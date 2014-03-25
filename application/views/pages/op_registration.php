@@ -246,12 +246,12 @@ pri.print();
 			<?php foreach($registered as $row){ ?>
 				<tr>
 				<td colspan="3" align="center">
-				<img align="left" src="<?php echo $this->session->userdata('hospital')['logo'];?>" width="50px" />
-				<font size="3"><?php echo $this->session->userdata('hospital')['hospital'];?></font><br />
-					<?php echo $this->session->userdata('hospital')['description'];?> 
+				<img align="left" src="<?php $hospital=$this->session->userdata('hospital');echo $hospital['logo'];?>" width="50px" />
+				<font size="3"><?php echo $hospital['hospital'];?></font><br />
+					<?php echo $hospital['description'];?> 
 					@ 
-					<?php echo $this->session->userdata('hospital')['place'];?>, 
-					<?php echo $this->session->userdata('hospital')['district'];?>,
+					<?php echo $hospital['place'];?>, 
+					<?php echo $hospital['district'];?>,
 					<?php echo date("d-M-Y",strtotime($row->admit_date)); ?>
 				</td>
 				</tr>
