@@ -9,7 +9,6 @@ class Home extends CI_Controller {
 			$data['title']="Home";
 			$this->load->view('templates/header',$data);
 			$data['userdata']=$this->session->userdata('logged_in');
-			$this->load->view('templates/left_nav');
 			if(count($this->session->userdata('logged_in'))>1){
 				$this->load->library('form_validation');
 				$this->form_validation->set_rules('organisation', 'Organisation',
@@ -73,7 +72,6 @@ class Home extends CI_Controller {
 		$data['title']="Login";
 
 		$this->load->view('templates/header',$data);
-		$this->load->view('templates/left_nav');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 		

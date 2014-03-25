@@ -10,7 +10,6 @@ class Reports extends CI_Controller {
 		$data['userdata']=$this->session->userdata('logged_in');
 		$data['title']="Reports";
 		$this->load->view('templates/header',$data);
-		$this->load->view('templates/left_nav');
 		$this->load->view('pages/reports');
 		$this->load->view('templates/footer');
 		}
@@ -24,7 +23,6 @@ class Reports extends CI_Controller {
 		$data['userdata']=$this->session->userdata('logged_in');
 		$data['title']="Out-Patient Summary Report";
 		$this->load->view('templates/header',$data);
-		$this->load->view('templates/left_nav');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 
@@ -53,7 +51,6 @@ class Reports extends CI_Controller {
 		$data['userdata']=$this->session->userdata('logged_in');
 		$data['title']="Out-Patient Detailed Report";
 		$this->load->view('templates/header',$data);
-		$this->load->view('templates/left_nav');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 

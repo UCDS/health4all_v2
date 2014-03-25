@@ -8,7 +8,6 @@ class Staff extends CI_Controller {
 	function index(){
 		$data['title']="Staff List";
 		$this->load->view('templates/header',$data);
-		$this->load->view('templates/donate_nav');
 		$data['staff']=$this->staff_model->staff_list();
 		$this->load->view('pages/staff_list',$data);
 	}
@@ -19,7 +18,6 @@ class Staff extends CI_Controller {
 		$data['title']="Staff Login";
 
 		$this->load->view('templates/header',$data);
-		$this->load->view('templates/donate_nav');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 		
