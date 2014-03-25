@@ -16,7 +16,6 @@ class Register extends CI_Controller {
 			$data['userdata']=$this->session->userdata('logged_in');
 			$data['title']="Out-Patient Registration";
 			$this->load->view('templates/header',$data);
-			$this->load->view('templates/left_nav');
 			$this->load->library('form_validation');
 			
 			$this->form_validation->set_rules('first_name', 'Patient Name',

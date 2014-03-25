@@ -10,11 +10,8 @@ class User_panel extends CI_Controller {
 		$this->load->helper('form');
 		$data['title']="User Panel";
 		$data['userdata']=$this->session->userdata('logged_in');
-		$data['fields']=$this->reports_model->get_form_fields();
 		$this->load->view('templates/header',$data);
-		$this->load->view('templates/panel_nav',$data);
-		$this->load->view('templates/reports_nav',$data);
-		$this->load->view('pages/panel_index',$data);
+		$this->load->view('pages/op_layout',$data);
 		$this->load->view('templates/footer');	
 		}
 		else{
