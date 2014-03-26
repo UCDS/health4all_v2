@@ -119,9 +119,9 @@ pri.print();
 			<div class="col-md-4">
 					Gender*  
 			</div>
-			<div class="col-md-8">
-					<label class="control-label"><input type="radio" value="M" name="gender" id="male" class="form-control" class="gender" required />Male</label>
-					<label class="control-label"><input type="radio" value="F" name="gender" id="female" class="form-control" class="gender" required />Female</label>
+			<div class="col-md-8 radio">
+					<label class="control-label"><input type="radio" value="M" name="gender" id="male" class="gender" required />Male</label>
+					<label class="control-label"><input type="radio" value="F" name="gender" id="female" class="gender" required />Female</label>
 			</div>
 		</div>
 		</div>
