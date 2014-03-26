@@ -6052,3 +6052,10 @@ td.visible-print {
   color: #fff;
   background-color: #428bca;
 }
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+ }
+.dropdown:hover{
+    background:#eee;
+ }

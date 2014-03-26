@@ -12,14 +12,6 @@
 	src="<?php echo base_url();?>assets/js/jquery.min.js"></script>
 	<script type="text/javascript" 
 	src="<?php echo base_url();?>assets/js/bootstrap.min.js"></script>
-	<script type="text/javascript" 
-	src="<?php echo base_url();?>assets/js/bootstrap_hover_menu.js"></script>
-	  <script>
- 	   // very simple to use!
- 	   $(document).ready(function() {
- 	     $('.js-activated').dropdownHover().dropdown();
- 	   });
- 	 </script>
 </head>
 <body>
 <div id="wrap">
