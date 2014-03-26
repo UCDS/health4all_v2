@@ -12,6 +12,14 @@
 	src="<?php echo base_url();?>assets/js/jquery.min.js"></script>
 	<script type="text/javascript" 
 	src="<?php echo base_url();?>assets/js/bootstrap.min.js"></script>
+	<script type="text/javascript" 
+	src="<?php echo base_url();?>assets/js/bootstrap_hover_menu.js"></script>
+	  <script>
+ 	   // very simple to use!
+ 	   $(document).ready(function() {
+ 	     $('.js-activated').dropdownHover().dropdown();
+ 	   });
+ 	 </script>
 </head>
 <body>
 <div id="wrap">
@@ -31,15 +39,42 @@
           <ul class="nav navbar-nav">
             <li <?php if(current_url()==base_url()){ echo "class='active'";}?>><a href="#">Home</a></li>
 	<?php if($this->session->userdata('logged_in')) { ?>
-            <li <?php if(preg_match("/register/",current_url())){ echo "class='active'";}?>>
-				<a href="<?php echo base_url();?>register/op">Out-Patient Registration</a>
-			</li>
-            <li <?php if(preg_match("/reports/",current_url())){ echo "class='active'";}?>>
-				<a href="<?php echo base_url();?>reports">Reports</a>
-			</li>
+	<li class="dropdown">
+                <a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Patients <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="<?php echo base_url();?>register/op">OutPatient</a></li>
+                  <li><a href="#">InPatient</a></li>
+                </ul>
+              </li>	
+	<li class="dropdown">
+                <a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Services <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Diagnostics</a></li>
+                  <li><a href="#">BloodBank</a></li>
+                </ul>
+              </li>
+	<li class="dropdown">
+                <a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Resources <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">HR</a></li>
+                  <li><a href="#">Equipment</a></li>
+                  <li><a href="#">Consumables</a></li>
+                </ul>
+              </li>
+	<li class="dropdown">
+                <a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Reports <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">OutPatient Summary</a></li>
+                  <li><a href="#">OutPatient Detailed</a></li>
+                  <li><a href="#">InPatient</a></li>
+                </ul>
+              </li>
+	<li><a href="#" >Help</a></li>
+
+
+
 	<?php } ?>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
+            
 		</ul>
 	<?php if($this->session->userdata('logged_in')) { ?>
           <ul class="nav navbar-nav navbar-right">
