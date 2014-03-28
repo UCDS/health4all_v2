@@ -1,0 +1,177 @@
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#supply_date").Zebra_DatePicker({
+		
+	});
+	
+});
+</script>
+		<div class="col-md-8 col-md-offset-2">
+		<center>
+		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
+		<h3>Add Equipment Details</h3></center><br>
+	<center><?php echo validation_errors(); echo form_open('inventory/masters/add/equipment',array('role'=>'form','id'=>'add_equipment')); ?></center>
+	<div class="form-group">
+		<label for="equpiment" class="col-md-4">Equiment Type<font color='red'>*</font></label>
+		<div  class="col-md-8">
+		<select name="equipment_type" id="division" class="form-control">
+		<option value="">Equipment Type</option>
+		<?php foreach($equipment_types as $d){
+			echo "<option value='$d->equipment_type_id'>$d->equipment_name</option>";
+		}
+		?>
+		</select>
+		
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="description" class="col-md-4"> Make</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder=" Make" id="description" name="make" />
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="description" class="col-md-4"> Model</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder=" Model" id="description" name="model" />
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="description" class="col-md-4"> Serial Number</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder=" Serial Number" id="description" name="serial_number" />
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="description" class="col-md-4"> Asset Number</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder=" Asset Number" id="description" name="asset_number" />
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="description" class="col-md-4"> Procured By</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder=" Procured By" id="description" name="procured_by" />
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="description" class="col-md-4"> Cost</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder=" Cost" id="description" name="cost" />
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="description" class="col-md-4"> Supplier</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder=" Supplier" id="description" name="supplier" />
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="supply_date" class="col-md-4"> Supply Date</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder="Supply Date" id="supply_date" form="add_equipment" name="supply_date" />
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="description" class="col-md-4"> Warranty Period</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder=" Warranty Period" id="description" name="warranty_period" />
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="description" class="col-md-4"> Service Engineer</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder=" Service Engineer" id="description" name="service_engineer" />
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="description" class="col-md-4">  Service Engineer Contact</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder=" Service Engineer Contact" id="description" name="service_engineer_contact" />
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="agency_address" class="col-md-4">Hospital</label>
+		<div  class="col-md-8">
+		<select name="hospital" id="division" class="form-control">
+		<option value="">Hospital </option>
+		<?php foreach($hospital as $d){
+			echo "<option value='$d->hospital_id'>$d->hospital</option>";
+		}
+		?>
+		</select>
+		
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="agency_contact_name" class="col-md-4">Department</label>
+		<div  class="col-md-8">
+		<select name="department" id="division" class="form-control">
+		<option value="">Department</option>
+		<?php foreach($department as $d){
+			echo "<option value='$d->department_id'>$d->department</option>";
+		}
+		?>
+		</select>
+		
+		</div>
+	</div>	
+	<div class="form-group">
+		<label for="agency_designation" class="col-md-4">User  </label>
+		<div  class="col-md-8">
+		<select name="user" id="division" class="form-control">
+		<option value="">User</option>
+		<?php foreach($user as $d){
+			echo "<option value='$d->user_id'>$d->username</option>";
+		}
+		?>
+		</select>
+		
+		</div>
+	</div>		
+	<div class="form_group">
+		<label for="agency_contact_no" class="col-md-4">  Equipment Status</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder="  Equipment status" id="agency_contact_no" name="equipment_status" />
+		</div>
+	</div>
+<!--	<div class="form_group">
+		<label for="agency_email_id" class="col-md-4">Agency Email Id</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder="Agency Email Id" id="agency_email_id" name="agency_email_id" />
+		</div>
+	</div>
+
+	<div class="form_group">
+		<label for="account_no" class="col-md-4">Account No</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder="Account No" id="account_no" name="account_no" />
+		</div>
+	</div>
+	<div class="form_group">
+		<label for="bank_name" class="col-md-4">Bank Name</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder="Bank Name" id="bank_name" name="bank_name" />
+		</div>
+	</div>
+		<div class="form_group">
+		<label for="branch" class="col-md-4">Branch</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder="Branch" id="branch" name="branch" />
+		</div>
+	</div>
+		<div class="form_group">
+		<label for="pan" class="col-md-4">Pan</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder="Pan" id="pan" name="pan" />
+		</div>
+	</div>
+-->		
+   	<div class="col-md-3 col-md-offset-4">
+	<button class="btn btn-lg btn-primary btn-block" type="submit" value="submit">Submit</button>
+	</div>
+</div>
