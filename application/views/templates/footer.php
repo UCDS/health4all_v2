@@ -6,7 +6,7 @@
 <div id="footer">
       <div class="container">
         <p class="text-muted">
-		Health4All - A free Open Source application supported by <a href="http://www.yousee.in" target="_blank">YouSee</a>
+		Health4All - a Free and Open Source application supported by <a href="http://www.yousee.in" target="_blank">YouSee</a>
 		</p>
       </div>
 </div>
