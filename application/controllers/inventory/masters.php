@@ -9,7 +9,8 @@ class Masters extends CI_Controller {
 	function add($type=""){
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
-		$data['user_id']=$this->session->userdata('logged_in')[0]['user_id'];
+		$user=$this->session->userdata('logged_in');
+		$data['user_id']=$user[0]['user_id'];
 		if($type=="drug_type"){
 			$title="Add Drug";
 		
@@ -231,7 +232,8 @@ $data['user']=$this->masters_model->get_data("user");
 function edit($type=""){
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
-		$data['user_id']=$this->session->userdata('logged_in')[0]['user_id'];
+		$user=$this->session->userdata('logged_in');
+		$data['user_id']=$user[0]['user_id'];
 	if($type=="drugs"){
 			$title="Edit Drugs";
 			$config=array(
