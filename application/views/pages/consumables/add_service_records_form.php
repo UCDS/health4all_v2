@@ -90,20 +90,7 @@ $(function(){
 	<div class="form-group">
 		<label for="description" class="col-md-4"> Problem Status</label>
 		<div  class="col-md-8">
-		
-<select name="problem_status" class="form-control">
-		<option value="">Select Problem Status</option>
-
-	<option value="Issue Reported">Issue Reported</option>
-	<option value="Service Visit Made">Service Visit Made</option>
-	<option value="Under Observation">Under Observation</option>
-	<option value="Issue Resolved">Issue Resolved</option>
-
-
-
-</select>
-
-
+		<input type="text" class="form-control" placeholder=" Problem Status" id="description" name="problem_status" />
 		</div>
 	</div>
 	

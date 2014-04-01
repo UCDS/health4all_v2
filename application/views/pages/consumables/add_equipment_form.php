@@ -52,16 +52,10 @@ $(function(){
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="procured_by" class="col-md-4"> Procured By</label>
+		<label for="description" class="col-md-4"> Procured By</label>
 		<div  class="col-md-8">
-		
-<select name="procured_by" class="form-control">
-		<option value="">Select Procured By</option>
-
-	<option value="CentralGovernment">Central Government</option>
-	<option value="StateGovernment">State Government</option>
-</select>
-	</div>
+		<input type="text" class="form-control" placeholder=" Procured By" id="description" name="procured_by" />
+		</div>
 	</div>
 	<div class="form-group">
 		<label for="description" class="col-md-4"> Cost</label>
@@ -144,8 +138,8 @@ $(function(){
 <select name="equipment_status"  id="equipment_status" class="form-control">
 <option value="">Select Status</option>
 
-<option value="1">In Use</option>
-<option value="0">Removed </option>
+<option value="1">Working</option>
+<option value="0">Not Working</option>
 </select>
 	</div>
 	</div>

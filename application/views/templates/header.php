@@ -29,7 +29,7 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li <?php if(current_url()==base_url()){ echo "class='active'";}?>><a href="#">Home</a></li>
+            <li <?php if(current_url()==base_url()){ echo "class='active'";}?>><a href="<?php echo base_url();?>">Home</a></li>
 	<?php if($this->session->userdata('logged_in')) { ?>
 	<li class="dropdown">
                 <a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Patients <b class="caret"></b></a>
@@ -50,7 +50,7 @@
                 <ul class="dropdown-menu">
                   <li><a href="#">HR</a></li>
                   <li><a href="<?php echo base_url()."inventory";?>">Equipment</a></li>
-                  <li><a href="#">Consumables</a></li>
+                  <li><a href="<?php echo base_url()."consumables";?>">Consumables</a></li>
                 </ul>
               </li>
 	<li class="dropdown">

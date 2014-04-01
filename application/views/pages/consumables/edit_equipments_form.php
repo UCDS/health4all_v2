@@ -30,10 +30,6 @@ $(function(){
 		}
 		?>
 		</select>
-<?php if(isset($equipments)) { ?>
-		<input type="hidden" value="<?php echo $equipments[0]->equipment_id;?>" name="equipment_id" />
-		
-		<?php } ?> 	 	 	
 		</div>
 	</div>	
 
@@ -41,9 +37,9 @@ $(function(){
 
 
 		<div class="form-group">
-		<label for="make" class="col-md-4">Make<font color='red'>*</font></label>
+		<label for="agency_name" class="col-md-4">Make<font color='red'>*</font></label>
 		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder="Make " id="make" name="make" 
+		<input type="text" class="form-control" placeholder="Make " id="agency_name" name="make" 
 		<?php if(isset($equipments)){
 			echo "value='".$equipments[0]->make."' ";
 			}
@@ -56,15 +52,18 @@ $(function(){
 		</div>
 	</div>
 <div class="form-group">
-		<label for="model" class="col-md-4">Model<font color='red'>*</font></label>
+		<label for="agency_name" class="col-md-4">Model<font color='red'>*</font></label>
 		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Model" id="model" name="model" 
+		<input type="text" class="form-control" placeholder=" Model" id="agency_name" name="model" 
 		<?php if(isset($equipments)){
 			echo "value='".$equipments[0]->model."' ";
 			}
 		?>
 		/>
+		<?php if(isset($equipments)){ ?>
+		<input type="hidden" value="<?php echo $equipments[0]->equipment_id;?>" name="equipment_id" />
 		
+		<?php } ?>
 		</div>
 	</div>
 
@@ -92,28 +91,13 @@ $(function(){
 		<div class="form-group">
 		<label for="agency_contact_number" class="col-md-4">  Procured By</label>
 		<div  class="col-md-8">
-	<!--	<input type="text" class="form-control" placeholder=" Procured By " id="agency_contact_number" name="procured_by" 
-		-->
-
-<select name="procured_by" id="facility_type" class="form-control">
-
-<option value="1" <?php if($equipments[0]->procured_by=="State Government")
-{ echo "SELECTED"; }?>  >State Government</option>
-
-
-
-<option value="0" <?php if($equipments[0]->procured_by=="Central Government")
-{ echo "SELECTED"; }?>  > Central Government </option>
-
-			
-</select>		
-		 
-<!--<option value="1">In Use</option>
-		<option value="0">Removed </option>
-				
-
-		</select>--></div></div>
-
+		<input type="text" class="form-control" placeholder=" Procured By " id="agency_contact_number" name="procured_by" 
+		<?php if(isset($equipments)){
+			echo "value='".$equipments[0]->procured_by."' ";
+			}
+		?>
+		/>
+</div></div>
 		<div class="form-group">
 		<label for="agency_email_id" class="col-md-4">Cost</label>
 		<div  class="col-md-8">
@@ -158,16 +142,16 @@ $(function(){
 		/>
 </div></div>
 		<div class="form-group">
-		<label for="service_engineer" class="col-md-4">Service Engineer</label>
+		<label for="pan" class="col-md-4">Service Engineer</label>
 		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder="Service Engineer" id="service_engineer" name="service_engineer" 
+		<input type="text" class="form-control" placeholder="Service Engineer" id="pan" name="service_engineer" 
 		<?php if(isset($equipments)){
 			echo "value='".$equipments[0]->service_engineer."' ";
 			}
 		?>
 		/>
 
-	</div>	</div>
+		</div>
 <div class="form-group">
 		<label for="pan" class="col-md-4">Service Engineer  Contact</label>
 		<div  class="col-md-8">
@@ -179,7 +163,7 @@ $(function(){
 		/>
 
 		</div>
-</div>
+
 <div class="form-group">
 		<label for="pan" class="col-md-4">Hospital</label>
 		<div  class="col-md-8">
@@ -236,26 +220,13 @@ $(function(){
 		<div class="form-group">
 		<label for="pan" class="col-md-4">Select Equipment Status</label>
 		<div  class="col-md-8">
-
 <select name="equipment_status" id="facility_type" class="form-control">
-<option value="">Select Status</option>
-
-<option value="1" <?php if($equipments[0]->equipment_status==1)
-{ echo "SELECTED"; }?>  >In Use </option>
-
-
-
-<option value="0" <?php if($equipments[0]->equipment_status==0)
-{ echo "SELECTED"; }?>  > Removed </option>
-
-			
-</select>		
-		 
-<!--<option value="1">In Use</option>
-		<option value="0">Removed </option>
+		<option value="">Select Equipment Status</option>
+<option value="1">Working</option>
+		<option value="0">Not Working</option>
 				
 
-		</select>--></div></div>
+		</select></div></div>
 
 
 	</div> 
@@ -313,14 +284,7 @@ $(function(){
 		<td><?php echo $a->service_engineer_contact; ?></td>
 		<td><?php echo $a->hospital; ?></td>
 		<td><?php echo $a->department; ?></td>
-		<td><?php  $i=$a->equipment_status;
-if($i==1){
-	echo "In Use";
-}
-else
-	echo "Removed";
-
-		 ?></td>
+		<td><?php echo $a->equipment_status; ?></td>
 		
 
 

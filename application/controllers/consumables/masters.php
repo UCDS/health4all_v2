@@ -40,13 +40,8 @@ class Masters extends CI_Controller {
                      'field'   => 'dosage_unit',
                      'label'   => 'Dosage Name',
                      'rules'   => 'required|trim|xss_clean'
-                  ),
-               array(
-                     'field'   => 'dosage',
-                     'label'   => 'Dosage',
-                     'rules'   => 'required|trim|xss_clean'
                   )
-			);
+             	);
 }
 else if($type=="equipment_type"){
 		 	$title="Add Equipment Type";
@@ -88,7 +83,57 @@ $data['user']=$this->masters_model->get_data("user");
                      'label'   => 'Make',
                      'rules'   => 'required|trim|xss_clean'
                   ),
+               array(
+                     'field'   => 'model',
+                     'label'   => 'model',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+                array(
+                     'field'   => 'serial_number',
+                     'label'   => 'serial_number',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+                 array(
+                     'field'   => 'asset_number',
+                     'label'   => 'asset_number',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+                  array(
+                     'field'   => 'procured_by',
+                     'label'   => 'procured_by',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+                   array(
+                     'field'   => 'cost',
+                     'label'   => 'cost',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+                    array(
+                     'field'   => 'supplier',
+                     'label'   => 'supplier',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+                    array(
+                     'field'   => 'supply_date',
+                     'label'   => 'supply_date',
+                     'rules'   => 'trim|xss_clean'
+                  ),
+                      array(
+                     'field'   => 'warranty_period',
+                     'label'   => 'warranty_period',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
                        array(
+                     'field'   => 'service_engineer',
+                     'label'   => 'service_engineer',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+                        array(
+                     'field'   => 'service_engineer_contact',
+                     'label'   => 'service_engineer_contact',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+		               array(
                      'field'   => 'equipment_status',
                      'label'   => 'equipment_status',
                      'rules'   => 'required|trim|xss_clean'
@@ -158,10 +203,10 @@ $data['user']=$this->masters_model->get_data("user");
 		else{
 			show_404();
 		}
-		$page="pages/inventory/add_".$type."_form";
+		$page="pages/consumables/add_".$type."_form";
 		$data['title']=$title;
 		$this->load->view('templates/header',$data);
-		$this->load->view('templates/leftnav');
+		$this->load->view('templates/leftnav2');
 		$this->form_validation->set_rules($config);
  		if ($this->form_validation->run() === FALSE)
 		{
@@ -325,10 +370,10 @@ $data['item_type']=$this->masters_model->get_data("item_type");
 			show_404();
 		}
 		
-		$page="pages/inventory/edit_".$type."_form";
+		$page="pages/consumables/edit_".$type."_form";
 		$data['title']=$title;
 		$this->load->view('templates/header',$data);
-      $this->load->view('templates/leftnav',$data);
+      $this->load->view('templates/leftnav2',$data);
 		
 		$this->form_validation->set_rules($config);
 
@@ -340,7 +385,6 @@ $data['item_type']=$this->masters_model->get_data("item_type");
 			if($this->input->post('update')){
 				if($this->masters_model->update_data($type)){
 					$data['msg']="Updated Successfully";
-		
 					$this->load->view($page,$data);
 				}
 				else{

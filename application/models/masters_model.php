@@ -36,7 +36,7 @@ class Masters_model extends CI_Model{
 			$this->db->select("equipment_type_id,equipment_name")->from("equipment_type");
 		}
 		else if($type=="hospital"){
-			
+		
 			$this->db->select("hospital_id,hospital")->from("hospitals");
 		}
 		else if($type=="department"){
@@ -92,7 +92,7 @@ if($this->input->post('search')){
 			
 			}
 $this->db->select("generic_item_id,generic_name,drug_type,item_type,drug_type.drug_type_id,item_type.item_type_id")->from("generic_item")
-			->join('drug_type','generic_item.drug_type_id=drug_type.drug_type_id','left')
+			->join('drug_type','generic_item.drug_type_id=dxrug_type.drug_type_id','left')
 			->join('item_type','generic_item.item_type_id=item_type.item_type_id','left')
 			->order_by('generic_name');	
 
@@ -186,7 +186,7 @@ $this->db->select("drug_type_id,drug_type,description")->from("drug_type");
   //$this->db->last_query();
 //$query=$this->db->get();
 			$query=$this->db->get();
-	$this->db->last_query();
+echo	$this->db->last_query();
 		return $query->result();
 
 //	return $query->result();
@@ -223,7 +223,7 @@ function update_data($type){
 					  'equipment_name'=>$this->input->post('equipment_name')
 					/*  'description'=>$this->input->post('description'),*/
 					  	
-				
+					
 				);
 			$this->db->where('equipment_type_id',$this->input->post('equipment_type_id'));
 			$table="equipment_type";
