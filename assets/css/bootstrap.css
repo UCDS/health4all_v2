@@ -6028,7 +6028,7 @@ td.visible-print {
     top: 51px;
     bottom: 60px;
     right: 0;
-    z-index: 1000;
+    z-index: 100;
     display: block;
     padding: 20px;
     overflow-x: hidden;
@@ -6041,7 +6041,7 @@ td.visible-print {
     top: 51px;
     bottom: 60px;
     left: 0;
-    z-index: 1000;
+    z-index: 100;
     display: block;
     padding: 20px;
     overflow-x: hidden;
