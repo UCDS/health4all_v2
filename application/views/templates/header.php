@@ -70,8 +70,13 @@
 		</ul>
 	<?php if($this->session->userdata('logged_in')) { ?>
           <ul class="nav navbar-nav navbar-right">
-            <li><a><?php $logged_in=$this->session->userdata('logged_in');echo $logged_in[0]['username']; ?></a></li>
-            <li><a href="<?php echo base_url();?>home/logout">Logout</a></li>
+            <li class="dropdown"><a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><?php $logged_in=$this->session->userdata('logged_in');echo $logged_in[0]['username']; ?> <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="<?php echo base_url()."user_panel/settings";?>">Settings</a></li>
+				  <li class="divider"></li>
+				  <li><a href="<?php echo base_url();?>home/logout">Logout</a></li>
+                </ul>
+			</li>
           </ul>	
 	<?php } ?>
         </div><!--/.nav-collapse -->

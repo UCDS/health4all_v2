@@ -18,5 +18,18 @@ class User_panel extends CI_Controller {
 			show_404();
 		}
 	}
+	function settings(){
+		if($this->session->userdata('logged_in')){
+		$this->load->helper('form');
+		$data['title']="User Panel";
+		$data['userdata']=$this->session->userdata('logged_in');
+		$this->load->view('templates/header',$data);
+		$this->load->view('pages/settings',$data);
+		$this->load->view('templates/footer');	
+		}
+		else{
+			show_404();
+		}
+	}
 
 }
