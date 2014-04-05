@@ -6072,3 +6072,11 @@ td.visible-print {
 .dropdown:hover{
     background:#eee;
  }
+ 
+.layout-div{
+	position:relative;
+	float:left;
+	background:#eee;
+	border:1px solid #ccc;
+	width:33%;
+}
