@@ -43,7 +43,7 @@ $(function(){
 		<label for="description" class="col-md-4"> Working Status<font color='red'>*</font></label>
 		<div  class="col-md-8">
 			<select name="working_status" id="division" class="form-control">
-	<option	value="">Select</option>		
+	<option	value="">Select Working Status</option>		
 	<option	value="1">Working</option>		
 	<option	value="0">Not Working</option>		<!--	<input type="text" class="form-control" placeholder=" Working Status" id="description" name="working_status" />
 	

@@ -287,15 +287,17 @@ else if($type=="equipments"){
                      'rules'   => 'trim|xss_clean'
                   )
              
-			);
-$data['equipments']=$this->masters_model->get_data("equipments");
 
+			);
+if($this->input->post('select')){
+
+$data['equipments']=$this->masters_model->get_data("equipments");
 $data['equipment_type']=$this->masters_model->get_data("equipment_types");
 $data['hospital']=$this->masters_model->get_data("hospital");
 $data['department']=$this->masters_model->get_data("department");
 $data['user']=$this->masters_model->get_data("user");
  }
-
+}
 		else if($type=="generics"){
 			$title="Edit Generic";
 			$config=array(

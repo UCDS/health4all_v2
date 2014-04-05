@@ -15,7 +15,7 @@ $(function(){
 		<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
 		<h3>Add Generic Details</h3></center><br>
-	<center><?php echo validation_errors(); echo form_open('masters/add/generic',array('role'=>'form')); ?></center>
+	<center><?php echo validation_errors(); echo form_open('consumables/masters/add/generic',array('role'=>'form')); ?></center>
 	<div class="form-group">
 		<label for="generic" class="col-md-4">Generic Name<font color='red'>*</font></label>
 		<div  class="col-md-8">

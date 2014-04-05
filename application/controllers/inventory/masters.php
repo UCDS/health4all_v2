@@ -61,6 +61,25 @@ else if($type=="equipment_type"){
 			);
 }
 
+else if($type=="service"){
+		 	$title="Add Service Records";
+		
+			$config=array(
+                         array(
+                     'field'   => 'working_status',
+                     'label'   =>  'Working Status',
+                     'rules'   => 'trim|xss_clean'
+                  )
+        
+      
+             
+			);
+$data['service']=$this->masters_model->get_data("service");
+     		
+}
+
+
+
 else if($type=="service_records"){
 		 	$title="Add Service Records";
 		
@@ -216,6 +235,23 @@ $data['drug']=$this->masters_model->get_data("drugs");
 			$data['agency']=$this->masters_model->get_data("agency");
 
 		}
+		else if($type=="service"){
+		 	$title="Edit Service Records";
+		
+			$config=array(
+                         array(
+                     'field'   => 'working_status',
+                     'label'   =>  'Working Status',
+                     'rules'   => 'trim|xss_clean'
+                  )
+        
+             
+             
+			);
+$data['equipments']=$this->masters_model->get_data("equipments");
+		
+}
+
 		else if($type=="equipment_type"){
 		 	$title="Edit Equipment Type";
 		

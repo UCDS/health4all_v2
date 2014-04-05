@@ -3,7 +3,7 @@
     			<li class="nav-header">Add</li>
 				<li><a href="<?php echo base_url();?>inventory/masters/add/equipment">Equipment</a></li>
 				<li><a href="<?php echo base_url();?>inventory/masters/add/equipment_type">Equipment Type</a></li>
-				<li><a href="<?php echo base_url();?>inventory/masters/add/service_records">Service Issue</a></li>
+				<li><a href="<?php echo base_url();?>inventory/masters/edit/service">Service Issue</a></li>
 				<li class="nav-header">Edit</li>
 				<li><a href="<?php echo base_url();?>inventory/masters/edit/equipment_type">Equipment Type</a></li>
 			<li><a href="<?php echo base_url();?>inventory/masters/edit/equipments">Equipment Details</a></li>

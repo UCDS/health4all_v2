@@ -92,7 +92,7 @@ if($this->input->post('search')){
 			
 			}
 $this->db->select("generic_item_id,generic_name,drug_type,item_type,drug_type.drug_type_id,item_type.item_type_id")->from("generic_item")
-			->join('drug_type','generic_item.drug_type_id=dxrug_type.drug_type_id','left')
+			->join('drug_type','generic_item.drug_type_id=drug_type.drug_type_id','left')
 			->join('item_type','generic_item.item_type_id=item_type.item_type_id','left')
 			->order_by('generic_name');	
 
@@ -113,23 +113,48 @@ if($this->input->post('search')){
 
 			//$this->db->where('generic_item.generic_item_id',$generic_type);
 			
-			}
-$this->db->select("equipment_id,make,serial_number,asset_number,equipment_name,equipments.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_period,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospitals.hospital_id,departments.department_id,users.user_id")->from("equipments")
+			
+}
+$this->db->select("equipment_id,make,serial_number,asset_number,equipment_name,equipments.equipment_id,equipments.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_period,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospitals.hospital_id,departments.department_id,users.user_id")->from("equipments")
 			->join('equipment_type','equipments.equipment_type_id=equipment_type.equipment_type_id','left')
 			->join('hospitals','equipments.hospital_id=hospitals.hospital_id','left')
 			->join('departments','equipments.department_id=departments.department_id','left')
 			->join('users','equipments.user_id=users.user_id','left')
 			
 			->order_by('equipment_name');	
-
 		
 		}
 
+else if($type=="service"){
+		
+		
 
-/*if($this->input->post('search_generic')){
-*/			
-		/*}
-	*/
+
+if($this->input->post('select')){
+				$equipment_id=$this->input->post('equipment_id');
+
+				$this->db->where('equipment_id',$equipment_id);
+				
+}
+if($this->input->post('search')){
+			//$generic_type=$this->input->post('generic_name');
+			$equipment=strtolower($this->input->post('equipment_name'));
+			$this->db->like('LOWER(equipment_name)',$equipment,'after');
+
+			
+			
+}
+$this->db->select("equipment_id,make,serial_number,asset_number,equipment_name,equipments.equipment_id,equipments.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_period,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospitals.hospital_id,departments.department_id,users.user_id")->from("equipments")
+			->join('equipment_type','equipments.equipment_type_id=equipment_type.equipment_type_id','left')
+			->join('hospitals','equipments.hospital_id=hospitals.hospital_id','left')
+			->join('departments','equipments.department_id=departments.department_id','left')
+			->join('users','equipments.user_id=users.user_id','left')
+			
+			->order_by('equipment_name');	
+		
+
+		}
+	
 		else if($type=="equipment_type"){
 
 
@@ -185,10 +210,10 @@ $this->db->select("drug_type_id,drug_type,description")->from("drug_type");
 			
   //$this->db->last_query();
 //$query=$this->db->get();
-			$query=$this->db->get();
-echo	$this->db->last_query();
-		return $query->result();
+ $this->db->last_query();
 
+			$query=$this->db->get();
+		return $query->result();
 //	return $query->result();
 	
 }
@@ -240,7 +265,7 @@ function update_data($type){
 					  'procured_by'=>$this->input->post('procured_by'),	
 					  'cost'=>$this->input->post('cost'),	
 					  'supplier'=>$this->input->post('supplier'),	
-					  'supply_date'=>$this->input->post('supply_date'),	
+					  'supply_date'=>date("Y-m-d",strtotime($this->input->post('service_date'))),
 					  'warranty_period'=>$this->input->post('warranty_period'),	
 					  'service_engineer'=>$this->input->post('service_engineer'),	
 					  'service_engineer_contact'=>$this->input->post('service_engineer_contact'),	
@@ -251,10 +276,10 @@ function update_data($type){
 					  	
 				
 				);
-			$this->db->where('equipment_id',$this->input->post('equipment _id'));
+			$this->db->where('equipment_id',$this->input->post('equipment_id'));
 			$table="equipments";
 		
-		
+
 	}
 
 
@@ -320,9 +345,9 @@ else if($type=="dosages"){
 			$table="divisions";
 		}
 		
-		
 			$this->db->trans_start();
 			$this->db->update($table,$data);
+	
 		$this->db->trans_complete();
 		if($this->db->trans_status()===FALSE){
 			return false;
@@ -389,7 +414,31 @@ else if($type=="dosages"){
 					   'procured_by'=>$this->input->post('procured_by'),
 					    'cost'=>$this->input->post('cost'),
 					     'supplier'=>$this->input->post('supplier'),
-					      'supply_date'=>$this->input->post('supply_date'),
+					      'supply_date'=>date("Y-m-d",strtotime($this->input->post('supply_date'))),
+					       'warranty_period'=>$this->input->post('warranty_period'),
+					        'service_engineer'=>$this->input->post('service_engineer'),
+					        'service_engineer_contact'=>$this->input->post('service_engineer_contact'),
+					        'hospital_id'=>$this->input->post('hospital'),
+					        'department_id'=>$this->input->post('department'),
+		'user_id'=>$this->input->post('user'),
+		'equipment_status'=>$this->input->post('equipment_status')
+		
+			);
+
+		$table="equipments";
+		}
+	
+		elseif($type=="service"){
+		$data = array(
+					  'equipment_type_id'=>$this->input->post('equipment_type'),
+					 'make'=>$this->input->post('make'),
+					 'model'=>$this->input->post('model'),
+					  'serial_number'=>$this->input->post('serial_number'),
+					   'asset_number'=>$this->input->post('asset_number'),
+					   'procured_by'=>$this->input->post('procured_by'),
+					    'cost'=>$this->input->post('cost'),
+					     'supplier'=>$this->input->post('supplier'),
+					      'supply_date'=>date("Y-m-d",strtotime($this->input->post('supply_date'))),
 					       'warranty_period'=>$this->input->post('warranty_period'),
 					        'service_engineer'=>$this->input->post('service_engineer'),
 					        'service_engineer_contact'=>$this->input->post('service_engineer_contact'),
@@ -405,7 +454,7 @@ else if($type=="dosages"){
 		
 		elseif($type=="service_records"){
 		$data = array(
-					  'call_date'=>$this->input->post('call_date'),
+					  'call_date'=>date("Y-m-d",strtotime($this->input->post('call_date'))),
 					 'call_time'=>$this->input->post('call_time'),
 					 'user_id'=>$this->input->post('user'),
 					
@@ -414,7 +463,7 @@ else if($type=="dosages"){
 					   'service_provider'=>$this->input->post('service_provider'),
 					   'service_person'=>$this->input->post('service_person'),
 					    'service_person_remarks'=>$this->input->post('service_person_remarks'),
-					     'service_date'=>$this->input->post('service_date'),
+					     'service_date'=>date("Y-m-d",strtotime($this->input->post('service_date'))),
 					      'service_time'=>$this->input->post('service_time'),
 					       'problem_status'=>$this->input->post('problem_status'),
 					        'working_status'=>$this->input->post('working_status')
@@ -503,32 +552,6 @@ else if($type=="dosages"){
 					  'pan'=>$pan
 					);
 			$table="agency";
-		}
-		else if($type=="grant"){
-			$phase_data=array();
-			$data = array(
-					  'grant_name'=>$this->input->post('grant_name'),
-					  'grant_source'=>$this->input->post('grant_source'),
-					  'date'=>$this->input->post('date')
-					  );
-			$this->db->trans_start();
-				if($this->db->insert('grants',$data)){
-				$grant_id=$this->db->insert_id();
-				foreach($this->input->post('phase_name') as $phase){
-					$phase_data[]=array(
-						'phase_name'=>$phase,
-						'grant_id'=>$grant_id
-					  );
-				}
-				$this->db->insert_batch('grant_phase',$phase_data);
-				}
-			$this->db->trans_complete();
-			if($this->db->trans_status()===FALSE){
-				return false;
-			}
-			else{
-			  return true;
-			}
 		}
 		else if($type=="division"){
 			$data = array(
