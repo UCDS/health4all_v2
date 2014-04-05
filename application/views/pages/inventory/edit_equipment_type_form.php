@@ -2,7 +2,7 @@
 
 	<?php if((isset($mode))&&(($mode)=="select")){ ?>
 	<center>	<h3>Edit  Equipment Type </h3></center><br>
-	<?php echo form_open('inventory/masters/edit/equipment_type',array('role'=>'form')); ?>
+	<?php echo form_open('equipments/edit/equipment_type',array('role'=>'form')); ?>
 		
 
 		<div class="form-group">
@@ -27,7 +27,7 @@
 	<?php } ?>
 	<h3><?php if(isset($msg)) echo $msg;?></h3>	
 	<div class="col-md-12">
-	<?php echo form_open('inventory/masters/edit/equipment_type',array('role'=>'form','id'=>'search_form','class'=>'form-inline','name'=>'search_equipment_type'));?>
+	<?php echo form_open('equipments/edit/equipment_type',array('role'=>'form','id'=>'search_form','class'=>'form-inline','name'=>'search_equipment_type'));?>
 	<h3> Search Equipment Type </h3>
 	<table class="table-bordered col-md-12">
 	<tbody>
@@ -52,7 +52,7 @@
 	<?php 
 	$i=1;
 	foreach($equipment_types as $a){ ?>
-	<?php echo form_open('inventory/masters/edit/equipment_type',array('id'=>'select_equipment_type_form_'.$a->equipment_type_id,'role'=>'form')); ?>
+	<?php echo form_open('equipments/edit/equipment_type',array('id'=>'select_equipment_type_form_'.$a->equipment_type_id,'role'=>'form')); ?>
 	<tr onclick="$('#select_equipment_type_form_<?php echo $a->equipment_type_id;?>').submit();" >
 		<td><?php echo $i++; ?></td>
 		<td><?php echo $a->equipment_name; ?>

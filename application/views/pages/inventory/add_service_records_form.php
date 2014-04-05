@@ -11,7 +11,7 @@ $(function(){
 		<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
 		<h3>Add Service Issue Details</h3></center><br>
-	<center><?php echo validation_errors(); echo form_open('inventory/masters/add/service_records',array('role'=>'form','id'=>'add_service_record')); ?></center>
+	<center><?php echo validation_errors(); echo form_open('equipments/add/service_records',array('role'=>'form','id'=>'add_service_record')); ?></center>
 
 		<input type="hidden" class="form-control" placeholder=" Call Date"  form="user" id="" name="user" />
 
@@ -45,9 +45,7 @@ $(function(){
 			<select name="working_status" id="division" class="form-control">
 	<option	value="">Select Working Status</option>		
 	<option	value="1">Working</option>		
-	<option	value="0">Not Working</option>		<!--	<input type="text" class="form-control" placeholder=" Working Status" id="description" name="working_status" />
-	
-	-->
+	<option	value="0">Not Working</option>
 </select>
 
 		</div>

@@ -14,7 +14,7 @@ $(function(){
 
 	<?php if(isset($mode)&& $mode=="select"){ ?>
 	<center>	<h3>Add  Service Issue</h3></center><br>
-	<?php echo validation_errors(); echo form_open('inventory/masters/edit/service',array('role'=>'form','id'=>'edit_equipment')); ?>
+	<?php echo validation_errors(); echo form_open('equipments/edit/service',array('role'=>'form','id'=>'edit_equipment')); ?>
 
 
 	<div class="form-group">
@@ -89,18 +89,7 @@ $(function(){
 		?>
 		/>
 </div></div>
-<!--<option value="1">In Use</option>
-		<option value="0">Removed </option>
-				
-
-		</select>--></div></div>
-	
-		 
-<!--<option value="1">In Use</option>
-		<option value="0">Removed </option>
-				
-
-		</select>--></div></div>
+</div></div>
 
 
 	</div> 
@@ -111,7 +100,7 @@ $(function(){
 	<?php } ?>
 	<h3><?php if(isset($msg)) echo $msg;?></h3>	
 	<div class="col-md-12">
-	<?php echo form_open('inventory/masters/edit/service',array('role'=>'form','id'=>'search_form','class'=>'form-inline','name'=>'search_equipment'));?>
+	<?php echo form_open('equipments/edit/service',array('role'=>'form','id'=>'search_form','class'=>'form-inline','name'=>'search_equipment'));?>
 	<h3> Search Equipment </h3>
 	<table class="table-bordered col-md-12">
 	<tbody>
@@ -136,7 +125,7 @@ $(function(){
 	<?php 
 	$i=1;
 	foreach($equipments as $a){ ?>
-	<?php echo form_open('inventory/masters/edit/service',array('id'=>'select_equipment_form_'.$a->equipment_id,'role'=>'form')); ?>
+	<?php echo form_open('equipments/edit/service',array('id'=>'select_equipment_form_'.$a->equipment_id,'role'=>'form')); ?>
 	<tr onclick="$('#select_equipment_form_<?php echo $a->equipment_id;?>').submit();" >
 		<td><?php echo $i++; ?></td>
 		<td><?php echo $a->equipment_name; ?>

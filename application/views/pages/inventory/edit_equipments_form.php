@@ -3,7 +3,7 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <script type="text/javascript">
 $(function(){
-	$("#supply_date").Zebra_DatePicker({
+	$("#date").Zebra_DatePicker({
 		
 	});
 	
@@ -14,7 +14,7 @@ $(function(){
 
 	<?php if(isset($mode)&& $mode=="select"){ ?>
 	<center>	<h3>Edit  Equipment Details</h3></center><br>
-	<?php echo validation_errors(); echo form_open('inventory/masters/edit/equipments',array('role'=>'form','id'=>'edit_equipment')); ?>
+	<?php echo validation_errors(); echo form_open('equipments/edit/equipments',array('role'=>'form','id'=>'edit_equipment')); ?>
 
 
 	<div class="form-group">
@@ -30,10 +30,6 @@ $(function(){
 		}
 		?>
 		</select>
-<?php if(isset($equipments)) { ?>
-		<input type="hidden" value="<?php echo $equipments[0]->equipment_id;?>" name="equipment_id" />
-		
-		<?php } ?> 	 	 	
 		</div>
 	</div>	
 
@@ -41,9 +37,9 @@ $(function(){
 
 
 		<div class="form-group">
-		<label for="make" class="col-md-4">Make<font color='red'>*</font></label>
+		<label for="agency_name" class="col-md-4">Make<font color='red'>*</font></label>
 		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder="Make " id="make" name="make" 
+		<input type="text" class="form-control" placeholder="Make " id="agency_name" name="make" 
 		<?php if(isset($equipments)){
 			echo "value='".$equipments[0]->make."' ";
 			}
@@ -56,15 +52,18 @@ $(function(){
 		</div>
 	</div>
 <div class="form-group">
-		<label for="model" class="col-md-4">Model<font color='red'>*</font></label>
+		<label for="agency_name" class="col-md-4">Model<font color='red'>*</font></label>
 		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Model" id="model" name="model" 
+		<input type="text" class="form-control" placeholder=" Model" id="agency_name" name="model" 
 		<?php if(isset($equipments)){
 			echo "value='".$equipments[0]->model."' ";
 			}
 		?>
 		/>
+		<?php if(isset($equipments)){ ?>
+		<input type="hidden" value="<?php echo $equipments[0]->equipment_id;?>" name="equipment_id" />
 		
+		<?php } ?>
 		</div>
 	</div>
 
@@ -89,31 +88,16 @@ $(function(){
 		?>
 		/>
 </div></div>
-			<div class="form-group">
+		<div class="form-group">
 		<label for="agency_contact_number" class="col-md-4">  Procured By</label>
 		<div  class="col-md-8">
-	<!--	<input type="text" class="form-control" placeholder=" Procured By " id="agency_contact_number" name="procured_by" 
-		-->
-
-<select name="procured_by" id="facility_type" class="form-control">
-
-<option value="State Govenment" <?php if($equipments[0]->procured_by=="State Government")
-{ echo "SELECTED"; }?>  >State Government</option>
-
-
-
-<option value="Central Government" <?php if($equipments[0]->procured_by=="Central Government")
-{ echo "SELECTED"; }?>  > Central Government </option>
-
-			
-</select>		
-		 
-<!--<option value="1">In Use</option>
-		<option value="0">Removed </option>
-				
-
-		</select>--></div></div>
-
+		<input type="text" class="form-control" placeholder=" Procured By " id="agency_contact_number" name="procured_by" 
+		<?php if(isset($equipments)){
+			echo "value='".$equipments[0]->procured_by."' ";
+			}
+		?>
+		/>
+</div></div>
 		<div class="form-group">
 		<label for="agency_email_id" class="col-md-4">Cost</label>
 		<div  class="col-md-8">
@@ -136,9 +120,9 @@ $(function(){
 		</div></div>
 
 		<div class="form-group">
-		<label for="supply_date" class="col-md-4">Supply Date</label>
+		<label for="bank_name" class="col-md-4">Supply Date</label>
 		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder="Supply Date" id="supply_date" form="edit_equipment" name="supply_date" 
+		<input type="text" class="form-control" placeholder="Supply Date" id="date" form="edit_equipment" name="supply_date" 
 		<?php if(isset($equipments)){
 			echo "value='".$equipments[0]->supply_date."' ";
 			}
@@ -158,11 +142,16 @@ $(function(){
 		/>
 </div></div>
 		<div class="form-group">
-		<label for="service_engineer" class="col-md-4">Service Engineer</label>
+		<label for="pan" class="col-md-4">Service Engineer</label>
 		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder="Service Engineer" id="service_engineer" name="service_engineer" value="<?php if(isset($equipments)){ echo $equipments[0]->service_engineer;}?>" />
+		<input type="text" class="form-control" placeholder="Service Engineer" id="pan" name="service_engineer" 
+		<?php if(isset($equipments)){
+			echo "value='".$equipments[0]->service_engineer."' ";
+			}
+		?>
+		/>
 
-	</div>	</div>
+		</div>
 <div class="form-group">
 		<label for="pan" class="col-md-4">Service Engineer  Contact</label>
 		<div  class="col-md-8">
@@ -174,7 +163,7 @@ $(function(){
 		/>
 
 		</div>
-</div>
+
 <div class="form-group">
 		<label for="pan" class="col-md-4">Hospital</label>
 		<div  class="col-md-8">
@@ -210,30 +199,17 @@ $(function(){
 	</div>
 	</div>
 	
-	
+	<input type="hidden" class="form-control" placeholder="Service Engineer" id="pan" name="service_engineer" >
 		<div class="form-group">
 		<label for="pan" class="col-md-4">Select Equipment Status</label>
 		<div  class="col-md-8">
-
 <select name="equipment_status" id="facility_type" class="form-control">
-<option value="">Select Status</option>
-
-<option value="1" <?php if($equipments[0]->equipment_status==1)
-{ echo "SELECTED"; }?>  >In Use </option>
-
-
-
-<option value="0" <?php if($equipments[0]->equipment_status==0)
-{ echo "SELECTED"; }?>  > Removed </option>
-
-			
-</select>		
-		 
-<!--<option value="1">In Use</option>
-		<option value="0">Removed </option>
+		<option value="">Select Equipment Status</option>
+<option value="1">Working</option>
+		<option value="0">Not Working</option>
 				
 
-		</select>--></div></div>
+		</select></div></div>
 
 
 	</div> 
@@ -244,7 +220,7 @@ $(function(){
 	<?php } ?>
 	<h3><?php if(isset($msg)) echo $msg;?></h3>	
 	<div class="col-md-12">
-	<?php echo form_open('inventory/masters/edit/equipments',array('role'=>'form','id'=>'search_form','class'=>'form-inline','name'=>'search_equipment'));?>
+	<?php echo form_open('equipments/edit/equipments',array('role'=>'form','id'=>'search_form','class'=>'form-inline','name'=>'search_equipment'));?>
 	<h3> Search Equipment </h3>
 	<table class="table-bordered col-md-12">
 	<tbody>
@@ -267,11 +243,11 @@ $(function(){
 	<th>Supply Date</th><th>Warranty Period</th><th>Service Engineer</th><th>Service Engineer Contact</th><th>Hospital</th><th>Department</th><th>Equipment Status</th></thead>
 	<tbody>
 	<?php 
-	$j=1;
+	$i=1;
 	foreach($equipments as $a){ ?>
-	<?php echo form_open('inventory/masters/edit/equipments',array('id'=>'select_equipment_form_'.$a->equipment_id,'role'=>'form')); ?>
+	<?php echo form_open('equipments/edit/equipments',array('id'=>'select_equipment_form_'.$a->equipment_id,'role'=>'form')); ?>
 	<tr onclick="$('#select_equipment_form_<?php echo $a->equipment_id;?>').submit();" >
-		<td><?php echo $j++; ?></td>
+		<td><?php echo $i++; ?></td>
 		<td><?php echo $a->equipment_name; ?>
 		
 		<input type="hidden" value="<?php echo $a->equipment_id; ?>" name="equipment_id" />
@@ -291,14 +267,7 @@ $(function(){
 		<td><?php echo $a->service_engineer_contact; ?></td>
 		<td><?php echo $a->hospital; ?></td>
 		<td><?php echo $a->department; ?></td>
-		<td><?php  $i=$a->equipment_status;
-if($i==1){
-	echo "In Use";
-}
-else
-	echo "Removed";
-
-		 ?></td>
+		<td><?php echo $a->equipment_status; ?></td>
 		
 
 

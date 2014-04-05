@@ -219,10 +219,7 @@ function edit($type=""){
 		
 			);
 $data['drug']=$this->masters_model->get_data("drugs");
-
-		/*	$data['facility_types']=$this->masters_model->get_data("facility_types");
-			$data['divisions']=$this->masters_model->get_data("divisions");	
-		*/}
+}
 		else if($type=="agency"){
 			$title="Edit Agency";
 			$config=array(
@@ -317,9 +314,6 @@ $data['user']=$this->masters_model->get_data("user");
 		
 			);
 			$data['dosage']=$this->masters_model->get_data("dosages");
-/*$data['generic']=$this->masters_model->get_data("generics");
-$data['item_type']=$this->masters_model->get_data("item_type");
-*/
 		}
 		
 		else if($type=="division"){

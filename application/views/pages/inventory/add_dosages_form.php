@@ -6,14 +6,17 @@ $(function(){
 	$("#agreement_date").Zebra_DatePicker({
 		direction:false
 	});
-	
+	$("#probable_date_of_completion,#agreement_completion_date").Zebra_DatePicker({
+		direction:1
+	});
 });
 </script>
+
 		<div class="col-md-8 col-md-offset-2">
 		<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
 		<h3>Add Dosage Details</h3></center><br>
-	<center><?php echo validation_errors(); echo form_open('consumables/masters/add/dosages',array('role'=>'form')); ?></center>
+	<center><?php echo validation_errors(); echo form_open('consumables/add/dosages',array('role'=>'form')); ?></center>
 	<div class="form-group">
 		<label for="dosages" class="col-md-4">Dosage<font color='red'>*</font></label>
 		<div  class="col-md-8">

@@ -49,8 +49,8 @@
                 <a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Resources <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="#">HR</a></li>
-                  <li><a href="<?php echo base_url()."inventory";?>">Equipment</a></li>
-                  <li><a href="<?php echo base_url()."consumables";?>">Consumables</a></li>
+                  <li><a href="<?php echo base_url()."equipments/add/equipment";?>">Equipment</a></li>
+                  <li><a href="<?php echo base_url()."consumables/add/dosages";?>">Consumables</a></li>
                 </ul>
               </li>
 	<li class="dropdown">
