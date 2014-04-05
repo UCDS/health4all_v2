@@ -26,11 +26,6 @@ class Masters extends CI_Controller {
                      'rules'   => 'required|trim|xss_clean'
                   )
 			);
-/*			$data['drug_type']=$this->masters_model->insert_data("drug_type");
-			$data['divisions']=$this->masters_model->get_data("divisions");	
-		*/
-
-
 		}
 	else if($type=="dosages"){
 		 	$title="Add dosage";
@@ -136,44 +131,6 @@ $data['user']=$this->masters_model->get_data("user");
 		$data['drug_type']=$this->masters_model->get_data("drug_type");
 		
 		}
-		else if($type=="division"){
-			$title="Add Division";
-			$config=array(
-               array(
-                     'field'   => 'division_name',
-                     'label'   => 'Division Name',
-                     'rules'   => 'required|trim|xss_clean'
-                  )
-			);	
-			$data['district']=$this->masters_model->get_data("districts");
-		}
-		else if($type=="grant"){
-			$title="Add Grant";
-			$config=array(
-               array(
-                     'field'   => 'grant_name',
-                     'label'   => 'Grant Name',
-                     'rules'   => 'required|trim|xss_clean'
-                  ),
-			  array(
-                     'field'   => 'phase_name[]',
-                     'label'   => 'Phase Name',
-                     'rules'   => 'required|trim|xss_clean'
-               )
-			);
-			$data['grant_sources']=$this->masters_model->get_data("grant_sources");
-		}
-		else if($type=="user"){
-			$title="Add User";
-			$config=array(
-               array(
-                     'field'   => 'user_name',
-                     'label'   => 'User Name',
-                     'rules'   => 'required|trim|xss_clean'
-                  )
-			);
-		}
-			
 		else{
 			show_404();
 		}
@@ -203,7 +160,7 @@ function edit($type=""){
 		$this->load->library('form_validation');
 		$user=$this->session->userdata('logged_in');
 		$data['user_id']=$user[0]['user_id'];
-	if($type=="drugs"){
+	if($type=="drug_type"){
 			$title="Edit Drugs";
 			$config=array(
                array(
@@ -218,8 +175,8 @@ function edit($type=""){
                   )
 		
 			);
-$data['drug']=$this->masters_model->get_data("drugs");
-}
+$data['drug_types']=$this->masters_model->get_data("drug_types");
+		}
 		else if($type=="agency"){
 			$title="Edit Agency";
 			$config=array(
@@ -316,40 +273,6 @@ $data['user']=$this->masters_model->get_data("user");
 			$data['dosage']=$this->masters_model->get_data("dosages");
 		}
 		
-		else if($type=="division"){
-			$title="Edit Division";
-			$config=array(
-               array(
-                     'field'   => 'search_division',
-                     'label'   => 'Division',
-                     'rules'   => 'required|trim|xss_clean'
-                  )
-			);	
-			$data['district']=$this->masters_model->get_data("districts");
-			$data['divisions']=$this->masters_model->get_data("division");	
-		}
-		else if($type=="grant"){
-			$title="Edit Grant";
-			$config=array(
-               array(
-                     'field'   => 'grant_phase_id',
-                     'label'   => 'Grant',
-                     'runles'   => 'required|trim|xss_clean'
-                  )
-			);
-			$data['grant_sources']=$this->masters_model->get_data("grant_sources");
-		}
-		else if($type=="user"){
-			$title="Edit User";
-			$config=array(
-               array(
-                     'field'   => 'user_id',
-                     'label'   => 'Username',
-                     'rules'   => 'required|trim|xss_clean'
-                  )
-			);
-				$data['users']=$this->masters_model->get_data("user");
-		}
 			
 		else{
 			show_404();

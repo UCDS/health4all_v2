@@ -15,7 +15,7 @@ $(function(){
 		<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
 		<h3>Add Drug Type Details</h3></center><br>
-	<center><?php echo validation_errors(); echo form_open('consumables/add/drug_type',array('role'=>'form')); ?></center>
+	<center><?php echo validation_errors(); echo form_open('inventory/masters/add/drug_type',array('role'=>'form')); ?></center>
 	<div class="form-group">
 		<label for="drug_type" class="col-md-4">Drug Type<font color='red'>*</font></label>
 		<div  class="col-md-8">

@@ -14,7 +14,7 @@ $(function(){
 
 	<?php if(isset($mode)&& $mode=="select"){ ?>
 	<center>	<h3>Edit  Equipment Details</h3></center><br>
-	<?php echo validation_errors(); echo form_open('equipments/edit/equipments',array('role'=>'form','id'=>'edit_equipment')); ?>
+	<?php echo validation_errors(); echo form_open('inventory/masters/edit/equipments',array('role'=>'form','id'=>'edit_equipment')); ?>
 
 
 	<div class="form-group">
@@ -200,6 +200,23 @@ $(function(){
 	</div>
 	
 	<input type="hidden" class="form-control" placeholder="Service Engineer" id="pan" name="service_engineer" >
+	
+		<!--</select></div></div>
+		<div class="form-group">
+		<label for="pan" class="col-md-4">User</label>
+		<div  class="col-md-8">
+<select name="user" id="facility_type" class="form-control">
+		<option value="">Select User</option>
+		<?php foreach($user as $e){
+			echo "<option value='$e->user_id'";
+			if(isset($equipments) && $equipments[0]->user_id==$e->user_id)
+				echo " SELECTED ";
+			echo ">$e->username</option>";
+		}
+		?>
+		</select></div></div>
+
+-->
 		<div class="form-group">
 		<label for="pan" class="col-md-4">Select Equipment Status</label>
 		<div  class="col-md-8">
@@ -220,7 +237,7 @@ $(function(){
 	<?php } ?>
 	<h3><?php if(isset($msg)) echo $msg;?></h3>	
 	<div class="col-md-12">
-	<?php echo form_open('equipments/edit/equipments',array('role'=>'form','id'=>'search_form','class'=>'form-inline','name'=>'search_equipment'));?>
+	<?php echo form_open('inventory/masters/edit/equipments',array('role'=>'form','id'=>'search_form','class'=>'form-inline','name'=>'search_equipment'));?>
 	<h3> Search Equipment </h3>
 	<table class="table-bordered col-md-12">
 	<tbody>
@@ -245,7 +262,7 @@ $(function(){
 	<?php 
 	$i=1;
 	foreach($equipments as $a){ ?>
-	<?php echo form_open('equipments/edit/equipments',array('id'=>'select_equipment_form_'.$a->equipment_id,'role'=>'form')); ?>
+	<?php echo form_open('inventory/masters/edit/equipments',array('id'=>'select_equipment_form_'.$a->equipment_id,'role'=>'form')); ?>
 	<tr onclick="$('#select_equipment_form_<?php echo $a->equipment_id;?>').submit();" >
 		<td><?php echo $i++; ?></td>
 		<td><?php echo $a->equipment_name; ?>

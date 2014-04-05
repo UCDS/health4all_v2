@@ -2,7 +2,7 @@
 	
 	<?php if(isset($mode)&& $mode=="select"){ ?>
 	<center>	<h3>Edit Generic</h3></center><br>
-	<?php echo validation_errors(); echo form_open('consumables/edit/generics',array('role'=>'form')); ?>
+	<?php echo validation_errors(); echo form_open('consumables/masters/edit/generics',array('role'=>'form')); ?>
 
 
 
@@ -66,7 +66,7 @@
 	<?php } ?>
 	<h3><?php if(isset($msg)) echo $msg;?></h3>	
 	<div class="col-md-12">
-	<?php echo form_open('consumables/edit/generics',array('role'=>'form','id'=>'search_form','class'=>'form-inline','name'=>'search_generic'));?>
+	<?php echo form_open('consumables/masters/edit/generics',array('role'=>'form','id'=>'search_form','class'=>'form-inline','name'=>'search_generic'));?>
 	<h3> Search Generic </h3>
 	<table class="table-bordered col-md-12">
 	<tbody>
@@ -75,7 +75,13 @@
 		<td>
 <input type="text" class="form-control" placeholder="Generic Name" id="agency_name" name="generic_name" >
 		
-</td>		
+<!--	<select name="generic_name" id="search_generic_name" form='search_form' class="form-control" style="width:180px">
+		<option value="" disabled selected>Generic</option>
+		<?php foreach($generic as $generic_name){
+			echo "<option value='$generic_name->generic_item_id'>$generic_name->generic_name</option>";
+		}
+		?>
+		</select>--></td>		
 		<td><input class="btn btn-lg btn-primary btn-block" name="search" value="Search" type="submit" /></td></tr>
 	</tbody>
 	</table>
@@ -95,7 +101,7 @@
 	<?php 
 	$i=1;
 	foreach($generic as $a){ ?>
-	<?php echo form_open('consumables/edit/generics',array('id'=>'select_generic_form_'.$a->generic_item_id,'role'=>'form')); ?>
+	<?php echo form_open('consumables/	masters/edit/generics',array('id'=>'select_generic_form_'.$a->generic_item_id,'role'=>'form')); ?>
 	<tr onclick="$('#select_generic_form_<?php echo $a->generic_item_id;?>').submit();" >
 		<td><?php echo $i++; ?></td>
 		<td><?php echo $a->generic_name; ?>

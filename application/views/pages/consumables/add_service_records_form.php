@@ -11,7 +11,7 @@ $(function(){
 		<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
 		<h3>Add Service Issue Details</h3></center><br>
-	<center><?php echo validation_errors(); echo form_open('equipments/add/service_records',array('role'=>'form','id'=>'add_service_record')); ?></center>
+	<center><?php echo validation_errors(); echo form_open('inventory/masters/add/service_records',array('role'=>'form','id'=>'add_service_record')); ?></center>
 
 		<input type="hidden" class="form-control" placeholder=" Call Date"  form="user" id="" name="user" />
 
@@ -43,9 +43,11 @@ $(function(){
 		<label for="description" class="col-md-4"> Working Status<font color='red'>*</font></label>
 		<div  class="col-md-8">
 			<select name="working_status" id="division" class="form-control">
-	<option	value="">Select Working Status</option>		
+	<option	value="">Select</option>		
 	<option	value="1">Working</option>		
-	<option	value="0">Not Working</option>
+	<option	value="0">Not Working</option>		<!--	<input type="text" class="form-control" placeholder=" Working Status" id="description" name="working_status" />
+	
+	-->
 </select>
 
 		</div>
@@ -88,20 +90,7 @@ $(function(){
 	<div class="form-group">
 		<label for="description" class="col-md-4"> Problem Status</label>
 		<div  class="col-md-8">
-		
-<select name="problem_status" class="form-control">
-		<option value="">Select Problem Status</option>
-
-	<option value="Issue Reported">Issue Reported</option>
-	<option value="Service Visit Made">Service Visit Made</option>
-	<option value="Under Observation">Under Observation</option>
-	<option value="Issue Resolved">Issue Resolved</option>
-
-
-
-</select>
-
-
+		<input type="text" class="form-control" placeholder=" Problem Status" id="description" name="problem_status" />
 		</div>
 	</div>
 	

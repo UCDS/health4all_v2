@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Masters extends CI_Controller {
+class Consumables extends CI_Controller {
 	function __construct(){
 		parent::__construct();
 		$this->load->model('projects_model');
@@ -203,7 +203,7 @@ function edit($type=""){
 		$this->load->library('form_validation');
 		$user=$this->session->userdata('logged_in');
 		$data['user_id']=$user[0]['user_id'];
-	if($type=="drugs"){
+	if($type=="drug_type"){
 			$title="Edit Drugs";
 			$config=array(
                array(
@@ -218,8 +218,11 @@ function edit($type=""){
                   )
 		
 			);
-$data['drug']=$this->masters_model->get_data("drugs");
-}
+$data['drug_type']=$this->masters_model->get_data("drug_type");
+
+		/*	$data['facility_types']=$this->masters_model->get_data("facility_types");
+			$data['divisions']=$this->masters_model->get_data("divisions");	
+		*/}
 		else if($type=="agency"){
 			$title="Edit Agency";
 			$config=array(
@@ -314,6 +317,9 @@ $data['user']=$this->masters_model->get_data("user");
 		
 			);
 			$data['dosage']=$this->masters_model->get_data("dosages");
+/*$data['generic']=$this->masters_model->get_data("generics");
+$data['item_type']=$this->masters_model->get_data("item_type");
+*/
 		}
 		
 		else if($type=="division"){

@@ -13,7 +13,7 @@ $(function(){
 		<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
 		<h3>Add Equipment Details</h3></center><br>
-	<center><?php echo validation_errors(); echo form_open('equipments/add/equipment',array('role'=>'form','id'=>'add_equipment')); ?></center>
+	<center><?php echo validation_errors(); echo form_open('inventory/masters/add/equipment',array('role'=>'form','id'=>'add_equipment')); ?></center>
 	<div class="form-group">
 		<label for="equpiment" class="col-md-4">Equiment Type<font color='red'>*</font></label>
 		<div  class="col-md-8">
@@ -122,9 +122,19 @@ $(function(){
 	</div>	
 	<input type="hidden" class="form-control" value='1' placeholder=" Service Engineer Contact" id="description" name="user" />
 	
+<!--		<select name="user" id="division" class="form-control">
+		<option value="">User</option>
+		<?php foreach($user as $d){
+			echo "<option value='$d->user_id'>$d->username</option>";
+		}
+		?>
+		</select>
+	-->	
 	<div class="form_group">
 		<label for="agency_contact_no" class="col-md-4">  Equipment Status</label>
 		<div  class="col-md-8">
+	<!--	<input type="text" class="form-control" placeholder="  Equipment status" id="agency_contact_no" name="equipment_status" />
+		-->
 <select name="equipment_status"  id="equipment_status" class="form-control">
 <option value="">Select Status</option>
 
@@ -133,6 +143,38 @@ $(function(){
 </select>
 	</div>
 	</div>
+<!--	<div class="form_group">
+		<label for="agency_email_id" class="col-md-4">Agency Email Id</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder="Agency Email Id" id="agency_email_id" name="agency_email_id" />
+		</div>
+	</div>
+
+	<div class="form_group">
+		<label for="account_no" class="col-md-4">Account No</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder="Account No" id="account_no" name="account_no" />
+		</div>
+	</div>
+	<div class="form_group">
+		<label for="bank_name" class="col-md-4">Bank Name</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder="Bank Name" id="bank_name" name="bank_name" />
+		</div>
+	</div>
+		<div class="form_group">
+		<label for="branch" class="col-md-4">Branch</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder="Branch" id="branch" name="branch" />
+		</div>
+	</div>
+		<div class="form_group">
+		<label for="pan" class="col-md-4">Pan</label>
+		<div  class="col-md-8">
+		<input type="text" class="form-control" placeholder="Pan" id="pan" name="pan" />
+		</div>
+	</div>
+-->		
    	<div class="col-md-3 col-md-offset-4">
 	<button class="btn btn-lg btn-primary btn-block" type="submit" value="submit">Submit</button>
 	</div>
