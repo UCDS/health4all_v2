@@ -118,7 +118,7 @@ pri.print();
 				</div>
 				<div class="form-group">
 				<label class="control-label">Time</label>
-				<input type="text" name="time" class="form-control" value="<?php echo date("H:ia");?>"  required />
+				<input type="text" name="time" class="form-control" value="<?php echo date("h:ia");?>"  required />
 				</div>
 			</div>
 			<h4><?php echo $form_name; ?></h4>
@@ -135,7 +135,7 @@ pri.print();
 				if($field=="patient_name"){ ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
-						<label class="control-label">Patient Name<?php if(!$mandatory) { ?><span class="mandatory">*</span><?php } ?></label>
+						<label class="control-label">Patient Name<?php if($mandatory) { ?><span class="mandatory">*</span><?php } ?></label>
 						<input type="text" name="patient_name" class="form-control" <?php if($mandatory) echo "required"; ?> />
 						</div>
 					</div>

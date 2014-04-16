@@ -5,7 +5,7 @@ class Register_model extends CI_Model{
 	}
 	function register(){
 		$date=date("Y-m-d",strtotime($this->input->post('date')));
-		$time=date("H:i:s",strtotime($this->input->post('time')));
+		$time=date_format(date_create_from_format('h:ia', $this->input->post('time')),'H:i:s');
 		if($this->input->post('first_name')){
 		$first_name=$this->input->post('first_name');
 		$last_name=$this->input->post('last_name');
