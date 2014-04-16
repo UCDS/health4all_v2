@@ -66,7 +66,7 @@ class Home extends CI_Controller {
 		}
 		else{
 			$this->data['title']="Login";
-			$this->load->view('templates/header',$data);
+			$this->load->view('templates/header',$this->data);
 			$this->load->view('pages/login');
 		}
 		$this->load->view('templates/footer');
@@ -78,7 +78,7 @@ class Home extends CI_Controller {
 			
 		$this->data['title']="Login";
 
-		$this->load->view('templates/header',$data);
+		$this->load->view('templates/header',$this->data);
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 		
