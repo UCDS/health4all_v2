@@ -3,12 +3,18 @@ class Register_model extends CI_Model{
 	function __construct(){
 		parent::__construct();
 	}
-	function register_op(){
+	function register(){
 		$date=date("Y-m-d",strtotime($this->input->post('date')));
 		$time=date("H:i:s",strtotime($this->input->post('time')));
+		if($this->input->post('first_name')){
 		$first_name=$this->input->post('first_name');
 		$last_name=$this->input->post('last_name');
-		$age_years=$this->input->post('age_years');
+		}
+		else{
+			$first_name=$this->input->post('patient_name');
+			$last_name="";
+		}
+		$age_years=$this->input->post('age');
 		$age_months=$this->input->post('age_months');
 		$age_days=$this->input->post('age_days');
 		$gender=$this->input->post('gender');
@@ -20,6 +26,7 @@ class Register_model extends CI_Model{
 		$district=$this->input->post('district');
 		$department=$this->input->post('department');
 		$hospital=$this->session->userdata('hospital');
+		$form_type=$this->input->post('form_type');
 		$hospital_id=$hospital['hospital_id'];
 		$data=array(
 			'first_name'=>$first_name,
@@ -39,7 +46,7 @@ class Register_model extends CI_Model{
 		$this->db->insert('patients',$data);
 		$patient_id=$this->db->insert_id();
 		$visit_data=array(
-			'visit_type'=>'OP',
+			'visit_type'=>$form_type,
 			'patient_id'=>$patient_id,
 			'department_id'=>$department,
 			'admit_date'=>$date,
@@ -48,12 +55,12 @@ class Register_model extends CI_Model{
 		$this->db->insert('patient_visits',$visit_data);
 		$visit_id=$this->db->insert_id();
 		$this->db->trans_complete();
-		$this->db->select('patients.patient_id,visit_id,admit_date,admit_time,CONCAT(IF(first_name=NULL,"",first_name)," ",IF(last_name=NULL,"",last_name)) name,age_years,age_months,age_days,gender,IF(father_name=NULL,spouse_name,father_name) parent_spouse,department,place,phone',false)
+		$this->db->select('patients.patient_id,visit_id,admit_date,admit_time,CONCAT(IF(first_name=NULL,"",first_name)," ",IF(last_name=NULL,"",last_name)) name,age_years,age_months,age_days,gender,IF(father_name=NULL OR father_name="",spouse_name,father_name) parent_spouse,department,place,phone',false)
 		->from('patients')->join('patient_visits','patients.patient_id=patient_visits.patient_id')
 		->join('departments','patient_visits.department_id=departments.department_id')
 		->where('visit_id',$visit_id);
 		$resource=$this->db->get();
-		return $resource->result();
+		return $resource->row();
 
 	}
 }

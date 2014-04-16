@@ -6076,7 +6076,26 @@ td.visible-print {
 .layout-div{
 	position:relative;
 	float:left;
-	background:#eee;
 	border:1px solid #ccc;
-	width:33%;
+	cursor:pointer !important;
+	min-height:50px;
+	padding:5px;
+	display:none;
+}
+
+
+.star {
+	font-size:3em;	
+	color:#ccc;
+	margin:0;
+	padding:0;
+	top:-10px;
+	cursor:pointer;
+	transition:all 0.2s;
+	position:absolute;
+	float:right;
+	
+}
+.star:hover {
+	color:red;
 }

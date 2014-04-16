@@ -4,9 +4,11 @@ class Staff extends CI_Controller {
 	function __construct(){
 		parent::__construct();
 		$this->load->model('staff_model');
+		$this->data['op_forms']=$this->staff_model->get_forms("OP");
+		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 	}
 	function index(){
-		$data['title']="Staff List";
+		$this->data['title']="Staff List";
 		$this->load->view('templates/header',$data);
 		$data['staff']=$this->staff_model->staff_list();
 		$this->load->view('pages/staff_list',$data);
@@ -15,7 +17,7 @@ class Staff extends CI_Controller {
 	{	
 		if(!$this->session->userdata('logged_in')){
 			
-		$data['title']="Staff Login";
+		$this->data['title']="Staff Login";
 
 		$this->load->view('templates/header',$data);
 		$this->load->helper('form');

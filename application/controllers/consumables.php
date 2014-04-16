@@ -5,6 +5,9 @@ class Consumables extends CI_Controller {
 		parent::__construct();
 		$this->load->model('projects_model');
 		$this->load->model('masters_model');
+		$this->load->model('staff_model');
+		$this->data['op_forms']=$this->staff_model->get_forms("OP");
+		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 	}
 	function add($type=""){
 	 	$this->load->helper('form');
@@ -178,8 +181,8 @@ $data['user']=$this->masters_model->get_data("user");
 			show_404();
 		}
 		$page="pages/inventory/add_".$type."_form";
-		$data['title']=$title;
-		$this->load->view('templates/header',$data);
+		$this->data['title']=$title;
+		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/leftnav');
 		$this->form_validation->set_rules($config);
  		if ($this->form_validation->run() === FALSE)
@@ -362,8 +365,8 @@ $data['item_type']=$this->masters_model->get_data("item_type");
 		}
 		
 		$page="pages/inventory/edit_".$type."_form";
-		$data['title']=$title;
-		$this->load->view('templates/header',$data);
+		$this->data['title']=$title;
+		$this->load->view('templates/header',$this->data);
       $this->load->view('templates/leftnav',$data);
 		
 		$this->form_validation->set_rules($config);

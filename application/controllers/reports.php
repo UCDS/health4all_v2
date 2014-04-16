@@ -4,11 +4,14 @@ class Reports extends CI_Controller {
 	function __construct(){
 		parent::__construct();
 		$this->load->model('reports_model');
+		$this->load->model('staff_model');
+		$data['op_forms']=$this->staff_model->get_forms("OP");
+		$data['ip_forms']=$this->staff_model->get_forms("IP");
 	}
 	public function index(){
 		if($this->session->userdata('logged_in')){
 		$data['userdata']=$this->session->userdata('logged_in');
-		$data['title']="Reports";
+		$this->data['title']="Reports";
 		$this->load->view('templates/header',$data);
 		$this->load->view('pages/reports');
 		$this->load->view('templates/footer');
@@ -21,7 +24,7 @@ class Reports extends CI_Controller {
 	{
 		if($this->session->userdata('logged_in')){
 		$data['userdata']=$this->session->userdata('logged_in');
-		$data['title']="Out-Patient Summary Report";
+		$this->data['title']="Out-Patient Summary Report";
 		$this->load->view('templates/header',$data);
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -49,7 +52,7 @@ class Reports extends CI_Controller {
 	{
 		if($this->session->userdata('logged_in')){
 		$data['userdata']=$this->session->userdata('logged_in');
-		$data['title']="Out-Patient Detailed Report";
+		$this->data['title']="Out-Patient Detailed Report";
 		$this->load->view('templates/header',$data);
 		$this->load->helper('form');
 		$this->load->library('form_validation');

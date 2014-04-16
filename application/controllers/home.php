@@ -1,13 +1,20 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Home extends CI_Controller {
+class Home extends CI_Controller {	
+
+	function __construct(){
+		parent::__construct();
+		$this->load->model('staff_model');
+		$this->data['op_forms']=$this->staff_model->get_forms("OP");
+		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
+	}
 
 	public function index()
 	{
-				$this->load->helper('form');
+		$this->load->helper('form');
 		if($this->session->userdata('logged_in')){
-			$data['title']="Home";
-			$this->load->view('templates/header',$data);
+			$this->data['title']="Home";
+			$this->load->view('templates/header',$this->data);
 			$data['userdata']=$this->session->userdata('logged_in');
 			if(count($this->session->userdata('logged_in'))>1){
 				$this->load->library('form_validation');
@@ -35,7 +42,7 @@ class Home extends CI_Controller {
 								$this->session->set_userdata('hospital',$sess_array);
 							}
 						}
-						$this->load->view('pages/home');
+						$this->load->view('pages/home',$data);
 					}
 				}
 			}
@@ -58,7 +65,7 @@ class Home extends CI_Controller {
 			}
 		}
 		else{
-			$data['title']="Login";
+			$this->data['title']="Login";
 			$this->load->view('templates/header',$data);
 			$this->load->view('pages/login');
 		}
@@ -69,7 +76,7 @@ class Home extends CI_Controller {
 	{	
 		if(!$this->session->userdata('logged_in')){
 			
-		$data['title']="Login";
+		$this->data['title']="Login";
 
 		$this->load->view('templates/header',$data);
 		$this->load->helper('form');

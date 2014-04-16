@@ -30,43 +30,51 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class=" <?php if(preg_match("^".base_url()."home^",current_url())){ echo "active";}?>"><a href="#">Home</a></li>
-	<?php if($this->session->userdata('logged_in')) { ?>
-	<li class="dropdown  <?php if(preg_match("^".base_url()."register^",current_url())){ echo "active";}?>">
-                <a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Patients <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li><a href="<?php echo base_url();?>register/op">OutPatient</a></li>
-                  <li><a href="#">InPatient</a></li>
-                </ul>
-              </li>	
-	<li class="dropdown  <?php if(preg_match("^".base_url()."services^",current_url())){ echo "active";}?>">
-                <a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Services <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Diagnostics</a></li>
-                  <li><a href="#">BloodBank</a></li>
-                </ul>
-              </li>
-	<li class="dropdown  <?php if(preg_match("^".base_url()."inventory^",current_url())){ echo "active";}?>">
-                <a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Resources <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">HR</a></li>
-                  <li><a href="<?php echo base_url()."equipments/add/equipment";?>">Equipment</a></li>
-                  <li><a href="<?php echo base_url()."consumables/add/dosages";?>">Consumables</a></li>
-                </ul>
-              </li>
-	<li class="dropdown  <?php if(preg_match("^".base_url()."reports^",current_url())){ echo "active";}?>">
-                <a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Reports <b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">OutPatient Summary</a></li>
-                  <li><a href="#">OutPatient Detailed</a></li>
-                  <li><a href="#">InPatient</a></li>
-                </ul>
-              </li>
-	<li><a href="#" >Help</a></li>
+			<?php if($this->session->userdata('logged_in')) { ?>
+			<li class="dropdown  <?php if(preg_match("^".base_url()."register^",current_url())){ echo "active";}?>">
+						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Patients <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+						  <li class="dropdown-header">OutPatient</li>
+						  <?php foreach($op_forms as $form){ ?>
+							<li><a href="<?php echo base_url()."register/custom_form/$form->form_id"; ?>"><?php echo $form->form_name;?></a></li>
+						  <?php } ?>	
+						  <li class="divider"></li>
+						  <li class="dropdown-header">InPatient</li>
+						  <?php foreach($ip_forms as $form){ ?>
+							<li><a href="<?php echo base_url()."register/custom_form/$form->form_id"; ?>"><?php echo $form->form_name;?></a></li>
+						  <?php } ?>	
+	
+						</ul>
+					  </li>	
+			<li class="dropdown  <?php if(preg_match("^".base_url()."services^",current_url())){ echo "active";}?>">
+						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Services <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+						  <li><a href="#">Diagnostics</a></li>
+						  <li><a href="#">BloodBank</a></li>
+						</ul>
+					  </li>
+			<li class="dropdown  <?php if(preg_match("^".base_url()."inventory^",current_url())){ echo "active";}?>">
+						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Resources <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+						  <li><a href="#">HR</a></li>
+						  <li><a href="<?php echo base_url()."equipments/add/equipment";?>">Equipment</a></li>
+						  <li><a href="<?php echo base_url()."consumables/add/dosages";?>">Consumables</a></li>
+						</ul>
+					  </li>
+			<li class="dropdown  <?php if(preg_match("^".base_url()."reports^",current_url())){ echo "active";}?>">
+						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Reports <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+						  <li><a href="#">OutPatient Summary</a></li>
+						  <li><a href="#">OutPatient Detailed</a></li>
+						  <li><a href="#">InPatient</a></li>
+						</ul>
+					  </li>
+			<li><a href="#" >Help</a></li>
 
 
 
-	<?php } ?>
-            
+			<?php } ?>
+					
 		</ul>
 	<?php if($this->session->userdata('logged_in')) { ?>
           <ul class="nav navbar-nav navbar-right">
