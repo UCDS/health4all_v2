@@ -7,7 +7,9 @@
 				<li><a href="<?php echo base_url();?>equipments/add/service_records">Service Issue</a></li>
 				<li class="nav-header">Edit</li>
 				<li><a href="<?php echo base_url();?>equipments/edit/equipment_type">Equipment Type</a></li>
-			<li><a href="<?php echo base_url();?>equipments/edit/equipments">Equipment Details</a></li>
+				<li><a href="<?php echo base_url();?>equipments/edit/equipments">Equipment Details</a></li>
+				<li class="nav-header">View</li>
+				<li><a href="<?php echo base_url();?>equipments/report_equipments_detailed">Detailed Report</a></li>
 	<ul>
 </div>
 <?php } ?>

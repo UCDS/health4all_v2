@@ -76,7 +76,7 @@ if($this->input->post('search')){
 			$this->db->like('LOWER(equipment_name)',$equipment,'after');
 			
 }
-$this->db->select("equipment_id,make,serial_number,asset_number,equipment_name,equipments.equipment_id,equipments.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_period,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospitals.hospital_id,departments.department_id,users.user_id")->from("equipments")
+$this->db->select("equipment_id,make,serial_number,asset_number,equipment_name,equipment_type.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_period,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospitals.hospital_id,departments.department_id,users.user_id")->from("equipments")
 			->join('equipment_type','equipments.equipment_type_id=equipment_type.equipment_type_id','left')
 			->join('hospitals','equipments.hospital_id=hospitals.hospital_id','left')
 			->join('departments','equipments.department_id=departments.department_id','left')

@@ -396,6 +396,16 @@ $data['item_type']=$this->masters_model->get_data("item_type");
 		}
 		$this->load->view('templates/footer');
 	}
+
+	function report_equipments_detailed(){	
+		$this->load->helper('form_helper');
+		$this->data['title']="Equipments detailed report";
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('templates/leftnav',$this->data);
+		$data['equipments']=$this->masters_model->get_data("equipments");
+		$this->load->view("pages/inventory/report_equipment_detailed",$data);
+		$this->load->view('templates/footer');
+	}
 	
 }
 
