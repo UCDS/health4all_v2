@@ -4,7 +4,7 @@ class Masters_model extends CI_Model{
 		parent::__construct();
 	}
 	
-	function get_data($type){
+	function get_data($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=""){
 		if($type=="equipment_types"){
 			
 			$this->db->select("equipment_type_id,equipment_name")->from("equipment_type");
@@ -16,6 +16,14 @@ class Masters_model extends CI_Model{
 		else if($type=="department"){
 			
 			$this->db->select("department_id,department")->from("departments");
+		}
+		else if($type=="area"){
+			
+			$this->db->select("area_id,area_name,department_id")->from("areas");
+		}
+		else if($type=="unit"){
+			
+			$this->db->select("unit_id,unit_name,department_id")->from("units");
 		}
 		else if($type=="user"){
 			
@@ -51,32 +59,47 @@ if($this->input->post('search')){
 
 				$this->db->where('generic_item_id',$generic_id);
 				
-}
-if($this->input->post('search')){
+		}
+		if($this->input->post('search')){
 			$generic_type=strtolower($this->input->post('generic_name'));
 			$this->db->like('LOWER(generic_name)',$generic_type,'after');
 			}
-$this->db->select("generic_item_id,generic_name,drug_type,item_type,drug_type.drug_type_id,item_type.item_type_id")->from("generic_item")
+			$this->db->select("generic_item_id,generic_name,drug_type,item_type,drug_type.drug_type_id,item_type.item_type_id")->from("generic_item")
 			->join('drug_type','generic_item.drug_type_id=drug_type.drug_type_id','left')
 			->join('item_type','generic_item.item_type_id=item_type.item_type_id','left')
 			->order_by('generic_name');	
 
 		
 		}
-else if($type=="equipments"){
+		else if($type=="equipments"){
 		
 		if($this->input->post('select')){
 				$equipment_id=$this->input->post('equipment_id');
 
 				$this->db->where('equipment_id',$equipment_id);
 				
-}
-if($this->input->post('search')){
-			$equipment=strtolower($this->input->post('equipment_name'));
-			$this->db->like('LOWER(equipment_name)',$equipment,'after');
-			
-}
-$this->db->select("equipment_id,make,serial_number,asset_number,equipment_name,equipment_type.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_period,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospitals.hospital_id,departments.department_id,users.user_id")->from("equipments")
+		}
+		if($this->input->post('search')){
+					$equipment=strtolower($this->input->post('equipment_name'));
+					$this->db->like('LOWER(equipment_name)',$equipment,'after');
+					
+		}
+		if($equipment_type!=0){
+			$this->db->where("equipments.equipment_type_id",$equipment_type);
+		}
+		if($department!=0){
+			$this->db->where("equipments.department_id",$department);
+		}
+		if($area!=0){
+			$this->db->where("equipments.area_id",$area);
+		}
+		if($unit!=0){
+			$this->db->where("equipments.unit_id",$unit);
+		}
+		if($status!=""){
+			$this->db->where("equipments.equipment_status",$status);
+		}
+		$this->db->select("equipment_id,make,serial_number,asset_number,equipment_name,equipment_type.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_start_date,warranty_end_date,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospitals.hospital_id,departments.department_id,users.user_id")->from("equipments")
 			->join('equipment_type','equipments.equipment_type_id=equipment_type.equipment_type_id','left')
 			->join('hospitals','equipments.hospital_id=hospitals.hospital_id','left')
 			->join('departments','equipments.department_id=departments.department_id','left')
@@ -255,6 +278,9 @@ else if($type=="dosages"){
 	}
 	
 	function insert_data($type){
+
+		$hospital=$this->session->userdata('hospital');
+		$hospital_id=$hospital['hospital_id'];
 		if($type=="drug_type"){
 		$data = array(
 					  'drug_type'=>$this->input->post('drug_type'),
@@ -290,24 +316,26 @@ else if($type=="dosages"){
 		}
 		elseif($type=="equipment"){
 		$data = array(
-					  'equipment_type_id'=>$this->input->post('equipment_type'),
-					 'make'=>$this->input->post('make'),
-					 'model'=>$this->input->post('model'),
-					  'serial_number'=>$this->input->post('serial_number'),
-					   'asset_number'=>$this->input->post('asset_number'),
-					   'procured_by'=>$this->input->post('procured_by'),
-					    'cost'=>$this->input->post('cost'),
-					     'supplier'=>$this->input->post('supplier'),
-					      'supply_date'=>date("Y-m-d",strtotime($this->input->post('supply_date'))),
-					       'warranty_period'=>$this->input->post('warranty_period'),
-					        'service_engineer'=>$this->input->post('service_engineer'),
-					        'service_engineer_contact'=>$this->input->post('service_engineer_contact'),
-					        'hospital_id'=>$this->input->post('hospital'),
-					        'department_id'=>$this->input->post('department'),
-		'user_id'=>$this->input->post('user'),
-		'equipment_status'=>$this->input->post('equipment_status')
-		
-			);
+				'equipment_type_id'=>$this->input->post('equipment_type'),
+				'make'=>$this->input->post('make'),
+				'model'=>$this->input->post('model'),
+				'serial_number'=>$this->input->post('serial_number'),
+				'asset_number'=>$this->input->post('asset_number'),
+				'procured_by'=>$this->input->post('procured_by'),
+				'cost'=>$this->input->post('cost'),
+				'supplier'=>$this->input->post('supplier'),
+				'supply_date'=>date("Y-m-d",strtotime($this->input->post('supply_date'))),
+				'warranty_start_date'=>date("Y-m-d",strtotime($this->input->post('warranty_start_date'))),
+				'warranty_end_date'=>date("Y-m-d",strtotime($this->input->post('warranty_end_date'))),
+				'service_engineer'=>$this->input->post('service_engineer'),
+				'service_engineer_contact'=>$this->input->post('service_engineer_contact'),
+				'hospital_id'=>$hospital_id,
+				'department_id'=>$this->input->post('department'),
+				'area_id'=>$this->input->post('area'),
+				'unit_id'=>$this->input->post('unit'),
+				'user_id'=>$this->input->post('user'),
+				'equipment_status'=>$this->input->post('equipment_status')
+				);
 
 		$table="equipments";
 		}

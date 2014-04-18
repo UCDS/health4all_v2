@@ -6,6 +6,7 @@ class Equipments extends CI_Controller {
 		$this->load->model('projects_model');
 		$this->load->model('masters_model');
 		$this->load->model('staff_model');
+		$this->load->model('reports_model');
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 	}
@@ -101,21 +102,21 @@ $data['user']=$this->masters_model->get_data("user");
 		
 			$config=array(
                array(
-                     'field'   => 'make',
-                     'label'   => 'Make',
+                     'field'   => 'equipment_type',
+                     'label'   => 'Equipment Type',
                      'rules'   => 'required|trim|xss_clean'
                   ),
                        array(
                      'field'   => 'equipment_status',
-                     'label'   => 'equipment_status',
+                     'label'   => 'Equipment Status',
                      'rules'   => 'required|trim|xss_clean'
                   ),
 		);
 
         $data['equipment_types']=$this->masters_model->get_data("equipment_types");
-		$data['hospital']=$this->masters_model->get_data("hospital");
 		$data['department']=$this->masters_model->get_data("department");
-		$data['user']=$this->masters_model->get_data("user");
+		$data['areas']=$this->masters_model->get_data("area");
+		$data['units']=$this->masters_model->get_data("unit");
 		
 
 }
@@ -397,13 +398,21 @@ $data['item_type']=$this->masters_model->get_data("item_type");
 		$this->load->view('templates/footer');
 	}
 
-	function report_equipments_detailed(){	
+	function view($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=0){	
 		$this->load->helper('form_helper');
-		$this->data['title']="Equipments detailed report";
+		switch($type){
+			case "equipments_detailed" : 
+				$this->data['title']="Equipments Detailed report";
+				$data['equipments']=$this->masters_model->get_data("equipments",$equipment_type,$department,$area,$unit,$status);
+				break;
+			case "equipments_summary" :
+				$this->data['title']="Equipments Summary report";
+				$data['summary']=$this->reports_model->get_equipments_summary();
+				break;
+		}				
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/leftnav',$this->data);
-		$data['equipments']=$this->masters_model->get_data("equipments");
-		$this->load->view("pages/inventory/report_equipment_detailed",$data);
+		$this->load->view("pages/inventory/report_$type",$data);
 		$this->load->view('templates/footer');
 	}
 	

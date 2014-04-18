@@ -26,8 +26,8 @@ class Register_model extends CI_Model{
 		$district=$this->input->post('district');
 		$department=$this->input->post('department');
 		$hospital=$this->session->userdata('hospital');
-		$form_type=$this->input->post('form_type');
 		$hospital_id=$hospital['hospital_id'];
+		$form_type=$this->input->post('form_type');
 		$data=array(
 			'first_name'=>$first_name,
 			'last_name'=>$last_name,

@@ -44,5 +44,23 @@ class Reports_model extends CI_Model{
 		$resource=$this->db->get();
 		return $resource->result();
 	}
+	
+	function get_equipments_summary(){
+		$this->db->select("equipments.equipment_type_id,equipment_name,equipments.department_id,department,equipments.area_id,area_name,equipments.unit_id,unit_name,
+		SUM(CASE WHEN equipment_status=1 THEN 1 ELSE 0 END) 'working',
+		SUM(CASE WHEN equipment_status=0 THEN 1 ELSE 0 END) 'not_working',
+		SUM(CASE WHEN 1 THEN 1 ELSE 0 END) 'total',
+		")
+		->from("equipments")
+		->join("equipment_type","equipments.equipment_type_id=equipment_type.equipment_type_id")
+		->join("departments","equipments.department_id=departments.department_id")
+		->join("units","equipments.unit_id=units.unit_id","left")
+		->join("areas","equipments.area_id=areas.area_id","left")
+		->group_by("equipment_name,department,equipments.area_id,equipments.unit_id")
+		->order_by("equipment_name");
+		$query=$this->db->get();
+		return $query->result();
+		
+	}
 }
 ?>

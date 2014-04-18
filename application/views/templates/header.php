@@ -25,11 +25,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Health4All</a>
+          <a class="navbar-brand" href="<?php echo base_url();?>">Health4All</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class=" <?php if(preg_match("^".base_url()."home^",current_url())){ echo "active";}?>"><a href="#">Home</a></li>
 			<?php if($this->session->userdata('logged_in')) { ?>
 			<li class="dropdown  <?php if(preg_match("^".base_url()."register^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Patients <b class="caret"></b></a>
@@ -61,15 +60,7 @@
 						  <li><a href="<?php echo base_url()."consumables/add/dosages";?>">Consumables</a></li>
 						</ul>
 					  </li>
-			<li class="dropdown  <?php if(preg_match("^".base_url()."reports^",current_url())){ echo "active";}?>">
-						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Reports <b class="caret"></b></a>
-						<ul class="dropdown-menu">
-						  <li><a href="#">OutPatient Summary</a></li>
-						  <li><a href="#">OutPatient Detailed</a></li>
-						  <li><a href="#">InPatient</a></li>
-						</ul>
-					  </li>
-			<li><a href="#" >Help</a></li>
+			<li class=" <?php if(preg_match("^".base_url()."help^",current_url())) echo "active";?>"><a href="<?php echo base_url()."help";?>" >Help</a></li>
 
 
 

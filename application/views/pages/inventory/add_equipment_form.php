@@ -3,10 +3,17 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <script type="text/javascript">
 $(function(){
+	$("#warranty_start_date,#warranty_end_date").Zebra_DatePicker();
 	$("#supply_date").Zebra_DatePicker({
-		
+		onSelect : function(date){
+		$("#warranty_start_date").val(date);
+		}
 	});
-	
+	$("#department").on('change',function(){
+		var department_id=$(this).val();
+		$("#unit option,#area option").hide();
+		$("#unit option[class="+department_id+"],#area option[class="+department_id+"]").show();
+	});
 });
 </script>
 		<div class="col-md-8 col-md-offset-2">
@@ -72,13 +79,14 @@ $(function(){
 	<div class="form-group">
 		<label for="supply_date" class="col-md-4"> Supply Date</label>
 		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder="Supply Date" id="supply_date" form="add_equipment" name="supply_date" />
+		<input type="text" class="form-control date" placeholder="Supply Date" id="supply_date" form="add_equipment" name="supply_date" />
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="description" class="col-md-4"> Warranty Period</label>
 		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Warranty Period" id="description" name="warranty_period" />
+		<input type="text" class="form-control date" placeholder="Start" id="warranty_start_date" name="warranty_start_date" />
+		<input type="text" class="form-control date" placeholder="End" id="warranty_end_date" name="warranty_end_date" />
 		</div>
 	</div>
 	<div class="form-group">
@@ -93,27 +101,39 @@ $(function(){
 		<input type="text" class="form-control" placeholder=" Service Engineer Contact" id="description" name="service_engineer_contact" />
 		</div>
 	</div>
-	
 	<div class="form-group">
-		<label for="agency_address" class="col-md-4">Hospital</label>
+		<label for="agency_contact_name" class="col-md-4">Department</label>
 		<div  class="col-md-8">
-		<select name="hospital" id="division" class="form-control">
-		<option value="">Hospital </option>
-		<?php foreach($hospital as $d){
-			echo "<option value='$d->hospital_id'>$d->hospital</option>";
+		<select name="department" id="department" class="form-control">
+		<option value="">Department</option>
+		<?php foreach($department as $d){
+			echo "<option value='$d->department_id'>$d->department</option>";
 		}
 		?>
 		</select>
 		
 		</div>
-	</div>
-	<div class="form-group">
-		<label for="agency_contact_name" class="col-md-4">Department</label>
+	</div>	
+		<div class="form-group">
+		<label for="area" class="col-md-4">Area</label>
 		<div  class="col-md-8">
-		<select name="department" id="division" class="form-control">
-		<option value="">Department</option>
-		<?php foreach($department as $d){
-			echo "<option value='$d->department_id'>$d->department</option>";
+		<select name="area" id="area" class="form-control">
+		<option value="">Area</option>
+		<?php foreach($areas as $a){
+			echo "<option value='$a->area_id' class='$a->department_id'>$a->area_name</option>";
+		}
+		?>
+		</select>
+		
+		</div>
+	</div>	
+	<div class="form-group">
+		<label for="unit" class="col-md-4">Unit</label>
+		<div  class="col-md-8">
+		<select name="unit" id="unit" class="form-control">
+		<option value="">Unit</option>
+		<?php foreach($units as $u){
+			echo "<option value='$u->unit_id' class='$u->department_id'>$u->unit_name</option>";
 		}
 		?>
 		</select>
