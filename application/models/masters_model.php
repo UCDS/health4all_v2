@@ -1,13 +1,11 @@
 <?php 
 class Masters_model extends CI_Model{
-	function __construct(){
-		parent::__construct();
-	}
+	
 	
 	function get_data($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=""){
 		if($type=="equipment_types"){
 			
-			$this->db->select("equipment_type_id,equipment_name")->from("equipment_type");
+			$this->db->select("equipment_type_id,equipment_type")->from("equipment_type");
 		}
 		else if($type=="hospital"){
 		
@@ -80,8 +78,8 @@ if($this->input->post('search')){
 				
 		}
 		if($this->input->post('search')){
-					$equipment=strtolower($this->input->post('equipment_name'));
-					$this->db->like('LOWER(equipment_name)',$equipment,'after');
+					$equipment=strtolower($this->input->post('equipment_type'));
+					$this->db->like('LOWER(equipment_type)',$equipment,'after');
 					
 		}
 		if($equipment_type!=0){
@@ -99,13 +97,13 @@ if($this->input->post('search')){
 		if($status!=""){
 			$this->db->where("equipments.equipment_status",$status);
 		}
-		$this->db->select("equipment_id,make,serial_number,asset_number,equipment_name,equipment_type.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_start_date,warranty_end_date,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospitals.hospital_id,departments.department_id,users.user_id")->from("equipments")
+		$this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipment_type.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_start_date,warranty_end_date,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospitals.hospital_id,departments.department_id,users.user_id")->from("equipments")
 			->join('equipment_type','equipments.equipment_type_id=equipment_type.equipment_type_id','left')
 			->join('hospitals','equipments.hospital_id=hospitals.hospital_id','left')
 			->join('departments','equipments.department_id=departments.department_id','left')
 			->join('users','equipments.user_id=users.user_id','left')
 			
-			->order_by('equipment_name');	
+			->order_by('equipment_type');	
 		
 		}
 
@@ -121,19 +119,19 @@ if($this->input->post('select')){
 				
 }
 if($this->input->post('search')){
-			$equipment=strtolower($this->input->post('equipment_name'));
-			$this->db->like('LOWER(equipment_name)',$equipment,'after');
+			$equipment=strtolower($this->input->post('equipment_type'));
+			$this->db->like('LOWER(equipment_type)',$equipment,'after');
 
 			
 			
 }
-$this->db->select("equipment_id,make,serial_number,asset_number,equipment_name,equipments.equipment_id,equipments.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_period,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospitals.hospital_id,departments.department_id,users.user_id")->from("equipments")
+$this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipments.equipment_id,equipments.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_period,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospitals.hospital_id,departments.department_id,users.user_id")->from("equipments")
 			->join('equipment_type','equipments.equipment_type_id=equipment_type.equipment_type_id','left')
 			->join('hospitals','equipments.hospital_id=hospitals.hospital_id','left')
 			->join('departments','equipments.department_id=departments.department_id','left')
 			->join('users','equipments.user_id=users.user_id','left')
 			
-			->order_by('equipment_name');	
+			->order_by('equipment_type');	
 		
 
 		}
@@ -151,11 +149,11 @@ $this->db->select("equipment_id,make,serial_number,asset_number,equipment_name,e
 		}
 if($this->input->post('search')){
 				
-            $equipment_type_id=strtolower($this->input->post('equipment_name'));
-			$this->db->like('LOWER(equipment_name)',$equipment_type_id,'after');
+            $equipment_type_id=strtolower($this->input->post('equipment_type'));
+			$this->db->like('LOWER(equipment_type)',$equipment_type_id,'after');
 			
 }
-		$this->db->select("equipment_type_id,equipment_name")->from("equipment_type")->order_by("equipment_name");
+		$this->db->select("equipment_type_id,equipment_type")->from("equipment_type")->order_by("equipment_type");
 		
 }
   else if($type=="drug_type"){
@@ -206,7 +204,7 @@ function update_data($type){
 	}
 	else if($type=="equipment_type"){
 			$data = array(
-					  'equipment_name'=>$this->input->post('equipment_name')
+					  'equipment_type'=>$this->input->post('equipment_type')
 				);
 			$this->db->where('equipment_type_id',$this->input->post('equipment_type_id'));
 			$table="equipment_type";
@@ -215,7 +213,7 @@ function update_data($type){
 	}
 	else if($type=="equipments"){
 			$data = array(
-					  'equipment_type_id'=>$this->input->post('equipment_name'),
+					  'equipment_type_id'=>$this->input->post('equipment_type'),
 					  'make'=>$this->input->post('make'),	
 					  'model'=>$this->input->post('model'),	
 					  'serial_number'=>$this->input->post('serial_number'),	
@@ -289,12 +287,10 @@ else if($type=="dosages"){
 
 		$table="drug_type";
 		}
-		elseif($type=="equipment_type"){
-		$data = array(
-					  'equipment_name'=>$this->input->post('equipment_name')
-		);
-
-		$table="equipment_type";
+		elseif($type=="equipment_type")
+		{
+			$data = array('equipment_type'=>$this->input->post('equipment_type'));
+			$table="equipment_type";
 		}
 		
 		elseif($type=="dosages"){
@@ -386,7 +382,7 @@ else if($type=="dosages"){
 		
 		elseif($type=="equipment_type"){
 		$data = array(
-					  'equipment_name'=>$this->input->post('equipment_name')
+					  'equipment_type'=>$this->input->post('equipment_type')
 		);
 
 		$table="equipment_type";
@@ -394,7 +390,7 @@ else if($type=="dosages"){
 		
 		
 		$this->db->trans_start();
-			$this->db->insert($table,$data);
+		$this->db->insert($table,$data);
 		$this->db->trans_complete();
 		if($this->db->trans_status()===FALSE){
 			return false;

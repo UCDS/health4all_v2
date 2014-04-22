@@ -1,14 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Equipments extends CI_Controller {
+class Consumables extends CI_Controller {
 	function __construct(){
 		parent::__construct();
 		$this->load->model('projects_model');
 		$this->load->model('masters_model');
-		$this->load->model('staff_model');
-		$this->load->model('reports_model');
-		$this->data['op_forms']=$this->staff_model->get_forms("OP");
-		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 	}
 	function add($type=""){
 	 	$this->load->helper('form');
@@ -30,6 +26,11 @@ class Equipments extends CI_Controller {
                      'rules'   => 'required|trim|xss_clean'
                   )
 			);
+/*			$data['drug_type']=$this->masters_model->insert_data("drug_type");
+			$data['divisions']=$this->masters_model->get_data("divisions");	
+		*/
+
+
 		}
 	else if($type=="dosages"){
 		 	$title="Add dosage";
@@ -52,32 +53,13 @@ else if($type=="equipment_type"){
 		
 			$config=array(
                array(
-                     'field'   => 'equipment_type',
-                     'label'   => 'Equipment Type',
+                     'field'   => 'equipment_name',
+                     'label'   => 'Equipment Name',
                      'rules'   => 'required|trim|xss_clean'
                   )
              
 			);
 }
-
-else if($type=="service"){
-		 	$title="Add Service Records";
-		
-			$config=array(
-                         array(
-                     'field'   => 'working_status',
-                     'label'   =>  'Working Status',
-                     'rules'   => 'trim|xss_clean'
-                  )
-        
-      
-             
-			);
-$data['service']=$this->masters_model->get_data("service");
-     		
-}
-
-
 
 else if($type=="service_records"){
 		 	$title="Add Service Records";
@@ -102,21 +84,71 @@ $data['user']=$this->masters_model->get_data("user");
 		
 			$config=array(
                array(
-                     'field'   => 'equipment_type',
-                     'label'   => 'Equipment Type',
+                     'field'   => 'make',
+                     'label'   => 'Make',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+               array(
+                     'field'   => 'model',
+                     'label'   => 'model',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+                array(
+                     'field'   => 'serial_number',
+                     'label'   => 'serial_number',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+                 array(
+                     'field'   => 'asset_number',
+                     'label'   => 'asset_number',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+                  array(
+                     'field'   => 'procured_by',
+                     'label'   => 'procured_by',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+                   array(
+                     'field'   => 'cost',
+                     'label'   => 'cost',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+                    array(
+                     'field'   => 'supplier',
+                     'label'   => 'supplier',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+                    array(
+                     'field'   => 'supply_date',
+                     'label'   => 'supply_date',
+                     'rules'   => 'trim|xss_clean'
+                  ),
+                      array(
+                     'field'   => 'warranty_period',
+                     'label'   => 'warranty_period',
                      'rules'   => 'required|trim|xss_clean'
                   ),
                        array(
+                     'field'   => 'service_engineer',
+                     'label'   => 'service_engineer',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+                        array(
+                     'field'   => 'service_engineer_contact',
+                     'label'   => 'service_engineer_contact',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+		               array(
                      'field'   => 'equipment_status',
-                     'label'   => 'Equipment Status',
+                     'label'   => 'equipment_status',
                      'rules'   => 'required|trim|xss_clean'
                   ),
 		);
 
         $data['equipment_types']=$this->masters_model->get_data("equipment_types");
+		$data['hospital']=$this->masters_model->get_data("hospital");
 		$data['department']=$this->masters_model->get_data("department");
-		$data['areas']=$this->masters_model->get_data("area");
-		$data['units']=$this->masters_model->get_data("unit");
+		$data['user']=$this->masters_model->get_data("user");
 		
 
 }
@@ -177,8 +209,8 @@ $data['user']=$this->masters_model->get_data("user");
 			show_404();
 		}
 		$page="pages/inventory/add_".$type."_form";
-		$this->data['title']=$title;
-		$this->load->view('templates/header',$this->data);
+		$data['title']=$title;
+		$this->load->view('templates/header',$data);
 		$this->load->view('templates/leftnav');
 		$this->form_validation->set_rules($config);
  		if ($this->form_validation->run() === FALSE)
@@ -234,29 +266,12 @@ $data['drug']=$this->masters_model->get_data("drugs");
 			$data['agency']=$this->masters_model->get_data("agency");
 
 		}
-		else if($type=="service"){
-		 	$title="Edit Service Records";
-		
-			$config=array(
-                         array(
-                     'field'   => 'working_status',
-                     'label'   =>  'Working Status',
-                     'rules'   => 'trim|xss_clean'
-                  )
-        
-             
-             
-			);
-$data['equipments']=$this->masters_model->get_data("equipments");
-		
-}
-
 		else if($type=="equipment_type"){
 		 	$title="Edit Equipment Type";
 		
 			$config=array(
                array(
-                     'field'   => 'equipment_type',
+                     'field'   => 'equipment_name',
                      'label'   => 'Equipment Name',
                      'rules'   => 'trim|xss_clean'
                   )
@@ -272,7 +287,7 @@ else if($type=="equipments"){
 		
 			$config=array(
                array(
-                     'field'   => 'equipment_type',
+                     'field'   => 'equipment_name',
                      'label'   => 'Equipment Name ',
                      'rules'   => 'trim|xss_clean'
                   )
@@ -361,8 +376,8 @@ $data['item_type']=$this->masters_model->get_data("item_type");
 		}
 		
 		$page="pages/inventory/edit_".$type."_form";
-		$this->data['title']=$title;
-		$this->load->view('templates/header',$this->data);
+		$data['title']=$title;
+		$this->load->view('templates/header',$data);
       $this->load->view('templates/leftnav',$data);
 		
 		$this->form_validation->set_rules($config);
@@ -375,7 +390,6 @@ $data['item_type']=$this->masters_model->get_data("item_type");
 			if($this->input->post('update')){
 				if($this->masters_model->update_data($type)){
 					$data['msg']="Updated Successfully";
-		
 					$this->load->view($page,$data);
 				}
 				else{
@@ -395,24 +409,6 @@ $data['item_type']=$this->masters_model->get_data("item_type");
 				$this->load->view($page,$data);
 			}
 		}
-		$this->load->view('templates/footer');
-	}
-
-	function view($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=0){	
-		$this->load->helper('form_helper');
-		switch($type){
-			case "equipments_detailed" : 
-				$this->data['title']="Equipments Detailed report";
-				$data['equipments']=$this->masters_model->get_data("equipments",$equipment_type,$department,$area,$unit,$status);
-				break;
-			case "equipments_summary" :
-				$this->data['title']="Equipments Summary report";
-				$data['summary']=$this->reports_model->get_equipments_summary();
-				break;
-		}				
-		$this->load->view('templates/header',$this->data);
-		$this->load->view('templates/leftnav',$this->data);
-		$this->load->view("pages/inventory/report_$type",$data);
 		$this->load->view('templates/footer');
 	}
 	

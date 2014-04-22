@@ -6,11 +6,11 @@
 		
 
 		<div class="form-group">
-		<label for="equipment_name" class="col-md-4">Equipment  Name<font color='red'>*</font></label>
+		<label for="equipment_type" class="col-md-4">Equipment  Name<font color='red'>*</font></label>
 		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder="Equipment Name" id="equipment_name" name="equipment_name" 
+		<input type="text" class="form-control" placeholder="Equipment Name" id="equipment_type" name="equipment_type" 
 		<?php if(isset($equipment_types)){
-			echo "value='".$equipment_types[0]->equipment_name."' ";
+			echo "value='".$equipment_types[0]->equipment_type."' ";
 			}
 		?>
 		/>
@@ -32,7 +32,7 @@
 	<table class="table-bordered col-md-12">
 	<tbody>
 	<tr>
-		<td><input type="text" class="form-control" placeholder="Equipment Type" id="equipment_name" name="equipment_name"> 
+		<td><input type="text" class="form-control" placeholder="Equipment Type" id="equipment_type" name="equipment_type"> 
 		
 		
 				<td><input class="btn btn-lg btn-primary btn-block" name="search" value="Search" type="submit" /></td></tr>
@@ -55,7 +55,7 @@
 	<?php echo form_open('equipments/edit/equipment_type',array('id'=>'select_equipment_type_form_'.$a->equipment_type_id,'role'=>'form')); ?>
 	<tr onclick="$('#select_equipment_type_form_<?php echo $a->equipment_type_id;?>').submit();" >
 		<td><?php echo $i++; ?></td>
-		<td><?php echo $a->equipment_name; ?>
+		<td><?php echo $a->equipment_type; ?>
 		<input type="hidden" value="<?php echo $a->equipment_type_id; ?>" name="equipment_type_id" />
 		<input type="hidden" value="select" name="select" />
 		</td>
