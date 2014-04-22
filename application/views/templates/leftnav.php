@@ -5,9 +5,11 @@
 				<li><a href="<?php echo base_url();?>equipments/add/equipment">Equipment</a></li>
 				<li><a href="<?php echo base_url();?>equipments/add/equipment_type">Equipment Type</a></li>
 				<li><a href="<?php echo base_url();?>equipments/add/service_records">Service Issue</a></li>
+				<li><a href="#">AMC/CMC</a></li>
 				<li class="nav-header">Edit</li>
 				<li><a href="<?php echo base_url();?>equipments/edit/equipment_type">Equipment Type</a></li>
 				<li><a href="<?php echo base_url();?>equipments/edit/equipments">Equipment Details</a></li>
+				<li><a href="#">AMC/CMC</a></li>
 				<li class="nav-header">View</li>
 				<li><a href="<?php echo base_url();?>equipments/view/equipments_summary">Equipments</a></li>
 	<ul>

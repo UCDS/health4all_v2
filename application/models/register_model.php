@@ -28,6 +28,10 @@ class Register_model extends CI_Model{
 		$hospital=$this->session->userdata('hospital');
 		$hospital_id=$hospital['hospital_id'];
 		$form_type=$this->input->post('form_type');
+		$this->db->select('count')->from('counters')->where('counter_name',$form_type);
+		$query=$this->db->get();
+		$result=$query->row();
+		$hosp_file_no=++$result->count;
 		$data=array(
 			'first_name'=>$first_name,
 			'last_name'=>$last_name,
@@ -48,14 +52,17 @@ class Register_model extends CI_Model{
 		$visit_data=array(
 			'visit_type'=>$form_type,
 			'patient_id'=>$patient_id,
+			'hosp_file_no'=>$hosp_file_no,
 			'department_id'=>$department,
 			'admit_date'=>$date,
 			'admit_time'=>$time
 		);
-		$this->db->insert('patient_visits',$visit_data);
+		$this->db->insert('patient_visits',$visit_data,false);
 		$visit_id=$this->db->insert_id();
+		$this->db->where('counter_name',$form_type);
+		$this->db->update('counters',array('count'=>$hosp_file_no));
 		$this->db->trans_complete();
-		$this->db->select('patients.patient_id,visit_id,admit_date,admit_time,CONCAT(IF(first_name=NULL,"",first_name)," ",IF(last_name=NULL,"",last_name)) name,age_years,age_months,age_days,gender,IF(father_name=NULL OR father_name="",spouse_name,father_name) parent_spouse,department,place,phone',false)
+		$this->db->select('patients.patient_id,visit_id,hosp_file_no,admit_date,admit_time,CONCAT(IF(first_name=NULL,"",first_name)," ",IF(last_name=NULL,"",last_name)) name,age_years,age_months,age_days,gender,IF(father_name=NULL OR father_name="",spouse_name,father_name) parent_spouse,department,place,phone,op_room_no,presenting_complaints',false)
 		->from('patients')->join('patient_visits','patients.patient_id=patient_visits.patient_id')
 		->join('departments','patient_visits.department_id=departments.department_id')
 		->where('visit_id',$visit_id);

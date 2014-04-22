@@ -1,7 +1,37 @@
 	<div class="row">
 	<div class="col-md-8 col-md-offset-2">
-	<h3>Equipments</h3>
-	
+	<div class="col-md-2"><h3>Equipments</h3></div>
+	<div class="col-md-7 col-md-offset-2">
+		<?php echo form_open("equipments/view/equipments_summary",array("role"=>"form","class"=>"form-custom"));?>
+		<label class="control-label">Filter By..</label>
+		<div class="form-group">
+		<select name="department" id="department" class="form-control">
+		<option value="">Department</option>
+		<?php foreach($department as $d){
+			echo "<option value='$d->department_id'>$d->department</option>";
+		}
+		?>
+		</select>
+		</div>
+		<div class="form-group">
+		<select name="area" id="area" class="form-control">
+		<option value="">Area</option>
+		<?php foreach($areas as $a){
+			echo "<option value='$a->area_id' class='$a->department_id'>$a->area_name</option>";
+		}
+		?>
+		</select>
+		</div>
+		<div class="form-group">
+		<select name="unit" id="unit" class="form-control">
+		<option value="">Unit</option>
+		<?php foreach($units as $u){
+			echo "<option value='$u->unit_id' class='$u->department_id'>$u->unit_name</option>";
+		}
+		?>
+		</select>
+		</div>
+	</div>
 	<table class="table table-bordered">
 	<thead>
 		<th>#</th>

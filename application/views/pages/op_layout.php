@@ -17,7 +17,6 @@
 				var id=$(this).attr('id');
 				$("."+id).hide();
 			}
-			//alert($("#new-form :visible,.mandatory").serialize())
 		});
 		$("#save-form").click(function(e){
 			e.preventDefault();
@@ -96,7 +95,7 @@
 				<div class="panel-heading">
 				<div class="row">
 					<div class="col-md-4">
-						<label class="control-label">Select number of columns : </label>
+						<label class="control-label">Select number of columns :</label>
 						<div class="radio">
 							<label class="control-label"><input type="radio" value="1" name="cols" class="num_cols" />1</label>
 						</div>
@@ -110,7 +109,7 @@
 					<div class="col-md-4">
 						<div class="form-group">
 						<label class="control-label">Select form type</label>
-						<select class="form-control" name="form_type" id="form-type">
+						<select class="form-control" name="form_type" id="form-type" required >
 							<option value="">Select</option>
 							<option value="OP">OP</option>
 							<option value="IP">IP</option>
@@ -120,7 +119,19 @@
 					<div class="col-md-4">
 						<div class="form-group">
 						<label class="control-label">Form Name</label>
-						<input type="text" name="form_name" class="form-control" />
+						<input type="text" name="form_name" class="form-control" required />
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+						<label class="control-label">Print Layout</label>
+						<select class="form-control" name="form_type" id="form-type" required >
+							<option value="">Select</option>
+							<?php foreach($print_layouts as $layout){
+								echo "<option value='$layout->print_layout_id'>$layout->layout_name</option>";
+							}
+							?>
+						</select>
 						</div>
 					</div>
 				</div>
@@ -233,7 +244,6 @@
 					<button type="submit" class="btn btn-primary" id="save-form">Save</button>
 				</div>
 				</div>
-				
 			</div>
 			<div class="col-sm-3 col-md-2 sidebar">
 			<strong>Patient Information</strong>

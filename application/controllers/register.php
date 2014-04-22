@@ -71,6 +71,7 @@ class Register extends CI_Controller {
 			else{
 				if($this->input->post('form_type')){
 					$data['registered']=$this->register_model->register();
+					$data['print_layout']='pages/print_layouts/gandhi_op';
 				}
 				$this->load->view('pages/custom_form',$data);
 

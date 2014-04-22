@@ -41,11 +41,13 @@ class Staff_model extends CI_Model{
 		$form_name=$this->input->post('form_name');
 		$form_type=$this->input->post('form_type');
 		$columns=$this->input->post('columns');
+		$print_layout=$this->input->post('print_layout');
 		$count=count($fields->field_name);
 		$form_data=array(
 			'form_name'=>$form_name,
 			'form_type'=>$form_type,
-			'num_columns'=>$columns
+			'num_columns'=>$columns,
+			'print_layout_id'=>$print_layout
 		);
 		$this->db->trans_start();
 		$this->db->insert('form',$form_data);

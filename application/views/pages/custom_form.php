@@ -72,6 +72,10 @@ pri.print();
 
 <iframe id="ifmcontentstoprint" style="height: 0px; width: 0px; position: absolute;display:none"></iframe>
 		<?php if(isset($registered)){ ?>
+		
+		<div class="sr-only" id="print-div" style="width:100%;height:100%;"> 
+		<?php $this->load->view($print_layout);?>
+		</div>
 		<div class="row">
 			<div class="panel panel-success col-md-4 col-md-offset-5" >
 				<div class="panel-heading">Inserted Successfully</div>
@@ -100,7 +104,7 @@ pri.print();
 					</table>
 				</div>
 				<div class="panel-footer">
-					<button type="submit" class="btn btn-primary col-md-offset-5"> Print</button>
+					<button type="submit" class="btn btn-primary col-md-offset-5" onclick="printDiv('print-div')"> Print</button>
 				</div>
 			</div>
 			</div>
@@ -257,3 +261,4 @@ pri.print();
 		</div>
 		</form>	
 	</section>
+	
