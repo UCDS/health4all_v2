@@ -11,8 +11,8 @@ $(function(){
 });
 </script>
 	<div class="row">
-		<h4>Out-Patient Detailed report</h4>	
-		<?php echo form_open("reports/op_detail",array('role'=>'form','class'=>'form-custom')); ?> 
+		<h4>In-Patient Detailed report</h4>	
+		<?php echo form_open("reports/ip_detail",array('role'=>'form','class'=>'form-custom')); ?> 
 					From Date : <input type="text" class="form-control" value="<?php echo date("d-M-Y"); ?>" name="from_date" id="from_date" size="15" />
 					To Date : <input type="text" class="form-control" value="<?php echo date("d-M-Y"); ?>" name="to_date" id="to_date" size="15" />
 					<input type="submit" class="btn btn-primary btn-sm" value="Submit" />
@@ -21,7 +21,7 @@ $(function(){
 	<?php if($report && count($report)>0){ ?>
 	<table class="table table-bordered table-striped">
 	<thead>
-		<th>OP No.</th>
+		<th>IP No.</th>
 		<th>Gender</th>
 		<th>Name</th>
 		<th>Age</th>

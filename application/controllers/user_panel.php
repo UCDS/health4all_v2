@@ -8,13 +8,14 @@ class User_panel extends CI_Controller {
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");	
 	}
-	function op_layout(){
+	function form_layout(){
 		if($this->session->userdata('logged_in')){
 		$this->load->helper('form');
 		$this->data['title']="User Panel";
 		$data['userdata']=$this->session->userdata('logged_in');
+		$data['print_layouts']=$this->staff_model->get_print_layouts();
 		$this->load->view('templates/header',$this->data);
-		$this->load->view('pages/op_layout',$data);
+		$this->load->view('pages/form_layout',$data);
 		$this->load->view('templates/footer');	
 		}
 		else{

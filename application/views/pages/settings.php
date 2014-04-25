@@ -1,6 +1,6 @@
   <div class="container">
 
-      <?php echo form_open('user_panel/op_layout',array('role'=>'form')); ?>
+      <?php echo form_open('user_panel/form_layout',array('role'=>'form')); ?>
 			<div class="row">
 				<div class="col-md-10">
 				</div>
@@ -11,7 +11,7 @@
 			<li class="nav-divider"></li>
 			<li>Forms</li>
             <li> 
-				<a href="<?php echo base_url()."user_panel/op_layout";?>">Create New</a>
+				<a href="<?php echo base_url()."user_panel/form_layout";?>">Create New</a>
 			</li>
 			<li class="disabled"><a>Edit</a>
             <ul>

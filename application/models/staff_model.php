@@ -31,6 +31,16 @@ class Staff_model extends CI_Model{
 		$query=$this->db->get();
 		return $query->result();
 	}
+	function get_areas(){
+		$this->db->select("area_id,department_id,area_name")->from("areas");
+		$query=$this->db->get();
+		return $query->result();
+	}
+	function get_units(){
+		$this->db->select("department_id,unit_id,unit_name")->from("units");
+		$query=$this->db->get();
+		return $query->result();
+	}
 	function get_districts(){
 		$this->db->select("district_id,district")->from("districts");
 		$query=$this->db->get();
@@ -67,13 +77,19 @@ class Staff_model extends CI_Model{
 		}
 		else return true;
 	}
+	function get_print_layouts(){
+		$this->db->select("print_layout_id,print_layout_name")->from("print_layouts");
+		$query=$this->db->get();
+		return $query->result();
+	}
 	function get_forms($form_type){
 		$this->db->select("form_id,form_name")->from("form")->where("form_type",$form_type);
 		$query=$this->db->get();
 		return $query->result();
 	}
 	function get_form($form_id){
-		$this->db->select("form_id,form_name,num_columns,form_type")->from("form")->where("form_id",$form_id);
+		$this->db->select("form_id,form_name,num_columns,form_type,print_layout_page")->from("form")->
+		join('print_layouts','form.print_layout_id=print_layouts.print_layout_id')->where("form_id",$form_id);
 		$query=$this->db->get();
 		return $query->row();
 	}

@@ -1,3 +1,8 @@
+	<style>
+	#sortable .control-label{
+		font-size:0.8em;
+	}
+	</style>
 	<!-- Include scripts for jQuery Sortable -->
 	<script src="<?php echo base_url(); ?>assets/js/jquery.ui.core.min.js"></script>
 	<script src="<?php echo base_url(); ?>assets/js/jquery.ui.widget.min.js"></script>
@@ -23,6 +28,7 @@
 			columns=$('input:radio[name=cols]:checked').val();
 			form_name=$('input:text[name=form_name]').val();
 			form_type=$('select[name=form_type]').val();
+			print_layout=$('select[name=print_layout]').val();
 
 			fields={};
 			fields['field_name']=[];
@@ -40,7 +46,7 @@
 			$.ajax({
 				type:"POST",
 				async:true,
-				data : {form_name:form_name,columns:columns,form_type:form_type,fields:JSON.stringify(fields)},
+				data : {form_name:form_name,columns:columns,form_type:form_type,print_layout:print_layout,fields:JSON.stringify(fields)},
 				url : "<?php echo base_url()."user_panel/create_form"; ?>",
 				success : function(returnData){
 					if(returnData==1){
@@ -89,7 +95,7 @@
 	});
   </script>
 
-      <?php echo form_open('user_panel/op_layout',array('role'=>'form','class'=>'form-custom','id'=>'new-form')); ?>
+      <?php echo form_open('user_panel/form_layout',array('role'=>'form','class'=>'form-custom','id'=>'new-form')); ?>
 			<div class="col-md-10" >
 				<div class="panel panel-default">
 				<div class="panel-heading">
@@ -125,10 +131,10 @@
 					<div class="col-md-4">
 						<div class="form-group">
 						<label class="control-label">Print Layout</label>
-						<select class="form-control" name="form_type" id="form-type" required >
+						<select class="form-control" name="print_layout" id="print_layout" required >
 							<option value="">Select</option>
 							<?php foreach($print_layouts as $layout){
-								echo "<option value='$layout->print_layout_id'>$layout->layout_name</option>";
+								echo "<option value='$layout->print_layout_id'>$layout->print_layout_name</option>";
 							}
 							?>
 						</select>
@@ -235,6 +241,112 @@
 						}
 						?>
 						</select>	
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 area">
+						<div class="form-group">
+						<label class="control-label">Area</label>
+						<select name="area" class="form-control">
+						<option value="">--Select--</option>
+						<?php 
+						foreach($areas as $area){
+							echo "<option value='".$area->area_id."'>".$area->area_name."</option>";
+						}
+						?>
+						</select>	
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 unit">
+						<div class="form-group">
+						<label class="control-label">Unit</label>
+						<select name="unit" class="form-control">
+						<option value="">--Select--</option>
+						<?php 
+						foreach($units as $unit){
+							echo "<option value='".$unit->unit_id."'>".$unit->unit_id."</option>";
+						}
+						?>
+						</select>	
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 mlc">
+						<div class="radio ">
+						<label class="control-label" title="Medico Legal Case">MLC</label>
+						<label class="control-label">
+							<input type="radio" name="mlc" value="1" />Yes
+						</label>
+						<label class="control-label">
+							<input type="radio" name="mlc" value="0" checked />No
+						</label>
+						</div>					
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+					</div>
+					<div class="layout-div col-md-4 mlc_number">
+						<div class="form-group">
+						<label class="control-label">MLC Number</label>
+						<input type="text" name="mlc_number" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 ps_name">
+						<div class="form-group">
+						<label class="control-label">PS Name</label>
+						<input type="text" name="ps_name" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 presenting_complaints">
+						<div class="form-group">
+						<label class="control-label">Complaints</label>
+						<input type="text" name="presenting_complaints" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 provisional_diagnosis">
+						<div class="form-group">
+						<label class="control-label">Provisional Diag.</label>
+						<input type="text" name="provisional_diagnosis" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 outcome">
+						<div class="radio ">
+						<label class="control-label">
+							<input type="radio" name="outcome" value="Discharge" checked />Discharge
+						</label>
+						<label class="control-label">
+							<input type="radio" name="outcome" value="LAMA" checked />LAMA
+						</label>
+						<label class="control-label">
+							<input type="radio" name="outcome" value="Absconded" checked />Absconded
+						</label>
+						<label class="control-label">
+							<input type="radio" name="outcome" value="Death" checked />Death
+						</label>
+						</div>					
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+					</div>
+					<div class="layout-div col-md-4 outcome_date">
+						<div class="form-group">
+						<label class="control-label">Outcome Date</label>
+						<input type="text" name="outcome_date" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 outcome_time">
+						<div class="form-group">
+						<label class="control-label">Outcome Time</label>
+						<input type="text" name="outcome_time" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 final_diagnosis">
+						<div class="form-group">
+						<label class="control-label">Final Diag.</label>
+						<input type="text" name="final_diagnosis" class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
@@ -416,6 +528,21 @@
 				</li>
 				<li>  
 					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="mlc" class="checklist" />MLC</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="mlc_number" class="checklist" />MLC Number</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="ps_name" class="checklist" />PS Name</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
 						<label><input type="checkbox" value="1" id="presenting_complaints" class="checklist" />Presenting Complaints</label>
 					</div>
 				</li>  
@@ -452,6 +579,21 @@
 				<li>  
 					<div class="checkbox">
 						<label><input type="checkbox" value="1" id="provisional_diagnosis" class="checklist" />Provisional Diagnosis</label>
+					</div>
+				</li> 
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="outcome" class="checklist" />Outcome</label>
+					</div>
+				</li> 
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="outcome_date" class="checklist" />Outcome Date</label>
+					</div>
+				</li> 
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="outcome_time" class="checklist" />Outcome Time</label>
 					</div>
 				</li> 
 				<li>  

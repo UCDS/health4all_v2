@@ -40,7 +40,7 @@ class Register extends CI_Controller {
 			redirect('home','refresh');
 		}
 	}
-	public function custom_form($form_id="")
+	public function custom_form($form_id="",$visit_id=0)
 	{
 		$this->load->helper('form');
 		if($this->session->userdata('hospital')){
@@ -48,6 +48,8 @@ class Register extends CI_Controller {
 				show_404();
 			else{
 			$data['departments']=$this->staff_model->get_departments();
+			$data['units']=$this->staff_model->get_units();
+			$data['areas']=$this->staff_model->get_areas();
 			$data['districts']=$this->staff_model->get_districts();
 			$data['userdata']=$this->session->userdata('logged_in');
 			$this->data['title']="Patient Registration";
@@ -61,21 +63,33 @@ class Register extends CI_Controller {
 			$data['columns']=$form->num_columns;
 			$data['form_name']=$form->form_name;
 			$data['form_type']=$form->form_type;
+			$data['patient']=array();
+			$data['update']=0;
+			$print_layout_page=$form->print_layout_page;
 			$this->load->view('templates/header',$this->data);
 			$this->load->library('form_validation');
-			$this->form_validation->set_rules('form_type','Form Type','trim|required');
+			$this->form_validation->set_rules('form_type','Form Type','trim|xss_clean');
 			if ($this->form_validation->run() === FALSE)
 			{
 				$this->load->view('pages/custom_form',$data);
 			}
 			else{
-				if($this->input->post('form_type')){
+				if($this->input->post('search_patients')){
+					$data['patients']=$this->register_model->search();
+				}
+				else if($this->input->post('select_patient') && $visit_id!=0){
+					$data['patient']=$this->register_model->select($visit_id);
+					if($this->input->post('visit_type')=="IP"){
+						$data['update']=1;
+					}
+				}
+				else if($this->input->post('register')){
 					$data['registered']=$this->register_model->register();
-					$data['print_layout']='pages/print_layouts/gandhi_op';
+					$data['print_layout']="pages/print_layouts/$print_layout_page";
 				}
 				$this->load->view('pages/custom_form',$data);
 
-			}
+			}	
 			$this->load->view('templates/footer');
 			}
 		}
