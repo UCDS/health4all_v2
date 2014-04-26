@@ -6,30 +6,25 @@ class Register_model extends CI_Model{
 	function register(){
 		$date=date("Y-m-d",strtotime($this->input->post('date')));
 		$time=date_format(date_create_from_format('h:ia', $this->input->post('time')),'H:i:s');
-		if($this->input->post('first_name')){
-		$first_name=$this->input->post('first_name');
-		$last_name=$this->input->post('last_name');
-		}
-		else{
-			$first_name=$this->input->post('patient_name');
-			$last_name="";
-		}
+		if($this->input->post('first_name')) $first_name=$this->input->post('first_name'); else $first_name="";
+		if($this->input->post('last_name')) $last_name=$this->input->post('last_name'); else $last_name="";
 		$age_years=$this->input->post('age_years');
 		$age_months=$this->input->post('age_months');
 		$age_days=$this->input->post('age_days');
 		$gender=$this->input->post('gender');
 		$dob=$this->input->post('dob');
-		$spouse_name=$this->input->post('spouse_name');
-		$father_name=$this->input->post('father_name');
-		$address=$this->input->post('address');
-		$place=$this->input->post('place');
+		if($this->input->post('spouse_name'))$spouse_name=$this->input->post('spouse_name'); else $spouse_name="";
+		if($this->input->post('father_name'))$father_name=$this->input->post('father_name'); else $father_name="";
+		if($this->input->post('mother_name'))$mother_name=$this->input->post('mother_name'); else $mother_name="";
+		if($this->input->post('address')) $address=$this->input->post('address'); else $address="";
+		if($this->input->post('place')) $place=$this->input->post('place'); else $place="";
 		$phone=$this->input->post('phone');
 		$district=$this->input->post('district');
 		$department=$this->input->post('department');
 		$unit=$this->input->post('unit');
 		$area=$this->input->post('area');
-		$complaints=$this->input->post('presenting_complaints');
-		$provisional_diagnosis=$this->input->post('provisional_diagnosis');
+		if($this->input->post('presenting_complaints')) $complaints=$this->input->post('presenting_complaints'); else $complaints="";
+		if($this->input->post('provisional_diagnosis')) $provisional_diagnosis=$this->input->post('provisional_diagnosis'); else $provisional_diagnosis="";
 		$hospital=$this->session->userdata('hospital');
 		$hospital_id=$hospital['hospital_id'];
 		$form_type=$this->input->post('form_type');
@@ -39,7 +34,7 @@ class Register_model extends CI_Model{
 		$outcome=$this->input->post('outcome');
 		$outcome_date=date("Y-m-d",strtotime($this->input->post('outcome_date')));
 		$outcome_time=date("h:i:s",strtotime($this->input->post('outcome_time')));
-		$final_diagnosis=$this->input->post('final_diagnosis');
+		if($this->input->post('final_diagnosis')) $final_diagnosis=$this->input->post('final_diagnosis'); else $final_diagnosis="";
 		$this->db->select('count')->from('counters')->where('counter_name',$form_type);
 		$query=$this->db->get();
 		$result=$query->row();
@@ -54,6 +49,7 @@ class Register_model extends CI_Model{
 			'spouse_name'=>$spouse_name,
 			'father_name'=>$father_name,
 			'dob'=>$dob,
+			'address'=>$address,
 			'place'=>$place,
 			'phone'=>$phone,
 			'district_id'=>$district
@@ -117,11 +113,12 @@ class Register_model extends CI_Model{
 		admit_time,CONCAT(IF(first_name=NULL,"",first_name)," ",IF(last_name=NULL,"",last_name)) name,
 		age_years,age_months,age_days,gender,
 		IF(father_name=NULL OR father_name="",spouse_name,father_name) parent_spouse,
-		department,unit_name,area_name,address,place,phone,op_room_no,presenting_complaints,mlc,mlc_number,ps_name',false)
+		department,unit_name,area_name,address,place,phone,district,op_room_no,presenting_complaints,mlc,mlc_number,ps_name',false)
 		->from('patients')->join('patient_visits','patients.patient_id=patient_visits.patient_id')
 		->join('departments','patient_visits.department_id=departments.department_id')
 		->join('units','patient_visits.unit=units.unit_id','left')
 		->join('areas','patient_visits.area=areas.area_id','left')
+		->join('districts','patients.district_id=districts.district_id','left')
 		->join('mlc','patient_visits.visit_id=mlc.visit_id','left')
 		->where('patient_visits.visit_id',$visit_id);
 		$resource=$this->db->get();

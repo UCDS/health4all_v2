@@ -3,7 +3,6 @@
 class Equipments extends CI_Controller {
 	function __construct(){
 		parent::__construct();
-		$this->load->model('projects_model');
 		$this->load->model('masters_model');
 		$this->load->model('staff_model');
 		$this->load->model('reports_model');

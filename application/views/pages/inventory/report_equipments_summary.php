@@ -54,7 +54,7 @@
 	?>
 	<tr>
 		<td><?php echo $i++;?></td>
-		<td><a href="<?php echo base_url()."equipments/view/equipments_detailed/$s->equipment_type_id";?>"><?php echo $s->equipment_name;?></a></td>
+		<td><a href="<?php echo base_url()."equipments/view/equipments_detailed/$s->equipment_type_id";?>"><?php echo $s->equipment_type;?></a></td>
 		<td><a href="<?php echo base_url()."equipments/view/equipments_detailed/0/$s->department_id";?>"><?php echo $s->department;?></td>
 		<td><a href="<?php echo base_url()."equipments/view/equipments_detailed/0/0/$s->area_id";?>"><?php echo $s->area_name;?></td>
 		<td><a href="<?php echo base_url()."equipments/view/equipments_detailed/0/0/0/$s->unit_id";?>"><?php echo $s->unit_name;?></td>

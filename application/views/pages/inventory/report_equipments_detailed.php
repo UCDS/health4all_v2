@@ -29,7 +29,7 @@
 	?>
 	<tr>
 		<td><?php echo $i++;?></td>
-		<td><?php echo $e->equipment_name;?></td>
+		<td><?php echo $e->equipment_type;?></td>
 		<td><?php echo $e->make;?></td>
 		<td><?php echo $e->model;?></td>
 		<td><?php echo $e->serial_number;?></td>

@@ -96,32 +96,26 @@ pri.print();
 		<?php $this->load->view($print_layout);?>
 		</div>
 		<div class="row">
-			<div class="panel panel-success col-md-4 col-md-offset-5" >
+			<div class="panel panel-success col-md-6 col-md-offset-3" >
 				<div class="panel-heading">		<h5><?php echo $form_name; ?> - Inserted Successfully</div>
 				<div class="panel-body">
-					<table class="table">
+					<table class="table table-bordered">
 						<tr>
-							<td>Patient ID</td>
+							<th>Patient ID</th>
 							<td><?php echo $registered->patient_id;?></td>
+							<th><?php echo $form_type;?> No. </th>
+							<td><?php echo $registered->hosp_file_no;?></td>
 						</tr>
 						<tr>
-							<td>Visit ID</td>
-							<td><?php echo $registered->visit_id;?></td>
-						</tr>
-						<tr>
-							<td>Patient Name</td>
+							<th>Patient Name</th>
 							<td><?php echo $registered->name;?></td>
-						</tr>
-						<tr>
-							<td>Age</td>
+							<th>Age</th>
 							<td><?php echo $registered->age_years;?></td>
 						</tr>
 						<tr>
-							<td>Gender</td>
+							<th>Gender</th>
 							<td><?php echo $registered->gender;?></td>
-						</tr>
-						<tr>
-							<td>Department</td>
+							<th>Department</th>
 							<td><?php echo $registered->department;?></td>
 						</tr>
 					</table>
@@ -172,12 +166,21 @@ pri.print();
 			foreach($fields as $field=>$mandatory){
 				switch($field){
 				
-					case "patient_name": ?>
+					case "first_name": ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
-						<label class="control-label">Name<?php if($mandatory) { ?><span class="mandatory">*</span><?php } ?></label>
-						<input type="text" name="first_name" class="form-control" placeholder="First" size="12" value="<?php if($patient) echo $patient->first_name;?>" <?php if($mandatory) echo "required"; ?> />
-						<input type="text" name="last_name" class="form-control" placeholder="Last" size="12" value="<?php  if($patient) echo $patient->last_name;?>" <?php if($mandatory) echo "required"; ?> />
+						<label class="control-label">First Name<?php if($mandatory) { ?><span class="mandatory">*</span><?php } ?></label>
+						<input type="text" name="first_name" class="form-control" placeholder="First" value="<?php if($patient) echo $patient->first_name;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+				<?php 
+					break;
+					
+					case "last_name": ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Last Name<?php if($mandatory) { ?><span class="mandatory">*</span><?php } ?></label>
+						<input type="text" name="last_name" class="form-control" placeholder="Last" value="<?php  if($patient) echo $patient->last_name;?>" <?php if($mandatory) echo "required"; ?> />
 						</div>
 					</div>
 				<?php 
@@ -196,7 +199,7 @@ pri.print();
 						<div class="form-group">
 						<label class="control-label">Age<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<input type="text" name="age_years" class="form-control" size="1"  value="<?php if($patient)  echo $patient->age_years;?>" <?php if($mandatory) echo "required"; ?> />Y
-						<input type="text" name="age_months" class="form-control" size="1"  value="<?php if($patient)  echo $patient->age_months;?>" <?php if($mandatory) echo "required"; ?> />M
+						<input type="text" name="age_months" class="form-control" size="1" value="<?php if($patient)  echo $patient->age_months;?>" <?php if($mandatory) echo "required"; ?> />M
 						<input type="text" name="age_days" class="form-control" size="1"  value="<?php if($patient)  echo $patient->age_days;?>" <?php if($mandatory) echo "required"; ?> />D
 						</div>
 					</div>
@@ -208,8 +211,8 @@ pri.print();
 						<div class="form-group">
 						<label class="control-label">Age<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<input type="text" name="age_years" class="form-control" size="1"  value="<?php if($patient)  echo $patient->age_years;?>" <?php if($mandatory) echo "required"; ?> />Y
-						<input type="text" name="age_months" class="form-control" size="1"  value="<?php if($patient)  echo $patient->age_months;?>" <?php if($mandatory) echo "required"; ?> />M
-						<input type="text" name="age_days" class="form-control" size="1"  value="<?php if($patient)  echo $patient->age_days;?>" <?php if($mandatory) echo "required"; ?> />D
+						<input type="text" name="age_months" class="form-control" size="1" tabindex="1000"  value="<?php if($patient)  echo $patient->age_months;?>" <?php if($mandatory) echo "required"; ?> />M
+						<input type="text" name="age_days" class="form-control" size="1"  tabindex="1001" value="<?php if($patient)  echo $patient->age_days;?>" <?php if($mandatory) echo "required"; ?> />D
 						</div>
 					</div>
 				<?php 
@@ -354,6 +357,7 @@ pri.print();
 				<?php 
 					break;
 					
+					
 					case "area" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -479,6 +483,18 @@ pri.print();
 				<div class="panel-body">
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
+						<label class="control-label">OP Number</label>
+						<input type="text" name="search_op_number" class="form-control" />
+						</div>
+					</div>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">IP Number</label>
+						<input type="text" name="search_ip_number" class="form-control" />
+						</div>
+					</div>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
 						<label class="control-label">Patient ID</label>
 						<input type="text" name="search_patient_id" class="form-control" />
 						</div>
@@ -487,12 +503,6 @@ pri.print();
 						<div class="form-group">
 						<label class="control-label">Patient Name</label>
 						<input type="text" name="search_patient_name" class="form-control" />
-						</div>
-					</div>
-					<div class="<?php echo $class;?>">
-						<div class="form-group">
-						<label class="control-label">OP Number</label>
-						<input type="text" name="search_op_number" class="form-control" />
 						</div>
 					</div>
 					<div class="<?php echo $class;?>">

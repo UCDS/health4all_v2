@@ -27,7 +27,7 @@ $(function(){
 		<select name="equipment_type" id="division" class="form-control">
 		<option value="">Equipment Type</option>
 		<?php foreach($equipment_types as $d){
-			echo "<option value='$d->equipment_type_id'>$d->equipment_name</option>";
+			echo "<option value='$d->equipment_type_id'>$d->equipment_type</option>";
 		}
 		?>
 		</select>
@@ -85,8 +85,8 @@ $(function(){
 	<div class="form-group">
 		<label for="description" class="col-md-4"> Warranty Period</label>
 		<div  class="col-md-8">
-		<input type="text" class="form-control date" placeholder="Start" id="warranty_start_date" name="warranty_start_date" />
-		<input type="text" class="form-control date" placeholder="End" id="warranty_end_date" name="warranty_end_date" />
+		<input type="text" class="form-control date" placeholder="Start" form="add_equipment" id="warranty_start_date" name="warranty_start_date" />
+		<input type="text" class="form-control date" placeholder="End"  form="add_equipment" id="warranty_end_date" name="warranty_end_date" />
 		</div>
 	</div>
 	<div class="form-group">

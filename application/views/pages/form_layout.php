@@ -145,10 +145,17 @@
 				<div class="panel-body">
 				<div class="alert alert-info">Select fields from the right menu to start creating the form! >></div>
 				<div class="form row" id="sortable">
-					<div class="layout-div col-md-4 patient_name ">
+					<div class="layout-div col-md-4 first_name">
 						<div class="form-group">
-						<label class="control-label">Patient Name</label>
-						<input type="text" name="patient_name" class="form-control" />
+						<label class="control-label">First Name</label>
+						<input type="text" name="first_name" placeholder="First Name" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 last_name">
+						<div class="form-group">
+						<label class="control-label">Last Name</label>
+						<input type="text" name="last_name" placeholder="Last Name" class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
@@ -362,7 +369,12 @@
 			  <ul class="nav nav-sidebar">
 				<li>  
 					<div class="checkbox">
-						<label><input type="checkbox" value="1" id="patient_name" class="checklist" />Patient name</label>
+						<label><input type="checkbox" value="1" id="first_name" class="checklist" />First name</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="last_name" class="checklist" />Last name</label>
 					</div>
 				</li>
 				<li>  
