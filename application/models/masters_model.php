@@ -388,7 +388,28 @@ else if($type=="dosages"){
 		$table="equipment_type";
 		}
 		
-		
+		elseif($type=="staff"){
+		$data = array(
+					  'first_name'=>$this->input->post('first_name'),
+					  'last_name'=>$this->input->post('last_name'),
+					  'gender'=>$this->input->post('gender'),
+					  'date_of_birth'=>$this->input->post('date_of_birth'),
+					  'department_id'=>$this->input->post('department'),
+					  'unit_id'=>$this->input->post('unit'),
+					  'area_id'=>$this->input->post('area'),
+					  'staff_role_id'=>$this->input->post('staff_role'),
+					  'staff_category_id'=>$this->input->post('staff_category'),
+					  'designation'=>$this->input->post('designation'),
+					  'staff_type'=>$this->input->post('staff_type'),
+					  'email'=>$this->input->post('email'),
+					  'phone'=>$this->input->post('phone'),
+					  'specialisation'=>$this->input->post('specialisation'),
+					  'research_area'=>$this->input->post('research_area'),
+					  'research'=>$this->input->post('research')
+		);
+
+		$table="staff";
+		}
 		$this->db->trans_start();
 		$this->db->insert($table,$data);
 		$this->db->trans_complete();
