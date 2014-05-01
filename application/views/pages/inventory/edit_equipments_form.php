@@ -20,13 +20,13 @@ $(function(){
 	<div class="form-group">
 		<label for="equipment_type" class="col-md-4" >Equipment Type</label>
 		<div  class="col-md-8">
-		<select name="equipment_name" id="equipment_type" class="form-control">
+		<select name="equipment_type" id="equipment_type" class="form-control">
 		<option value="">--SELECT--</option>
 		<?php foreach($equipment_type as $e){
 			echo "<option value='$e->equipment_type_id'";
 			if(isset($equipments) && $equipments[0]->equipment_type_id==$e->equipment_type_id)
 				echo " SELECTED ";
-			echo ">$e->equipment_name</option>";
+			echo ">$e->equipment_type</option>";
 		}
 		?>
 		</select>
@@ -225,7 +225,7 @@ $(function(){
 	<table class="table-bordered col-md-12">
 	<tbody>
 	<tr>
-		<td><input type="text" class="form-control" placeholder="Equipment Name	" id="equipment Name" name="equipment_name"> 
+		<td><input type="text" class="form-control" placeholder="Equipment Name	" id="equipment Name" name="equipment_type"> 
 		
 		
 				<td><input class="btn btn-lg btn-primary btn-block" name="search" value="Search" type="submit" /></td></tr>
@@ -248,7 +248,7 @@ $(function(){
 	<?php echo form_open('equipments/edit/equipments',array('id'=>'select_equipment_form_'.$a->equipment_id,'role'=>'form')); ?>
 	<tr onclick="$('#select_equipment_form_<?php echo $a->equipment_id;?>').submit();" >
 		<td><?php echo $i++; ?></td>
-		<td><?php echo $a->equipment_name; ?>
+		<td><?php echo $a->equipment_type; ?>
 		
 		<input type="hidden" value="<?php echo $a->equipment_id; ?>" name="equipment_id" />
 		<input type="hidden" value="select" name="select" />
@@ -262,7 +262,7 @@ $(function(){
 		<td><?php echo $a->cost; ?></td>
 		<td><?php echo $a->supplier; ?></td>
 		<td><?php echo $a->supply_date; ?></td>
-		<td><?php echo $a->warranty_period; ?></td>
+		<td><?php if($a->warranty_start_date!=0 && $a->warranty_end_date!=0) echo date("d-M-Y",strtotime($a->warranty_start_date))." - ".date("d-M-Y",strtotime($a->warranty_end_date)); ?></td>
 		<td><?php echo $a->service_engineer; ?></td>
 		<td><?php echo $a->service_engineer_contact; ?></td>
 		<td><?php echo $a->hospital; ?></td>
