@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 01, 2014 at 09:52 AM
+-- Generation Time: May 01, 2014 at 01:28 PM
 -- Server version: 5.6.12-log
 -- PHP Version: 5.4.12
 
@@ -19,8 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `health4all_test`
 --
-CREATE DATABASE IF NOT EXISTS `health4all` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `health4all`;
+CREATE DATABASE IF NOT EXISTS `health4all_test` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `health4all_test`;
 
 -- --------------------------------------------------------
 
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `areas` (
   `department_id` int(4) NOT NULL,
   `beds` int(4) NOT NULL,
   PRIMARY KEY (`area_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Areas in hospitals' AUTO_INCREMENT=13 ;
 
 --
 -- Dumping data for table `areas`
@@ -249,7 +249,14 @@ CREATE TABLE IF NOT EXISTS `bb_users` (
   `admin` tinyint(1) NOT NULL,
   `displayname` varchar(200) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `bb_users`
+--
+
+INSERT INTO `bb_users` (`user_id`, `username`, `password`, `registration_date`, `registrar`, `examiner`, `technician`, `screener`, `issuer`, `requester`, `admin`, `displayname`) VALUES
+(1, 'admin', 'e3274be5c857fb42ab72d786e281b4b8', '2013-12-02 00:00:00', 0, 0, 0, 0, 0, 0, 1, 'Admin');
 
 -- --------------------------------------------------------
 
@@ -397,7 +404,7 @@ CREATE TABLE IF NOT EXISTS `contact_person` (
   `contact_person_contact` int(50) NOT NULL,
   `vendor_id` int(11) NOT NULL,
   PRIMARY KEY (`contact_person_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Vendor contact persons' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -573,20 +580,19 @@ CREATE TABLE IF NOT EXISTS `equipments` (
   `asset_number` varchar(100) DEFAULT NULL,
   `procured_by` varchar(100) DEFAULT NULL,
   `cost` int(9) DEFAULT NULL,
-  `supplier` varchar(100) DEFAULT NULL,
+  `vendor_id` int(6) DEFAULT NULL,
   `supply_date` date DEFAULT NULL,
   `warranty_start_date` date NOT NULL,
   `warranty_end_date` date NOT NULL,
-  `service_engineer` varchar(50) NOT NULL,
-  `service_engineer_contact` varchar(20) NOT NULL,
+  `service_person_id` int(6) NOT NULL COMMENT 'Contact person id',
   `hospital_id` int(3) DEFAULT NULL,
   `department_id` int(2) DEFAULT NULL,
   `area_id` int(6) NOT NULL,
   `unit_id` int(6) NOT NULL,
-  `user_id` int(4) NOT NULL,
+  `staff_id` int(4) NOT NULL,
   `equipment_status` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`equipment_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='List of equipments in hospital' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -603,7 +609,7 @@ CREATE TABLE IF NOT EXISTS `equipment_maintenance_contract` (
   `rate` varchar(10) NOT NULL,
   `cost` int(11) NOT NULL,
   `vendor_id` int(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Maintenance contracts for equipments';
 
 -- --------------------------------------------------------
 
@@ -615,7 +621,7 @@ CREATE TABLE IF NOT EXISTS `equipment_type` (
   `equipment_type_id` int(3) NOT NULL AUTO_INCREMENT,
   `equipment_type` varchar(200) NOT NULL,
   PRIMARY KEY (`equipment_type_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=99 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='List of equipment types' AUTO_INCREMENT=99 ;
 
 --
 -- Dumping data for table `equipment_type`
@@ -779,7 +785,7 @@ CREATE TABLE IF NOT EXISTS `hospitals` (
   `state` varchar(50) NOT NULL,
   `logo` varchar(200) NOT NULL,
   PRIMARY KEY (`hospital_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='List of hospitals' AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `hospitals`
@@ -13295,45 +13301,87 @@ CREATE TABLE IF NOT EXISTS `id_proof_type` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `indent`
+--
+
+CREATE TABLE IF NOT EXISTS `indent` (
+  `indent_id` int(6) NOT NULL AUTO_INCREMENT,
+  `indent_date` date NOT NULL,
+  `from_id` int(6) NOT NULL,
+  `to_id` int(6) NOT NULL,
+  `approver_id` int(6) NOT NULL COMMENT 'staff_id',
+  `issuer_id` int(6) NOT NULL COMMENT 'staff_id',
+  `indent_status` varchar(50) NOT NULL COMMENT 'Indented, approved, issued',
+  PRIMARY KEY (`indent_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Indent for consumables' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `indent_item`
+--
+
+CREATE TABLE IF NOT EXISTS `indent_item` (
+  `indent_item_id` int(6) NOT NULL AUTO_INCREMENT,
+  `indent_id` int(6) NOT NULL,
+  `item_id` int(6) NOT NULL,
+  `quantity_indented` int(11) NOT NULL,
+  `quantity_issued` int(11) NOT NULL,
+  `indent_status` varchar(50) NOT NULL COMMENT 'Indented, Issued, Rejected, etc.,',
+  `issue_date` date NOT NULL,
+  `consumption_status` varchar(50) NOT NULL COMMENT 'In stock, expired, damaged, etc.,',
+  PRIMARY KEY (`indent_item_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='List of items for each indent' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `item`
 --
 
 CREATE TABLE IF NOT EXISTS `item` (
   `item_id` int(11) NOT NULL AUTO_INCREMENT,
-  `item_name` varchar(30) NOT NULL,
+  `item_name_id` int(6) NOT NULL,
   `generic_item_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
   `manufacturer_vendor_id` int(11) NOT NULL,
   `description` varchar(30) NOT NULL,
   `model` int(11) NOT NULL,
-  `serial_number` int(11) NOT NULL,
-  `asset_number` int(11) NOT NULL,
-  `procured_by` varchar(30) NOT NULL,
-  `cost` float NOT NULL,
+  `lot_batch_id` varchar(50) NOT NULL,
   `supplier_vendor_id` int(11) NOT NULL,
   `supply_date` date NOT NULL,
-  `warranty_period` varchar(40) NOT NULL,
+  `cost` int(11) NOT NULL,
+  `warranty_period` int(3) NOT NULL COMMENT 'in months',
+  `manufacturing_date` date NOT NULL,
   `expire_date` date NOT NULL,
-  `contact_person_id` int(11) NOT NULL,
-  `hospital_id` int(11) NOT NULL,
-  `department_id` int(11) NOT NULL,
-  `item_status` varchar(50) NOT NULL,
-  `dosage_id` int(6) NOT NULL,
-  `form_id` int(6) NOT NULL,
+  `item_status` varchar(50) NOT NULL COMMENT 'Expired, in stock, issued, partially issued, etc.,',
   PRIMARY KEY (`item_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `item_batch`
+-- Table structure for table `item_form`
 --
 
-CREATE TABLE IF NOT EXISTS `item_batch` (
-  `batch_id` int(11) NOT NULL AUTO_INCREMENT,
-  `item_id` int(11) NOT NULL,
-  `item_quantity` int(11) NOT NULL,
-  `batch_number` int(11) NOT NULL,
-  PRIMARY KEY (`batch_id`)
+CREATE TABLE IF NOT EXISTS `item_form` (
+  `item_form_id` int(6) NOT NULL AUTO_INCREMENT,
+  `item_form` varchar(20) NOT NULL,
+  PRIMARY KEY (`item_form_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `item_name`
+--
+
+CREATE TABLE IF NOT EXISTS `item_name` (
+  `item_name_id` int(6) NOT NULL AUTO_INCREMENT,
+  `item_name` varchar(100) NOT NULL,
+  `dosage_id` int(6) NOT NULL,
+  `item_form_id` int(6) NOT NULL,
+  PRIMARY KEY (`item_name_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13628,13 +13676,13 @@ CREATE TABLE IF NOT EXISTS `sample_status` (
 CREATE TABLE IF NOT EXISTS `service_record` (
   `request_id` int(4) NOT NULL AUTO_INCREMENT,
   `equipment_id` int(6) NOT NULL,
-  `user_id` int(4) NOT NULL,
+  `staff_id` int(4) NOT NULL,
   `call_date` date DEFAULT NULL,
   `call_time` time DEFAULT NULL,
   `call_information_type` varchar(50) NOT NULL,
   `call_information` varchar(500) DEFAULT NULL,
-  `service_provider` varchar(50) DEFAULT NULL,
-  `service_person` varchar(50) DEFAULT NULL,
+  `vendor_id` int(6) DEFAULT NULL,
+  `service_person_id` int(6) DEFAULT NULL COMMENT 'Contact person ID',
   `service_person_remarks` varchar(500) DEFAULT NULL,
   `service_date` date DEFAULT NULL,
   `service_time` time DEFAULT NULL,
@@ -13642,7 +13690,7 @@ CREATE TABLE IF NOT EXISTS `service_record` (
   `working_status` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`request_id`),
   UNIQUE KEY `request_id` (`request_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service records log for equipments' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -13881,7 +13929,22 @@ CREATE TABLE IF NOT EXISTS `treatment_type` (
   `treatment_type_id` int(3) NOT NULL AUTO_INCREMENT,
   `treatment_type` varchar(50) NOT NULL,
   PRIMARY KEY (`treatment_type_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+
+--
+-- Dumping data for table `treatment_type`
+--
+
+INSERT INTO `treatment_type` (`treatment_type_id`, `treatment_type`) VALUES
+(1, 'Antibiotics'),
+(2, 'CPAP'),
+(3, 'Oxygen'),
+(4, 'Ventilation'),
+(5, 'Exchange Transfusion'),
+(6, 'Blood Products'),
+(7, 'Resuscitation'),
+(8, 'Phototherapy'),
+(9, 'Surfactant');
 
 -- --------------------------------------------------------
 
@@ -13895,7 +13958,7 @@ CREATE TABLE IF NOT EXISTS `units` (
   `department_id` int(4) NOT NULL,
   `beds` int(4) NOT NULL,
   PRIMARY KEY (`unit_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=51 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Units belonging to departments in hospital' AUTO_INCREMENT=51 ;
 
 --
 -- Dumping data for table `units`
@@ -13987,7 +14050,15 @@ CREATE TABLE IF NOT EXISTS `user_activity` (
   `register` tinyint(1) NOT NULL,
   `event_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`update_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `user_activity`
+--
+
+INSERT INTO `user_activity` (`update_id`, `visit_id`, `user_id`, `register`, `event_date`) VALUES
+(1, 1, 2, 1, '2014-04-09 09:12:40'),
+(2, 25, 2, 1, '2014-04-22 13:37:15');
 
 -- --------------------------------------------------------
 
@@ -14087,7 +14158,7 @@ CREATE TABLE IF NOT EXISTS `vendor` (
   `vendor_state` varchar(50) NOT NULL,
   `vendor_country` varchar(50) NOT NULL,
   PRIMARY KEY (`vendor_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='List of vendors' AUTO_INCREMENT=1 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
