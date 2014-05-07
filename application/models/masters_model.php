@@ -171,6 +171,20 @@ if($this->input->post('search')){
 $this->db->select("drug_type_id,drug_type,description")->from("drug_type");	
 
 	}		
+	else if($type=="test_method")
+		{
+			if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
+			{
+					$test_id=$this->input->post('test_method_id');
+					$this->db->where('test_method_id',$test_id);
+			}
+	    	if($this->input->post('search') && $this->input->post('test_method')!="")  //query to retrieve matches for the text entered in the field from table test_type
+	    	{
+	 		 		$search_method=strtolower($this->input->post('test_method'));
+		  	    	$this->db->like('LOWER(test_method)',$search_method,'after');
+	    	}
+			$this->db->select("test_method_id,test_method")->from("test_method")->order_by('test_method');
+		}
 
 		$query=$this->db->get();
 		return $query->result();
@@ -260,6 +274,13 @@ else if($type=="dosages"){
 		
 		
 	}
+
+ elseif ($type=="test_method") {      //updating when update button is clicked
+  $data=array('test_method'=>$this->input->post('test_method'));
+
+	$this->db->where('test_method_id',$this->input->post('test_method_id'));
+   $table="test_method";
+ }
 
 
 		
@@ -409,6 +430,11 @@ else if($type=="dosages"){
 		);
 
 		$table="staff";
+		}
+		
+		elseif ($type=="test_method") {
+			$data=array('test_method'=>$this->input->post('test_method'));
+		$table="test_method";			
 		}
 		$this->db->trans_start();
 		$this->db->insert($table,$data);
