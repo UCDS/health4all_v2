@@ -9,23 +9,31 @@ class Masters_model extends CI_Model{
 		}
 		else if($type=="hospital"){
 		
-			$this->db->select("hospital_id,hospital")->from("hospitals");
+			$this->db->select("hospital_id,hospital")->from("hospital");
 		}
 		else if($type=="department"){
 			
-			$this->db->select("department_id,department")->from("departments");
+			$this->db->select("department_id,department")->from("department");
 		}
 		else if($type=="area"){
 			
-			$this->db->select("area_id,area_name,department_id")->from("areas");
+			$this->db->select("area_id,area_name,department_id")->from("area");
 		}
 		else if($type=="unit"){
 			
-			$this->db->select("unit_id,unit_name,department_id")->from("units");
+			$this->db->select("unit_id,unit_name,department_id")->from("unit");
 		}
 		else if($type=="user"){
 			
-			$this->db->select("user_id,username")->from("users");
+			$this->db->select("user_id,username")->from("user");
+		}
+		else if($type=="staff_category"){
+			
+			$this->db->select("staff_category_id,staff_category")->from("staff_category");
+		}
+		else if($type=="staff_role"){
+			
+			$this->db->select("staff_role_id,staff_role")->from("staff_role");
 		}
 		else if($type=="item_type"){
 			$this->db->select("item_type_id,item_type")->from("item_type");
@@ -34,130 +42,120 @@ class Masters_model extends CI_Model{
 			$this->db->select("drug_type_id,drug_type,description")->from("drug_type");
 		}
 		
-		else if($type=="dosages"){
+		else if($type=="dosage"){
 
-if($this->input->post('search')){
-				
-		$dosage_type=strtolower($this->input->post('dosage_name'));
-			$this->db->like('LOWER(dosage)',$dosage_type,'after');
-			}
-	if($this->input->post('select')){
-				$dosage_id=$this->input->post('dosage_id');
-
-				$this->db->where('dosage_id',$dosage_id);
-		}
-	$this->db->select("dosage,dosage_id,dosage_unit")->from("dosages");
+			if($this->input->post('search')){
 					
-}
+			$dosage_type=strtolower($this->input->post('dosage_name'));
+				$this->db->like('LOWER(dosage)',$dosage_type,'after');
+				}
+			if($this->input->post('select')){
+					$dosage_id=$this->input->post('dosage_id');
+
+					$this->db->where('dosage_id',$dosage_id);
+			}
+			$this->db->select("dosage,dosage_id,dosage_unit")->from("dosage");
+						
+		}
 	
 		else if($type=="generics"){
 		
-		if($this->input->post('select')){
-				$generic_id=$this->input->post('generic_item_id');
+			if($this->input->post('select')){
+					$generic_id=$this->input->post('generic_item_id');
 
-				$this->db->where('generic_item_id',$generic_id);
-				
-		}
-		if($this->input->post('search')){
-			$generic_type=strtolower($this->input->post('generic_name'));
-			$this->db->like('LOWER(generic_name)',$generic_type,'after');
-			}
-			$this->db->select("generic_item_id,generic_name,drug_type,item_type,drug_type.drug_type_id,item_type.item_type_id")->from("generic_item")
-			->join('drug_type','generic_item.drug_type_id=drug_type.drug_type_id','left')
-			->join('item_type','generic_item.item_type_id=item_type.item_type_id','left')
-			->order_by('generic_name');	
-
-		
-		}
-		else if($type=="equipments"){
-		
-		if($this->input->post('select')){
-				$equipment_id=$this->input->post('equipment_id');
-
-				$this->db->where('equipment_id',$equipment_id);
-				
-		}
-		if($this->input->post('search')){
-					$equipment=strtolower($this->input->post('equipment_type'));
-					$this->db->like('LOWER(equipment_type)',$equipment,'after');
+					$this->db->where('generic_item_id',$generic_id);
 					
-		}
-		if($equipment_type!=0){
-			$this->db->where("equipments.equipment_type_id",$equipment_type);
-		}
-		if($department!=0){
-			$this->db->where("equipments.department_id",$department);
-		}
-		if($area!=0){
-			$this->db->where("equipments.area_id",$area);
-		}
-		if($unit!=0){
-			$this->db->where("equipments.unit_id",$unit);
-		}
-		if($status!=""){
-			$this->db->where("equipments.equipment_status",$status);
-		}
-		$this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipment_type.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_start_date,warranty_end_date,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospitals.hospital_id,departments.department_id,users.user_id")->from("equipments")
-			->join('equipment_type','equipments.equipment_type_id=equipment_type.equipment_type_id','left')
-			->join('hospitals','equipments.hospital_id=hospitals.hospital_id','left')
-			->join('departments','equipments.department_id=departments.department_id','left')
-			->join('users','equipments.user_id=users.user_id','left')
+			}
+			if($this->input->post('search')){
+				$generic_type=strtolower($this->input->post('generic_name'));
+				$this->db->like('LOWER(generic_name)',$generic_type,'after');
+				}
+				$this->db->select("generic_item_id,generic_name,drug_type,item_type,drug_type.drug_type_id,item_type.item_type_id")->from("generic_item")
+				->join('drug_type','generic_item.drug_type_id=drug_type.drug_type_id','left')
+				->join('item_type','generic_item.item_type_id=item_type.item_type_id','left')
+				->order_by('generic_name');	
+
 			
-			->order_by('equipment_type');	
-		
 		}
-
-else if($type=="service"){
+		else if($type=="equipment"){
 		
-		
+			if($this->input->post('select')){
+					$equipment_id=$this->input->post('equipment_id');
 
-
-if($this->input->post('select')){
-				$equipment_id=$this->input->post('equipment_id');
-
-				$this->db->where('equipment_id',$equipment_id);
+					$this->db->where('equipment_id',$equipment_id);
+					
+			}
+			if($this->input->post('search')){
+						$equipment=strtolower($this->input->post('equipment_type'));
+						$this->db->like('LOWER(equipment_type)',$equipment,'after');
+						
+			}
+			if($equipment_type!=0){
+				$this->db->where("equipment.equipment_type_id",$equipment_type);
+			}
+			if($department!=0){
+				$this->db->where("equipment.department_id",$department);
+			}
+			if($area!=0){
+				$this->db->where("equipment.area_id",$area);
+			}
+			if($unit!=0){
+				$this->db->where("equipment.unit_id",$unit);
+			}
+			if($status!=""){
+				$this->db->where("equipment.equipment_status",$status);
+			}
+			$this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipment_type.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_start_date,warranty_end_date,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospital.hospital_id,department.department_id,user.user_id")->from("equipment")
+				->join('equipment_type','equipment.equipment_type_id=equipment_type.equipment_type_id','left')
+				->join('hospital','equipment.hospital_id=hospital.hospital_id','left')
+				->join('department','equipment.department_id=department.department_id','left')
+				->join('user','equipment.user_id=user.user_id','left')
 				
-}
-if($this->input->post('search')){
-			$equipment=strtolower($this->input->post('equipment_type'));
-			$this->db->like('LOWER(equipment_type)',$equipment,'after');
+				->order_by('equipment_type');	
+			
+		}
 
-			
-			
-}
-$this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipments.equipment_id,equipments.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_period,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospitals.hospital_id,departments.department_id,users.user_id")->from("equipments")
-			->join('equipment_type','equipments.equipment_type_id=equipment_type.equipment_type_id','left')
-			->join('hospitals','equipments.hospital_id=hospitals.hospital_id','left')
-			->join('departments','equipments.department_id=departments.department_id','left')
-			->join('users','equipments.user_id=users.user_id','left')
-			
-			->order_by('equipment_type');	
-		
+		else if($type=="service"){
+			if($this->input->post('select')){
+							$equipment_id=$this->input->post('equipment_id');
+
+							$this->db->where('equipment_id',$equipment_id);
+							
+			}
+			if($this->input->post('search')){
+						$equipment=strtolower($this->input->post('equipment_type'));
+						$this->db->like('LOWER(equipment_type)',$equipment,'after');
+
+						
+						
+			}
+			$this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipment.equipment_id,equipment.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_period,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospital.hospital_id,department.department_id,user.user_id")->from("equipment")
+						->join('equipment_type','equipment.equipment_type_id=equipment_type.equipment_type_id','left')
+						->join('hospital','equipment.hospital_id=hospital.hospital_id','left')
+						->join('department','equipment.department_id=department.department_id','left')
+						->join('user','equipment.user_id=user.user_id','left')
+						
+						->order_by('equipment_type');	
+					
 
 		}
 	
 		else if($type=="equipment_type"){
-
-
-
-	if($this->input->post('select')){
+			if($this->input->post('select')){
 				$equipment_type_id=$this->input->post('equipment_type_id');
-
-
-			$this->db->where('equipment_type_id',$equipment_type_id);
-				
+				$this->db->where('equipment_type_id',$equipment_type_id);	
+			}
+			if($this->input->post('search')){
+							
+						$equipment_type_id=strtolower($this->input->post('equipment_type'));
+						$this->db->like('LOWER(equipment_type)',$equipment_type_id,'after');
+						
+			}
+					$this->db->select("equipment_type_id,equipment_type")->from("equipment_type")->order_by("equipment_type");
+					
 		}
-if($this->input->post('search')){
-				
-            $equipment_type_id=strtolower($this->input->post('equipment_type'));
-			$this->db->like('LOWER(equipment_type)',$equipment_type_id,'after');
-			
-}
-		$this->db->select("equipment_type_id,equipment_type")->from("equipment_type")->order_by("equipment_type");
-		
-}
-  else if($type=="drug_type"){
-				if($this->input->post('search')){
+		else if($type=="drug_type"){
+			if($this->input->post('search')){
 				$drug_type=strtolower($this->input->post('drug_type'));
 				$this->db->like('LOWER(drug_type)',$drug_type,'after');
 	
@@ -166,11 +164,39 @@ if($this->input->post('search')){
 					
 					$drug_id=$this->input->post('drug_type_id');
 					$this->db->where('drug_type_id',$drug_id);
-				}
+			}
 			
-$this->db->select("drug_type_id,drug_type,description")->from("drug_type");	
+			$this->db->select("drug_type_id,drug_type,description")->from("drug_type");	
 
-	}		
+		}		
+
+		else if($type=="test_method")
+
+			{
+
+				if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
+
+				{
+
+						$test_id=$this->input->post('test_method_id');
+
+						$this->db->where('test_method_id',$test_id);
+
+				}
+
+		    	if($this->input->post('search') && $this->input->post('test_method')!="")  //query to retrieve matches for the text entered in the field from table test_type
+
+		    	{
+
+		 		 		$search_method=strtolower($this->input->post('test_method'));
+
+			  	    	$this->db->like('LOWER(test_method)',$search_method,'after');
+
+		    	}
+
+				$this->db->select("test_method_id,test_method")->from("test_method")->order_by('test_method');
+
+			}		
 
 		$query=$this->db->get();
 		return $query->result();
@@ -211,7 +237,7 @@ function update_data($type){
 		
 		
 	}
-	else if($type=="equipments"){
+	else if($type=="equipment"){
 			$data = array(
 					  'equipment_type_id'=>$this->input->post('equipment_type'),
 					  'make'=>$this->input->post('make'),	
@@ -233,7 +259,7 @@ function update_data($type){
 				
 				);
 			$this->db->where('equipment_id',$this->input->post('equipment_id'));
-			$table="equipments";
+			$table="equipment";
 		
 
 	}
@@ -250,17 +276,26 @@ else if($type=="generics"){
 		
 		
 	}
-else if($type=="dosages"){
+else if($type=="dosage"){
 			$data = array(
 					  'dosage'=>$this->input->post('dosage'),
 					  'dosage_unit'=>$this->input->post('dosage_unit')
 					  );
 			$this->db->where('dosage_id',$this->input->post('dosage_id'));
-			$table="dosages";
+			$table="dosage";
 		
 		
 	}
+ 
 
+ elseif ($type=="test_method") {      //updating when update button is clicked
+	$data=array('test_method'=>$this->input->post('test_method'));
+
+	$this->db->where('test_method_id',$this->input->post('test_method_id'));
+
+   $table="test_method";
+
+ }
 
 		
 			$this->db->trans_start();
@@ -293,13 +328,13 @@ else if($type=="dosages"){
 			$table="equipment_type";
 		}
 		
-		elseif($type=="dosages"){
+		elseif($type=="dosage"){
 		$data = array(
 					  'dosage_unit'=>$this->input->post('dosage_unit'),
 					 'dosage'=>$this->input->post('dosage')
 		);
 
-		$table="dosages";
+		$table="dosage";
 		}
 		elseif($type=="generic"){
 		$data = array(
@@ -333,7 +368,7 @@ else if($type=="dosages"){
 				'equipment_status'=>$this->input->post('equipment_status')
 				);
 
-		$table="equipments";
+		$table="equipment";
 		}
 	
 		elseif($type=="service"){
@@ -357,7 +392,7 @@ else if($type=="dosages"){
 		
 			);
 
-		$table="equipments";
+		$table="equipment";
 		}
 		
 		elseif($type=="service_records"){
@@ -409,6 +444,15 @@ else if($type=="dosages"){
 		);
 
 		$table="staff";
+		}
+				
+
+		elseif ($type=="test_method") {
+
+			$data=array('test_method'=>$this->input->post('test_method'));
+
+		$table="test_method";			
+
 		}
 		$this->db->trans_start();
 		$this->db->insert($table,$data);
