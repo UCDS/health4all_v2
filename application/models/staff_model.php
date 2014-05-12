@@ -5,13 +5,13 @@ class Staff_model extends CI_Model{
 	}
 	function login($username, $password){
 	   $this -> db -> select('*');
-	   $this -> db -> from('users');
-	   $this -> db -> join('user_department_links','users.user_id=user_department_links.user_id');
-	   $this -> db -> join('user_function_links','users.user_id=user_function_links.user_id');
-	   $this -> db -> join('user_functions','user_function_links.function_id=user_functions.user_function_id');
-	   $this -> db -> join('user_hospital_links','users.user_id=user_hospital_links.user_id');
-	   $this -> db -> join('hospitals','user_hospital_links.hospital_id=hospitals.hospital_id');
-	   $this -> db -> join('departments','user_department_links.department_id=departments.department_id');
+	   $this -> db -> from('user');
+	   $this -> db -> join('user_department_link','user.user_id=user_department_link.user_id');
+	   $this -> db -> join('user_function_link','user.user_id=user_function_link.user_id');
+	   $this -> db -> join('user_function','user_function_link.function_id=user_function.user_function_id');
+	   $this -> db -> join('user_hospital_link','user.user_id=user_hospital_link.user_id');
+	   $this -> db -> join('hospital','user_hospital_link.hospital_id=hospital.hospital_id');
+	   $this -> db -> join('department','user_department_link.department_id=department.department_id');
 	   $this -> db -> where('username', $username);
 	   $this -> db -> where('password', MD5($password));
 	 
@@ -26,23 +26,23 @@ class Staff_model extends CI_Model{
 	     return false;
 	   }
 	}
-	function get_departments(){
-		$this->db->select("department_id,department")->from("departments")->where('clinical','1');
+	function get_department(){
+		$this->db->select("department_id,department")->from("department")->where('clinical','1');
 		$query=$this->db->get();
 		return $query->result();
 	}
-	function get_areas(){
-		$this->db->select("area_id,department_id,area_name")->from("areas");
+	function get_area(){
+		$this->db->select("area_id,department_id,area_name")->from("area");
 		$query=$this->db->get();
 		return $query->result();
 	}
-	function get_units(){
-		$this->db->select("department_id,unit_id,unit_name")->from("units");
+	function get_unit(){
+		$this->db->select("department_id,unit_id,unit_name")->from("unit");
 		$query=$this->db->get();
 		return $query->result();
 	}
-	function get_districts(){
-		$this->db->select("district_id,district")->from("districts");
+	function get_district(){
+		$this->db->select("district_id,district")->from("district");
 		$query=$this->db->get();
 		return $query->result();
 	}
@@ -78,7 +78,7 @@ class Staff_model extends CI_Model{
 		else return true;
 	}
 	function get_print_layouts(){
-		$this->db->select("print_layout_id,print_layout_name")->from("print_layouts");
+		$this->db->select("print_layout_id,print_layout_name")->from("print_layout");
 		$query=$this->db->get();
 		return $query->result();
 	}
@@ -89,7 +89,7 @@ class Staff_model extends CI_Model{
 	}
 	function get_form($form_id){
 		$this->db->select("form_id,form_name,num_columns,form_type,print_layout_page")->from("form")->
-		join('print_layouts','form.print_layout_id=print_layouts.print_layout_id')->where("form_id",$form_id);
+		join('print_layout','form.print_layout_id=print_layout.print_layout_id')->where("form_id",$form_id);
 		$query=$this->db->get();
 		return $query->row();
 	}

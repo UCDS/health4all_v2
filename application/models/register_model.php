@@ -35,7 +35,7 @@ class Register_model extends CI_Model{
 		$outcome_date=date("Y-m-d",strtotime($this->input->post('outcome_date')));
 		$outcome_time=date("h:i:s",strtotime($this->input->post('outcome_time')));
 		if($this->input->post('final_diagnosis')) $final_diagnosis=$this->input->post('final_diagnosis'); else $final_diagnosis="";
-		$this->db->select('count')->from('counters')->where('counter_name',$form_type);
+		$this->db->select('count')->from('counter')->where('counter_name',$form_type);
 		$query=$this->db->get();
 		$result=$query->row();
 		$hosp_file_no=++$result->count;
@@ -58,10 +58,10 @@ class Register_model extends CI_Model{
 		if($this->input->post('patient_id')){
 			$patient_id=$this->input->post('patient_id');
 			$this->db->where('patient_id',$patient_id);
-			$this->db->update('patients',$data);
+			$this->db->update('patient',$data);
 		}
 		else{
-			$this->db->insert('patients',$data);
+			$this->db->insert('patient',$data);
 			$patient_id=$this->db->insert_id();
 		}
 		$visit_data=array(
@@ -84,10 +84,10 @@ class Register_model extends CI_Model{
 		if($this->input->post('visit_id')){
 			$visit_id=$this->input->post('visit_id');
 			$this->db->where('visit_id',$visit_id);
-			$this->db->update('patient_visits',$visit_data);
+			$this->db->update('patient_visit',$visit_data);
 		}
 		else{
-		$this->db->insert('patient_visits',$visit_data,false);
+		$this->db->insert('patient_visit',$visit_data,false);
 		$visit_id=$this->db->insert_id();
 		}
 		if($mlc==1 || $this->input->post('visit_id')){
@@ -105,29 +105,29 @@ class Register_model extends CI_Model{
 			}
 		}
 		$this->db->where('visit_id',$visit_id);
-		$this->db->update('patient_visits',array('admit_id'=>$visit_id));
+		$this->db->update('patient_visit',array('admit_id'=>$visit_id));
 		$this->db->where('counter_name',$form_type);
-		$this->db->update('counters',array('count'=>$hosp_file_no));
+		$this->db->update('counter',array('count'=>$hosp_file_no));
 		$this->db->trans_complete();
-		$this->db->select('patients.patient_id,patient_visits.visit_id,hosp_file_no,admit_date,
+		$this->db->select('patient.patient_id,patient_visit.visit_id,hosp_file_no,admit_date,
 		admit_time,CONCAT(IF(first_name=NULL,"",first_name)," ",IF(last_name=NULL,"",last_name)) name,
 		age_years,age_months,age_days,gender,
 		IF(father_name=NULL OR father_name="",spouse_name,father_name) parent_spouse,
 		department,unit_name,area_name,address,place,phone,district,op_room_no,presenting_complaints,mlc,mlc_number,ps_name',false)
-		->from('patients')->join('patient_visits','patients.patient_id=patient_visits.patient_id')
-		->join('departments','patient_visits.department_id=departments.department_id')
-		->join('units','patient_visits.unit=units.unit_id','left')
-		->join('areas','patient_visits.area=areas.area_id','left')
-		->join('districts','patients.district_id=districts.district_id','left')
-		->join('mlc','patient_visits.visit_id=mlc.visit_id','left')
-		->where('patient_visits.visit_id',$visit_id);
+		->from('patient')->join('patient_visit','patient.patient_id=patient_visit.patient_id')
+		->join('department','patient_visit.department_id=department.department_id')
+		->join('unit','patient_visit.unit=unit.unit_id','left')
+		->join('area','patient_visit.area=area.area_id','left')
+		->join('district','patient.district_id=district.district_id','left')
+		->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
+		->where('patient_visit.visit_id',$visit_id);
 		$resource=$this->db->get();
 		return $resource->row();
 
 	}
 	function search(){
 		if($this->input->post('search_patient_id')){
-			$this->db->where('patients.patient_id',$this->input->post('search_patient_id'));
+			$this->db->where('patient.patient_id',$this->input->post('search_patient_id'));
 		}
 		if($this->input->post('search_patient_name')){
 			$name=$this->input->post('search_patient_name');
@@ -144,27 +144,27 @@ class Register_model extends CI_Model{
 		if($this->input->post('search_phone')){
 			$this->db->where('phone',$this->input->post('search_phone'));
 		}
-		$this->db->select("patients.patient_id,visit_type,visit_id,first_name,last_name,CONCAT(first_name,' ',last_name) name,
+		$this->db->select("patient.patient_id,visit_type,visit_id,first_name,last_name,CONCAT(first_name,' ',last_name) name,
 		age_years,age_months,age_days,gender,phone,department,
 		IF(father_name=NULL OR father_name='',spouse_name,father_name) parent_spouse,admit_date",false)
-		->from('patients')
-		->join('patient_visits','patients.patient_id=patient_visits.patient_id')
-		->join('departments','patient_visits.department_id=departments.department_id')
+		->from('patient')
+		->join('patient_visit','patient.patient_id=patient_visit.patient_id')
+		->join('department','patient_visit.department_id=department.department_id')
 		->order_by('name','ASC');
 		$query=$this->db->get();
 		return $query->result();
 	}
 	function select($visit_id=0){
 		if($visit_id!=0)
-			$this->db->where('patient_visits.visit_id',$visit_id);
+			$this->db->where('patient_visit.visit_id',$visit_id);
 		else return false;
 		
-		$this->db->select('patients.*,patient_visits.*,departments.department,units.unit_id,units.unit_name,areas.area_id,areas.area_name,mlc.mlc_number,mlc.ps_name')
-		->from('patients')->join('patient_visits','patients.patient_id=patient_visits.patient_id')
-		->join('departments','patient_visits.department_id=departments.department_id')
-		->join('units','patient_visits.unit=units.unit_id','left')
-		->join('areas','patient_visits.area=areas.area_id','left')
-		->join('mlc','patient_visits.visit_id=mlc.visit_id','left');
+		$this->db->select('patient.*,patient_visit.*,department.department,unit.unit_id,unit.unit_name,area.area_id,area.area_name,mlc.mlc_number,mlc.ps_name')
+		->from('patient')->join('patient_visit','patient.patient_id=patient_visit.patient_id')
+		->join('department','patient_visit.department_id=department.department_id')
+		->join('unit','patient_visit.unit=unit.unit_id','left')
+		->join('area','patient_visit.area=area.area_id','left')
+		->join('mlc','patient_visit.visit_id=mlc.visit_id','left');
 		$query=$this->db->get();
 		return $query->row();
 

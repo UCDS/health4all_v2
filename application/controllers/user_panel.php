@@ -22,6 +22,21 @@ class User_panel extends CI_Controller {
 			show_404();
 		}
 	}
+	function create_user(){
+		if($this->session->userdata('logged_in')){
+		$this->load->helper('form');
+		$this->data['title']="Create User";
+		$data['userdata']=$this->session->userdata('logged_in');
+		$data['print_layouts']=$this->staff_model->get_print_layouts();
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('templates/leftnav',$this->data);
+		$this->load->view('pages/create_user',$data);
+		$this->load->view('templates/footer');	
+		}
+		else{
+			show_404();
+		}
+	}
 	function create_form(){
 		if($this->session->userdata('logged_in')){
 				if($this->staff_model->upload_form()){
@@ -36,6 +51,7 @@ class User_panel extends CI_Controller {
 		$this->data['title']="User Panel";
 		$data['userdata']=$this->session->userdata('logged_in');
 		$this->load->view('templates/header',$this->data);
+		$this->load->view('templates/leftnav',$this->data);
 		$this->load->view('pages/settings',$data);
 		$this->load->view('templates/footer');	
 		}

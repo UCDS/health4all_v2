@@ -32,3 +32,33 @@
 			<ul>
 </div>
 <?php } ?>
+
+<?php if(preg_match("^user_panel/*^",current_url())) { ?>
+
+		<div class="col-sm-3 col-md-2 sidebar-left">
+			<strong>Settings</strong>
+				<ul class="nav nav-sidebar nav-stacked">
+				<li class="nav-divider"></li>
+				<li>Forms</li>
+				<li> 
+					<a href="<?php echo base_url()."user_panel/form_layout";?>">Create New</a>
+				</li>
+				<li class="disabled"><a>Edit</a>
+					<ul>
+						<li> 
+						<a href="#">Out Patient Form</a>
+						</li>
+						<li> 
+						<a href="#">In Patient Form</a>
+						</li>
+					</ul>
+				</li>
+				<li class="nav-divider"></li>
+
+				<li class="navbar-text">Users</li>
+				<li> 
+					<a href="<?php echo base_url()."user_panel/create_user";?>">Create New</a>
+				</li>
+				</ul>
+        </div>
+<?php } ?>

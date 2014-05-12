@@ -32,8 +32,8 @@ class Reports_model extends CI_Model{
 		SUM(CASE WHEN age_years > 50 THEN 1 ELSE 0 END) 'op_50plus',
 		SUM(CASE WHEN gender = 'F' AND age_years > 50 THEN 1 ELSE 0 END) 'op_f50plus',
 		  SUM(CASE WHEN gender = 'M' AND age_years > 50 THEN 1 ELSE 0 END) 'op_m50plus'");
-		 $this->db->from('patient_visits')->join('patients','patient_visits.patient_id=patients.patient_id')
-		 ->join('departments','patient_visits.department_id=departments.department_id')
+		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
+		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->where('visit_type','OP')
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')")
 		 ->group_by('department');
@@ -70,8 +70,8 @@ class Reports_model extends CI_Model{
 		SUM(CASE WHEN age_years > 50 THEN 1 ELSE 0 END) 'ip_50plus',
 		SUM(CASE WHEN gender = 'F' AND age_years > 50 THEN 1 ELSE 0 END) 'ip_f50plus',
 		  SUM(CASE WHEN gender = 'M' AND age_years > 50 THEN 1 ELSE 0 END) 'ip_m50plus'");
-		 $this->db->from('patient_visits')->join('patients','patient_visits.patient_id=patients.patient_id')
-		 ->join('departments','patient_visits.department_id=departments.department_id')
+		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
+		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->where('visit_type','IP')
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')")
 		 ->group_by('department');
@@ -94,8 +94,8 @@ class Reports_model extends CI_Model{
 		}
 
 		$this->db->select("hosp_file_no,visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,gender,IF(gender='F' AND father_name=NULL,spouse_name,father_name) parent_spouse,age_years,place,phone,department",false);
-		 $this->db->from('patient_visits')->join('patients','patient_visits.patient_id=patients.patient_id')
-		 ->join('departments','patient_visits.department_id=departments.department_id')
+		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
+		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->where('visit_type','OP')
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')");		  
 		$resource=$this->db->get();
@@ -116,26 +116,26 @@ class Reports_model extends CI_Model{
 		}
 
 		$this->db->select("hosp_file_no,visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,gender,IF(gender='F' AND father_name=NULL,spouse_name,father_name) parent_spouse,age_years,place,phone,department",false);
-		 $this->db->from('patient_visits')->join('patients','patient_visits.patient_id=patients.patient_id')
-		 ->join('departments','patient_visits.department_id=departments.department_id')
+		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
+		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->where('visit_type','IP')
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')");		  
 		$resource=$this->db->get();
 		return $resource->result();
 	}
 	
-	function get_equipments_summary(){
-		$this->db->select("equipments.equipment_type_id,equipment_type,equipments.department_id,department,equipments.area_id,area_name,equipments.unit_id,unit_name,
+	function get_equipment_summary(){
+		$this->db->select("equipment.equipment_type_id,equipment_type,equipment.department_id,department,equipment.area_id,area_name,equipment.unit_id,unit_name,
 		SUM(CASE WHEN equipment_status=1 THEN 1 ELSE 0 END) 'working',
 		SUM(CASE WHEN equipment_status=0 THEN 1 ELSE 0 END) 'not_working',
 		SUM(CASE WHEN 1 THEN 1 ELSE 0 END) 'total',
 		")
-		->from("equipments")
-		->join("equipment_type","equipments.equipment_type_id=equipment_type.equipment_type_id")
-		->join("departments","equipments.department_id=departments.department_id")
-		->join("units","equipments.unit_id=units.unit_id","left")
-		->join("areas","equipments.area_id=areas.area_id","left")
-		->group_by("equipment_type,department,equipments.area_id,equipments.unit_id")
+		->from("equipment")
+		->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id")
+		->join("department","equipment.department_id=department.department_id")
+		->join("unit","equipment.unit_id=unit.unit_id","left")
+		->join("area","equipment.area_id=area.area_id","left")
+		->group_by("equipment_type,department,equipment.area_id,equipment.unit_id")
 		->order_by("equipment_type");
 		$query=$this->db->get();
 		return $query->result();
