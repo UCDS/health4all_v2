@@ -196,7 +196,22 @@ class Masters_model extends CI_Model{
 
 				$this->db->select("test_method_id,test_method")->from("test_method")->order_by('test_method');
 
-			}		
+			}
+				elseif ($type=="test_group") {
+			if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
+			{
+					$test_id=$this->input->post('test_group_id');
+					$this->db->where('group_id',$test_id);
+			}
+	    	if($this->input->post('search') && $this->input->post('group_name')!="")  //query to retrieve matches for the text entered in the field from table test_type
+	    	{
+	 		 		$search_method=strtolower($this->input->post('group_name'));
+		  	    	$this->db->like('LOWER(group_name)',$search_method,'after');
+	    	}
+			$this->db->select("group_id,group_name")->from("test_group")->order_by('group_name');
+
+
+		}		
 
 		$query=$this->db->get();
 		return $query->result();
@@ -297,6 +312,13 @@ else if($type=="dosage"){
 
  }
 
+ elseif ($type=="test_group") {
+ 		
+    $data=array('group_name'=>$this->input->post('group_name'));
+ 	$r=$this->input->post('test_group_id');
+ 	$this->db->where('group_id',$this->input->post('test_group_id'));
+   $table="test_group";	
+ }
 		
 			$this->db->trans_start();
 			$this->db->update($table,$data);
@@ -453,6 +475,10 @@ else if($type=="dosage"){
 
 		$table="test_method";			
 
+		}
+			elseif ($type=="test_group") {
+			$data=array('group_name'=>$this->input->post('group_name'));
+		$table="test_group";
 		}
 		$this->db->trans_start();
 		$this->db->insert($table,$data);

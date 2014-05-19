@@ -20,6 +20,11 @@ array('field' => 'test_method',
 )
 );
 }
+if($type=="test_group"){
+		$title="Test Group";
+		$config=array(array('field' => 'group_name','label'=>'Group_Name','rules'=>'required|trim|xss_clean' ));
+
+	}
 
    $data['title']=$title;
 $page="pages/diagnostics/add_".$type."_form";
@@ -62,6 +67,18 @@ $config=array( array(
 		//load model and execute select query in order to populate search results
 $data['test_methods']=$this->masters_model->get_data("test_method");
 }
+if ($type=="test_group") {
+		$title="Edit Test Group";
+		//Defining  field,name label and rules for the text field
+		$config=array( array(
+       'field' => 'group_name',
+       'label'   => 'Group Name ',
+       'rules'   => 'trim|xss_clean',
+        ));
+        //load model and execute select query in order to populate search results
+		$data['test_groups']=$this->masters_model->get_data("test_group");
+
+	}
 
 //defining filenname in view and also loading header,left nav bar and footer
 $page="pages/diagnostics/edit_".$type."_form";

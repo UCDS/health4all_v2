@@ -48,7 +48,8 @@
 			<li class="dropdown  <?php if(preg_match("^".base_url()."services^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Services <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-						  <li><a href="#">Diagnostics</a></li>
+
+              <li><a href="<?php echo base_url()."mastertables/load_background";?>">Diagnostics</a></li>
 						  <li><a href="#">BloodBank</a></li>
 						</ul>
 					  </li>
