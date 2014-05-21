@@ -25,6 +25,11 @@ if($type=="test_group"){
 		$config=array(array('field' => 'group_name','label'=>'Group_Name','rules'=>'required|trim|xss_clean' ));
 
 	}
+if($type=="specimen_type"){
+		$title="Specimen Type";
+		$config=array(array('field' => 'specimen_type','label'=>'Specimen_Type','rules'=>'required|trim|xss_clean' ));
+
+	}
 
    $data['title']=$title;
 $page="pages/diagnostics/add_".$type."_form";
@@ -77,6 +82,18 @@ if ($type=="test_group") {
         ));
         //load model and execute select query in order to populate search results
 		$data['test_groups']=$this->masters_model->get_data("test_group");
+
+	}
+	if ($type=="specimen_type") {
+		$title="Edit Specimen Type";
+		//Defining  field,name label and rules for the text field
+		$config=array( array(
+       'field' => 'specimen_type',
+       'label'   => 'Specimen Type',
+       'rules'   => 'trim|xss_clean',
+        ));
+        //load model and execute select query in order to populate search results
+		$data['specimen_types']=$this->masters_model->get_data("specimen_type");
 
 	}
 
