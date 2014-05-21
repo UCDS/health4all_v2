@@ -225,7 +225,22 @@ class Masters_model extends CI_Model{
 	    	}
 			$this->db->select("speciment_type_id,specimen_type")->from("specimen_type")->order_by('specimen_type');
 
-		}		
+		}
+			elseif ($type=="sample_status") {
+			if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
+			{
+					$test_id=$this->input->post('sample_status_id');
+					$this->db->where('sample_status_id',$test_id);
+			}
+	    	if($this->input->post('search') && $this->input->post('sample_status')!="")  //query to retrieve matches for the text entered in the field from table test_type
+	    	{
+	 		 		$search_method=strtolower($this->input->post('sample_status'));
+		  	    	$this->db->like('LOWER(sample_status)',$search_method,'after');
+	    	}
+			$this->db->select("sample_status_id,sample_status")->from("sample_status")->order_by('sample_status');
+
+		}
+		
 
 		$query=$this->db->get();
 		return $query->result();
@@ -339,6 +354,11 @@ else if($type=="dosage"){
  	 $this->db->where('speciment_type_id',$this->input->post('specimen_type_id'));
    $table="specimen_type";	
  }	
+ elseif ($type=="sample_status") {
+    $data=array('sample_status'=>$this->input->post('sample_status'));
+ 	 $this->db->where('sample_status_id',$this->input->post('sample_status_id'));
+   $table="sample_status";	
+ }
 			$this->db->trans_start();
 			$this->db->update($table,$data);
 	
@@ -502,6 +522,10 @@ else if($type=="dosage"){
 		elseif ($type=="specimen_type") {
 			$data=array('specimen_type'=>$this->input->post('specimen_type'));
 		$table="specimen_type";
+		}
+			elseif ($type=="sample_status") {
+			$data=array('sample_status'=>$this->input->post('sample_status'));
+		$table="sample_status";
 		}
 
 		$this->db->trans_start();

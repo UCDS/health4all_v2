@@ -30,7 +30,11 @@ if($type=="specimen_type"){
 		$config=array(array('field' => 'specimen_type','label'=>'Specimen_Type','rules'=>'required|trim|xss_clean' ));
 
 	}
+if($type=="sample_status"){
+		$title="Sample Status";
+		$config=array(array('field' => 'sample_status','label'=>'Sample Status','rules'=>'required|trim|xss_clean' ));
 
+	}
    $data['title']=$title;
 $page="pages/diagnostics/add_".$type."_form";
 $this->load->view('templates/header',$data);
@@ -96,6 +100,18 @@ if ($type=="test_group") {
 		$data['specimen_types']=$this->masters_model->get_data("specimen_type");
 
 	}
+		if ($type=="sample_status") {
+		$title="Edit Sample Status";
+		//Defining  field,name label and rules for the text field
+		$config=array( array(
+       'field' => 'sample_status',
+       'label'   => 'Sample Status',
+       'rules'   => 'trim|xss_clean',
+        ));
+        //load model and execute select query in order to populate search results
+		$data['sample_statuses']=$this->masters_model->get_data("sample_status");
+
+	}	
 
 //defining filenname in view and also loading header,left nav bar and footer
 $page="pages/diagnostics/edit_".$type."_form";
