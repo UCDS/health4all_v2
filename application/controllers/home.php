@@ -16,13 +16,17 @@ class Home extends CI_Controller {
 			$this->data['title']="Home";
 			$this->load->view('templates/header',$this->data);
 			$data['userdata']=$this->session->userdata('logged_in');
-			if(count($this->session->userdata('logged_in'))>1){
+			$hospitals=array();
+			foreach($data['userdata'] as $temp){
+				$hospitals[]=$temp['hospital_id'];
+			}
+			if(count(array_unique($hospitals))>1){
 				$this->load->library('form_validation');
 				$this->form_validation->set_rules('organisation', 'Organisation',
 				'trim|required|xss_clean');
 				if ($this->form_validation->run() === FALSE)
 				{
-					$this->load->view('pages/home');
+					$this->load->view('pages/home',$data);
 				}
 				else{
 					if($this->input->post('organisation')){
@@ -37,7 +41,9 @@ class Home extends CI_Controller {
 								 'place' => $row['place'],
 								 'district' => $row['district'],
 								 'state' => $row['state'],
-								 'logo' => $row['logo']
+								 'logo' => $row['logo'],
+								 'user_function_id'=>$row['user_function_id'],
+								 'user_function'=>$row['user_function']
 								);
 								$this->session->set_userdata('hospital',$sess_array);
 							}
@@ -50,18 +56,20 @@ class Home extends CI_Controller {
 				foreach($this->session->userdata('logged_in') as $row){
 							$sess_array = array(
 							'user_id' => $row['user_id'],
-							 'username' => $row['username'],
-							 'hospital_id' => $row['hospital_id'],
-							 'hospital' => $row['hospital'],
-							 'description' => $row['description'],
-							 'place' => $row['place'],
-							 'district' => $row['district'],
-							 'state' => $row['state'],
-							'logo' => $row['logo']
+							'username' => $row['username'],
+							'hospital_id' => $row['hospital_id'],
+							'hospital' => $row['hospital'],
+							'description' => $row['description'],
+							'place' => $row['place'],
+							'district' => $row['district'],
+							'state' => $row['state'],
+							'logo' => $row['logo'],
+							'user_function_id'=>$row['user_function_id'],
+							'user_function'=>$row['user_function']
 							);
 							$this->session->set_userdata('hospital',$sess_array);
 				}
-				$this->load->view('pages/home');
+				$this->load->view('pages/home',$data);
 			}
 		}
 		else{
@@ -109,7 +117,6 @@ class Home extends CI_Controller {
 	 
 	   //query the database
 	   $result = $this->staff_model->login($username, $password);
-	 
 	   if($result)
 	   {
 	     $sess_array = array();
@@ -124,7 +131,9 @@ class Home extends CI_Controller {
 	         'place' => $row->place,
 	         'district' => $row->district,
 	         'state' => $row->state,
-	         'logo' => $row->logo
+	         'logo' => $row->logo,
+			 'user_function_id'=>$row->function_id,
+			 'user_function'=>$row->user_function,
 			 );
 	       $this->session->set_userdata('logged_in', $sess_array);
 	     }

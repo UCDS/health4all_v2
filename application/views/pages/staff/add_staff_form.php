@@ -24,7 +24,7 @@
 	</center>
 	<?php 
 	//What is form_open ?
-	echo form_open('staff/add/staff',array('class'=>'form-custom','role'=>'form','id'=>'add_staff')); 
+	echo form_open('staff/add/staff',array('class'=>'form-horizontal','role'=>'form','id'=>'add_staff')); 
 	?>
 
 	<div class="form-group">
@@ -44,8 +44,11 @@
 			<input type="text" class="form-control" placeholder="Last Name" id="last_name" name="last_name" />
 		</div>
 	</div>
-	<div class="radio">
-		<div class="col-md-9">
+	<div class="form-group">
+		<div class="col-md-3">
+			<label class="control-label">Gender</label>
+		</div>
+		<div class="col-md-6">
 			<label class="control-label">
 				<input type="radio" name="gender" value="1" checked />Male
 			</label>
@@ -77,7 +80,7 @@
 				echo "<option value='$d->department_id'>$d->department</option>";
 				}?>
 			</select>
-		</div
+		</div>
 	</div>
 	
 	<div class="form-group">

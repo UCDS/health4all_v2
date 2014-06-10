@@ -46,6 +46,18 @@ class Staff_model extends CI_Model{
 		$query=$this->db->get();
 		return $query->result();
 	}
+	function get_user_function(){
+		$this->db->select("user_function_id,user_function")->from("user_function");
+		$query=$this->db->get();
+		return $query->result();
+	}
+	function get_staff(){
+		$this->db->select("staff_id,CONCAT(IF(first_name!='',first_name,''),' ',IF(last_name!='',last_name,'')) staff_name,department",false)
+		->from("staff")
+		->join('department','staff.department_id=department.department_id');
+		$query=$this->db->get();
+		return $query->result();
+	}
 	function upload_form(){
 		$fields=json_decode($this->input->post('fields'));
 		$form_name=$this->input->post('form_name');
@@ -103,7 +115,53 @@ class Staff_model extends CI_Model{
 			$fields[$row->field_name]=$row->mandatory;
 		}
 		return $fields;
-		
 	}
+	function create_user(){
+		$data=array(
+		'username'=>$this->input->post('username'),
+		'password'=>md5($this->input->post('password')),
+		'staff_id'=>$this->input->post('staff')
+		);
+		$this->db->trans_start();
+		$this->db->insert('user',$data);
+		$user_id=$this->db->insert_id();
+		$user_function=$this->input->post('user_function');
+		$user_function_data=array();
+		foreach($user_function as $u){
+			$add=0;
+			$edit=0;
+			$view=0;
+			if($this->input->post($u)){
+				foreach($this->input->post($u) as $access){
+					if($access=="add") $add=1;
+					if($access=="edit") $edit=1;
+					if($access=="view") $view=1;
+				}
+				$user_function_data[]=array(
+					'user_id'=>$user_id,
+					'function_id'=>$u,
+					'add'=>$add,
+					'edit'=>$edit,
+					'view'=>$view
+				);
+			}
+		}
+		$this->db->insert_batch('user_function_link',$user_function_data);
+		$this->db->select('department_id,hospital_id')->from('staff')->where('staff_id',$this->input->post('staff'));
+		$query=$this->db->get();
+		$result=$query->row();
+		if($this->input->post('department')){
+			$department=0;
+		}
+		else
+			$department=$result->department_id;
+		$hospital=$result->hospital_id;
+		$this->db->insert('user_department_link',array('user_id'=>$user_id,'department_id'=>$department));
+		$this->db->insert('user_hospital_link',array('user_id'=>$user_id,'hospital_id'=>$hospital));
+		$this->db->trans_complete();
+		if($this->db->trans_status()===TRUE) return true; else return false;
+	}
+			
+			
 }
 ?>

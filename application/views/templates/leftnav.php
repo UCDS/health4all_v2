@@ -1,4 +1,6 @@
-<?php if(preg_match("^equipments/*^",current_url())) { ?>
+<?php if(preg_match("^equipments/*^",current_url())) { 
+	$userinfo=$this->session->userdata('logged_in'); // Store the session data in a variable, contains all the functions the user has access to.
+?>
 <div class="col-sm-3 col-md-2 sidebar-left">
     <ul class="nav nav-sidebar">
     			<li class="nav-header">Add</li>

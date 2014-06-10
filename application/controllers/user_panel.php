@@ -27,10 +27,26 @@ class User_panel extends CI_Controller {
 		$this->load->helper('form');
 		$this->data['title']="Create User";
 		$data['userdata']=$this->session->userdata('logged_in');
-		$data['print_layouts']=$this->staff_model->get_print_layouts();
+		$data['user_functions']=$this->staff_model->get_user_function();
+		$data['staff']=$this->staff_model->get_staff();
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/leftnav',$this->data);
-		$this->load->view('pages/create_user',$data);
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean');
+		$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean');
+		if ($this->form_validation->run() === FALSE){
+			$this->load->view('pages/create_user',$data);
+		}
+		else{
+			if($this->staff_model->create_user()){
+				$data['msg']="User created successfully";
+				$this->load->view('pages/create_user',$data);
+			}
+			else{
+				$data['msg']="Error creating user. Please retry.";
+				$this->load->view('pages/create_user',$data);
+			}
+		}
 		$this->load->view('templates/footer');	
 		}
 		else{

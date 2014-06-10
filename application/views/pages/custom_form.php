@@ -146,10 +146,12 @@ pri.print();
 				<label class="control-label">Patient ID</label>
 				<input type="text" name="patient_id" class="form-control" size="3" value="<?php echo $patient->patient_id;?>" readonly />
 				<?php } ?>
-				<?php if($update){ ?>
+				<?php if($form_type=="IP"){ ?>
 				<label class="control-label">IP No</label>
+				<?php if($update){ ?>
 				<input type="text" name="visit_id" class="form-control sr-only" size="3" value="<?php echo $patient->visit_id;?>" readonly />
-				<input type="text" name="hosp_file_no" class="form-control" size="3" value="<?php echo $patient->hosp_file_no;?>" readonly />
+				<?php } ?>
+				<input type="text" name="hosp_file_no" <?php if($update){?> value="<?php echo $patient->hosp_file_no;?>" <?php } ?> class="form-control" size="3" />
 				<?php } ?>
 				<label class="control-label">Date</label>
 				<input type="text" name="date" class="form-control date" value="<?php echo date("d-M-Y");?>" required />

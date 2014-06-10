@@ -2,7 +2,8 @@
 	<div class="row">
 		<h1>Welcome to Health4All! <small>a Free and Open Source application supported by <a href="www.yousee.in" target="_blank">YouSee</a></small></h1>
 		<p>
-		<?php if($this->session->userdata('hospital')){
+		<?php 
+		if($this->session->userdata('hospital')){
 				$hospital=$this->session->userdata('hospital');
 				echo "<div class='well'><b>Current Hospital set to</b> : $hospital[hospital], Place: $hospital[place], District: $hospital[district]</div>";
 			}
@@ -12,7 +13,11 @@
 		?>
 		<p>
 		<?php
-		if(count($this->session->userdata('logged_in'))>1){
+		$hospitals=array();
+		foreach($userdata as $temp){
+			$hospitals[]=$temp['hospital_id'];
+		}
+		if(count(array_unique($hospitals))>1){
 		echo form_open('home',array('role'=>'form','class'=>'form-custom')); ?>
 		<label class="control-label"> Select Hospital - 
 		<select name="organisation" class="form-control">
