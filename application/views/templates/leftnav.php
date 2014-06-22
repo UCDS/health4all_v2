@@ -34,6 +34,17 @@
 			<ul>
 </div>
 <?php } ?>
+<?php if(preg_match("^staff/*^",current_url())) { ?>
+
+<div class="col-sm-3 col-md-2 sidebar-left">
+    <ul class="nav nav-sidebar">
+    			<li class="nav-header">Add</li>
+				<li><a href="<?php echo base_url();?>staff/add/staff">Staff</a></li>
+				<li><a href="<?php echo base_url();?>staff/add/staff_role">Staff Role</a></li>
+				<li><a href="<?php echo base_url();?>staff/add/staff_category"> Staff Category</a></li>
+	<ul>
+</div>
+<?php } ?>
 
 <?php if(preg_match("^user_panel/*^",current_url())) { ?>
 

@@ -6,12 +6,6 @@ class Staff_model extends CI_Model{
 	function login($username, $password){
 	   $this -> db -> select('*');
 	   $this -> db -> from('user');
-	   $this -> db -> join('user_department_link','user.user_id=user_department_link.user_id');
-	   $this -> db -> join('user_function_link','user.user_id=user_function_link.user_id');
-	   $this -> db -> join('user_function','user_function_link.function_id=user_function.user_function_id');
-	   $this -> db -> join('user_hospital_link','user.user_id=user_hospital_link.user_id');
-	   $this -> db -> join('hospital','user_hospital_link.hospital_id=hospital.hospital_id');
-	   $this -> db -> join('department','user_department_link.department_id=department.department_id');
 	   $this -> db -> where('username', $username);
 	   $this -> db -> where('password', MD5($password));
 	 
@@ -25,6 +19,30 @@ class Staff_model extends CI_Model{
 	   {
 	     return false;
 	   }
+	}
+	function user_function($user_id){
+		$this->db->select('user_function_id,user_function,add,edit,view')->from('user')
+		->join('user_function_link','user.user_id=user_function_link.user_id')
+		->join('user_function','user_function_link.function_id=user_function.user_function_id')
+		->where('user_function_link.user_id',$user_id);
+		$query=$this->db->get();
+		return $query->result();
+	}
+	function user_hospital($user_id){
+		$this->db->select('hospital.hospital_id,hospital,description,place,district,state,logo')->from('user')
+		->join('user_hospital_link','user.user_id=user_hospital_link.user_id')
+		->join('hospital','user_hospital_link.hospital_id=hospital.hospital_id')
+		->where('user_hospital_link.user_id',$user_id);
+		$query=$this->db->get();
+		return $query->result();
+	}
+	function user_department($user_id){
+		$this->db->select('department.department_id,department')->from('user')
+		->join('user_department_link','user.user_id=user_department_link.user_id')
+		->join('department','user_department_link.department_id=department.department_id')
+		->where('user_department_link.user_id',$user_id);
+		$query=$this->db->get();
+		return $query->result();
 	}
 	function get_department(){
 		$this->db->select("department_id,department")->from("department")->where('clinical','1');

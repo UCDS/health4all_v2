@@ -18,6 +18,11 @@ $(function(){
 					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
 		</form>
 	<br />
+	<?php 
+	$from_date=0;$to_date=0;
+	if($this->input->post('from_date')) $from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+	if($this->input->post('to_date')) $to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+	?>
 	<?php if(count($report)>0){ ?>
 	<table class="table table-bordered table-striped">
 	<thead>
@@ -56,21 +61,21 @@ $(function(){
 	?>
 	<tr>
 		<td><?php echo $s->department;?></td>
-		<td><?php echo $s->ip_mchild;?></td>
-		<td><?php echo $s->ip_fchild;?></td>
-		<td><?php echo $s->ip_child;?></td>
-		<td><?php echo $s->ip_m14to30;?></td>
-		<td><?php echo $s->ip_f14to30;?></td>
-		<td><?php echo $s->ip_14to30;?></td>
-		<td><?php echo $s->ip_m30to50;?></td>
-		<td><?php echo $s->ip_f30to50;?></td>
-		<td><?php echo $s->ip_30to50;?></td>
-		<td><?php echo $s->ip_m50plus;?></td>
-		<td><?php echo $s->ip_f50plus;?></td>
-		<td><?php echo $s->ip_50plus;?></td>
-		<td><?php echo $s->ip_male;?></td>
-		<td><?php echo $s->ip_female;?></td>
-		<th><?php echo $s->ip;?></th>
+		<td><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/M/14/0/$from_date/$to_date";?>"><?php echo $s->ip_mchild;?></a></td>
+		<td><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/F/14/0/$from_date/$to_date";?>"><?php echo $s->ip_fchild;?></td>
+		<td><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/0/14/0/$from_date/$to_date";?>"><?php echo $s->ip_child;?></td>
+		<td><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/M/14/30/$from_date/$to_date";?>"><?php echo $s->ip_m14to30;?></td>
+		<td><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/F/14/30/$from_date/$to_date";?>"><?php echo $s->ip_f14to30;?></td>
+		<td><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/0/14/30/$from_date/$to_date";?>"><?php echo $s->ip_14to30;?></td>
+		<td><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/M/30/50/$from_date/$to_date";?>"><?php echo $s->ip_m30to50;?></td>
+		<td><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/F/30/50/$from_date/$to_date";?>"><?php echo $s->ip_f30to50;?></td>
+		<td><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/0/30/50/$from_date/$to_date";?>"><?php echo $s->ip_30to50;?></td>
+		<td><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/M/0/50/$from_date/$to_date";?>"><?php echo $s->ip_m50plus;?></td>
+		<td><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/F/0/50/$from_date/$to_date";?>"><?php echo $s->ip_f50plus;?></td>
+		<td><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/0/0/50/$from_date/$to_date";?>"><?php echo $s->ip_50plus;?></td>
+		<td><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/M/0/0/$from_date/$to_date";?>"><?php echo $s->ip_male;?></td>
+		<td><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/F/0/0/$from_date/$to_date";?>"><?php echo $s->ip_female;?></td>
+		<th><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/0/0/0/$from_date/$to_date";?>"><?php echo $s->ip;?></th>
 	</tr>
 	<?php
 	$total_mchild+=$s->ip_mchild;

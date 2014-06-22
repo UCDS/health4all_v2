@@ -6,6 +6,13 @@ class Consumables extends CI_Controller {
 		$this->load->model('projects_model');
 		$this->load->model('masters_model');
 		$this->load->model('staff_model');
+		if($this->session->userdata('logged_in')){
+		$userdata=$this->session->userdata('logged_in');
+		$user_id=$userdata['user_id'];
+		$this->data['hospitals']=$this->staff_model->user_hospital($user_id);
+		$this->data['functions']=$this->staff_model->user_function($user_id);
+		$this->data['departments']=$this->staff_model->user_department($user_id);
+		}
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 	}
@@ -13,7 +20,14 @@ class Consumables extends CI_Controller {
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
 		$user=$this->session->userdata('logged_in');
-		$data['user_id']=$user[0]['user_id'];
+		$this->data['user_id']=$user['user_id'];
+		$access=0;
+		foreach($this->data['functions'] as $function){
+			if($function['user_function']=="Consumables" && $function['add']==1){
+				$access=1;
+			}
+		}
+		if($access==1){
 		if($type=="drug_type"){
 			$title="Add Drug";
 		
@@ -29,8 +43,8 @@ class Consumables extends CI_Controller {
                      'rules'   => 'required|trim|xss_clean'
                   )
 			);
-/*			$data['drug_type']=$this->masters_model->insert_data("drug_type");
-			$data['divisions']=$this->masters_model->get_data("divisions");	
+/*			$this->data['drug_type']=$this->masters_model->insert_data("drug_type");
+			$this->data['divisions']=$this->masters_model->get_data("divisions");	
 		*/
 
 
@@ -77,7 +91,7 @@ else if($type=="service"){
       
              
 			);
-$data['service']=$this->masters_model->get_data("service");
+$this->data['service']=$this->masters_model->get_data("service");
      		
 }
 
@@ -96,7 +110,7 @@ else if($type=="service_records"){
              
              
 			);
-$data['user']=$this->masters_model->get_data("user");
+$this->data['user']=$this->masters_model->get_data("user");
 		
 }
 
@@ -117,10 +131,10 @@ $data['user']=$this->masters_model->get_data("user");
                   ),
 		);
 
-        $data['equipment_types']=$this->masters_model->get_data("equipment_types");
-		$data['hospital']=$this->masters_model->get_data("hospital");
-		$data['department']=$this->masters_model->get_data("department");
-		$data['user']=$this->masters_model->get_data("user");
+        $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
+		$this->data['hospital']=$this->masters_model->get_data("hospital");
+		$this->data['department']=$this->masters_model->get_data("department");
+		$this->data['user']=$this->masters_model->get_data("user");
 		
 
 }
@@ -135,8 +149,8 @@ $data['user']=$this->masters_model->get_data("user");
                   ) 	
 		     
 			);
-			$data['item_type']=$this->masters_model->get_data("item_type");
-		$data['drug_type']=$this->masters_model->get_data("drug_type");
+			$this->data['item_type']=$this->masters_model->get_data("item_type");
+		$this->data['drug_type']=$this->masters_model->get_data("drug_type");
 		
 		}
 		else if($type=="division"){
@@ -148,7 +162,7 @@ $data['user']=$this->masters_model->get_data("user");
                      'rules'   => 'required|trim|xss_clean'
                   )
 			);	
-			$data['district']=$this->masters_model->get_data("districts");
+			$this->data['district']=$this->masters_model->get_data("districts");
 		}
 		else if($type=="grant"){
 			$title="Add Grant";
@@ -164,7 +178,7 @@ $data['user']=$this->masters_model->get_data("user");
                      'rules'   => 'required|trim|xss_clean'
                )
 			);
-			$data['grant_sources']=$this->masters_model->get_data("grant_sources");
+			$this->data['grant_sources']=$this->masters_model->get_data("grant_sources");
 		}
 		else if($type=="user"){
 			$title="Add User";
@@ -187,25 +201,27 @@ $data['user']=$this->masters_model->get_data("user");
 		$this->form_validation->set_rules($config);
  		if ($this->form_validation->run() === FALSE)
 		{
-			$this->load->view($page,$data);
+			$this->load->view($page,$this->data);
 		}
 		else{
 				if(($this->input->post('submit'))||($this->masters_model->insert_data($type))){
-					$data['msg']=" Inserted  Successfully";
-					$this->load->view($page,$data);
+					$this->data['msg']=" Inserted  Successfully";
+					$this->load->view($page,$this->data);
 				}
 				else{
-					$data['msg']="Failed";
-					$this->load->view($page,$data);
+					$this->data['msg']="Failed";
+					$this->load->view($page,$this->data);
 				}
 		}
 		$this->load->view('templates/footer');
+		}
+		else show_404();
   	}	
 function edit($type=""){
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
 		$user=$this->session->userdata('logged_in');
-		$data['user_id']=$user[0]['user_id'];
+		$this->data['user_id']=$user['user_id'];
 	if($type=="drug_type"){
 			$title="Edit Drugs";
 			$config=array(
@@ -221,10 +237,10 @@ function edit($type=""){
                   )
 		
 			);
-$data['drug_type']=$this->masters_model->get_data("drug_type");
+$this->data['drug_type']=$this->masters_model->get_data("drug_type");
 
-		/*	$data['facility_types']=$this->masters_model->get_data("facility_types");
-			$data['divisions']=$this->masters_model->get_data("divisions");	
+		/*	$this->data['facility_types']=$this->masters_model->get_data("facility_types");
+			$this->data['divisions']=$this->masters_model->get_data("divisions");	
 		*/}
 		else if($type=="agency"){
 			$title="Edit Agency";
@@ -235,7 +251,7 @@ $data['drug_type']=$this->masters_model->get_data("drug_type");
                      'rules'   => 'trim|xss_clean'
                   )
 			);
-			$data['agency']=$this->masters_model->get_data("agency");
+			$this->data['agency']=$this->masters_model->get_data("agency");
 
 		}
 		else if($type=="service"){
@@ -251,7 +267,7 @@ $data['drug_type']=$this->masters_model->get_data("drug_type");
              
              
 			);
-$data['equipments']=$this->masters_model->get_data("equipments");
+$this->data['equipments']=$this->masters_model->get_data("equipments");
 		
 }
 
@@ -267,7 +283,7 @@ $data['equipments']=$this->masters_model->get_data("equipments");
              
 			);
       
-$data['equipment_types']=$this->masters_model->get_data("equipment_type");
+$this->data['equipment_types']=$this->masters_model->get_data("equipment_type");
 
 }
 
@@ -282,12 +298,12 @@ else if($type=="equipments"){
                   )
              
 			);
-$data['equipments']=$this->masters_model->get_data("equipments");
+$this->data['equipments']=$this->masters_model->get_data("equipments");
 
-$data['equipment_type']=$this->masters_model->get_data("equipment_types");
-$data['hospital']=$this->masters_model->get_data("hospital");
-$data['department']=$this->masters_model->get_data("department");
-$data['user']=$this->masters_model->get_data("user");
+$this->data['equipment_type']=$this->masters_model->get_data("equipment_types");
+$this->data['hospital']=$this->masters_model->get_data("hospital");
+$this->data['department']=$this->masters_model->get_data("department");
+$this->data['user']=$this->masters_model->get_data("user");
  }
 
 		else if($type=="generics"){
@@ -299,9 +315,9 @@ $data['user']=$this->masters_model->get_data("user");
                      'rules'   => 'trim|xss_clean'
                   )
 			);
-		$data['generic']=$this->masters_model->get_data("generics");
-		$data['item_type']=$this->masters_model->get_data("item_type");
-		$data['drug_type']=$this->masters_model->get_data("drug_type");
+		$this->data['generic']=$this->masters_model->get_data("generics");
+		$this->data['item_type']=$this->masters_model->get_data("item_type");
+		$this->data['drug_type']=$this->masters_model->get_data("drug_type");
 		
 		}
 		else if($type=="dosages"){
@@ -319,9 +335,9 @@ $data['user']=$this->masters_model->get_data("user");
                   )
 		
 			);
-			$data['dosage']=$this->masters_model->get_data("dosages");
-/*$data['generic']=$this->masters_model->get_data("generics");
-$data['item_type']=$this->masters_model->get_data("item_type");
+			$this->data['dosage']=$this->masters_model->get_data("dosages");
+/*$this->data['generic']=$this->masters_model->get_data("generics");
+$this->data['item_type']=$this->masters_model->get_data("item_type");
 */
 		}
 		
@@ -334,8 +350,8 @@ $data['item_type']=$this->masters_model->get_data("item_type");
                      'rules'   => 'required|trim|xss_clean'
                   )
 			);	
-			$data['district']=$this->masters_model->get_data("districts");
-			$data['divisions']=$this->masters_model->get_data("division");	
+			$this->data['district']=$this->masters_model->get_data("districts");
+			$this->data['divisions']=$this->masters_model->get_data("division");	
 		}
 		else if($type=="grant"){
 			$title="Edit Grant";
@@ -346,7 +362,7 @@ $data['item_type']=$this->masters_model->get_data("item_type");
                      'runles'   => 'required|trim|xss_clean'
                   )
 			);
-			$data['grant_sources']=$this->masters_model->get_data("grant_sources");
+			$this->data['grant_sources']=$this->masters_model->get_data("grant_sources");
 		}
 		else if($type=="user"){
 			$title="Edit User";
@@ -357,7 +373,7 @@ $data['item_type']=$this->masters_model->get_data("item_type");
                      'rules'   => 'required|trim|xss_clean'
                   )
 			);
-				$data['users']=$this->masters_model->get_data("user");
+				$this->data['users']=$this->masters_model->get_data("user");
 		}
 			
 		else{
@@ -367,36 +383,36 @@ $data['item_type']=$this->masters_model->get_data("item_type");
 		$page="pages/inventory/edit_".$type."_form";
 		$this->data['title']=$title;
 		$this->load->view('templates/header',$this->data);
-      $this->load->view('templates/leftnav',$data);
+      $this->load->view('templates/leftnav',$this->data);
 		
 		$this->form_validation->set_rules($config);
 
 		if ($this->form_validation->run() === FALSE)
 		{
-			$this->load->view($page,$data);
+			$this->load->view($page,$this->data);
 		}
 		else{
 			if($this->input->post('update')){
 				if($this->masters_model->update_data($type)){
-					$data['msg']="Updated Successfully";
+					$this->data['msg']="Updated Successfully";
 		
-					$this->load->view($page,$data);
+					$this->load->view($page,$this->data);
 				}
 				else{
-					$data['msg']="Failed";
-					$this->load->view($page,$data);
+					$this->data['msg']="Failed";
+					$this->load->view($page,$this->data);
 				}
 			}
 			else if($this->input->post('select')){
-            $data['mode']="select";
-			   $data[$type]=$this->masters_model->get_data($type);
+            $this->data['mode']="select";
+			   $this->data[$type]=$this->masters_model->get_data($type);
          
-         	$this->load->view($page,$data);
+         	$this->load->view($page,$this->data);
 			}
 			else if($this->input->post('search')){
-				$data['mode']="search";
-				$data[$type]=$this->masters_model->get_data($type);
-				$this->load->view($page,$data);
+				$this->data['mode']="search";
+				$this->data[$type]=$this->masters_model->get_data($type);
+				$this->load->view($page,$this->data);
 			}
 		}
 		$this->load->view('templates/footer');

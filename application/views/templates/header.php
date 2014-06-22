@@ -27,24 +27,20 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-			<?php if($this->session->userdata('logged_in')) {
-				$userinfo=$this->session->userdata('logged_in'); // Store the session data in a variable, contains all the functions the user has access to.
-				
-			?>
-			<?php
+			<?php if($this->session->userdata('logged_in')) {	
 			//Loop through the session data to check if the user has access to each function and only display those.
-			foreach($userinfo as $u){
+			foreach($functions as $f){
 					//Check if the user has access to Out Patient Registration forms or In Patient Registration forms 
-					if($u['user_function']=="Out Patient Registration" || $u['user_function']=="In Patient Registration"){ 
+					if($f->user_function=="Out Patient Registration" || $f->user_function=="In Patient Registration"){ 
 					// If they do, display dropdown menu which will contain all the links to the forms. ?>
 						<li class="dropdown  <?php if(preg_match("^".base_url()."register^",current_url())){ echo "active";}?>">
 									<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Patients <b class="caret"></b></a>
 									<ul class="dropdown-menu">
 						<?php
 						//Loop through the user session data to check if the user has access to Out Patient forms
-						foreach($userinfo as $u){
+						foreach($functions as $f){
 						//If they do, display all the OP forms available
-								if($u['user_function']=="Out Patient Registration"){ ?>
+								if($f->user_function=="Out Patient Registration"){ ?>
 									<li class="dropdown-header">OutPatient</li>
 									<?php foreach($op_forms as $form){ ?>
 										<li><a href="<?php echo base_url()."register/custom_form/$form->form_id"; ?>"><?php echo $form->form_name;?></a></li>
@@ -56,8 +52,8 @@
 						  <li class="divider"></li>
 						<?php 
 						//Repeat for all list items, and menu items.
-						foreach($userinfo as $u){
-								if($u['user_function']=="In Patient Registration"){ ?>
+						foreach($functions as $f){
+								if($f->user_function=="In Patient Registration"){ ?>
 								  <li class="dropdown-header">InPatient</li>
 								  <?php foreach($ip_forms as $form){ ?>
 									<li><a href="<?php echo base_url()."register/custom_form/$form->form_id"; ?>"><?php echo $form->form_name;?></a></li>
@@ -74,13 +70,13 @@
 					} 
 				?> 
 
-			<?php foreach($userinfo as $u){
-					if($u['user_function']=="Diagnostics" || $u['user_function']=="Bloodbank"){ ?>
+			<?php foreach($functions as $f){
+					if($f->user_function=="Diagnostics" || $f->user_function=="Bloodbank"){ ?>
 					<li class="dropdown  <?php if(preg_match("^".base_url()."services^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Services <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-						<?php foreach($userinfo as $u){
-								if($u['user_function']=="Diagnostics"){ ?>
+						<?php foreach($functions as $f){
+								if($f->user_function=="Diagnostics"){ ?>
 									<li><a href="#">Diagnostics</a></li>
 						<?php
 									break;
@@ -88,8 +84,8 @@
 							}
 						?>	
 
-						<?php foreach($userinfo as $u){
-								if($u['user_function']=="Bloodbank"){ ?>
+						<?php foreach($functions as $f){
+								if($f->user_function=="Bloodbank"){ ?>
 									<li><a href="#">BloodBank</a></li>
 						<?php
 									break;
@@ -103,13 +99,13 @@
 						} 
 					} 
 				?> 
-			<?php foreach($userinfo as $u){
-					if($u['user_function']=="Equipment" || $u['user_function']=="Consumables" || $u['user_function']=="HR"){ ?>
+			<?php foreach($functions as $f){
+					if($f->user_function=="Equipment" || $f->user_function=="Consumables" || $f->user_function=="HR"){ ?>
 			<li class="dropdown  <?php if(preg_match("^".base_url()."inventory^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Resources <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-						<?php foreach($userinfo as $u){
-								if($u['user_function']=="HR"){ ?>
+						<?php foreach($functions as $f){
+								if($f->user_function=="HR"){ ?>
 									<li><a href="#">HR</a></li>
 						<?php
 									break;
@@ -117,16 +113,16 @@
 							}
 						?>	
 
-						<?php foreach($userinfo as $u){
-								if($u['user_function']=="Equipment"){ ?>
+						<?php foreach($functions as $f){
+								if($f->user_function=="Equipment"){ ?>
 									<li><a href="<?php echo base_url()."equipments/add/equipment";?>">Equipment</a></li>
 						<?php
 									break;
 								}
 							}
 						?>
-						<?php foreach($userinfo as $u){
-								if($u['user_function']=="Consumables"){ ?>
+						<?php foreach($functions as $f){
+								if($f->user_function=="Consumables"){ ?>
 						  <li><a href="<?php echo base_url()."consumables/add/dosages";?>">Consumables</a></li>
 						<?php
 									break;
@@ -142,33 +138,47 @@
 				?> 
 
 			<?php 
-			foreach($userinfo as $u){
-					if($u['user_function']=="OP Summary" || $u['user_function']=="IP Summary" || $u['user_function']=="OP Detail" || $u['user_function']=="IP Detail"){ ?>
+			foreach($functions as $f){
+					if($f->user_function=="OP Summary" || $f->user_function=="IP Summary" || $f->user_function=="OP Detail" || $f->user_function=="IP Detail"){ ?>
 					<li class="dropdown  <?php if(preg_match("^".base_url()."reports^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Reports <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-			<?php	if($u['user_function']=="OP Summary" || $u['user_function']=="IP Summary"){ ?>
+			<?php	
+				foreach($functions as $f){
+					if($f->user_function=="OP Summary" || $f->user_function=="IP Summary"){ ?>
 						  <li class="dropdown-header">Summary reports</li>
-			<?php	if($u['user_function']=="OP Summary"){ ?>
+			<?php
+				break;
+				}
+				}	
+				foreach($functions as $f){
+				if($f->user_function=="OP Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/op_summary";?>">OP Summary</a></li>
 			<?php	}
-					if($u['user_function']=="IP Summary"){ ?>
+					if($f->user_function=="IP Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/ip_summary";?>">IP Summary</a></li>
 			<?php	} 	?>
-						  <li class="divider"></li>
 			<?php	}	?>
-			<?php	if($u['user_function']=="OP Detail" || $u['user_function']=="IP Detail"){ ?>
+			<li class="divider"></li>
+			<?php foreach($functions as $f){
+			?>
+			<?php	if($f->user_function=="OP Detail" || $f->user_function=="IP Detail"){ ?>
 						  <li class="dropdown-header">Detailed reports</li>
 
-			<?php	if($u['user_function']=="OP Detail"){ ?>
+			<?php	break;
+			}
+			}
+			foreach($functions as $f){
+			if($f->user_function=="OP Detail"){ ?>
 						<li><a href="<?php echo base_url()."reports/op_detail";?>">OP Detail</a></li>
 			<?php	}
-					if($u['user_function']=="IP Detail"){ ?>
+					if($f->user_function=="IP Detail"){ ?>
 						<li><a href="<?php echo base_url()."reports/ip_detail";?>">IP Detail</a></li>
 			<?php } } ?>
 						</ul>
 			<?php 
-				} break; 
+				break;
+				}  
 			}
 			?>
 			</li>
@@ -181,7 +191,7 @@
 		</ul>
 	<?php if($this->session->userdata('logged_in')) { ?>
           <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown  <?php if(preg_match("^".base_url()."user_panel^",current_url())){ echo "active";}?>"><a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><?php $logged_in=$this->session->userdata('logged_in');echo $logged_in[0]['username']; ?> <b class="caret"></b></a>
+            <li class="dropdown  <?php if(preg_match("^".base_url()."user_panel^",current_url())){ echo "active";}?>"><a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><?php $logged_in=$this->session->userdata('logged_in');echo $logged_in['username']; ?> <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="<?php echo base_url()."user_panel/settings";?>">Settings</a></li>
 				  <li class="divider"></li>

@@ -50,13 +50,13 @@
 		</div>
 		<div class="col-md-6">
 			<label class="control-label">
-				<input type="radio" name="gender" value="1" checked />Male
+				<input type="radio" name="gender" value="M" checked />Male
 			</label>
 			<label class="control-label">
-				<input type="radio" name="gender" value="1" />Female
+				<input type="radio" name="gender" value="F" />Female
 			</label>
 			<label class="control-label">
-				<input type="radio" name="gender" value="1" />Other
+				<input type="radio" name="gender" value="O" />Other
 			</label>
 		</div>
 	</div>	

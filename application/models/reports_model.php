@@ -54,7 +54,7 @@ class Reports_model extends CI_Model{
 			$from_date=date("Y-m-d");
 			$to_date=$from_date;
 		}
-		$this->db->select("          department 'department',
+		$this->db->select("department.department_id, department 'department',
           SUM(CASE WHEN 1  THEN 1 ELSE 0 END) 'ip',
 		SUM(CASE WHEN gender = 'F'  THEN 1 ELSE 0 END) 'ip_female',
 		SUM(CASE WHEN gender = 'M'  THEN 1 ELSE 0 END) 'ip_male',	
@@ -101,7 +101,7 @@ class Reports_model extends CI_Model{
 		$resource=$this->db->get();
 		return $resource->result();
 	}
-	function get_ip_detail(){
+	function get_ip_detail($department,$gender,$from_age,$to_age,$from_date,$to_date){
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -110,11 +110,26 @@ class Reports_model extends CI_Model{
 			$this->input->post('from_date')?$from_date=$this->input->post('from_date'):$from_date=$this->input->post('to_date');
 			$to_date=$from_date;
 		}
-		else{
+		else if($from_date=='0' && $to_date=='0'){
 			$from_date=date("Y-m-d");
 			$to_date=$from_date;
 		}
-
+		if($department!='-1'){
+			$this->db->where('department.department_id',$department);
+		}
+		if($gender!='0'){
+			$this->db->where('gender',$gender);
+		}
+		if($from_age!='0' && $to_age!='0'){
+			$this->db->where('age_years>=',$from_age,false);
+			$this->db->where('age_years<=',$to_age,false);
+		}
+		if($from_age!='0' && $to_age=='0'){
+			$this->db->where('age_years<=',$from_age,false);
+		}
+		if($from_age=='0' && $to_age!='0'){
+			$this->db->where('age_years>=',$to_age,false);
+		}
 		$this->db->select("hosp_file_no,visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,gender,IF(gender='F' AND father_name=NULL,spouse_name,father_name) parent_spouse,age_years,place,phone,department",false);
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
 		 ->join('department','patient_visit.department_id=department.department_id')

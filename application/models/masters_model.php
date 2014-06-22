@@ -13,7 +13,7 @@ class Masters_model extends CI_Model{
 		}
 		else if($type=="department"){
 			
-			$this->db->select("department_id,department")->from("department");
+			$this->db->select("department_id,department")->from("department")->order_by('department');
 		}
 		else if($type=="area"){
 			
@@ -82,8 +82,7 @@ class Masters_model extends CI_Model{
 			if($this->input->post('select')){
 					$equipment_id=$this->input->post('equipment_id');
 
-					$this->db->where('equipment_id',$equipment_id);
-					
+					$this->db->where('equipment_id',$equipment_id);					
 			}
 			if($this->input->post('search')){
 						$equipment=strtolower($this->input->post('equipment_type'));
@@ -444,6 +443,20 @@ else if($type=="dosage"){
 		);
 
 		$table="staff";
+		}
+		elseif($type=="staff_role"){
+		$data = array(
+					  'staff_role'=>$this->input->post('staff_role')
+		);
+
+		$table="staff_role";
+		}
+		elseif($type=="staff_category"){
+		$data = array(
+					  'staff_category'=>$this->input->post('staff_category')
+		);
+
+		$table="staff_category";
 		}
 				
 
