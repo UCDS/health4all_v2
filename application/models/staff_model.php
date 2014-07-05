@@ -136,9 +136,9 @@ class Staff_model extends CI_Model{
 	}
 	function create_user(){
 		$data=array(
-		'username'=>$this->input->post('username'),
-		'password'=>md5($this->input->post('password')),
-		'staff_id'=>$this->input->post('staff')
+			'username'=>$this->input->post('username'),
+			'password'=>md5($this->input->post('password')),
+			'staff_id'=>$this->input->post('staff')
 		);
 		$this->db->trans_start();
 		$this->db->insert('user',$data);
@@ -156,11 +156,11 @@ class Staff_model extends CI_Model{
 					if($access=="view") $view=1;
 				}
 				$user_function_data[]=array(
-					'user_id'=>$user_id,
-					'function_id'=>$u,
-					'add'=>$add,
-					'edit'=>$edit,
-					'view'=>$view
+				'user_id'=>$user_id,
+				'function_id'=>$u,
+				'add'=>$add,
+				'edit'=>$edit,
+				'view'=>$view
 				);
 			}
 		}
@@ -172,14 +172,15 @@ class Staff_model extends CI_Model{
 			$department=0;
 		}
 		else
-			$department=$result->department_id;
+		$department=$result->department_id;
 		$hospital=$result->hospital_id;
 		$this->db->insert('user_department_link',array('user_id'=>$user_id,'department_id'=>$department));
 		$this->db->insert('user_hospital_link',array('user_id'=>$user_id,'hospital_id'=>$hospital));
 		$this->db->trans_complete();
 		if($this->db->trans_status()===TRUE) return true; else return false;
 	}
-			
+
+
 			
 }
 ?>

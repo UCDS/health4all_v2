@@ -224,7 +224,7 @@ $this->data['user']=$this->masters_model->get_data("user");
 		switch($type){
 			case "equipments_detailed" : 
 				$this->data['title']="Equipments Detailed report";
-				$this->data['equipments']=$this->masters_model->get_data("equipments",$equipment_type,$department,$area,$unit,$status);
+				$this->data['equipments']=$this->masters_model->get_data("equipment",$equipment_type,$department,$area,$unit,$status);
 				break;
 			case "equipments_summary" :
 				$this->data['title']="Equipments Summary report";

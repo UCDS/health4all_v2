@@ -46,6 +46,61 @@
 </div>
 <?php } ?>
 
+<?php if(preg_match("^sanitation/*^",current_url())) { ?>
+
+<div class="col-sm-3 col-md-2 sidebar-left">
+    <ul class="nav nav-sidebar">
+    			<li class="nav-header">Add</li>
+				<li><a href="<?php echo base_url();?>sanitation/add/area_types">Area Types</a></li>
+				<li><a href="<?php echo base_url();?>sanitation/add/area_activity">Area activity</a></li>
+				<li><a href="<?php echo base_url();?>sanitation/add/department">Department</a></li>
+				<li><a href="<?php echo base_url();?>sanitation/add/districts">Districts</a></li>
+				<li><a href="<?php echo base_url();?>sanitation/add/facility_activity">Facility Activity</a></li>
+		        <li><a href="<?php echo base_url();?>sanitation/add/facility">Facility</a></li>
+				<li><a href="<?php echo base_url();?>sanitation/add/facility_type">Facility Type</a></li>
+				<li><a href="<?php echo base_url();?>sanitation/add/facility_area">Facility Area</a></li>
+				<li><a href="<?php echo base_url();?>sanitation/add/staff">Staff</a></li> 
+				<li><a href="<?php echo base_url();?>sanitation/add/states">States</a></li>
+				<li><a href="<?php echo base_url();?>sanitation/add/vendor">Vendor</a></li>
+				<li><a href="<?php echo base_url();?>sanitation/add/vendor_contracts">Vendor_contracts</a></li>
+				<li><a href="<?php echo base_url();?>sanitation/add/village_town">Village Town</a></li>
+				<li class="divider"></li>
+	<ul>
+</div>
+<?php } ?>
+
+<?php if(preg_match("^diagnostics/*^",current_url())) { ?>
+<div class="col-sm-3 col-md-2 sidebar-left">
+    <ul class="nav nav-sidebar">
+
+		<li class="nav-header">Add</li>
+
+		<li><a href="<?php echo base_url();?>diagnostics/add/test_method">Test Method</a></li>
+		<li><a href="<?php echo base_url();?>diagnostics/add/test_group">Test Group</a></li>
+		<li><a href="<?php echo base_url();?>diagnostics/add/test_status_type">Test Status Type</a></li>
+		<li><a href="<?php echo base_url();?>diagnostics/add/test_name">Test Name</a></li>
+		<li><a href="<?php echo base_url();?>diagnostics/add/test_area">Test Area</a></li>
+		<li><a href="<?php echo base_url();?>diagnostics/add/antibody">Antibody</a></li>
+		<li><a href="<?php echo base_url();?>diagnostics/add/micro_organism">Micro Organism</a></li>
+		<li><a href="<?php echo base_url();?>diagnostics/add/specimen_type">Specimen Type</a></li>
+		<li><a href="<?php echo base_url();?>diagnostics/add/sample_status">Sample Status</a></li>
+
+		<li class="nav-header">Edit</li>
+		<li><a href="<?php echo base_url();?>diagnostics/edit/test_method">Test Method</a></li>
+		<li><a href="<?php echo base_url();?>diagnostics/edit/test_group">Test Group</a></li>
+		<li><a href="<?php echo base_url();?>diagnostics/edit/test_status_type">Test Status Type</a></li>
+		<li><a href="<?php echo base_url();?>diagnostics/edit/test_name">Test Name</a></li>
+		<li><a href="<?php echo base_url();?>diagnostics/edit/test_area">Test Area</a></li>
+		<li><a href="<?php echo base_url();?>diagnostics/edit/antibody">Antibody</a></li>
+		<li><a href="<?php echo base_url();?>diagnostics/edit/micro_organism">Micro Organism</a></li>
+		<li><a href="<?php echo base_url();?>diagnostics/edit/specimen_type">Specimen Type</a></li>
+		<li><a href="<?php echo base_url();?>diagnostics/edit/sample_status">Sample Status</a></li>
+		
+</ul>
+</div>	
+
+<?php } ?>
+
 <?php if(preg_match("^user_panel/*^",current_url())) { ?>
 
 		<div class="col-sm-3 col-md-2 sidebar-left">

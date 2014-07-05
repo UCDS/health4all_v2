@@ -195,7 +195,166 @@ class Masters_model extends CI_Model{
 
 				$this->db->select("test_method_id,test_method")->from("test_method")->order_by('test_method');
 
-			}		
+			}elseif ($type=="test_group") {
+			if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
+			{
+					$test_id=$this->input->post('test_group_id');
+					$this->db->where('group_id',$test_id);
+			}
+	    	if($this->input->post('search') && $this->input->post('group_name')!="")  //query to retrieve matches for the text entered in the field from table test_type
+	    	{
+	 		 		$search_method=strtolower($this->input->post('group_name'));
+		  	    	$this->db->like('LOWER(group_name)',$search_method,'after');
+	    	}
+			$this->db->select("group_id,group_name")->from("test_group")->order_by('group_name');
+
+
+		}
+		elseif ($type=="test_status_type") {
+			if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
+			{
+					$test_id=$this->input->post('test_status_type_id');
+					$this->db->where('test_status_type_id',$test_id);
+			}
+	    	if($this->input->post('search') && $this->input->post('test_status_type')!="")  //query to retrieve matches for the text entered in the field from table test_type
+	    	{
+	 		 		$search_method=strtolower($this->input->post('test_status_type'));
+		  	    	$this->db->like('LOWER(test_status_type)',$search_method,'after');
+	    	}
+			$this->db->select("test_status_type_id,test_status_type")->from("test_status_type")->order_by('test_status_type');
+
+
+		}
+		elseif ($type=="test_name") {
+			if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
+			{
+					$test_id=$this->input->post('test_master_id');
+					$this->db->where('test_master_id',$test_id);
+			}
+	    	if($this->input->post('search') && $this->input->post('test_name')!="")  //query to retrieve matches for the text entered in the field from table test_type
+	    	{
+	 		 		$search_method=strtolower($this->input->post('test_name'));
+		  	    	$this->db->like('LOWER(test_name)',$search_method,'after');
+	    	}
+			$this->db->select("test_master_id,test_name,test_master.test_method_id")->from("test_master")->join('test_method','test_master.test_method_id=test_method.test_method_id')->order_by('test_name');
+
+
+		}
+		elseif ($type=="test_area") {
+			if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
+			{
+					$test_id=$this->input->post('test_area_id');
+					$this->db->where('test_area_id',$test_id);
+			}
+	    	if($this->input->post('search') && $this->input->post('test_area')!="")  //query to retrieve matches for the text entered in the field from table test_type
+	    	{
+	 		 		$search_method=strtolower($this->input->post('test_area'));
+		  	    	$this->db->like('LOWER(test_area)',$search_method,'after');
+	    	}
+			$this->db->select("test_area_id,test_area")->from("test_area")->order_by('test_area');
+
+
+		}
+		
+		elseif ($type=="antibody") {
+			if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
+			{
+					$test_id=$this->input->post('antibody_id');
+					$this->db->where('antibody_id',$test_id);
+			}
+	    	if($this->input->post('search') && $this->input->post('antibody')!="")  //query to retrieve matches for the text entered in the field from table test_type
+	    	{
+	 		 		$search_method=strtolower($this->input->post('antibody'));
+		  	    	$this->db->like('LOWER(antibody)',$search_method,'after');
+	    	}
+			$this->db->select("antibody_id,antibody")->from("antibody")->order_by('antibody');
+			
+			}
+			
+		elseif ($type=="micro_organism") {
+			if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
+			{
+					$test_id=$this->input->post('micro_organism_id');
+					$this->db->where('micro_organism_id',$test_id);
+			}
+	    	if($this->input->post('search') && $this->input->post('micro_organism')!="")  //query to retrieve matches for the text entered in the field from table test_type
+	    	{
+	 		 		$search_method=strtolower($this->input->post('micro_organism'));
+		  	    	$this->db->like('LOWER(micro_organism)',$search_method,'after');
+	    	}
+			$this->db->select("micro_organism_id,micro_organism")->from("micro_organism")->order_by('micro_organism');
+			
+			}
+		elseif ($type=="specimen_type") {
+			if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
+			{
+					$test_id=$this->input->post('specimen_type_id');
+					$this->db->where('speciment_type_id',$test_id);
+			}
+	    	if($this->input->post('search') && $this->input->post('specimen_type')!="")  //query to retrieve matches for the text entered in the field from table test_type
+	    	{
+	 		 		$search_method=strtolower($this->input->post('specimen_type'));
+		  	    	$this->db->like('LOWER(specimen_type)',$search_method,'after');
+	    	}
+			$this->db->select("speciment_type_id,specimen_type")->from("specimen_type")->order_by('specimen_type');
+
+		}
+			elseif ($type=="sample_status") {
+			if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
+			{
+					$test_id=$this->input->post('sample_status_id');
+					$this->db->where('sample_status_id',$test_id);
+			}
+	    	if($this->input->post('search') && $this->input->post('sample_status')!="")  //query to retrieve matches for the text entered in the field from table test_type
+	    	{
+	 		 		$search_method=strtolower($this->input->post('sample_status'));
+		  	    	$this->db->like('LOWER(sample_status)',$search_method,'after');
+	    	}
+			$this->db->select("sample_status_id,sample_status")->from("sample_status")->order_by('sample_status');
+
+		}
+		else if($type=="districts"){
+			
+			$this->db->select("district_id,district")->from("district");
+		}
+		else if($type=="states"){
+			$this->db->select("state_id,state")->from("states");
+		}
+		else if($type=="area_types"){
+			$this->db->select("area_type_id,area_type")->from("area_types");
+		}
+		else if($type=="area_activity"){
+			$this->db->select("area_activity_id,activity_name")->from("area_activity");
+		}
+		else if($type=="vendor"){
+			$this->db->select("vendor_id,vendor_name")->from("vendor");
+		}
+		else if($type=="facility_activity"){
+			$this->db->select("activity_id")->from("facility_activity");
+		}
+		else if($type=="activity_done"){
+			$this->db->select("*")->from("activity_done");
+		}	
+		else if($type=="facility_type"){
+			$this->db->select("facility_type_id,facility_type")->from("facility_type");
+		}
+		else if($type=="facility_area"){
+			$this->db->select("facility_area_id,area_name")->from("facility_area");
+		}
+			else if($type=="vendor"){
+			$this->db->select("vendor_id,vendor_name")->from("vendor");
+		}
+		else if($type=="vendor_contracts"){
+			
+			$this->db->select("contract_id,status")->from("vendor_contracts");
+
+		}
+		else if($type=="facility"){
+			$this->db->select("facility_id,facility_name")->from("facility");
+		}
+		else if($type=="village_town"){
+			$this->db->select("village_town_id,village_town")->from("village_town");
+		}		
 
 		$query=$this->db->get();
 		return $query->result();
@@ -294,6 +453,141 @@ else if($type=="dosage"){
 
    $table="test_method";
 
+ }
+
+ elseif ($type=="test_group") {
+ 		
+    $data=array('group_name'=>$this->input->post('group_name'));
+ 	$r=$this->input->post('test_group_id');
+ 	$this->db->where('group_id',$this->input->post('test_group_id'));
+   $table="test_group";	
+ }
+ 
+ elseif ($type=="test_status_type") {
+ 		
+    $data=array('test_status_type'=>$this->input->post('test_status_type'));
+ 	$r=$this->input->post('test_status_type_id');
+ 	$this->db->where('test_status_type_id',$this->input->post('test_status_type_id'));
+   $table="test_status_type";	
+ }
+ elseif ($type=="test_name") {
+ 		
+    $data=array('test_name'=>$this->input->post('test_name'),
+	'test_method_id'=>$this->input->post('test_method')
+	);
+ 	$r=$this->input->post('test_master_id');
+ 	$this->db->where('test_master_id',$this->input->post('test_master_id'));
+   $table="test_master";	
+ }
+ elseif ($type=="test_area") {
+ 		
+    $data=array('test_area'=>$this->input->post('test_area'));
+ 	$r=$this->input->post('test_area_id');
+ 	$this->db->where('test_area_id',$this->input->post('test_area_id'));
+   $table="test_area";	
+ }
+ elseif ($type=="test_name") {
+ 		
+    $data=array('test_name'=>$this->input->post('test_name'));
+ 	$r=$this->input->post('test_master_id');
+ 	$this->db->where('test_master_id',$this->input->post('test_master_id'));
+   $table="test_master";	
+ }
+ elseif ($type=="antibody") {
+ 		
+    $data=array('antibody'=>$this->input->post('antibody'));
+ 	$r=$this->input->post('antibody_id');
+ 	$this->db->where('antibody_id',$this->input->post('antibody_id'));
+   $table="antibody";	
+ }
+ elseif ($type=="micro_organism") {
+ 		
+    $data=array('micro_organism'=>$this->input->post('micro_organism'));
+ 	$r=$this->input->post('micro_organism_id');
+ 	$this->db->where('micro_organism_id',$this->input->post('micro_organism_id'));
+   $table="micro_organism";	
+ }
+	elseif ($type=="specimen_type") {
+    $data=array('specimen_type'=>$this->input->post('specimen_type'));
+ 	$r=$this->input->post('specimen_type_id');
+ 	 $this->db->where('speciment_type_id',$this->input->post('specimen_type_id'));
+   $table="specimen_type";	
+ }	
+ elseif ($type=="sample_status") {
+    $data=array('sample_status'=>$this->input->post('sample_status'));
+ 	 $this->db->where('sample_status_id',$this->input->post('sample_status_id'));
+   $table="sample_status";	
+ }elseif ($type=="test_method") {      //updating when update button is clicked
+	$data=array('test_method'=>$this->input->post('test_method'));
+
+	$this->db->where('test_method_id',$this->input->post('test_method_id'));
+
+   $table="test_method";
+
+ }
+
+ elseif ($type=="test_group") {
+ 		
+    $data=array('group_name'=>$this->input->post('group_name'));
+ 	$r=$this->input->post('test_group_id');
+ 	$this->db->where('group_id',$this->input->post('test_group_id'));
+   $table="test_group";	
+ }
+ 
+ elseif ($type=="test_status_type") {
+ 		
+    $data=array('test_status_type'=>$this->input->post('test_status_type'));
+ 	$r=$this->input->post('test_status_type_id');
+ 	$this->db->where('test_status_type_id',$this->input->post('test_status_type_id'));
+   $table="test_status_type";	
+ }
+ elseif ($type=="test_name") {
+ 		
+    $data=array('test_name'=>$this->input->post('test_name'),
+	'test_method_id'=>$this->input->post('test_method')
+	);
+ 	$r=$this->input->post('test_master_id');
+ 	$this->db->where('test_master_id',$this->input->post('test_master_id'));
+   $table="test_master";	
+ }
+ elseif ($type=="test_area") {
+ 		
+    $data=array('test_area'=>$this->input->post('test_area'));
+ 	$r=$this->input->post('test_area_id');
+ 	$this->db->where('test_area_id',$this->input->post('test_area_id'));
+   $table="test_area";	
+ }
+ elseif ($type=="test_name") {
+ 		
+    $data=array('test_name'=>$this->input->post('test_name'));
+ 	$r=$this->input->post('test_master_id');
+ 	$this->db->where('test_master_id',$this->input->post('test_master_id'));
+   $table="test_master";	
+ }
+ elseif ($type=="antibody") {
+ 		
+    $data=array('antibody'=>$this->input->post('antibody'));
+ 	$r=$this->input->post('antibody_id');
+ 	$this->db->where('antibody_id',$this->input->post('antibody_id'));
+   $table="antibody";	
+ }
+ elseif ($type=="micro_organism") {
+ 		
+    $data=array('micro_organism'=>$this->input->post('micro_organism'));
+ 	$r=$this->input->post('micro_organism_id');
+ 	$this->db->where('micro_organism_id',$this->input->post('micro_organism_id'));
+   $table="micro_organism";	
+ }
+	elseif ($type=="specimen_type") {
+    $data=array('specimen_type'=>$this->input->post('specimen_type'));
+ 	$r=$this->input->post('specimen_type_id');
+ 	 $this->db->where('speciment_type_id',$this->input->post('specimen_type_id'));
+   $table="specimen_type";	
+ }	
+ elseif ($type=="sample_status") {
+    $data=array('sample_status'=>$this->input->post('sample_status'));
+ 	 $this->db->where('sample_status_id',$this->input->post('sample_status_id'));
+   $table="sample_status";	
  }
 
 		
@@ -467,6 +761,49 @@ else if($type=="dosage"){
 		$table="test_method";			
 
 		}
+			elseif ($type=="test_group") {
+			$data=array('group_name'=>$this->input->post('group_name'));
+		$table="test_group";
+		}
+		elseif ($type=="test_area") {
+			$data=array('test_area'=>$this->input->post('test_area'));
+		$table="test_area";
+		}
+		elseif ($type=="test_status_type") {
+			$data=array('test_status_type'=>$this->input->post('test_status_type'));
+		$table="test_status_type";
+		}
+		elseif ($type=="test_name") {
+			$data=array();
+			foreach($this->input->post('test_name') as $test_name){
+				$data[]=array(
+					'test_name'=>$test_name,
+					'test_method_id'=>$this->input->post('test_method')
+				);
+			}
+		$table="test_master";
+		}
+		elseif ($type=="test_area") {
+			$data=array('test_area'=>$this->input->post('test_area'));
+			$table="test_area";
+		}
+		elseif ($type=="antibody") {
+			$data=array('antibody'=>$this->input->post('antibody'));
+		$table="antibody";
+		}
+		elseif ($type=="micro_organism") {
+			$data=array('micro_organism'=>$this->input->post('micro_organism'));
+		$table="micro_organism";
+		}
+		elseif ($type=="specimen_type") {
+			$data=array('specimen_type'=>$this->input->post('specimen_type'));
+		$table="specimen_type";
+		}
+			elseif ($type=="sample_status") {
+			$data=array('sample_status'=>$this->input->post('sample_status'));
+		$table="sample_status";
+		}
+
 		$this->db->trans_start();
 		$this->db->insert($table,$data);
 		$this->db->trans_complete();
