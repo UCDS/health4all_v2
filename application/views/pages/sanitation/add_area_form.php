@@ -14,7 +14,7 @@ $(function(){
 		<div class="col-md-8 col-md-offset-2">
 		<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
-		<h3><u>Add Facility Area</u></h3></center><br>
+		<h3><u>Add Area</u></h3></center><br>
 	<?php echo validation_errors(); echo form_open('masters/add/facility_area',array('role'=>'form')); ?>
 	
 	<div class="form-group">
@@ -24,12 +24,12 @@ $(function(){
 	    </div>
 	</div>
 	<div class="form-group">
-	    <label for="facility_name" class="col-md-4">Facility Name</label>
+	    <label for="facility_name" class="col-md-4">Hospital Name</label>
 	    <div class="col-md-8">
-	   <select name="facility" id="facility" class="form-control">
-		<option value="">Facility</option>
-		<?php foreach($facility as $d){
-			echo "<option value='$d->facility_id'>$d->facility_name</option>";
+	   <select name="hospital" id="hospital_name" class="form-control">
+		<option value="">Hospital</option>
+		<?php foreach($hospitals as $d){
+			echo "<option value='$d->hospital_id'>$d->hospital</option>";
 		}
 		?>
 		</select>
@@ -39,8 +39,8 @@ $(function(){
 	    <div class="col-md-8">
 	   <select name="department" id="district" class="form-control">
 		<option value="">department</option>
-		<?php foreach($department as $d){
-			echo "<option value='$d->department_id'>$d->department_name</option>";
+		<?php foreach($departments as $d){
+			echo "<option value='$d->department_id'>$d->department</option>";
 		}
 		?>
 		</select>

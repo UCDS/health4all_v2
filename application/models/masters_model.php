@@ -16,7 +16,6 @@ class Masters_model extends CI_Model{
 			$this->db->select("department_id,department")->from("department")->order_by('department');
 		}
 		else if($type=="area"){
-			
 			$this->db->select("area_id,area_name,department_id")->from("area");
 		}
 		else if($type=="unit"){
@@ -27,11 +26,53 @@ class Masters_model extends CI_Model{
 			
 			$this->db->select("user_id,username")->from("user");
 		}
-		else if($type=="staff_category"){
+		else if($type=='staff')
+		{
+			if($this->input->post('search'))
+			{
+				$staff = strtolower($this->input->post('staff'));
+				$this->db->like('LOWER(first_name)',$staff,'after');
+			}
+			if($this->input->post('select'))
+			{
+				$staff_id = $this->input->post('staff_id');
+				$this->db->where('staff_id',$staff_id);
+			}
+			$this->db->select("staff_id,first_name,last_name,gender,date_of_birth,department_id,unit_id,area_id,staff_role_id,staff_category_id,designation,email,phone,specialisation,research,research_area")->from("staff");
+			
+		}
+		else if($type=="staff_category")
+		{
+		
+			
+			if($this->input->post('search'))
+			{
+				$staff_category = strtolower($this->input->post('staff_category'));
+				$this->db->like('LOWER(staff_category)',$staff_category,'after');
+			}
+			if($this->input->post('staff_category_id'))
+			{
+				
+				$staff_category_id = $this->input->post('staff_category_id');
+				$this->db->where('staff_category_id',$staff_category_id);
+			}
 			
 			$this->db->select("staff_category_id,staff_category")->from("staff_category");
 		}
-		else if($type=="staff_role"){
+		else if($type=="staff_role")
+		{
+		if($this->input->post('search'))
+			{
+				$staff_role = strtolower($this->input->post('staff_role'));
+				$this->db->like('LOWER(staff_role)',$staff_role,'after');
+			}
+			if($this->input->post('staff_role_id'))
+			{
+				//$staff_role = $this->input->post('staff_role');
+				//$this->db->where('staff_role',$staff_role);
+				$staff_role_id = $this->input->post('staff_role_id');
+				$this->db->where('staff_role_id',$staff_role_id);
+			}
 			
 			$this->db->select("staff_role_id,staff_role")->from("staff_role");
 		}
@@ -338,8 +379,8 @@ class Masters_model extends CI_Model{
 		else if($type=="facility_type"){
 			$this->db->select("facility_type_id,facility_type")->from("facility_type");
 		}
-		else if($type=="facility_area"){
-			$this->db->select("facility_area_id,area_name")->from("facility_area");
+		else if($type=="area"){
+			$this->db->select("area_id,area_name")->from("area");
 		}
 			else if($type=="vendor"){
 			$this->db->select("vendor_id,vendor_name")->from("vendor");
@@ -348,9 +389,6 @@ class Masters_model extends CI_Model{
 			
 			$this->db->select("contract_id,status")->from("vendor_contracts");
 
-		}
-		else if($type=="facility"){
-			$this->db->select("facility_id,facility_name")->from("facility");
 		}
 		else if($type=="village_town"){
 			$this->db->select("village_town_id,village_town")->from("village_town");
@@ -361,20 +399,7 @@ class Masters_model extends CI_Model{
 	
 }
 function update_data($type){
-		if($type=="facility"){
-			$data = array(
-					  'facility_type_id'=>$this->input->post('facility_type'),
-					  'facility_name'=>$this->input->post('facility_name'),
-					  'division_id'=>$this->input->post('division'),
-					   'longitude'=>$this->input->post('longitude'),
-					   'latitude'=>$this->input->post('latitude')
-			);
-			$this->db->where('facility_id',$this->input->post('facility_id'));
-			$table="facilities";
-		
-		
-	}
-		else if($type=="drugs"){
+	if($type=="drugs"){
 			$data = array(
 					  'drug_type'=>$this->input->post('drug_type'),
 					  'description'=>$this->input->post('description'),
@@ -589,6 +614,56 @@ else if($type=="dosage"){
  	 $this->db->where('sample_status_id',$this->input->post('sample_status_id'));
    $table="sample_status";	
  }
+		else if($type == 'staff')
+		{
+			$date = $this->input->post('date_of_birth');
+			$date = date("Y-m-d",strtotime($date));
+			//echo $date;
+			$data = array(
+					  'first_name'=>$this->input->post('first_name'),
+					  'last_name'=>$this->input->post('last_name'),
+					  'gender'=>$this->input->post('gender'),
+					  'date_of_birth'=>$date,
+					  'department_id'=>$this->input->post('department'),
+					  'unit_id'=>$this->input->post('unit'),
+					  'area_id'=>$this->input->post('area'),
+					  'staff_role_id'=>$this->input->post('staff_role'),
+					  'staff_category_id'=>$this->input->post('staff_category'),
+					  'designation'=>$this->input->post('designation'),
+					  'staff_type'=>$this->input->post('staff_type'),
+					  'email'=>$this->input->post('email'),
+					  'phone'=>$this->input->post('phone'),
+					  'specialisation'=>$this->input->post('specialisation'),
+					  'research_area'=>$this->input->post('research_area'),
+					  'research'=>$this->input->post('research')
+					);
+			$this->db->where('staff_id',$this->input->post('staff_id'));
+			$table = 'staff';
+		}
+		
+ 		else if($type=='staff_role')
+		{
+			//cunstructing array for attributes to be updated.
+			$data = array(
+						'staff_role' => $this->input->post('staff_role'),
+						'staff_role_id' => $this->input->post('staff_role_id')
+					);
+			//setting where condition		
+			$this->db->where('staff_role_id',$data['staff_role_id']);
+			$table = 'staff_role';
+		}
+ 		
+		else if($type=='staff_category')
+		{
+			//cunstructing array for attributes to be updated.
+			$data = array(
+						'staff_category_id' => $this->input->post('staff_category_id'),
+						'staff_category' => $this->input->post('staff_category')
+					);
+			//setting where condition		
+			$this->db->where('staff_category_id',$data['staff_category_id']);
+			$table = 'staff_category';
+		}
 
 		
 			$this->db->trans_start();
@@ -802,6 +877,134 @@ else if($type=="dosage"){
 			elseif ($type=="sample_status") {
 			$data=array('sample_status'=>$this->input->post('sample_status'));
 		$table="sample_status";
+		}
+		
+		if($type=="area_types"){
+		$data = array(
+					  'area_type'=>$this->input->post('area_type')
+			);
+
+		$table="area_types";
+		}
+		elseif($type=="area_activity"){
+		$data = array(
+					  'activity_name'=>$this->input->post('activity_name'),
+					 'frequency'=>$this->input->post('frequency'),
+					   'weightage'=>$this->input->post('weightage'),
+					   'area_type_id'=>$this->input->post('area_type'),
+					   'frequency_type'=>$this->input->post('frequency_type')
+			);
+
+		$table="area_activity";
+		}
+		elseif($type=="activity_done"){
+		$data = array(
+					  'date'=>date("Y-m-d",strtotime($this->input->post('date'))),
+					 'time'=>$this->input->post('time'),
+					 'staff_id'=>$this->input->post('staff'),
+					  'activity_id'=>$this->input->post('activity_name'));
+
+		$table="activity_done";
+		}
+		elseif($type=="department"){
+		$data = array(
+					  'department_name'=>$this->input->post('department_name'),
+					  'hospital_id'=>$this->input->post('hospital_id'));
+
+		$table="department";
+		}
+		elseif($type=="districts"){
+		$data = array(
+					  'district'=>$this->input->post('districts'),
+					 'state_id'=>$this->input->post('states'),
+					   'longitude'=>$this->input->post('longitude'),
+					   'latitude'=>$this->input->post('latitude')
+			);
+
+		$table="district";
+		}
+		elseif($type=="hospital"){
+		$data = array(
+					  'hospital'=>$this->input->post('hospital_name'),
+					 'facility_type_id'=>$this->input->post('facility_type'),
+					   'address'=>$this->input->post('address'),
+					   'village_town_id'=>$this->input->post('village_town'),
+					   'longitude'=>$this->input->post('longitude'),
+					   'latitude'=>$this->input->post('latitude')
+			);
+
+		$table="facility";
+		}
+		elseif($type=="facility_activity"){
+		$data = array(
+					  'facility_area_id'=>$this->input->post('facility_area'),
+					 'area_activity_id'=>$this->input->post('area_activity')
+			);
+
+		$table="facility_activity";
+		}
+		
+		
+		
+		elseif($type=="facility_type"){
+		$data = array(
+					  'facility_types'=>$this->input->post('facility_types')
+			);
+
+		$table="facility_type";
+		}
+		
+		elseif($type=="area"){
+		$data = array(
+					  'area_name'=>$this->input->post('area_name'),
+					 'hospital_id'=>$this->input->post('hospital'),
+					   'department_id'=>$this->input->post('department'),
+					   'area_type_id'=>$this->input->post('area_types')
+			);
+
+		$table="area";
+		}
+		elseif($type=="states"){
+		$data = array(
+					  'state'=>$this->input->post('state'),
+					   'longitude'=>$this->input->post('longitude'),
+					   'latitude'=>$this->input->post('latitude')
+			);
+
+		$table="states";
+		}
+		elseif($type=="vendor"){
+		$data = array(
+					  'vendor_name'=>$this->input->post('vendor_name'),
+					   'vendor_address'=>$this->input->post('vendor_address'),
+					  'contact_name'=>$this->input->post('contact_name'),
+					  'contact_number'=>$this->input->post('contact_number'),
+					  'contact_email'=>$this->input->post('contact_email'),
+			);
+
+		$table="vendor";
+		}
+		elseif($type=="vendor_contracts"){
+		$data = array(
+					  'vendor_name'=>$this->input->post('vendor_name'),
+					   'facility_name'=>$this->input->post('facility_name'),
+					  'form_date'=>$this->input->post('form_date'),
+					  'to_date'=>$this->input->post('to_date'),
+					  'status'=>$this->input->post('status'),
+			);
+
+		$table="vendor_contracts";
+		}
+		elseif($type=="village_town"){
+		$data = array(
+					  'village_town'=>$this->input->post('village_town'),
+					   'district_id'=>$this->input->post('district'),
+					  'pin_code'=>$this->input->post('pin_code'),
+					  'longitude'=>$this->input->post('longitude'),
+					  'latitude'=>$this->input->post('latitude'),
+			);
+
+		$table="village_town";
 		}
 
 		$this->db->trans_start();

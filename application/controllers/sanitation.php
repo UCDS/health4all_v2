@@ -15,30 +15,19 @@ class Sanitation extends CI_Controller {
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");	
 	}
+	function evaluate(){
+	 	$this->load->helper('form');
+		$this->load->library('form_validation');
+		$this->data['areas']=$this->staff_model->get_areas();
+		
+		
+	}
 	function add($type=""){
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
 		$userdata=$this->session->userdata('logged_in');
 		$this->data['user_id']=$userdata['user_id'];
-		if($type=="drug_type"){
-			$title="Add Drug";
-		
-			$config=array(
-               array(
-                     'field'   => 'drug_type',
-                     'label'   => 'Drug Name',
-                     'rules'   => 'required|trim|xss_clean'
-                  ),
-               array(
-                     'field'   => 'description',
-                     'label'   => 'Description',
-                     'rules'   => 'required|trim|xss_clean'
-                  )
-			);
-
-
-		}
-	else if($type=="area_types"){
+	if($type=="area_types"){
 		 	$title="Add area_types";
 		
 			$config=array(
@@ -88,12 +77,12 @@ class Sanitation extends CI_Controller {
 			 $this->data['states']=$this->masters_model->get_data("states");
 			 $this->data['districts']=$this->masters_model->get_data("districts");
 		}
-		else if($type=="facility"){
-			$title="Add facility";
+		else if($type=="hospital"){
+			$title="Add Hospital";
 			$config=array(
                array(
-                     'field'   => 'facility_name',
-                     'label'   => 'facility_name',
+                     'field'   => 'hospital_name',
+                     'label'   => 'Hospital Name',
                      'rules'   => 'trim|xss_clean'
                   )
 			  
@@ -123,14 +112,14 @@ class Sanitation extends CI_Controller {
                   )
 			  
 			);
-		 $this->data['facility_area']=$this->masters_model->get_data("facility_area");
+		 $this->data['area']=$this->masters_model->get_data("area");
 		 $this->data['area_activity']=$this->masters_model->get_data("area_activity");
 
 			
 			
 		}
-		else if($type=="facility_area"){
-			$title="Add facility_area";
+		else if($type=="area"){
+			$title="Add Area";
 			$config=array(
                array(
                      'field'   => 'area_name',
@@ -139,8 +128,6 @@ class Sanitation extends CI_Controller {
                   )
 			  
 			);
-			 $this->data['facility']=$this->masters_model->get_data("facility");
-			 $this->data['department']=$this->masters_model->get_data("department");
 			 $this->data['area_types']=$this->masters_model->get_data("area_types");
 			 
 		}
@@ -154,8 +141,6 @@ class Sanitation extends CI_Controller {
                   )
 			  
 			);
-			 $this->data['department']=$this->masters_model->get_data("department");
-			 
 		}
 		else if($type=="states"){
 			$title="Add states";
@@ -197,7 +182,6 @@ class Sanitation extends CI_Controller {
 			 
 			 $this->data['vendor_contracts']=$this->masters_model->get_data("vendor_contracts");
 			 $this->data['vendor']=$this->masters_model->get_data("vendor");
-			 $this->data['facility']=$this->masters_model->get_data("facility");
 			 
 			 
 		}
@@ -215,16 +199,6 @@ class Sanitation extends CI_Controller {
 			 $this->data['districts']=$this->masters_model->get_data("districts");
 			
 	}
-		else if($type=="user"){
-			$title="Add User";
-			$config=array(
-               array(
-                     'field'   => 'user_name',
-                     'label'   => 'User Name',
-                     'rules'   => 'required|trim|xss_clean'
-                  )
-			);
-		}
 			
 		else{
 			show_404();
@@ -265,11 +239,9 @@ function edit($type=""){
                
 		
 			);
-$this->data['area_types']=$this->masters_model->get_data("area_types");
+		$this->data['area_types']=$this->masters_model->get_data("area_types");
 
-		/*	$this->data['facility_types']=$this->masters_model->get_data("facility_types");
-			$this->data['divisions']=$this->masters_model->get_data("divisions");	
-		*/}
+		}
 		else if($type=="area_activity"){
 			$title="Edit Area Activity";
 			$config=array(
@@ -312,9 +284,6 @@ $this->data['area_types']=$this->masters_model->get_data("area_types");
                      'rules'   => 'trim|xss_clean'
                   )
 			);
-$this->data['department']=$this->masters_model->get_data("department");
-/*$this->data['item_type']=$this->masters_model->get_data("item_type");
-$this->data['drug']=$this->masters_model->get_data("drugs");*/
 
 		}
 		else if($type=="districts"){
@@ -343,16 +312,14 @@ $this->data['drug']=$this->masters_model->get_data("drugs");*/
 		
 			);
 			$this->data['districts']=$this->masters_model->get_data("districts");
-$this->data['states']=$this->masters_model->get_data("states");
-/*$this->data['item_type']=$this->masters_model->get_data("item_type");
-*/
+			$this->data['states']=$this->masters_model->get_data("states");
 		}
-		else if($type=="facility"){
-			$title="Edit Facility";
+		else if($type=="hospital"){
+			$title="Edit Hospital";
 			$config=array(
                array(
-                     'field'   => 'facility_name',
-                     'label'   => 'facility_name',
+                     'field'   => 'hospital_name',
+                     'label'   => 'Hospital Name',
                      'rules'   => 'trim|xss_clean'
                   ),
                 array(
@@ -378,9 +345,7 @@ $this->data['states']=$this->masters_model->get_data("states");
 		
 			);
 			$this->data['facility']=$this->masters_model->get_data("facility");
-$this->data['village_town']=$this->masters_model->get_data("village_town");
-/*$this->data['item_type']=$this->masters_model->get_data("item_type");
-*/
+			$this->data['village_town']=$this->masters_model->get_data("village_town");
 		}
 		
 		else if($type=="facility_activity"){
@@ -400,8 +365,8 @@ $this->data['village_town']=$this->masters_model->get_data("village_town");
 			$this->data['facility_activity']=$this->masters_model->get_data("facility_activity");
 			$this->data['area_activity']=$this->masters_model->get_data("area_activity");	
 		}
-		else if($type=="facility_area"){
-			$title="Edit Facility Area";
+		else if($type=="area"){
+			$title="Edit Area";
 			$config=array(
                array(
                      'field'   => 'area_name',
@@ -409,9 +374,7 @@ $this->data['village_town']=$this->masters_model->get_data("village_town");
                      'runles'   => 'trim|xss_clean'
                   )
 			);
-			$this->data['facility_area']=$this->masters_model->get_data("facility_area");
-			$this->data['facility']=$this->masters_model->get_data("facility");
-			$this->data['department']=$this->masters_model->get_data("department");
+			$this->data['area']=$this->masters_model->get_data("area");
 			$this->data['area_types']=$this->masters_model->get_data("area_types");
 		}
 
@@ -443,19 +406,6 @@ $this->data['village_town']=$this->masters_model->get_data("village_town");
 			$this->data['states']=$this->masters_model->get_data("states");
 				
 		}
-		else if($type=="staff"){
-			$title="Edit staff";
-			$config=array(
-               array(
-                     'field'   => 'staff',
-                     'label'   => 'staff',
-                     'rules'   => 'trim|xss_clean'
-                  ),
-				 
-			);	
-			$this->data['staff']=$this->masters_model->get_data("staff");
-				
-		}
 		else if($type=="vendor"){
 			$title="Edit vendor";
 			$config=array(
@@ -469,7 +419,7 @@ $this->data['village_town']=$this->masters_model->get_data("village_town");
 			$this->data['vendor']=$this->masters_model->get_data("vendor");
 				
 		}
-else if($type=="vendor_contracts"){
+		else if($type=="vendor_contracts"){
 			$title="Edit Vendor contracts";
 			$config=array(
                array(
@@ -484,7 +434,7 @@ else if($type=="vendor_contracts"){
 				
 		}
 
-else if($type=="village_town"){
+		else if($type=="village_town"){
 			$title="Edit Village Town";
 			$config=array(
                array(
@@ -497,9 +447,6 @@ else if($type=="village_town"){
 			$this->data['village_town']=$this->masters_model->get_data("village_town");
 				
 		}
-		else if($type=="user"){
-		}
-			
 		else{
 			show_404();
 		}

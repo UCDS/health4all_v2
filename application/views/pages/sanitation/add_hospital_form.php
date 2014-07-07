@@ -14,12 +14,12 @@ $(function(){
 		<div class="col-md-8 col-md-offset-2">
 		<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
-		<h3><u>Add Facility</u></h3></center><br>
-	<?php echo validation_errors(); echo form_open('masters/add/facility',array('role'=>'form')); ?>
+		<h3><u>Add Hospital</u></h3></center><br>
+	<?php echo validation_errors(); echo form_open('masters/add/hospital',array('role'=>'form')); ?>
 	<div class="form-group">
-		<label for="facility_name" class="col-md-4">Facility Name</label>
+		<label for="hospital_name" class="col-md-4">Hospital Name</label>
 		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder="Facility Name" id="Facility_name" name="facility_name" />
+		<input type="text" class="form-control" placeholder="Hospital Name" id="hospital_name" name="hospital_name" />
 		</div>
 	</div>
 	<div class="form-group">

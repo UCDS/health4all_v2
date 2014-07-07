@@ -77,7 +77,7 @@
 						<ul class="dropdown-menu">
 						<?php foreach($functions as $f){
 								if($f->user_function=="Diagnostics"){ ?>
-									<li><a href="#">Diagnostics</a></li>
+									<li><a href="<?php echo base_url()."diagnostics/add/test_method";?>">Diagnostics</a></li>
 						<?php
 									break;
 								}
@@ -106,7 +106,7 @@
 						<ul class="dropdown-menu">
 						<?php foreach($functions as $f){
 								if($f->user_function=="HR"){ ?>
-									<li><a href="#">HR</a></li>
+									<li><a href="<?php echo base_url()."staff/add/staff";?>">HR</a></li>
 						<?php
 									break;
 								}

@@ -34,9 +34,9 @@ $(function(){
 	    <label for="area_activity" class="col-md-4">Facility area</label>
 	    <div class="col-md-8">
 <select name="facility_area" id="district" class="form-control">
-		<option value="">Facility Area</option>
-		<?php foreach($facility_area as $d){
-			echo "<option value='$d->facility_area_id'>$d->area_name</option>";
+		<option value="">Area</option>
+		<?php foreach($area as $d){
+			echo "<option value='$d->area_id'>$d->area_name</option>";
 		}
 		?>
 		</select>

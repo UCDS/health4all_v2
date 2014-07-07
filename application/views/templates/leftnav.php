@@ -42,6 +42,10 @@
 				<li><a href="<?php echo base_url();?>staff/add/staff">Staff</a></li>
 				<li><a href="<?php echo base_url();?>staff/add/staff_role">Staff Role</a></li>
 				<li><a href="<?php echo base_url();?>staff/add/staff_category"> Staff Category</a></li>
+		<li class="nav-header">Edit</li>
+		<li><a href="<?php echo base_url();?>staff/edit/staff">Staff</a></li>
+		<li><a href="<?php echo base_url();?>staff/edit/staff_role">Staff Role</a></li>
+		<li><a href="<?php echo base_url();?>staff/edit/staff_category">Staff Category</a></li>
 	<ul>
 </div>
 <?php } ?>
@@ -56,9 +60,9 @@
 				<li><a href="<?php echo base_url();?>sanitation/add/department">Department</a></li>
 				<li><a href="<?php echo base_url();?>sanitation/add/districts">Districts</a></li>
 				<li><a href="<?php echo base_url();?>sanitation/add/facility_activity">Facility Activity</a></li>
-		        <li><a href="<?php echo base_url();?>sanitation/add/facility">Facility</a></li>
+		        <li><a href="<?php echo base_url();?>sanitation/add/hospital">Hospital</a></li>
 				<li><a href="<?php echo base_url();?>sanitation/add/facility_type">Facility Type</a></li>
-				<li><a href="<?php echo base_url();?>sanitation/add/facility_area">Facility Area</a></li>
+				<li><a href="<?php echo base_url();?>sanitation/add/area">Area</a></li>
 				<li><a href="<?php echo base_url();?>sanitation/add/staff">Staff</a></li> 
 				<li><a href="<?php echo base_url();?>sanitation/add/states">States</a></li>
 				<li><a href="<?php echo base_url();?>sanitation/add/vendor">Vendor</a></li>
