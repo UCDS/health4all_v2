@@ -63,10 +63,9 @@
 		        <li><a href="<?php echo base_url();?>sanitation/add/hospital">Hospital</a></li>
 				<li><a href="<?php echo base_url();?>sanitation/add/facility_type">Facility Type</a></li>
 				<li><a href="<?php echo base_url();?>sanitation/add/area">Area</a></li>
-				<li><a href="<?php echo base_url();?>sanitation/add/staff">Staff</a></li> 
 				<li><a href="<?php echo base_url();?>sanitation/add/states">States</a></li>
 				<li><a href="<?php echo base_url();?>sanitation/add/vendor">Vendor</a></li>
-				<li><a href="<?php echo base_url();?>sanitation/add/vendor_contracts">Vendor_contracts</a></li>
+				<li><a href="<?php echo base_url();?>sanitation/add/vendor_contracts">Vendor Contracts</a></li>
 				<li><a href="<?php echo base_url();?>sanitation/add/village_town">Village Town</a></li>
 				<li class="divider"></li>
 	<ul>

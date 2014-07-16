@@ -15,7 +15,7 @@ $(function(){
 		<center>
 		<strong><?php echo validation_errors();  if(isset($msg)){ echo $msg;}?></strong>
 		<h3><u>Add States</u></h3></center><br>
-	<?php echo form_open('masters/add/states',array('role'=>'form')); ?>
+	<?php echo form_open('sanitation/add/states',array('role'=>'form')); ?>
 
 	
 	<div class="form-group">

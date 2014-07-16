@@ -15,7 +15,7 @@ $(function(){
 		<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
 		<h3><u>Add Facility Type</u></h3></center><br>
-	<?php echo validation_errors(); echo form_open('masters/add/facility_type',array('role'=>'form')); ?>
+	<?php echo validation_errors(); echo form_open('sanitation/add/facility_type',array('role'=>'form')); ?>
 	
 	<div class="form-group">
 	    <label for="facility_types" class="col-md-4">Facility Types</label>

@@ -15,7 +15,7 @@ $(function(){
 		<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
 	    <h3><u>Add Area Activity</u></h3></center><br>
-	<?php echo form_open('masters/add/area_activity',array('role'=>'form')); ?>
+	<?php echo form_open('sanitation/add/area_activity',array('role'=>'form')); ?>
 	<div class="form-group">
 	<label for="area_type" class="col-md-4">Area type</label>
 		<div  class="col-md-8">

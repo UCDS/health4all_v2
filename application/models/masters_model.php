@@ -16,10 +16,9 @@ class Masters_model extends CI_Model{
 			$this->db->select("department_id,department")->from("department")->order_by('department');
 		}
 		else if($type=="area"){
-			$this->db->select("area_id,area_name,department_id")->from("area");
+			$this->db->select("area_id,area_name,area.department_id,hospital_id")->from("area")->join('department','area.department_id=department.department_id');
 		}
 		else if($type=="unit"){
-			
 			$this->db->select("unit_id,unit_name,department_id")->from("unit");
 		}
 		else if($type=="user"){
@@ -68,8 +67,6 @@ class Masters_model extends CI_Model{
 			}
 			if($this->input->post('staff_role_id'))
 			{
-				//$staff_role = $this->input->post('staff_role');
-				//$this->db->where('staff_role',$staff_role);
 				$staff_role_id = $this->input->post('staff_role_id');
 				$this->db->where('staff_role_id',$staff_role_id);
 			}
@@ -392,9 +389,31 @@ class Masters_model extends CI_Model{
 		}
 		else if($type=="village_town"){
 			$this->db->select("village_town_id,village_town")->from("village_town");
-		}		
-
+		}
+		else if($type=="sanitation_activity"){
+			$date=date("Y-m-d",strtotime($this->input->post('date')));
+			$day = date('w',strtotime($this->input->post('date')));
+			$week_start = date('Y-m-d', strtotime($date.' - '.$day.' days'));
+			$week_end = date('Y-m-d', strtotime($date.' + '.(6-$day).' days'));
+			$fortnight_start_date=date("Y-m-1",strtotime($date));
+			if($date-$fortnight_start_date>15)
+			$fortnight_end_date=date("Y-m-15",strtotime($date));
+			else { 
+				$fortnight_start_date=date("Y-m-15",strtotime($date));
+				$fortnight_end_date=date("Y-m-t",strtotime($date));
+			}
+			$this->db->select('activity_name,frequency,weightage,frequency_type,activity_id,day_done.*,week_done.*,fortnight_done.*,month_done.*')
+			->from('facility_activity')
+			->join('area_activity','facility_activity.area_activity_id=area_activity.area_activity_id')
+			->join('area','facility_activity.facility_area_id=area.area_id')
+			->join("(SELECT activity_id day_activity_done,date day_activity_date,time day_activity_time FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Daily' AND date='$date') day_done",'facility_activity.activity_id=day_done.day_activity_done','left')
+			->join("(SELECT activity_id week_activity_done,date week_activity_date,time week_activity_time FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Weekly' AND (date BETWEEN '$week_start' AND '$week_end')) week_done",'facility_activity.activity_id=week_done.week_activity_done','left')
+			->join("(SELECT activity_id fortnight_activity_done,date fortnight_activity_date,time fortnight_activity_time FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Fortnightly' AND (date BETWEEN '$fortnight_start_date' AND '$fortnight_end_date')) fortnight_done",'facility_activity.activity_id=fortnight_done.fortnight_activity_done','left')
+			->join("(SELECT activity_id month_activity_done,date month_activity_date,time month_activity_time FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Monthly' AND MONTH(date)=MONTH('$date') AND YEAR(date)=YEAR('$date')) month_done",'facility_activity.activity_id=month_done.month_activity_done','left')
+			->where('area.area_id',$this->input->post('area'));
+		}
 		$query=$this->db->get();
+		
 		return $query->result();
 	
 }
@@ -909,7 +928,7 @@ else if($type=="dosage"){
 		elseif($type=="department"){
 		$data = array(
 					  'department_name'=>$this->input->post('department_name'),
-					  'hospital_id'=>$this->input->post('hospital_id'));
+					  'hospital_id'=>$this->input->post('hospital'));
 
 		$table="department";
 		}
@@ -936,12 +955,23 @@ else if($type=="dosage"){
 		$table="facility";
 		}
 		elseif($type=="facility_activity"){
-		$data = array(
-					  'facility_area_id'=>$this->input->post('facility_area'),
-					 'area_activity_id'=>$this->input->post('area_activity')
-			);
-
-		$table="facility_activity";
+			$this->db->select('frequency')->from('area_activity')->where('area_activity_id',$this->input->post('area_activity'));
+			$query=$this->db->get();
+			$result=$query->row();
+			$frequency=$result->frequency;
+			$data=array();
+			for($i=0;$i<$frequency;$i++){
+				$data[] = array(
+						'facility_area_id'=>$this->input->post('area'),
+						'area_activity_id'=>$this->input->post('area_activity')
+					);
+			}
+			$this->db->trans_start();
+			$this->db->insert_batch('facility_activity',$data);
+			$this->db->trans_complete();
+			if($this->db->trans_status()===FALSE)
+				return false;
+			else return true;
 		}
 		
 		

@@ -15,7 +15,7 @@ $(function(){
 		<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
 		<h3><u>Add Districts</u></h3></center><br>
-	<?php echo validation_errors(); echo  form_open('masters/add/districts',array('role'=>'form')); ?>
+	<?php echo validation_errors(); echo  form_open('sanitation/add/districts',array('role'=>'form')); ?>
 	<div class="form-group">
 		<label for="district" class="col-md-4" > Districts</label>
 		<div  class="col-md-8">

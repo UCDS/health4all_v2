@@ -15,7 +15,7 @@ $(function(){
 		<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
 		<h3><u>Vendor Contracts</u></h3></center><br>
-	<?php echo validation_errors(); echo form_open('masters/add/vendor_contracts',array('role'=>'form')); ?>
+	<?php echo validation_errors(); echo form_open('sanitation/add/vendor_contracts',array('role'=>'form')); ?>
 	
 	<div class="form-group">
 		<label for="vendor_name" class="col-md-4">Vendor Name</label>

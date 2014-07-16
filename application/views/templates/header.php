@@ -92,6 +92,7 @@
 								}
 							}
 						?>	
+						<li><a href="<?php echo base_url();?>sanitation/evaluate">Sanitation</a></li>
 						</ul>
 					  </li>
 					<?php

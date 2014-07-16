@@ -13,7 +13,7 @@ $(function(){
 	<div class="col-md-8 col-md-offset-2">
 	<h3><?php if(isset($msg)) echo $msg;?></h3>	
 	<center><h3><u>Add Activity done</u></h3></center><br><br>
-	<?php echo form_open('masters/add/activity_done',array('role'=>'form')); ?>
+	<?php echo form_open('sanitation/add/activity_done',array('role'=>'form')); ?>
 	<div class="form-group">
 
 	<label for="text" class="col-md-4">First Name</label>

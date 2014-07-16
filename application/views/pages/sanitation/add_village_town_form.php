@@ -15,7 +15,7 @@ $(function(){
 		<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
 		<h3><u>Add Village Town</u></h3></center><br>
-	<?php echo form_open('masters/add/village_town',array('role'=>'form')); ?>
+	<?php echo form_open('sanitation/add/village_town',array('role'=>'form')); ?>
 	
 	<div class="form-group">
 	    <label for="village_town" class="col-md-4">Village/Town</label>

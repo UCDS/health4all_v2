@@ -3,7 +3,7 @@
 		<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
 		<h3><u>Area Types</u></h3></center><br>
-	<?php echo form_open('masters/add/area_types',array('role'=>'form')); ?>
+	<?php echo form_open('sanitation/add/area_types',array('role'=>'form')); ?>
 	
 	<div class="form-group">
 	    <label for="area_type" class="col-md-4">Area Type</label>

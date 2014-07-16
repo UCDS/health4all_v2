@@ -15,7 +15,7 @@ $(function(){
 		<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
 		<h3><u>Add Hospital</u></h3></center><br>
-	<?php echo validation_errors(); echo form_open('masters/add/hospital',array('role'=>'form')); ?>
+	<?php echo validation_errors(); echo form_open('sanitation/add/hospital',array('role'=>'form')); ?>
 	<div class="form-group">
 		<label for="hospital_name" class="col-md-4">Hospital Name</label>
 		<div  class="col-md-8">
@@ -28,7 +28,7 @@ $(function(){
 	   <select name="facility_type" id="district" class="form-control">
 		<option value="">Select</option>
 		<?php foreach($facility_type as $d){
-			echo "<option value='$d->facility_type_id'>$d->facility_types</option>";
+			echo "<option value='$d->facility_type_id'>$d->facility_type</option>";
 		}
 		?>
 		</select>

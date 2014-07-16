@@ -16,11 +16,52 @@ class Sanitation extends CI_Controller {
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");	
 	}
 	function evaluate(){
+		$this->load->model('sanitation_model');
+		$this->data['title']="Evaluate Sanitation Works";
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
-		$this->data['areas']=$this->staff_model->get_areas();
-		
-		
+		$this->data['area']=$this->masters_model->get_data('area');
+		$this->form_validation->set_rules('area', 'Area', 'trim|xss_clean');
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('templates/leftnav');
+		if($this->form_validation->run()==FALSE){
+			$this->load->view('pages/sanitation/evaluation_form',$this->data);			
+		}
+		else{
+			if($this->input->post('select_area')){
+				$this->data['sanitation_activity']=$this->masters_model->get_data('sanitation_activity');
+				$this->load->view('pages/sanitation/evaluation_form',$this->data);
+			}
+			else if($this->input->post('submit')){
+				$result=$this->sanitation_model->upload_evaluation();
+				if($result){
+					$this->data['msg']="Evaluation saved.";
+					$this->load->view('pages/sanitation/evaluation_form',$this->data);
+				}
+				else{
+					$this->data['msg']="Evaluation could not be saved. Please retry.";
+					$this->load->view('pages/sanitation/evaluation_form',$this->data);
+				}
+			}
+		}
+		$this->load->view('templates/footer');
+				
+	}
+	function view_scores(){
+		$this->load->model('sanitation_model');
+		$this->data['title']="Evaluate Sanitation Works";
+	 	$this->load->helper('form');
+		$this->load->library('form_validation');		
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('templates/leftnav');
+		$this->form_validation->set_rules('hospital', 'Hospital', 'trim|xss_clean');
+		if($this->form_validation->run()==FALSE){
+			$this->load->view('pages/sanitation/scores',$this->data);			
+		}
+		else{
+			$this->data['scores']=$this->sanitation_model->get_scores();
+			$this->load->view('pages/sanitation/scores',$this->data);
+		}		
 	}
 	function add($type=""){
 	 	$this->load->helper('form');
@@ -28,7 +69,7 @@ class Sanitation extends CI_Controller {
 		$userdata=$this->session->userdata('logged_in');
 		$this->data['user_id']=$userdata['user_id'];
 	if($type=="area_types"){
-		 	$title="Add area_types";
+		 	$title="Add Area Type";
 		
 			$config=array(
                array(
@@ -40,7 +81,7 @@ class Sanitation extends CI_Controller {
 			);
 }
 		else if($type=="area_activity"){
-			$title="Add area_activity";
+			$title="Add Area Activity";
 			$config=array(
                array(
                      'field'   => 'activity_name',
@@ -54,7 +95,7 @@ class Sanitation extends CI_Controller {
 		
 		}
 		else if($type=="department"){
-			$title="Add department";
+			$title="Add Department";
 			$config=array(
                array(
                      'field'   => 'department_name',
@@ -65,7 +106,7 @@ class Sanitation extends CI_Controller {
 			$this->data['department']=$this->masters_model->get_data("department");
 		}
 		else if($type=="districts"){
-			$title="Add districts";
+			$title="Add District";
 			$config=array(
                array(
                      'field'   => 'district',
@@ -91,7 +132,7 @@ class Sanitation extends CI_Controller {
 			 $this->data['village_town']=$this->masters_model->get_data("village_town");
 		}
 		else if($type=="facility_type"){
-			$title="Add facility_type";
+			$title="Add Facility Type";
 			$config=array(
                array(
                      'field'   => 'facility_types',
@@ -103,7 +144,7 @@ class Sanitation extends CI_Controller {
 			
 		}
 		else if($type=="facility_activity"){
-			$title="Add facility_activity";
+			$title="Add Facility Activity";
 			$config=array(
                array(
                      'field'   => 'area_name',
@@ -131,19 +172,8 @@ class Sanitation extends CI_Controller {
 			 $this->data['area_types']=$this->masters_model->get_data("area_types");
 			 
 		}
-		else if($type=="staff"){
-			$title="Add staff";
-			$config=array(
-               array(
-                     'field'   => 'first_name',
-                     'label'   => 'first_name',
-                     'rules'   => 'trim|xss_clean'
-                  )
-			  
-			);
-		}
 		else if($type=="states"){
-			$title="Add states";
+			$title="Add State";
 			$config=array(
                array(
                      'field'   => 'state',
@@ -157,7 +187,7 @@ class Sanitation extends CI_Controller {
 		}
 		
 		else if($type=="vendor"){
-			$title="Add vendor";
+			$title="Add Vendor";
 			$config=array(
                array(
                      'field'   => 'vendor_name',
@@ -170,7 +200,7 @@ class Sanitation extends CI_Controller {
 			 
 		}
 	    else if($type=="vendor_contracts"){
-			$title="Add vendor_contracts";
+			$title="Add Vendor Contract";
 			$config=array(
                array(
                      'field'   => 'status',
@@ -186,7 +216,7 @@ class Sanitation extends CI_Controller {
 			 
 		}
 		 else if($type=="village_town"){
-			$title="Add village_town";
+			$title="Add Village Town";
 			$config=array(
                array(
                      'field'   => 'village_town',
@@ -430,10 +460,8 @@ function edit($type=""){
                   ),
 				 
 			);	
-			$this->data['vendor_contracts']=$this->masters_model->get_data("vendor_contracts");
-				
+			$this->data['vendor_contracts']=$this->masters_model->get_data("vendor_contracts");	
 		}
-
 		else if($type=="village_town"){
 			$title="Edit Village Town";
 			$config=array(
@@ -442,7 +470,6 @@ function edit($type=""){
                      'label'   => 'village_town',
                      'rules'   => 'trim|xss_clean'
                   ),
-				 
 			);	
 			$this->data['village_town']=$this->masters_model->get_data("village_town");
 				
