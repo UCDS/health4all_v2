@@ -37,7 +37,7 @@ $(function(){
 	   <div class="form-group">
 	    <label for="department" class="col-md-4">Department</label>
 	    <div class="col-md-8">
-	   <select name="department" id="district" class="form-control">
+	   <select name="department" id="department" class="form-control">
 		<option value="">department</option>
 		<?php foreach($departments as $d){
 			echo "<option value='$d->department_id'>$d->department</option>";
@@ -49,7 +49,7 @@ $(function(){
 	<div class="form-group">
 	    <label for="area_types" class="col-md-4">Area type</label>
 	    <div class="col-md-8">
-	   <select name="area_type" id="district" class="form-control">
+	   <select name="area_type" id="area_type" class="form-control">
 		<option value="">area type</option>
 		<?php foreach($area_types as $d){
 			echo "<option value='$d->area_type_id'>$d->area_type</option>";

@@ -100,6 +100,7 @@ class Sanitation_model extends CI_Model{
 					'activity_id'=>$activity,
 					'date'=>date("Y-m-d",strtotime($this->input->post('activity_date_'.$activity))),
 					'time'=>date("H:i:s",strtotime($this->input->post('other_activity_'.$activity))),
+					'score'=>$this->input->post('activity_score_'.$activity),
 					'user_id'=>$user_id
 				);
 				continue;
@@ -108,6 +109,7 @@ class Sanitation_model extends CI_Model{
 				'activity_id'=>$activity,
 				'date'=>date("Y-m-d",strtotime($this->input->post('activity_date_'.$activity))),
 				'time'=>date("H:i:s",strtotime($this->input->post('other_activity_'.$activity))),
+				'score'=>$this->input->post('activity_score_'.$activity),
 				'user_id'=>$user_id
 			);
 		}
@@ -193,10 +195,10 @@ class Sanitation_model extends CI_Model{
 				$month_end_date=date("Y-m-t",strtotime($to_date));
 		$query=$this->db->query("SELECT weightages.hospital_id,weightages.hospital,daily_score,weekly_score,fortnightly_score,monthly_score,daily_total,weekly_total,fortnightly_total,monthly_total FROM 
 				(SELECT hospital_id,hospital, 
-				SUM( CASE WHEN frequency_type = 'Daily' THEN weightage ELSE 0 END) daily_score,
-				SUM( CASE WHEN frequency_type = 'Weekly' THEN weightage ELSE 0 END) weekly_score,
-				SUM( CASE WHEN frequency_type = 'Fortnightly' THEN weightage ELSE 0 END) fortnightly_score,
-				SUM( CASE WHEN frequency_type = 'Monthly' THEN weightage ELSE 0 END) monthly_score
+				SUM( CASE WHEN frequency_type = 'Daily' THEN score ELSE 0 END) daily_score,
+				SUM( CASE WHEN frequency_type = 'Weekly' THEN score ELSE 0 END) weekly_score,
+				SUM( CASE WHEN frequency_type = 'Fortnightly' THEN score ELSE 0 END) fortnightly_score,
+				SUM( CASE WHEN frequency_type = 'Monthly' THEN score ELSE 0 END) monthly_score
 				FROM activity_done
 				JOIN facility_activity
 				USING ( activity_id )
@@ -212,9 +214,9 @@ class Sanitation_model extends CI_Model{
 				LEFT JOIN 
 				(SELECT hospital_id,hospital,
 				SUM( CASE WHEN frequency_type = 'Daily' THEN weightage * DATEDIFF( '$to_date', '$from_date' ) ELSE 0 END ) daily_total ,
-				SUM(CASE WHEN frequency_type = 'Weekly' THEN weightage * DATEDIFF( '$week_end_date', '$week_start_date' ) /7 ELSE 0 END ) weekly_total,
-				SUM(CASE WHEN frequency_type = 'Fornightly' THEN weightage * DATEDIFF( '$fortnight_end_date', '$fortnight_start_date' ) /15 ELSE 0 END ) fortnightly_total,
-				SUM(CASE WHEN frequency_type = 'Monthly' THEN weightage * DATEDIFF( '$month_end_date', '$month_start_date' ) /30 ELSE 0 END ) monthly_total
+				SUM(CASE WHEN frequency_type = 'Weekly' THEN weightage * round(DATEDIFF( '$to_date', '$from_date' ) /7) ELSE 0 END ) weekly_total,
+				SUM(CASE WHEN frequency_type = 'Fornightly' THEN weightage * round(DATEDIFF( '$to_date', '$from_date' ) /15) ELSE 0 END ) fortnightly_total,
+				SUM(CASE WHEN frequency_type = 'Monthly' THEN weightage * round(DATEDIFF( '$to_date', '$from_date' ) /30) ELSE 0 END ) monthly_total
 				FROM facility_activity
 				JOIN area_activity ON facility_activity.area_activity_id = area_activity.area_activity_id
 				JOIN area ON facility_activity.facility_area_id = area.area_id

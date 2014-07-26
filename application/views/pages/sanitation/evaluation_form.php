@@ -121,8 +121,9 @@ $(function(){
 						?>
 						<td>
 							<input type="checkbox" value="<?php echo $a->activity_id;?>" name="weekly_activity_id[]"  />
-							<input type="text" class="date form-control" value="<?php if($a->week_activity_date) echo date("d-M-Y",strtotime($a->week_activity_date));?>" name="activity_date_<?php echo $a->activity_id;?>" />
-							<input type="text" class="time form-control" value="<?php echo $a->week_activity_time;?>" name="other_activity_<?php echo $a->activity_id;?>" size="7" /></td>
+							<input type="text" class="date form-control" placeholder="Date" value="<?php if($a->week_activity_date) echo date("d-M-Y",strtotime($a->week_activity_date));?>" name="activity_date_<?php echo $a->activity_id;?>" />
+							<input type="text" class="time form-control" placeholder="Time" value="<?php echo $a->week_activity_time;?>" name="other_activity_<?php echo $a->activity_id;?>" size="7" />
+							<input type="number" class="form-control" min=0 max="<?php echo $a->weightage;?>" value="<?php echo $a->weekly_score;?>" name="activity_score_<?php echo $a->activity_id;?>" size="3" /></td>
 						<?php }
 						} ?>
 					</tr>

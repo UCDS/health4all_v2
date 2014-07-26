@@ -406,14 +406,13 @@ class Masters_model extends CI_Model{
 			->from('facility_activity')
 			->join('area_activity','facility_activity.area_activity_id=area_activity.area_activity_id')
 			->join('area','facility_activity.facility_area_id=area.area_id')
-			->join("(SELECT activity_id day_activity_done,date day_activity_date,time day_activity_time FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Daily' AND date='$date') day_done",'facility_activity.activity_id=day_done.day_activity_done','left')
-			->join("(SELECT activity_id week_activity_done,date week_activity_date,time week_activity_time FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Weekly' AND (date BETWEEN '$week_start' AND '$week_end')) week_done",'facility_activity.activity_id=week_done.week_activity_done','left')
-			->join("(SELECT activity_id fortnight_activity_done,date fortnight_activity_date,time fortnight_activity_time FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Fortnightly' AND (date BETWEEN '$fortnight_start_date' AND '$fortnight_end_date')) fortnight_done",'facility_activity.activity_id=fortnight_done.fortnight_activity_done','left')
-			->join("(SELECT activity_id month_activity_done,date month_activity_date,time month_activity_time FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Monthly' AND MONTH(date)=MONTH('$date') AND YEAR(date)=YEAR('$date')) month_done",'facility_activity.activity_id=month_done.month_activity_done','left')
+			->join("(SELECT activity_id day_activity_done,date day_activity_date,time day_activity_time,score daily_score FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Daily' AND date='$date') day_done",'facility_activity.activity_id=day_done.day_activity_done','left')
+			->join("(SELECT activity_id week_activity_done,date week_activity_date,time week_activity_time,score weekly_score FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Weekly' AND (date BETWEEN '$week_start' AND '$week_end')) week_done",'facility_activity.activity_id=week_done.week_activity_done','left')
+			->join("(SELECT activity_id fortnight_activity_done,date fortnight_activity_date,time fortnight_activity_time,score fortnightly_score FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Fortnightly' AND (date BETWEEN '$fortnight_start_date' AND '$fortnight_end_date')) fortnight_done",'facility_activity.activity_id=fortnight_done.fortnight_activity_done','left')
+			->join("(SELECT activity_id month_activity_done,date month_activity_date,time month_activity_time,score monthly_score FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Monthly' AND MONTH(date)=MONTH('$date') AND YEAR(date)=YEAR('$date')) month_done",'facility_activity.activity_id=month_done.month_activity_done','left')
 			->where('area.area_id',$this->input->post('area'));
 		}
-		$query=$this->db->get();
-		
+		$query=$this->db->get();		
 		return $query->result();
 	
 }

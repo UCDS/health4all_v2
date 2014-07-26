@@ -163,7 +163,7 @@
 			<label for="email" class="control-label">Email</label>
 		</div>
 		<div class="col-md-6">
-			<input type="text" class="form-control" placeholder="Email" id="email" name="email" />
+			<input type="email" class="form-control" placeholder="Email" id="email" name="email" />
 		</div>
 	</div>
 
