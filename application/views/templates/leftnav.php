@@ -55,18 +55,42 @@
 <div class="col-sm-3 col-md-2 sidebar-left">
     <ul class="nav nav-sidebar">
     			<li class="nav-header">Add</li>
-				<li><a href="<?php echo base_url();?>sanitation/add/area_types">Area Types</a></li>
-				<li><a href="<?php echo base_url();?>sanitation/add/area_activity">Area activity</a></li>
-				<li><a href="<?php echo base_url();?>sanitation/add/department">Department</a></li>
-				<li><a href="<?php echo base_url();?>sanitation/add/districts">Districts</a></li>
-				<li><a href="<?php echo base_url();?>sanitation/add/facility_activity">Facility Activity</a></li>
-		        <li><a href="<?php echo base_url();?>sanitation/add/hospital">Hospital</a></li>
-				<li><a href="<?php echo base_url();?>sanitation/add/facility_type">Facility Type</a></li>
-				<li><a href="<?php echo base_url();?>sanitation/add/area">Area</a></li>
-				<li><a href="<?php echo base_url();?>sanitation/add/states">States</a></li>
-				<li><a href="<?php echo base_url();?>sanitation/add/vendor">Vendor</a></li>
-				<li><a href="<?php echo base_url();?>sanitation/add/vendor_contracts">Vendor Contracts</a></li>
-				<li><a href="<?php echo base_url();?>sanitation/add/village_town">Village Town</a></li>
+						<?php foreach($functions as $f){
+								if($f->user_function=="Masters - Sanitation" && ($f->add==1 || $f->edit==1)){ ?>
+									<li><a href="<?php echo base_url();?>sanitation/add/area_activity">Area activity</a></li>
+									<li><a href="<?php echo base_url();?>sanitation/add/facility_activity">Facility Activity</a></li>
+						<?php
+									break;
+								}
+							}
+						?>
+
+						<?php foreach($functions as $f){
+								if($f->user_function=="Masters - Facility" && ($f->add==1 || $f->edit==1)){ ?>
+									<li><a href="<?php echo base_url();?>sanitation/add/facility_type">Facility Type</a></li>
+									<li><a href="<?php echo base_url();?>sanitation/add/hospital">Hospital</a></li>
+									<li><a href="<?php echo base_url();?>sanitation/add/department">Department</a></li>
+									<li><a href="<?php echo base_url();?>sanitation/add/area_types">Area Types</a></li>
+									<li><a href="<?php echo base_url();?>sanitation/add/area">Area</a></li>
+									<li><a href="<?php echo base_url();?>sanitation/add/vendor">Vendor</a></li>
+									<li><a href="<?php echo base_url();?>sanitation/add/vendor_contracts">Vendor Contracts</a></li>
+						<?php
+									break;
+								}
+							}
+						?>	
+						
+						<?php foreach($functions as $f){
+								if($f->user_function=="Masters - Facility" && ($f->add==1 || $f->edit==1)){ ?>
+									<li><a href="<?php echo base_url();?>sanitation/add/states">States</a></li>
+									<li><a href="<?php echo base_url();?>sanitation/add/districts">Districts</a></li>
+									<li><a href="<?php echo base_url();?>sanitation/add/village_town">Village Town</a></li>
+						<?php
+									break;
+								}
+							}
+						?>						
+								
 				<li class="divider"></li>
 	<ul>
 </div>

@@ -15,7 +15,18 @@ class Sanitation extends CI_Controller {
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");	
 	}
+
+//************************************************************************************//  	
+// Function to score and update the sanitation activities
+//************************************************************************************//
 	function evaluate(){
+		$access=0;
+		foreach($this->data['functions'] as $f){
+			if($f->user_function=="Sanitation Evaluation" && ($f->add ==1 || $f->edit ==1)){
+				$access=1;
+			}
+		}
+		if($access==0) show_404();		
 		$this->load->model('sanitation_model');
 		$this->data['title']="Evaluate Sanitation Works";
 	 	$this->load->helper('form');
@@ -48,6 +59,13 @@ class Sanitation extends CI_Controller {
 				
 	}
 	function view_scores(){
+		$access=0;
+		foreach($this->data['functions'] as $f){
+			if($f->user_function=="Sanitation Evaluation" && $f->view ==1){
+				$access=1;
+			}
+		}
+		if($access==0) show_404();		
 		$this->load->model('sanitation_model');
 		$this->data['title']="Evaluate Sanitation Works";
 	 	$this->load->helper('form');
@@ -63,12 +81,24 @@ class Sanitation extends CI_Controller {
 			$this->load->view('pages/sanitation/scores',$this->data);
 		}		
 	}
+	
+//************************************************************************************//  	
+// Add functions commence here   	
+//************************************************************************************//	
+	
 	function add($type=""){
-	 	$this->load->helper('form');
+		$this->load->helper('form');
 		$this->load->library('form_validation');
 		$userdata=$this->session->userdata('logged_in');
 		$this->data['user_id']=$userdata['user_id'];
 	if($type=="area_types"){
+		$access=0;
+		foreach($this->data['functions'] as $f){
+			if($f->user_function=="Masters - Facility" && $f->add ==1){
+				$access=1;
+			}
+		}
+		if($access==0) show_404();		
 		 	$title="Add Area Type";
 		
 			$config=array(
@@ -81,6 +111,13 @@ class Sanitation extends CI_Controller {
 			);
 }
 		else if($type=="area_activity"){
+		$access=0;
+		foreach($this->data['functions'] as $f){
+			if($f->user_function=="Masters - Sanitation" && $f->add ==1){
+				$access=1;
+			}
+		}
+		if($access==0) show_404();		
 			$title="Add Area Activity";
 			$config=array(
                array(
@@ -95,6 +132,13 @@ class Sanitation extends CI_Controller {
 		
 		}
 		else if($type=="department"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Facility" && $f->add ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();		
 			$title="Add Department";
 			$config=array(
                array(
@@ -106,6 +150,13 @@ class Sanitation extends CI_Controller {
 			$this->data['department']=$this->masters_model->get_data("department");
 		}
 		else if($type=="districts"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Application" && $f->add ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Add District";
 			$config=array(
                array(
@@ -119,6 +170,13 @@ class Sanitation extends CI_Controller {
 			 $this->data['districts']=$this->masters_model->get_data("districts");
 		}
 		else if($type=="hospital"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Facility" && $f->add ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Add Hospital";
 			$config=array(
                array(
@@ -132,6 +190,13 @@ class Sanitation extends CI_Controller {
 			 $this->data['village_town']=$this->masters_model->get_data("village_town");
 		}
 		else if($type=="facility_type"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Facility" && $f->add ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Add Facility Type";
 			$config=array(
                array(
@@ -144,6 +209,13 @@ class Sanitation extends CI_Controller {
 			
 		}
 		else if($type=="facility_activity"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Sanitation" && $f->add ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Add Facility Activity";
 			$config=array(
                array(
@@ -160,6 +232,13 @@ class Sanitation extends CI_Controller {
 			
 		}
 		else if($type=="area"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Facility" && $f->add ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Add Area";
 			$config=array(
                array(
@@ -173,6 +252,13 @@ class Sanitation extends CI_Controller {
 			 
 		}
 		else if($type=="states"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Application" && $f->add ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Add State";
 			$config=array(
                array(
@@ -187,6 +273,13 @@ class Sanitation extends CI_Controller {
 		}
 		
 		else if($type=="vendor"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Facility" && $f->add ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Add Vendor";
 			$config=array(
                array(
@@ -200,6 +293,13 @@ class Sanitation extends CI_Controller {
 			 
 		}
 	    else if($type=="vendor_contracts"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Facility" && $f->add ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Add Vendor Contract";
 			$config=array(
                array(
@@ -216,6 +316,13 @@ class Sanitation extends CI_Controller {
 			 
 		}
 		 else if($type=="village_town"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Application" && $f->add ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Add Village Town";
 			$config=array(
                array(
@@ -254,11 +361,23 @@ class Sanitation extends CI_Controller {
 		}
 		$this->load->view('templates/footer');
   	}	
+
+//************************************************************************************//  	
+// Edit functions commence here   	
+//************************************************************************************//
+
 function edit($type=""){
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
 		$this->data['user_id']=$this->session->userdata('logged_in')[0]['user_id'];
 	if($type=="area_types"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Facility" && $f->edit ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Edit area_types";
 			$config=array(
                array(
@@ -273,6 +392,13 @@ function edit($type=""){
 
 		}
 		else if($type=="area_activity"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Sanitation" && $f->edit ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Edit Area Activity";
 			$config=array(
                array(
@@ -306,6 +432,13 @@ function edit($type=""){
 
 		}
 		else if($type=="department"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Facility" && $f->edit ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Edit Department";
 			$config=array(
                array(
@@ -317,6 +450,13 @@ function edit($type=""){
 
 		}
 		else if($type=="districts"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Application" && $f->edit ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Edit Districts";
 			$config=array(
                array(
@@ -345,6 +485,13 @@ function edit($type=""){
 			$this->data['states']=$this->masters_model->get_data("states");
 		}
 		else if($type=="hospital"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Facility" && $f->edit ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Edit Hospital";
 			$config=array(
                array(
@@ -379,6 +526,13 @@ function edit($type=""){
 		}
 		
 		else if($type=="facility_activity"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Sanitation" && $f->edit ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Edit Facility Activity";
 			$config=array(
                array(
@@ -396,6 +550,13 @@ function edit($type=""){
 			$this->data['area_activity']=$this->masters_model->get_data("area_activity");	
 		}
 		else if($type=="area"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Facility" && $f->edit ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Edit Area";
 			$config=array(
                array(
@@ -410,6 +571,13 @@ function edit($type=""){
 
 		
 		else if($type=="facility_type"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Facility" && $f->edit ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Edit Facility Type";
 			$config=array(
                array(
@@ -424,6 +592,13 @@ function edit($type=""){
 		}
 		
 	else if($type=="states"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Application" && $f->edit ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Edit States";
 			$config=array(
                array(
@@ -437,6 +612,13 @@ function edit($type=""){
 				
 		}
 		else if($type=="vendor"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Facility" && $f->edit ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Edit vendor";
 			$config=array(
                array(
@@ -450,6 +632,13 @@ function edit($type=""){
 				
 		}
 		else if($type=="vendor_contracts"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Facility" && $f->edit ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Edit Vendor contracts";
 			$config=array(
                array(
@@ -463,6 +652,13 @@ function edit($type=""){
 			$this->data['vendor_contracts']=$this->masters_model->get_data("vendor_contracts");	
 		}
 		else if($type=="village_town"){
+			$access=0;
+			foreach($this->data['functions'] as $f){
+				if($f->user_function=="Masters - Application" && $f->edit ==1){
+					$access=1;
+				}
+			}
+			if($access==0) show_404();
 			$title="Edit Village Town";
 			$config=array(
                array(
