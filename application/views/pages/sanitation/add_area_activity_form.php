@@ -54,10 +54,7 @@ $(function(){
 		<div  class="col-md-8">
 		<select class="form-control" name="frequency_type">
 			<option value="" selected disabled>Select</option>
-			<option value="Daily">Daily</option>
 			<option value="Weekly">Weekly</option>
-			<option value="Fortnightly">Fortnightly</option>
-			<option value="Monthly">Monthly</option>
 		</select>
 		</div>
 	</div>

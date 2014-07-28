@@ -92,24 +92,26 @@ class Sanitation_model extends CI_Model{
 		}
 		if(count($weekly_activities)>0){
 		foreach($weekly_activities as $activity){
-		if($this->input->post('other_activity_'.$activity)){
+		if($this->input->post('activity_score_'.$activity)){
 			if(in_array($activity,$activities_done)){
 				$key=array_search($activity,$activities_done);
 				$update_data[]=array(
 					'activity_done_id'=>$done_id[$key],
 					'activity_id'=>$activity,
-					'date'=>date("Y-m-d",strtotime($this->input->post('activity_date_'.$activity))),
-					'time'=>date("H:i:s",strtotime($this->input->post('other_activity_'.$activity))),
+					'date'=>$date,
+					'time'=>date("H:i:s"),
 					'score'=>$this->input->post('activity_score_'.$activity),
+					'comments'=>$this->input->post('comments_'.$activity),
 					'user_id'=>$user_id
 				);
 				continue;
 			}
 			$data[]=array(
 				'activity_id'=>$activity,
-				'date'=>date("Y-m-d",strtotime($this->input->post('activity_date_'.$activity))),
-				'time'=>date("H:i:s",strtotime($this->input->post('other_activity_'.$activity))),
+				'date'=>$date,
+				'time'=>date("H:i:s"),
 				'score'=>$this->input->post('activity_score_'.$activity),
+				'comments'=>$this->input->post('comments_'.$activity),
 				'user_id'=>$user_id
 			);
 		}

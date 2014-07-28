@@ -3,9 +3,23 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.timeentry.min.js"></script>
 <script type="text/javascript">
 $(function(){
-	$(".date").Zebra_DatePicker();
+	$('.date').Zebra_DatePicker({
+	  disabled_dates : ['* * * *'],
+	  enabled_dates: ['* * * 1']   // all days, all monts, all years as long
+									  // as the weekday is 0 or 6 (Sunday or Saturday)
+	});
 	$(".time").timeEntry();
+	$("#select_form").on('submit',function(e){
+		if($('#date').val()==""){
+			alert('Please select a date');
+			e.preventDefault();
+		}
+		else{
+			return true;
+		}
+	});
 	$("#hospital").on('change',function(){
+		$(".area").show();
 		var hospital_id=$(this).val();
 		$("#area option").hide().attr('disabled',true);
 		$("#area option[class="+hospital_id+"]").show().attr('disabled',false);
@@ -16,27 +30,32 @@ $(function(){
 	<?php if(isset($msg)){ ?>
 		<div class="alert alert-info"><?php echo $msg;?></div>
 	<?php } ?>
-	<?php echo validation_errors(); echo form_open('sanitation/evaluate',array('role'=>'form','class'=>'form-custom')); ?>
+	<?php echo validation_errors();
+		echo form_open('sanitation/evaluate',array('role'=>'form','class'=>'form-custom','id'=>'select_form')); ?>
 	    <label for="area_activity">Hospital</label>
-		<select name="hospital" id="hospital" class="form-control">
+		<select name="hospital" id="hospital" class="form-control" required >
 		<option value="">Hospital</option>
 		<?php foreach($hospitals as $d){
 			echo "<option value='$d->hospital_id'>$d->hospital</option>";
 		}
 		?>
 		</select>
+		<span class="area" hidden>
 	    <label for="area_activity">Area</label>
-		<select name="area" id="area" class="form-control">
-		<option value="">Area</option>
+		<select name="area" id="area" class="form-control" required >
+		<option value="">Select Area</option>
 		<?php foreach($area as $d){
 			echo "<option value='$d->area_id' class='$d->hospital_id' hidden disabled>$d->area_name</option>";
 		}
 		?>
 		</select>
+		</span>
 		<label for="date">Date</label>
-		<input type="text" class="date form-control" name="date" />
+		<input type="text" class="date form-control" name="date" id="date" form="select_form" required />
 		<input type="submit" value="Select" name="select_area" class="btn btn-primary btn-sm" />
-	<?php if($this->input->post('select_area')){ ?>
+	</form>
+	<?php if($this->input->post('select_area')){ 
+	echo form_open('sanitation/evaluate',array('role'=>'form','class'=>'form-custom')); ?>
 	<br />
 	<br />
 	<div class="panel panel-default">
@@ -120,10 +139,10 @@ $(function(){
 								if($a->activity_name == $activity){
 						?>
 						<td>
-							<input type="checkbox" value="<?php echo $a->activity_id;?>" name="weekly_activity_id[]"  />
-							<input type="text" class="date form-control" placeholder="Date" value="<?php if($a->week_activity_date) echo date("d-M-Y",strtotime($a->week_activity_date));?>" name="activity_date_<?php echo $a->activity_id;?>" />
-							<input type="text" class="time form-control" placeholder="Time" value="<?php echo $a->week_activity_time;?>" name="other_activity_<?php echo $a->activity_id;?>" size="7" />
-							<input type="number" class="form-control" min=0 max="<?php echo $a->weightage;?>" value="<?php echo $a->weekly_score;?>" name="activity_score_<?php echo $a->activity_id;?>" size="3" /></td>
+							<input type="checkbox" value="<?php echo $a->activity_id;?>" checked name="weekly_activity_id[]"  />
+							<input type="number" class="form-control" placeholder="Score" min=0 max="<?php echo $a->weightage;?>" value="<?php echo $a->weekly_score;?>" name="activity_score_<?php echo $a->activity_id;?>" size="3" />
+							<textarea class="form-control" placeholder="Comments" name="comments_<?php echo $a->activity_id;?>"><?php echo $a->comments;?></textarea>
+						</td>
 						<?php }
 						} ?>
 					</tr>
@@ -196,6 +215,6 @@ $(function(){
 			<button class="btn btn-sm btn-primary col-md-offset-5" type="submit" name="submit" value="Submit">Submit</button>
 		</div>
 	</div>
-	<?php } ?>
 	</form>
+	<?php } ?>
 </div>
