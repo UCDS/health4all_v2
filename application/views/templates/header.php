@@ -92,7 +92,27 @@
 								}
 							}
 						?>	
-						<li><a href="<?php echo base_url();?>sanitation/evaluate">Sanitation</a></li>
+						
+						<?php 
+						$evaluate=0;
+						foreach($functions as $f){
+								if($f->user_function=="Sanitation Evaluation" && ($f->add==1 || $f->edit==1)){ ?>
+									<li><a href="<?php echo base_url();?>sanitation/evaluate">Sanitation</a></li>
+						<?php
+									$evaluate=1;
+									break;
+								}
+						}
+						if($evaluate==0){
+						foreach($functions as $f){
+								if($f->user_function=="Sanitation Evaluation" && ($f->add==1 || $f->edit==1)){ ?>
+									<li><a href="<?php echo base_url();?>sanitation/add/facility_activity">Sanitation</a></li>
+						<?php
+								break;
+								}
+							}
+						}
+						?>	
 						</ul>
 					  </li>
 					<?php
@@ -194,8 +214,15 @@
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown  <?php if(preg_match("^".base_url()."user_panel^",current_url())){ echo "active";}?>"><a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><?php $logged_in=$this->session->userdata('logged_in');echo $logged_in['username']; ?> <b class="caret"></b></a>
                 <ul class="dropdown-menu">
+				<?php
+				foreach($functions as $f){
+				if($f->user_function=="Masters - Application"){ ?>
                   <li><a href="<?php echo base_url()."user_panel/settings";?>">Settings</a></li>
 				  <li class="divider"></li>
+				<?php break;
+					}
+				}
+				?>
 				  <li><a href="<?php echo base_url();?>home/logout">Logout</a></li>
                 </ul>
 			</li>
