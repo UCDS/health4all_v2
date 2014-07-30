@@ -18,7 +18,7 @@ $(function(){
 					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
 		</form>
 	<br />
-	<?php if(count($report)>0){ ?>
+	<?php if(isset($report) && count($report)>0){ ?>
 	<table class="table table-bordered table-striped">
 	<thead>
 		<th style="text-align:center" rowspan="2">Department</th>

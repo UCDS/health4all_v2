@@ -23,7 +23,7 @@ $(function(){
 	if($this->input->post('from_date')) $from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 	if($this->input->post('to_date')) $to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
 	?>
-	<?php if(count($report)>0){ ?>
+	<?php if(isset($report) && count($report)>0){ ?>
 	<table class="table table-bordered table-striped">
 	<thead>
 		<th style="text-align:center" rowspan="2">Department</th>

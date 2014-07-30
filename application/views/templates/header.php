@@ -160,7 +160,7 @@
 
 			<?php 
 			foreach($functions as $f){
-					if($f->user_function=="OP Summary" || $f->user_function=="IP Summary" || $f->user_function=="OP Detail" || $f->user_function=="IP Detail"){ ?>
+					if($f->user_function=="OP Summary" || $f->user_function=="IP Summary" || $f->user_function=="OP Detail" || $f->user_function=="IP Detail" || ($f->user_function == "Sanitation Evaluation" && $f->view==1)){ ?>
 					<li class="dropdown  <?php if(preg_match("^".base_url()."reports^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Reports <b class="caret"></b></a>
 						<ul class="dropdown-menu">
@@ -195,8 +195,17 @@
 			<?php	}
 					if($f->user_function=="IP Detail"){ ?>
 						<li><a href="<?php echo base_url()."reports/ip_detail";?>">IP Detail</a></li>
-			<?php } } ?>
-						</ul>
+			<?php } 
+			} ?>
+			<li class="divider"></li>
+			<?php
+			foreach($functions as $f){
+			if($f->user_function=="Sanitation Evaluation"){ ?>
+						<li><a href="<?php echo base_url()."sanitation/view_scores";?>">Sanitation Evaluation</a></li>
+			<?php	} 
+			}
+			?>
+			</ul>
 			<?php 
 				break;
 				}  

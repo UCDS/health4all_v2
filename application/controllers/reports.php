@@ -49,7 +49,7 @@ class Reports extends CI_Controller {
 	    'trim|required|xss_clean');
 		if ($this->form_validation->run() === FALSE)
 		{
-			$this->load->view('pages/op_summary');
+			$this->load->view('pages/op_summary',$this->data);
 		}
 		else{
 			$this->load->view('pages/op_summary',$this->data);
@@ -86,7 +86,7 @@ class Reports extends CI_Controller {
 	    'trim|required|xss_clean');
 		if ($this->form_validation->run() === FALSE)
 		{
-			$this->load->view('pages/ip_summary');
+			$this->load->view('pages/ip_summary',$this->data);
 		}
 		else{
 			$this->load->view('pages/ip_summary',$this->data);
@@ -113,6 +113,7 @@ class Reports extends CI_Controller {
 			}
 		}
 		if($access==1){
+		if($from_date == 0 && $to_date==0) {$from_date=date("Y-m-d");$to_date=$from_date;}
 		$this->data['title']="Out-Patient Detailed Report";
 		$this->load->view('templates/header',$this->data);
 		$this->load->helper('form');
@@ -124,7 +125,7 @@ class Reports extends CI_Controller {
 	    'trim|required|xss_clean');
 		if ($this->form_validation->run() === FALSE)
 		{
-			$this->load->view('pages/op_detailed');
+			$this->load->view('pages/op_detailed',$this->data);
 		}
 		else{
 			$this->load->view('pages/op_detailed',$this->data);
@@ -151,6 +152,7 @@ class Reports extends CI_Controller {
 			}
 		}
 		if($access==1){
+		if($from_date == 0 && $to_date==0) {$from_date=date("Y-m-d");$to_date=$from_date;}
 		$this->data['title']="In-Patient Detailed Report";
 		$this->load->view('templates/header',$this->data);
 		$this->load->helper('form');

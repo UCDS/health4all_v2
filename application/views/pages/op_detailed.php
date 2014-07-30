@@ -18,7 +18,7 @@ $(function(){
 					<input type="submit" class="btn btn-primary btn-sm" value="Submit" />
 		</form>
 	<br />
-	<?php if($report && count($report)>0){ ?>
+	<?php if(isset($report) && count($report)>0){ ?>
 	<table class="table table-bordered table-striped">
 	<thead>
 		<th>OP No.</th>
