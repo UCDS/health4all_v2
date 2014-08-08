@@ -36,6 +36,7 @@ class Staff extends CI_Controller {
 						 'rules'   => 'required|trim|xss_clean'
 						)
 				);
+				$this->data['hospital']=$this->masters_model->get_data("hospital");
 				$this->data['department']=$this->masters_model->get_data("department");
 				$this->data['unit']=$this->masters_model->get_data("unit");
 				$this->data['area']=$this->masters_model->get_data("area");

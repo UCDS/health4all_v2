@@ -1,21 +1,18 @@
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <script type="text/javascript">
 $(function(){
-	$("#agreement_date").Zebra_DatePicker({
-		direction:false
-	});
-	$("#probable_date_of_completion,#agreement_completion_date").Zebra_DatePicker({
-		direction:1
-	});
+			$("#department option").hide().attr('disabled',true);
+		$("#hospital").on('change',function(){
+			var hospital_id=$(this).val();
+			$("#department option").hide().attr('disabled',true);
+			$("#department option[class="+hospital_id+"]").show().attr('disabled',false);
+		});
 });
 </script>
 		<div class="col-md-8 col-md-offset-2">
 		<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
 		<h3><u>Add Area</u></h3></center><br>
-	<?php echo validation_errors(); echo form_open('sanitation/add/facility_area',array('role'=>'form')); ?>
+	<?php echo validation_errors(); echo form_open('sanitation/add/area',array('role'=>'form')); ?>
 	
 	<div class="form-group">
 	    <label for="area_name" class="col-md-4">Area Name</label>
@@ -26,7 +23,7 @@ $(function(){
 	<div class="form-group">
 	    <label for="facility_name" class="col-md-4">Hospital Name</label>
 	    <div class="col-md-8">
-	   <select name="hospital" id="hospital_name" class="form-control">
+	   <select name="hospital" id="hospital" class="form-control">
 		<option value="">Hospital</option>
 		<?php foreach($hospitals as $d){
 			echo "<option value='$d->hospital_id'>$d->hospital</option>";
@@ -40,7 +37,7 @@ $(function(){
 	   <select name="department" id="department" class="form-control">
 		<option value="">department</option>
 		<?php foreach($departments as $d){
-			echo "<option value='$d->department_id'>$d->department</option>";
+			echo "<option value='$d->department_id' class='$d->hospital_id'>$d->department</option>";
 		}
 		?>
 		</select>

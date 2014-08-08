@@ -51,7 +51,8 @@
 <?php } ?>
 
 <?php if(preg_match("^sanitation/*^",current_url())) { ?>
-
+	<?php foreach($functions as $f){
+			if($f->user_function=="Masters - Sanitation" || $f->user_function=="Masters - Facility" || $f->user_function == "Masters - Application"){ ?>
 <div class="col-sm-3 col-md-2 sidebar-left">
     <ul class="nav nav-sidebar">
     			<li class="nav-header">Add</li>
@@ -81,7 +82,7 @@
 						?>	
 						
 						<?php foreach($functions as $f){
-								if($f->user_function=="Masters - Facility" && ($f->add==1 || $f->edit==1)){ ?>
+								if($f->user_function=="Masters - Application" && ($f->add==1 || $f->edit==1)){ ?>
 									<li><a href="<?php echo base_url();?>sanitation/add/states">States</a></li>
 									<li><a href="<?php echo base_url();?>sanitation/add/districts">Districts</a></li>
 									<li><a href="<?php echo base_url();?>sanitation/add/village_town">Village Town</a></li>
@@ -94,7 +95,9 @@
 				<li class="divider"></li>
 	<ul>
 </div>
-<?php } ?>
+<?php break; }}
+}
+?>
 
 <?php if(preg_match("^diagnostics/*^",current_url())) { ?>
 <div class="col-sm-3 col-md-2 sidebar-left">

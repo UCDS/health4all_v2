@@ -147,7 +147,7 @@ class Sanitation extends CI_Controller {
                      'rules'   => 'required|trim|xss_clean'
                   )
 			);	
-			$this->data['department']=$this->masters_model->get_data("department");
+			$this->data['hospitals']=$this->masters_model->get_data("hospital");
 		}
 		else if($type=="districts"){
 			$access=0;
@@ -227,9 +227,7 @@ class Sanitation extends CI_Controller {
 			);
 		 $this->data['area']=$this->masters_model->get_data("area");
 		 $this->data['area_activity']=$this->masters_model->get_data("area_activity");
-
-			
-			
+			 $this->data['hospitals']=$this->masters_model->get_data("hospital");			
 		}
 		else if($type=="area"){
 			$access=0;
@@ -249,6 +247,8 @@ class Sanitation extends CI_Controller {
 			  
 			);
 			 $this->data['area_types']=$this->masters_model->get_data("area_types");
+			 $this->data['hospitals']=$this->masters_model->get_data("hospital");
+			$this->data['departments']=$this->masters_model->get_data("department");
 			 
 		}
 		else if($type=="states"){
@@ -369,7 +369,8 @@ class Sanitation extends CI_Controller {
 function edit($type=""){
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
-		$this->data['user_id']=$this->session->userdata('logged_in')[0]['user_id'];
+		$userdata=$this->session->userdata('logged_in');
+		$this->data['user_id']=$userdata[0]['user_id'];
 	if($type=="area_types"){
 			$access=0;
 			foreach($this->data['functions'] as $f){

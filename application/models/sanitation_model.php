@@ -49,7 +49,6 @@ class Sanitation_model extends CI_Model{
 			$fortnightly_activities = $this->input->post('fortnightly_activity_id');
 			$this->db->select('activity_done_id,activity_id')->from('activity_done')->where_in('activity_id',$fortnightly_activities)->where("(date BETWEEN '$fortnight_start_date' AND '$fortnight_end_date')");
 			$query=$this->db->get();
-			echo $this->db->last_query();
 			$result=$query->result();
 			foreach($result as $row){
 				$activities_done[]=$row->activity_id;
@@ -60,7 +59,6 @@ class Sanitation_model extends CI_Model{
 			$monthly_activities = $this->input->post('monthly_activity_id');
 			$this->db->select('activity_done_id,activity_id')->from('activity_done')->where_in('activity_id',$monthly_activities)->where("MONTH(date) = MONTH('$date')")->where("YEAR(date) = YEAR('$date')");
 			$query=$this->db->get();
-			echo $this->db->last_query();
 			$result=$query->result();
 			foreach($result as $row){
 				$activities_done[]=$row->activity_id;
@@ -171,7 +169,6 @@ class Sanitation_model extends CI_Model{
 		if(count($update_data)>0){
 			$this->db->update_batch('activity_done',$update_data,'activity_done_id');
 		}
-		echo $this->db->last_query();
 		$this->db->trans_complete();
 		if($this->db->trans_status() === FALSE){
 			return FALSE;

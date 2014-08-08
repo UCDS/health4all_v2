@@ -4,25 +4,21 @@ class Masters_model extends CI_Model{
 	
 	function get_data($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=""){
 		if($type=="equipment_types"){
-			
 			$this->db->select("equipment_type_id,equipment_type")->from("equipment_type");
 		}
 		else if($type=="hospital"){
-		
 			$this->db->select("hospital_id,hospital")->from("hospital");
 		}
 		else if($type=="department"){
-			
-			$this->db->select("department_id,department")->from("department")->order_by('department');
+			$this->db->select("department_id,hospital_id,department")->from("department")->order_by('department');
 		}
 		else if($type=="area"){
-			$this->db->select("area_id,area_name,area.department_id,hospital_id")->from("area")->join('department','area.department_id=department.department_id');
+			$this->db->select("area_id,area_name,area.department_id,hospital_id")->from("area")->join('department','area.department_id=department.department_id','left');
 		}
 		else if($type=="unit"){
 			$this->db->select("unit_id,unit_name,department_id")->from("unit");
 		}
 		else if($type=="user"){
-			
 			$this->db->select("user_id,username")->from("user");
 		}
 		else if($type=='staff')
@@ -41,9 +37,7 @@ class Masters_model extends CI_Model{
 			
 		}
 		else if($type=="staff_category")
-		{
-		
-			
+		{	
 			if($this->input->post('search'))
 			{
 				$staff_category = strtolower($this->input->post('staff_category'));
@@ -95,7 +89,6 @@ class Masters_model extends CI_Model{
 			$this->db->select("dosage,dosage_id,dosage_unit")->from("dosage");
 						
 		}
-	
 		else if($type=="generics"){
 		
 			if($this->input->post('select')){
@@ -815,6 +808,7 @@ else if($type=="dosage"){
 					  'last_name'=>$this->input->post('last_name'),
 					  'gender'=>$this->input->post('gender'),
 					  'date_of_birth'=>$this->input->post('date_of_birth'),
+					  'hospital_id'=>$this->input->post('hospital'),
 					  'department_id'=>$this->input->post('department'),
 					  'unit_id'=>$this->input->post('unit'),
 					  'area_id'=>$this->input->post('area'),
@@ -926,7 +920,7 @@ else if($type=="dosage"){
 		}
 		elseif($type=="department"){
 		$data = array(
-					  'department_name'=>$this->input->post('department_name'),
+					  'department'=>$this->input->post('department_name'),
 					  'hospital_id'=>$this->input->post('hospital'));
 
 		$table="department";
@@ -944,14 +938,12 @@ else if($type=="dosage"){
 		elseif($type=="hospital"){
 		$data = array(
 					  'hospital'=>$this->input->post('hospital_name'),
-					 'facility_type_id'=>$this->input->post('facility_type'),
-					   'address'=>$this->input->post('address'),
-					   'village_town_id'=>$this->input->post('village_town'),
-					   'longitude'=>$this->input->post('longitude'),
-					   'latitude'=>$this->input->post('latitude')
+					 'hospital_type_id'=>$this->input->post('facility_type'),
+					   'place'=>$this->input->post('address'),
+					   'village_town_id'=>$this->input->post('village_town')
 			);
 
-		$table="facility";
+		$table="hospital";
 		}
 		elseif($type=="facility_activity"){
 			$this->db->select('frequency')->from('area_activity')->where('area_activity_id',$this->input->post('area_activity'));
@@ -977,7 +969,7 @@ else if($type=="dosage"){
 		
 		elseif($type=="facility_type"){
 		$data = array(
-					  'facility_types'=>$this->input->post('facility_types')
+					  'facility_type'=>$this->input->post('facility_type')
 			);
 
 		$table="facility_type";
@@ -986,7 +978,6 @@ else if($type=="dosage"){
 		elseif($type=="area"){
 		$data = array(
 					  'area_name'=>$this->input->post('area_name'),
-					 'hospital_id'=>$this->input->post('hospital'),
 					   'department_id'=>$this->input->post('department'),
 					   'area_type_id'=>$this->input->post('area_types')
 			);
