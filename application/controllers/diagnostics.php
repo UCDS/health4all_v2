@@ -15,6 +15,10 @@ parent::__construct();
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 }
+
+//************************************************************************************//  	
+// Function for Add Forms in Diagnostics Module commence here   	
+//************************************************************************************//	
 function add($type=""){
 $this->load->helper('form');
 $this->load->library('form_validation');
@@ -104,6 +108,9 @@ $this->load->view($page,$this->data);
   $this->load->view('templates/footer');
 }
 
+//************************************************************************************//  	
+// Function for Edit Forms in Diagnostics Module commence here   	
+//************************************************************************************//
 function edit($type="")
 {
 $this->load->helper('form');
