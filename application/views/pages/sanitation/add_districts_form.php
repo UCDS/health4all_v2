@@ -19,13 +19,7 @@ $(function(){
 	<div class="form-group">
 		<label for="district" class="col-md-4" > Districts</label>
 		<div  class="col-md-8">
-		<select name="districts" id="district" class="form-control">
-		<option value="">--SELECT--</option>
-		<?php foreach($districts as $d){
-			echo "<option value='$d->district_id'>$d->district</option>";
-		}
-		?>
-		</select>
+			<input name="district" class="form-control" type="text" />
 		</div>
 	</div>	
 	<div class="form-group">

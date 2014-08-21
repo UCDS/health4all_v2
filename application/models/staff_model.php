@@ -180,6 +180,50 @@ class Staff_model extends CI_Model{
 		if($this->db->trans_status()===TRUE) return true; else return false;
 	}
 
+	function staff_list($hospital_id=0){
+		$userdata=$this->session->userdata('hospital');
+		if($hospital_id==0) $hospital_id=$userdata['hospital_id'];
+		
+		$this->db->select("*")->from("staff")->where("department_id","4")->where("hospital_id",$hospital_id);
+		$query=$this->db->get();
+		return $query->result();
+	}
+	function get_hospital(){
+		$this->db->select("*")->from("hospital")->order_by('hospital','asc');
+		$query=$this->db->get();
+		return $query->result();
+	}
+	function add_camp($hospital_id){
+		
+		$data=array(
+			'camp_name'=>$this->input->post('camp'),
+			'location'=>$this->input->post('location'),
+			'hospital_id'=>$hospital_id
+			);
+		$this->db->trans_start();
+			$this->db->insert('blood_donation_camp',$data);
+		$this->db->trans_complete();
+		if($this->db->trans_status() === FALSE){
+			return false;
+		}
+		else return true;
+	}
+	
+	function add_hospital(){
+		$data=array(
+			'hospital'=>$this->input->post('hospital'),
+			'place'=>$this->input->post('location'),
+			'district'=>$this->input->post('district'),
+			'state'=>$this->input->post('state')
+			);
+		$this->db->trans_start();
+			$this->db->insert('hospital',$data);
+		$this->db->trans_complete();
+		if($this->db->trans_status() === FALSE){
+			return false;
+		}
+		else return true;
+	}
 
 			
 }

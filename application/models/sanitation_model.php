@@ -27,10 +27,10 @@ class Sanitation_model extends CI_Model{
 		}
 		if($this->input->post('weekly_activity_id')){
 			$day = date('w',strtotime($this->input->post('date')));
-			$week_start = date('Y-m-d', strtotime('-'.$day.' days'));
+			$week_start = date('Y-m-d', strtotime($this->input->post('evaluation_date')));
 			$week_end = date('Y-m-d', strtotime('+'.(6-$day).' days'));
-			$weekly_activities = $this->input->post('weekly_activity_id');
-			$this->db->select('activity_done_id,activity_id')->from('activity_done')->where_in('activity_id',$weekly_activities)->where("(date BETWEEN '$week_start' AND '$week_end')");
+			$weekly_activities = array_unique($this->input->post('weekly_activity_id'));
+			$this->db->select('activity_done_id,activity_id')->from('activity_done')->where_in('activity_id',$weekly_activities)->where("date",$week_start);
 			$query=$this->db->get();
 			$result=$query->result();
 			foreach($result as $row){
@@ -176,14 +176,16 @@ class Sanitation_model extends CI_Model{
 		else return true;
 	}
 	
-	function get_scores(){
+	function get_scores_summary(){
 		$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 		$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
-			$from_day = date('w',strtotime($this->input->post('from_date')));
-			$to_day = date('w',strtotime($this->input->post('to_date')));
-			$week_start_date = date('Y-m-d', strtotime($from_date.' - '.$from_day.' days'));
-			$week_end_date = date('Y-m-d', strtotime($to_date.' + '.(6-$to_day).' days'));
+			$date1 = new DateTime($from_date);
+			$date2 = new DateTime($to_date);
+			$number1 = (int)$date1->format('U');
+			$number2 = (int)$date2->format('U');
+			$num_weeks= round(($number2 - $number1)/60/60/24/31*5,0);
 			$fortnight_start_date=date("Y-m-1",strtotime($from_date));
+			if($num_weeks == 0) $num_weeks=1;
 			if($from_date-$fortnight_start_date>15)
 			$fortnight_end_date=date("Y-m-15",strtotime($to_date));
 			else { 
@@ -199,31 +201,39 @@ class Sanitation_model extends CI_Model{
 				SUM( CASE WHEN frequency_type = 'Fortnightly' THEN score ELSE 0 END) fortnightly_score,
 				SUM( CASE WHEN frequency_type = 'Monthly' THEN score ELSE 0 END) monthly_score
 				FROM activity_done
-				JOIN facility_activity
-				USING ( activity_id )
-				JOIN area_activity
-				USING ( area_activity_id )
+				JOIN facility_activity USING ( activity_id )
+				JOIN area_activity USING ( area_activity_id )
 				JOIN area ON facility_activity.facility_area_id = area.area_id
-				JOIN department
-				USING ( department_id )
-				JOIN hospital
-				USING ( hospital_id )
+				JOIN department USING ( department_id )
+				JOIN hospital USING ( hospital_id )
 				WHERE (activity_done.date BETWEEN '$from_date' AND '$to_date') 
 				GROUP BY hospital_id) scores
 				LEFT JOIN 
 				(SELECT hospital_id,hospital,
 				SUM( CASE WHEN frequency_type = 'Daily' THEN weightage * DATEDIFF( '$to_date', '$from_date' ) ELSE 0 END ) daily_total ,
-				SUM(CASE WHEN frequency_type = 'Weekly' THEN weightage * round(DATEDIFF( '$to_date', '$from_date' ) /7) ELSE 0 END ) weekly_total,
+				SUM(CASE WHEN frequency_type = 'Weekly' THEN weightage * $num_weeks ELSE 0 END ) weekly_total,
 				SUM(CASE WHEN frequency_type = 'Fornightly' THEN weightage * round(DATEDIFF( '$to_date', '$from_date' ) /15) ELSE 0 END ) fortnightly_total,
 				SUM(CASE WHEN frequency_type = 'Monthly' THEN weightage * round(DATEDIFF( '$to_date', '$from_date' ) /30) ELSE 0 END ) monthly_total
 				FROM facility_activity
 				JOIN area_activity ON facility_activity.area_activity_id = area_activity.area_activity_id
 				JOIN area ON facility_activity.facility_area_id = area.area_id
-				JOIN department
-				USING ( department_id )
-				JOIN hospital
-				USING ( hospital_id )
+				JOIN department USING ( department_id )
+				JOIN hospital USING ( hospital_id )
 				GROUP BY hospital_id) weightages ON scores.hospital_id = weightages.hospital_id");
+			return $query->result();
+		}
+		
+		function get_scores_detail(){
+			$hospital=$this->input->post('hospital');
+			$query=$this->db->query("SELECT hospital,SUM(score) score,SUM(weightage) weightage,date,DATE_ADD(date,INTERVAL 6 DAY),activity_name
+			FROM activity_done 
+			JOIN facility_activity USING(activity_id) 
+			JOIN area ON facility_activity.facility_area_id = area.area_id 
+			JOIN area_activity USING(area_activity_id) 
+			JOIN department USING(department_id) 
+			JOIN hospital USING(hospital_id)
+			WHERE hospital_id = $hospital
+			GROUP BY date,area_activity_id");
 			return $query->result();
 		}
 

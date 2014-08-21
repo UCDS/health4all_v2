@@ -34,7 +34,7 @@ $(function(){
 	<div class="form-group">
 		<label for="pin_code" class="col-md-4">District</label>
 		<div  class="col-md-8">
-		<select name="districts" id="district" class="form-control">
+		<select name="district" id="district" class="form-control">
 		<option value="">--SELECT--</option>
 		<?php foreach($districts as $d){
 			echo "<option value='$d->district_id'>$d->district</option>";

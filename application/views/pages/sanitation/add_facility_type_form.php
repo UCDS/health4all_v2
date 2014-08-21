@@ -20,7 +20,7 @@ $(function(){
 	<div class="form-group">
 	    <label for="facility_types" class="col-md-4">Facility Types</label>
 	    <div class="col-md-8">
-	    <input type="text" class="form-control" placeholder="Facility Types" id="facility_types" name="facility_types"/>
+	    <input type="text" class="form-control" placeholder="Facility Types" id="facility_types" name="facility_type" />
 	    </div>
 	</div>
 
