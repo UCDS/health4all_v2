@@ -5,8 +5,7 @@
 $(function(){
 	$('.date').Zebra_DatePicker({
 	  disabled_dates : ['* * * *'],
-	  enabled_dates: ['* * * 1']   // all days, all monts, all years as long
-									  // as the weekday is 0 or 6 (Sunday or Saturday)
+	  enabled_dates: ['1,8,15,22,29 * * *']
 	});
 	$(".time").timeEntry();
 	$("#select_form").on('submit',function(e){
@@ -17,6 +16,22 @@ $(function(){
 		else{
 			return true;
 		}
+	});
+	$(".submit").on('click',function(e){
+		
+		var scores_table = '<table class="table table-bordered table-striped"><thead><th>Activity</th><th>Score</th><th>Comment</th></thead><tbody>';
+		$(".activity").each(function(){
+			scores_table+='<tr><td>'+$(this).find('.activity_name').text()+'</td><td>'+$(this).find('.score').val()+'</td><td>'+$(this).find('.comment').val()+'</td></tr>';
+		});
+		scores_table+='</tbody></table>';
+		$('.modal-body').text('');
+		$('.modal-body').append(scores_table);
+		console.log(scores_table);
+		
+	});
+	$('.confirm').click(function(){
+		$('#myModal').modal('hide');
+		$('#evaluation_form').submit();
 	});
 	$("#hospital").on('change',function(){
 		$(".area").show();
@@ -32,7 +47,13 @@ $(function(){
 	<?php } ?>
 	<?php echo validation_errors();
 		echo form_open('sanitation/evaluate',array('role'=>'form','class'=>'form-custom','id'=>'select_form')); ?>
-	    <label for="area_activity">Hospital</label>
+		<?php if(count($hospitals)==1){ ?>
+			<input name="hospital" class="sr-only" value="<?php echo $hospitals[0]->hospital_id;?>" hidden />
+			|||| Hospital : <b><?php echo $hospitals[0]->hospital;?></b>
+		<?php } 
+		else { 
+		?>
+	    <label for="hospital">Hospital</label>
 		<select name="hospital" id="hospital" class="form-control" required >
 		<option value="">Hospital</option>
 		<?php foreach($hospitals as $d){
@@ -40,7 +61,15 @@ $(function(){
 		}
 		?>
 		</select>
-		<span class="area" hidden>
+		<?php } ?>
+		
+		<?php if(count($area)==1){ ?>
+			<input name="area" class="sr-only" value="<?php echo $area[0]->area_id;?>" hidden />
+			|||| Area : <b><?php echo $area[0]->area_name;?></b> ||||
+		<?php } 
+		else { 
+		?>
+		<span class="area">
 	    <label for="area_activity">Area</label>
 		<select name="area" id="area" class="form-control" required >
 		<option value="">Select Area</option>
@@ -50,12 +79,13 @@ $(function(){
 		?>
 		</select>
 		</span>
+		<?php } ?>
 		<label for="date">Date</label>
 		<input type="text" class="date form-control" name="date" id="date" form="select_form" required />
 		<input type="submit" value="Select" name="select_area" class="btn btn-primary btn-sm" />
 	</form>
 	<?php if($this->input->post('select_area')){ 
-	echo form_open('sanitation/evaluate',array('role'=>'form','class'=>'form-custom')); ?>
+	echo form_open('sanitation/evaluate',array('role'=>'form','class'=>'form-custom','id'=>'evaluation_form')); ?>
 	<br />
 	<br />
 	<div class="panel panel-default">
@@ -132,16 +162,16 @@ $(function(){
 				<tbody>
 				<?php $i=1;
 				foreach($weekly_activities as $activity){?>
-					<tr>
+					<tr class="activity">
 						<td><?php echo $i++;?></td>
-						<td><?php echo $activity;?></td>
+						<td class="activity_name"><?php echo $activity;?></td>
 						<?php foreach($sanitation_activity as $a){
 								if($a->activity_name == $activity){
 						?>
 						<td>
-							<input type="checkbox" value="<?php echo $a->activity_id;?>" checked name="weekly_activity_id[]"  />
-							<input type="number" class="form-control" placeholder="Score" min=0 max="<?php echo $a->weightage;?>" value="<?php echo $a->weekly_score;?>" name="activity_score_<?php echo $a->activity_id;?>" size="3" />
-							<textarea class="form-control" placeholder="Comments" name="comments_<?php echo $a->activity_id;?>"><?php echo $a->comments;?></textarea>
+							<input type="checkbox" value="<?php echo $a->activity_id;?>" checked name="weekly_activity_id[]" hidden />
+							<input type="number" class="form-control score" placeholder="Score (Out of <?php echo $a->weightage;?>)" min=0 max="<?php echo $a->weightage;?>" value="<?php echo $a->weekly_score;?>" name="activity_score_<?php echo $a->activity_id;?>" size="3" required <?php if($a->weekly_score) echo "disabled";?> />
+							<textarea class="form-control comment" placeholder="Comments" name="comments_<?php echo $a->activity_id;?>" <?php if($a->weekly_score) echo "disabled";?>><?php echo $a->comments;?></textarea>
 						</td>
 						<?php }
 						} ?>
@@ -212,7 +242,28 @@ $(function(){
 			<?php } ?>
 		</div>
 		<div class="panel-footer">
-			<button class="btn btn-sm btn-primary col-md-offset-5" type="submit" name="submit" value="Submit">Submit</button>
+			<button class="btn btn-primary btn-lg submit col-md-offset-5" data-toggle="modal" data-target="#myModal" form="evaluation_form" value="Submit">
+			  Submit
+			</button>
+
+			<!-- Modal -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Cancel</span></button>
+					<h4 class="modal-title" id="myModalLabel">Confirm Scores</h4>
+				  </div>
+				  <div class="modal-body">
+					
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<input type="submit" class="btn btn-primary confirm" form="evaluation_form" name="submit_evaluation" value="Confirm" />
+				  </div>
+				</div>
+			  </div>
+			</div>
 		</div>
 	</div>
 	</form>

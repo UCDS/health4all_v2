@@ -1,8 +1,8 @@
 #Health4All
 	Implementations
-	1. Gandhi Hospital
-	2. APMSIDC
-	3. IRCS - VidyaNagar*
+	1. Gandhi Hospital, Hyderabad
+	2. APMSIDC (Andhra Pradesh Medical Services Infrastructure Development Corporation)
+	3. IRCS(Indian Red Cross Society) - VidyaNagar* 
 	4. IRCS - Waranagal*
 	5. IRCS - Mancherial*
 	6. Test Implementation
@@ -25,10 +25,4 @@
 		Password : abc123
 		Application Code Repository: https://github.com/UCDS/health4all_v2
 
-#Project Tracker
-	Impementations
-	1. APMSIDC
-
-#www.yousee.in
-
-* will merge to a single implementation on 15th Aug 2014
+* will merge to a single implementation in September 2014

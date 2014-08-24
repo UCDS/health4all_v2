@@ -2,7 +2,7 @@
 class Masters_model extends CI_Model{
 	
 	
-	function get_data($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=""){
+	function get_data($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status="",$hospitals=0){
 		if($type=="equipment_types"){
 			$this->db->select("equipment_type_id,equipment_type")->from("equipment_type");
 		}
@@ -13,6 +13,13 @@ class Masters_model extends CI_Model{
 			$this->db->select("department_id,hospital_id,department")->from("department")->order_by('department');
 		}
 		else if($type=="area"){
+			if($hospitals!=0){
+				$hosp_id=array();
+				foreach($hospitals as $hospital){
+					$hosp_id[]=$hospital->hospital_id;
+				}
+				$this->db->where_in('hospital_id',$hosp_id);
+			}
 			$this->db->select("area_id,area_name,area.department_id,hospital_id")->from("area")->join('department','area.department_id=department.department_id','left');
 		}
 		else if($type=="unit"){
@@ -198,8 +205,7 @@ class Masters_model extends CI_Model{
 			
 			$this->db->select("drug_type_id,drug_type,description")->from("drug_type");	
 
-		}		
-
+		}	
 		else if($type=="test_method")
 
 			{
@@ -226,21 +232,23 @@ class Masters_model extends CI_Model{
 
 				$this->db->select("test_method_id,test_method")->from("test_method")->order_by('test_method');
 
-			}elseif ($type=="test_group") {
-			if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
-			{
-					$test_id=$this->input->post('test_group_id');
-					$this->db->where('group_id',$test_id);
 			}
-	    	if($this->input->post('search') && $this->input->post('group_name')!="")  //query to retrieve matches for the text entered in the field from table test_type
-	    	{
-	 		 		$search_method=strtolower($this->input->post('group_name'));
-		  	    	$this->db->like('LOWER(group_name)',$search_method,'after');
-	    	}
-			$this->db->select("group_id,group_name")->from("test_group")->order_by('group_name');
+			elseif ($type=="test_group") 
+			{
+				if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
+				{
+						$test_id=$this->input->post('test_group_id');
+						$this->db->where('group_id',$test_id);
+				}
+				if($this->input->post('search') && $this->input->post('group_name')!="")  //query to retrieve matches for the text entered in the field from table test_type
+				{
+						$search_method=strtolower($this->input->post('group_name'));
+						$this->db->like('LOWER(group_name)',$search_method,'after');
+				}
+				$this->db->select("group_id,group_name")->from("test_group")->order_by('group_name');
 
 
-		}
+			}
 		elseif ($type=="test_status_type") {
 			if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
 			{
@@ -267,7 +275,7 @@ class Masters_model extends CI_Model{
 	 		 		$search_method=strtolower($this->input->post('test_name'));
 		  	    	$this->db->like('LOWER(test_name)',$search_method,'after');
 	    	}
-			$this->db->select("test_master_id,test_name,test_master.test_method_id")->from("test_master")->join('test_method','test_master.test_method_id=test_method.test_method_id')->order_by('test_name');
+			$this->db->select("test_master_id,test_name,test_master.test_method_id,test_master.test_area_id")->from("test_master")->join('test_method','test_master.test_method_id=test_method.test_method_id')->order_by('test_name');
 
 
 		}
@@ -386,8 +394,8 @@ class Masters_model extends CI_Model{
 		else if($type=="sanitation_activity"){
 			$date=date("Y-m-d",strtotime($this->input->post('date')));
 			$day = date('w',strtotime($this->input->post('date')));
-			$week_start = date('Y-m-d', strtotime($date.' - '.$day.' days'));
-			$week_end = date('Y-m-d', strtotime($date.' + '.(6-$day).' days'));
+			$week_start = $date;
+			$week_end = date('Y-m-d', strtotime($date.' +  days'));
 			$fortnight_start_date=date("Y-m-1",strtotime($date));
 			if($date-$fortnight_start_date>15)
 			$fortnight_end_date=date("Y-m-15",strtotime($date));
@@ -400,7 +408,7 @@ class Masters_model extends CI_Model{
 			->join('area_activity','facility_activity.area_activity_id=area_activity.area_activity_id')
 			->join('area','facility_activity.facility_area_id=area.area_id')
 			->join("(SELECT activity_id day_activity_done,date day_activity_date,time day_activity_time,score daily_score FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Daily' AND date='$date') day_done",'facility_activity.activity_id=day_done.day_activity_done','left')
-			->join("(SELECT activity_id week_activity_done,date week_activity_date,time week_activity_time,score weekly_score,comments FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Weekly' AND (date BETWEEN '$week_start' AND '$week_end')) week_done",'facility_activity.activity_id=week_done.week_activity_done','left')
+			->join("(SELECT activity_id week_activity_done,date week_activity_date,time week_activity_time,score weekly_score,comments FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Weekly' AND date='$week_start' ) week_done",'facility_activity.activity_id=week_done.week_activity_done','left')
 			->join("(SELECT activity_id fortnight_activity_done,date fortnight_activity_date,time fortnight_activity_time,score fortnightly_score FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Fortnightly' AND (date BETWEEN '$fortnight_start_date' AND '$fortnight_end_date')) fortnight_done",'facility_activity.activity_id=fortnight_done.fortnight_activity_done','left')
 			->join("(SELECT activity_id month_activity_done,date month_activity_date,time month_activity_time,score monthly_score FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Monthly' AND MONTH(date)=MONTH('$date') AND YEAR(date)=YEAR('$date')) month_done",'facility_activity.activity_id=month_done.month_activity_done','left')
 			->where('area.area_id',$this->input->post('area'));
@@ -522,13 +530,6 @@ else if($type=="dosage"){
  	$this->db->where('test_area_id',$this->input->post('test_area_id'));
    $table="test_area";	
  }
- elseif ($type=="test_name") {
- 		
-    $data=array('test_name'=>$this->input->post('test_name'));
- 	$r=$this->input->post('test_master_id');
- 	$this->db->where('test_master_id',$this->input->post('test_master_id'));
-   $table="test_master";	
- }
  elseif ($type=="antibody") {
  		
     $data=array('antibody'=>$this->input->post('antibody'));
@@ -560,70 +561,6 @@ else if($type=="dosage"){
 
    $table="test_method";
 
- }
-
- elseif ($type=="test_group") {
- 		
-    $data=array('group_name'=>$this->input->post('group_name'));
- 	$r=$this->input->post('test_group_id');
- 	$this->db->where('group_id',$this->input->post('test_group_id'));
-   $table="test_group";	
- }
- 
- elseif ($type=="test_status_type") {
- 		
-    $data=array('test_status_type'=>$this->input->post('test_status_type'));
- 	$r=$this->input->post('test_status_type_id');
- 	$this->db->where('test_status_type_id',$this->input->post('test_status_type_id'));
-   $table="test_status_type";	
- }
- elseif ($type=="test_name") {
- 		
-    $data=array('test_name'=>$this->input->post('test_name'),
-	'test_method_id'=>$this->input->post('test_method')
-	);
- 	$r=$this->input->post('test_master_id');
- 	$this->db->where('test_master_id',$this->input->post('test_master_id'));
-   $table="test_master";	
- }
- elseif ($type=="test_area") {
- 		
-    $data=array('test_area'=>$this->input->post('test_area'));
- 	$r=$this->input->post('test_area_id');
- 	$this->db->where('test_area_id',$this->input->post('test_area_id'));
-   $table="test_area";	
- }
- elseif ($type=="test_name") {
- 		
-    $data=array('test_name'=>$this->input->post('test_name'));
- 	$r=$this->input->post('test_master_id');
- 	$this->db->where('test_master_id',$this->input->post('test_master_id'));
-   $table="test_master";	
- }
- elseif ($type=="antibody") {
- 		
-    $data=array('antibody'=>$this->input->post('antibody'));
- 	$r=$this->input->post('antibody_id');
- 	$this->db->where('antibody_id',$this->input->post('antibody_id'));
-   $table="antibody";	
- }
- elseif ($type=="micro_organism") {
- 		
-    $data=array('micro_organism'=>$this->input->post('micro_organism'));
- 	$r=$this->input->post('micro_organism_id');
- 	$this->db->where('micro_organism_id',$this->input->post('micro_organism_id'));
-   $table="micro_organism";	
- }
-	elseif ($type=="specimen_type") {
-    $data=array('specimen_type'=>$this->input->post('specimen_type'));
- 	$r=$this->input->post('specimen_type_id');
- 	 $this->db->where('speciment_type_id',$this->input->post('specimen_type_id'));
-   $table="specimen_type";	
- }	
- elseif ($type=="sample_status") {
-    $data=array('sample_status'=>$this->input->post('sample_status'));
- 	 $this->db->where('sample_status_id',$this->input->post('sample_status_id'));
-   $table="sample_status";	
  }
 		else if($type == 'staff')
 		{
@@ -865,10 +802,21 @@ else if($type=="dosage"){
 			foreach($this->input->post('test_name') as $test_name){
 				$data[]=array(
 					'test_name'=>$test_name,
-					'test_method_id'=>$this->input->post('test_method')
+					'test_method_id'=>$this->input->post('test_method'),
+					'test_area_id' => $this->input->post('test_area')
 				);
 			}
 		$table="test_master";
+		
+		$this->db->trans_start();
+		$this->db->insert_batch($table,$data);
+		$this->db->trans_complete();
+		if($this->db->trans_status()===FALSE){
+			return false;
+		}
+		else{
+		  return true;
+		}	
 		}
 		elseif ($type=="test_area") {
 			$data=array('test_area'=>$this->input->post('test_area'));
@@ -927,7 +875,7 @@ else if($type=="dosage"){
 		}
 		elseif($type=="districts"){
 		$data = array(
-					  'district'=>$this->input->post('districts'),
+					  'district'=>$this->input->post('district'),
 					 'state_id'=>$this->input->post('states'),
 					   'longitude'=>$this->input->post('longitude'),
 					   'latitude'=>$this->input->post('latitude')
@@ -979,7 +927,7 @@ else if($type=="dosage"){
 		$data = array(
 					  'area_name'=>$this->input->post('area_name'),
 					   'department_id'=>$this->input->post('department'),
-					   'area_type_id'=>$this->input->post('area_types')
+					   'area_type_id'=>$this->input->post('area_type')
 			);
 
 		$table="area";

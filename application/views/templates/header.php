@@ -86,7 +86,7 @@
 
 						<?php foreach($functions as $f){
 								if($f->user_function=="Bloodbank"){ ?>
-									<li><a href="#">BloodBank</a></li>
+									<li><a href="<?php echo base_url();?>bloodbank/user_panel/place">BloodBank</a></li>
 						<?php
 									break;
 								}
@@ -105,7 +105,7 @@
 						}
 						if($evaluate==0){
 						foreach($functions as $f){
-								if($f->user_function=="Sanitation Evaluation" && ($f->add==1 || $f->edit==1)){ ?>
+								if($f->user_function=="Masters - Sanitation" && ($f->add==1 || $f->edit==1)){ ?>
 									<li><a href="<?php echo base_url();?>sanitation/add/facility_activity">Sanitation</a></li>
 						<?php
 								break;
@@ -160,7 +160,10 @@
 
 			<?php 
 			foreach($functions as $f){
-					if($f->user_function=="OP Summary" || $f->user_function=="IP Summary" || $f->user_function=="OP Detail" || $f->user_function=="IP Detail" || ($f->user_function == "Sanitation Evaluation" && $f->view==1)){ ?>
+					if($f->user_function=="OP Summary" || $f->user_function=="IP Summary" || 
+					$f->user_function=="OP Detail" || $f->user_function=="IP Detail" || 
+					($f->user_function == "Sanitation Evaluation" && $f->view==1) || 
+					$f->user_function == "Reports - Blood Bank"){ ?>
 					<li class="dropdown  <?php if(preg_match("^".base_url()."reports^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Reports <b class="caret"></b></a>
 						<ul class="dropdown-menu">
@@ -175,10 +178,21 @@
 				foreach($functions as $f){
 				if($f->user_function=="OP Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/op_summary";?>">OP Summary</a></li>
-			<?php	}
+				<?php	}
 					if($f->user_function=="IP Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/ip_summary";?>">IP Summary</a></li>
-			<?php	} 	?>
+				<?php	} 
+					if($f->user_function=="IP Summary"){ ?>
+						  <li><a href="<?php echo base_url()."bloodbank/reports/donation_summary";?>">Blood Donations</a></li>
+						  <li><a href="<?php echo base_url()."bloodbank/reports/issue_summary";?>">Blood Issues</a></li>
+						  <li><a href="<?php echo base_url()."bloodbank/reports/hospital_issues";?>">Blood Issues - Hospital Wise</a></li>
+						  <li><a href="<?php echo base_url()."bloodbank/reports/available_blood";?>">Available Blood</a></li>
+				<?php	}
+					if($f->user_function=="Masters - Sanitation"){ ?>
+						<li><a href="<?php echo base_url()."sanitation/view_summary";?>">Sanitation Evaluation</a></li>
+				<?php	
+					} 
+				?>
 			<?php	}	?>
 			<li class="divider"></li>
 			<?php foreach($functions as $f){
@@ -193,18 +207,22 @@
 			if($f->user_function=="OP Detail"){ ?>
 						<li><a href="<?php echo base_url()."reports/op_detail";?>">OP Detail</a></li>
 			<?php	}
-					if($f->user_function=="IP Detail"){ ?>
+			if($f->user_function=="IP Detail"){ ?>
 						<li><a href="<?php echo base_url()."reports/ip_detail";?>">IP Detail</a></li>
-			<?php } 
-			} ?>
-			<li class="divider"></li>
-			<?php
-			foreach($functions as $f){
+			<?php }
+			if($f->user_function=="IP Detail"){ ?>
+						<li><a href="<?php echo base_url()."bloodbank/reports/report_donations";?>">Blood Donations</a></li>
+						<li><a href="<?php echo base_url()."bloodbank/reports/report_issue";?>">Blood Issues</a></li>
+						<li><a href="<?php echo base_url()."bloodbank/reports/report_inventory";?>">Blood Inventory</a></li>
+						<li><a href="<?php echo base_url()."bloodbank/reports/blood_donors";?>">Blood Donors</a></li>
+						<li><a href="<?php echo base_url()."bloodbank/reports/report_screening";?>">Screening</a></li>
+						<li><a href="<?php echo base_url()."bloodbank/reports/report_grouping";?>">Grouping</a></li>
+			<?php }
 			if($f->user_function=="Sanitation Evaluation"){ ?>
-						<li><a href="<?php echo base_url()."sanitation/view_scores";?>">Sanitation Evaluation</a></li>
-			<?php	} 
-			}
-			?>
+								<li><a href="<?php echo base_url()."sanitation/view_scores";?>">Sanitation Evaluation</a></li>
+					<?php	}  
+					
+			} ?>
 			</ul>
 			<?php 
 				break;

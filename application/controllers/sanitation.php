@@ -31,7 +31,8 @@ class Sanitation extends CI_Controller {
 		$this->data['title']="Evaluate Sanitation Works";
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
-		$this->data['area']=$this->masters_model->get_data('area');
+		$hospitals=$this->data['hospitals'];
+		$this->data['area']=$this->masters_model->get_data('area',0,0,0,0,0,$hospitals);
 		$this->form_validation->set_rules('area', 'Area', 'trim|xss_clean');
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/leftnav');
@@ -43,7 +44,7 @@ class Sanitation extends CI_Controller {
 				$this->data['sanitation_activity']=$this->masters_model->get_data('sanitation_activity');
 				$this->load->view('pages/sanitation/evaluation_form',$this->data);
 			}
-			else if($this->input->post('submit')){
+			else if($this->input->post('submit_evaluation')){
 				$result=$this->sanitation_model->upload_evaluation();
 				if($result){
 					$this->data['msg']="Evaluation saved.";
@@ -74,11 +75,34 @@ class Sanitation extends CI_Controller {
 		$this->load->view('templates/leftnav');
 		$this->form_validation->set_rules('hospital', 'Hospital', 'trim|xss_clean');
 		if($this->form_validation->run()==FALSE){
+			$this->load->view('pages/sanitation/scores_detail',$this->data);			
+		}
+		else{
+				$this->data['scores']=$this->sanitation_model->get_scores_detail();
+				$this->load->view('pages/sanitation/scores_detail',$this->data);
+		}		
+	}
+	function view_summary(){
+		$access=0;
+		foreach($this->data['functions'] as $f){
+			if($f->user_function=="Masters - Sanitation" && $f->view ==1){
+				$access=1;
+			}
+		}
+		if($access==0) show_404();		
+		$this->load->model('sanitation_model');
+		$this->data['title']="Evaluate Sanitation Works";
+	 	$this->load->helper('form');
+		$this->load->library('form_validation');		
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('templates/leftnav');
+		$this->form_validation->set_rules('hospital', 'Hospital', 'trim|xss_clean');
+		if($this->form_validation->run()==FALSE){
 			$this->load->view('pages/sanitation/scores',$this->data);			
 		}
 		else{
-			$this->data['scores']=$this->sanitation_model->get_scores();
-			$this->load->view('pages/sanitation/scores',$this->data);
+				$this->data['scores']=$this->sanitation_model->get_scores_summary();
+				$this->load->view('pages/sanitation/scores',$this->data);
 		}		
 	}
 	

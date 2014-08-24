@@ -3,6 +3,7 @@ class diagnostics extends CI_Controller
 {
 function __construct(){
 parent::__construct();
+
 		$this->load->model('masters_model');
 		$this->load->model('staff_model');
 		if($this->session->userdata('logged_in')){
@@ -16,10 +17,48 @@ parent::__construct();
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 }
 
+<<<<<<< HEAD
 //************************************************************************************//  	
 // Function for Add Forms in Diagnostics Module commence here   	
 //************************************************************************************//	
+=======
+function test_order(){
+	if(!$this->session->userdata('logged_in')){
+		show_404();
+	}
+	$this->load->helper('form');
+	$this->load->library('form_validation');
+	$user=$this->session->userdata('logged_in');
+	$this->data['user_id']=$user['user_id'];	  
+	$this->data['title']="Order Test";
+	$page="pages/diagnostics/test_order_form";
+	$this->load->view('templates/header',$this->data);
+	$this->load->view('templates/leftnav');
+	$this->form_validation->set_rules('visit_id','Patient','required|trim|xss_clean');
+	$this->data['test_areas']=$this->masters_model->get_data('test_area');
+	$this->data['test_masters']=$this->masters_model->get_data('test_name');
+	$this->data['test_groups']=$this->masters_model->get_data('test_group');
+	if ($this->form_validation->run() === FALSE){
+		$this->load->view($page,$this->data);
+	}
+	else{	
+		if(($this->input->post('submit'))||($this->diagnostics_model->order_test())){
+		$this->data['msg']="Order has been placed successfully";
+		$this->load->view($page,$this->data);
+		}
+		else{
+		$this->data['msg']="Order could not be placed. Please try again.";
+		$this->load->view($page,$this->data);
+		}
+
+	}
+	$this->load->view('templates/footer');
+}
+>>>>>>> 48d604eac80dd7cc628a42843b7b6aa0e0fe56a9
 function add($type=""){
+if(!$this->session->userdata('logged_in')){
+show_404();
+}
 $this->load->helper('form');
 $this->load->library('form_validation');
 $user=$this->session->userdata('logged_in');
@@ -57,9 +96,15 @@ if($type=="test_name"){
 				'field' => 'test_method',
 				'label'=>'Test Method',
 				'rules'=>'required|xss_clean' 
+			),
+			array(
+				'field' => 'test_area',
+				'label'=>'Test Area',
+				'rules'=>'required|xss_clean' 
 			)
 		);
 		$this->data['test_methods']=$this->masters_model->get_data("test_method");
+		$this->data['test_areas'] = $this->masters_model->get_data("test_area");
 	}
 if($type=="test_area"){
 		$title="Test Area";
@@ -271,4 +316,11 @@ $this->load->view($page,$this->data);
 $this->load->view('templates/footer');
 }
 }
+<<<<<<< HEAD
 ?>
+=======
+
+
+	
+?>
+>>>>>>> 48d604eac80dd7cc628a42843b7b6aa0e0fe56a9

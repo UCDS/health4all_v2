@@ -166,7 +166,6 @@ else if($type=="equipments"){
                      'label'   => 'Equipment Name ',
                      'rules'   => 'trim|xss_clean'
                   )
-             
 			);
 $this->data['equipments']=$this->masters_model->get_data("equipment");
 
