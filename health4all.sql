@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 25, 2014 at 07:27 AM
+-- Generation Time: Aug 25, 2014 at 09:04 AM
 -- Server version: 10.0.13-MariaDB-log
 -- PHP Version: 5.5.16
 
@@ -261,9 +261,11 @@ CREATE TABLE IF NOT EXISTS `bb_donation` (
   `collected_by` int(5) NOT NULL,
   `donation_date` date NOT NULL,
   `status` varchar(100) COLLATE utf8_bin NOT NULL,
+  `status_id` int(11) NOT NULL,
   `camp_id` int(11) NOT NULL,
-  `hospital_id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+  `hospital_id` int(11) NOT NULL,
+  `screening_result` tinyint(1) NOT NULL
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=8446 ;
 
 -- --------------------------------------------------------
 
@@ -309,6 +311,33 @@ CREATE TABLE IF NOT EXISTS `bb_slot` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `bb_status`
+--
+
+CREATE TABLE IF NOT EXISTS `bb_status` (
+`status_id` int(11) NOT NULL,
+  `status` varchar(100) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+
+--
+-- Dumping data for table `bb_status`
+--
+
+INSERT INTO `bb_status` (`status_id`, `status`) VALUES
+(1, 'Registered'),
+(2, 'Medical'),
+(3, 'Incomplete'),
+(4, 'Donated'),
+(5, 'Grouped'),
+(6, 'Screened'),
+(7, 'Available'),
+(8, 'Issued'),
+(9, 'Discarded'),
+(10, 'Archived');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `bb_user`
 --
 
@@ -343,15 +372,16 @@ INSERT INTO `bb_user` (`user_id`, `username`, `password`, `registration_date`, `
 CREATE TABLE IF NOT EXISTS `blood_donation_camp` (
 `camp_id` int(11) NOT NULL,
   `camp_name` varchar(100) NOT NULL,
-  `location` varchar(100) NOT NULL
+  `location` varchar(100) NOT NULL,
+  `hospital_id` int(11) NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `blood_donation_camp`
 --
 
-INSERT INTO `blood_donation_camp` (`camp_id`, `camp_name`, `location`) VALUES
-(1, 'YouSee', 'Panjagutta');
+INSERT INTO `blood_donation_camp` (`camp_id`, `camp_name`, `location`, `hospital_id`) VALUES
+(1, 'YouSee', 'Panjagutta', 0);
 
 -- --------------------------------------------------------
 
@@ -385,6 +415,30 @@ CREATE TABLE IF NOT EXISTS `blood_donor` (
   `address` mediumtext COLLATE utf8_bin NOT NULL,
   `alerts` tinyint(1) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `blood_grouping`
+--
+
+CREATE TABLE IF NOT EXISTS `blood_grouping` (
+`grouping_id` int(11) NOT NULL,
+  `donation_id` int(11) NOT NULL,
+  `blood_group` varchar(10) NOT NULL,
+  `sub_group` varchar(5) NOT NULL,
+  `anti_a` varchar(5) NOT NULL,
+  `anti_b` varchar(5) NOT NULL,
+  `anti_ab` varchar(5) NOT NULL,
+  `anti_d` varchar(5) NOT NULL,
+  `a_cells` varchar(5) NOT NULL,
+  `b_cells` varchar(5) NOT NULL,
+  `o_cells` varchar(5) NOT NULL,
+  `du` varchar(5) NOT NULL,
+  `forward_done_by` int(11) NOT NULL,
+  `reverse_done_by` int(11) NOT NULL,
+  `grouping_date` date NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9491 ;
 
 -- --------------------------------------------------------
 
@@ -428,22 +482,28 @@ CREATE TABLE IF NOT EXISTS `blood_issue` (
 
 CREATE TABLE IF NOT EXISTS `blood_request` (
 `request_id` int(7) NOT NULL,
+  `bloodbank_id` int(11) NOT NULL,
+  `request_type` tinyint(1) NOT NULL COMMENT '0 - Patients, 1 - Bulk',
   `staff_id` int(7) NOT NULL,
   `patient_name` varchar(100) COLLATE utf8_bin NOT NULL,
   `patient_id` int(7) NOT NULL,
+  `hospital_id` int(11) NOT NULL,
   `ward_unit` varchar(200) COLLATE utf8_bin NOT NULL,
+  `referred_by` varchar(50) COLLATE utf8_bin NOT NULL,
   `department` varchar(200) COLLATE utf8_bin NOT NULL,
   `blood_group` varchar(5) COLLATE utf8_bin NOT NULL,
   `diagnosis` longtext COLLATE utf8_bin NOT NULL,
   `blood_transfusion_required` tinyint(1) NOT NULL,
   `whole_blood_units` int(5) NOT NULL,
   `packed_cell_units` int(5) NOT NULL,
+  `fp_units` int(5) NOT NULL,
   `ffp_units` int(5) NOT NULL,
-  `platelets_units` int(5) NOT NULL,
+  `prp_units` int(5) NOT NULL,
+  `platelet_concentrate_units` int(5) NOT NULL,
   `cryoprecipitate_units` int(5) NOT NULL,
   `request_date` datetime NOT NULL,
   `request_status` varchar(20) COLLATE utf8_bin NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=4441 ;
 
 -- --------------------------------------------------------
 
@@ -484,7 +544,8 @@ CREATE TABLE IF NOT EXISTS `ci_sessions` (
 --
 
 INSERT INTO `ci_sessions` (`session_id`, `ip_address`, `user_agent`, `last_activity`, `user_data`) VALUES
-('84d4a6d7783ff0ed4b0215b0204015c9', '::1', 'Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0', 1408754049, 'a:3:{s:9:"user_data";s:0:"";s:9:"logged_in";a:2:{s:7:"user_id";s:2:"18";s:8:"username";s:7:"vivek.c";}s:8:"hospital";a:7:{s:11:"hospital_id";s:1:"2";s:8:"hospital";s:45:"Sri Sathya Sai Seva Organisations - Hyderabad";s:11:"description";s:28:"Free Mobile Medical Services";s:5:"place";s:7:"Rajapet";s:8:"district";s:8:"Nalgonda";s:5:"state";s:14:"Andhra Pradesh";s:4:"logo";s:42:"/health4all/assets/images/organisation.jpg";}}');
+('a7cc35cf8b85a096376ce22b361aa492', '::1', 'Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0', 1408956373, 'a:3:{s:9:"user_data";s:0:"";s:9:"logged_in";a:2:{s:7:"user_id";s:2:"18";s:8:"username";s:7:"vivek.c";}s:8:"hospital";a:7:{s:11:"hospital_id";s:1:"2";s:8:"hospital";s:45:"Sri Sathya Sai Seva Organisations - Hyderabad";s:11:"description";s:28:"Free Mobile Medical Services";s:5:"place";s:7:"Rajapet";s:8:"district";s:8:"Nalgonda";s:5:"state";s:14:"Andhra Pradesh";s:4:"logo";s:42:"/health4all/assets/images/organisation.jpg";}}'),
+('fd042ce1abe5c9c7326f21a5a5a5cd53', '::1', 'Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0', 1408957043, 'a:4:{s:9:"user_data";s:0:"";s:9:"logged_in";a:2:{s:7:"user_id";s:2:"18";s:8:"username";s:7:"vivek.c";}s:8:"hospital";a:7:{s:11:"hospital_id";s:1:"2";s:8:"hospital";s:45:"Sri Sathya Sai Seva Organisations - Hyderabad";s:11:"description";s:28:"Free Mobile Medical Services";s:5:"place";s:7:"Rajapet";s:8:"district";s:8:"Nalgonda";s:5:"state";s:14:"Andhra Pradesh";s:4:"logo";s:42:"/health4all/assets/images/organisation.jpg";}s:5:"place";a:2:{s:7:"camp_id";i:0;s:4:"name";s:45:"Sri Sathya Sai Seva Organisations - Hyderabad";}}');
 
 -- --------------------------------------------------------
 
@@ -529,6 +590,7 @@ INSERT INTO `counter` (`counter_id`, `count`, `counter_name`) VALUES
 
 CREATE TABLE IF NOT EXISTS `department` (
   `department_id` int(3) NOT NULL,
+  `hospital_id` int(11) NOT NULL,
   `department` varchar(50) NOT NULL,
   `description` text NOT NULL,
   `number_of_units` int(3) NOT NULL,
@@ -547,42 +609,42 @@ CREATE TABLE IF NOT EXISTS `department` (
 -- Dumping data for table `department`
 --
 
-INSERT INTO `department` (`department_id`, `department`, `description`, `number_of_units`, `op_room_no`, `clinical`, `floor`, `mon`, `tue`, `wed`, `thr`, `fri`, `sat`) VALUES
-(1, 'Anatomy', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(2, 'Anesthesia', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(3, 'BioChemistry', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(4, 'Blood Bank', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(5, 'Cardiology', '', 0, '266', 1, '1', 1, 1, 0, 1, 1, 0),
-(6, 'Cardio-Thoracic Surgery', '', 0, '237', 1, '1', 0, 1, 0, 1, 0, 0),
-(7, 'Casualty', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(8, 'Community Medicine', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(9, 'Dental', '', 0, '338', 1, '2', 1, 1, 1, 1, 1, 1),
-(10, 'Dermatology', '', 0, '366/358', 1, '2', 1, 1, 1, 1, 1, 1),
-(11, 'Endocrinology', '', 0, '281/282', 1, '1', 0, 1, 0, 0, 1, 0),
-(12, 'ENT', '', 0, '324', 1, '2', 1, 1, 1, 1, 1, 1),
-(13, 'Forensic  Medicine', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(14, 'Gastroenterology', '', 0, '279', 1, '1', 0, 0, 1, 0, 0, 1),
-(15, 'General Medicine', '', 0, '175/184', 1, '0', 1, 1, 1, 1, 1, 1),
-(16, 'General Surgery', '', 0, '167/168', 1, '0', 1, 1, 1, 1, 1, 1),
-(17, 'Hospital Administration', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(18, 'MicroBiology', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(19, 'Nephrology', '', 0, '272', 1, '1', 0, 0, 1, 0, 0, 1),
-(20, 'Neurology', '', 0, '275', 1, '1', 0, 1, 0, 1, 0, 0),
-(21, 'Neurosurgery', '', 0, '239/240', 1, '1', 1, 0, 0, 0, 1, 0),
-(22, 'Obstetrics and Gynecology', '', 0, '143', 1, '0', 1, 1, 1, 1, 1, 1),
-(23, 'Ophthalmology', '', 0, '326', 1, '2', 1, 1, 1, 1, 1, 1),
-(24, 'Orthopedics', '', 0, '135', 1, '0', 1, 1, 1, 1, 1, 1),
-(25, 'Pathology', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(26, 'Pediatric Surgery', '', 0, '242', 1, '1', 1, 0, 1, 0, 1, 0),
-(27, 'Pediatrics', '', 0, '235', 1, '1', 1, 1, 1, 1, 1, 1),
-(28, 'Pharmacology', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(29, 'Physiology', '', 0, '', 0, '0', 1, 1, 1, 1, 1, 1),
-(30, 'Plastic Surgery', '', 0, '249/250', 1, '1', 1, 0, 0, 1, 0, 0),
-(31, 'Psychiatry', '', 0, '262', 1, '1', 0, 0, 0, 0, 0, 0),
-(32, 'Radiology', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(33, 'Urology', '', 0, '245', 1, '1', 1, 1, 0, 1, 1, 0),
-(0, '', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(34, 'TB&CD', '', 0, '181', 1, '0', 1, 1, 1, 1, 1, 1);
+INSERT INTO `department` (`department_id`, `hospital_id`, `department`, `description`, `number_of_units`, `op_room_no`, `clinical`, `floor`, `mon`, `tue`, `wed`, `thr`, `fri`, `sat`) VALUES
+(1, 0, 'Anatomy', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(2, 0, 'Anesthesia', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(3, 0, 'BioChemistry', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(4, 0, 'Blood Bank', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(5, 0, 'Cardiology', '', 0, '266', 1, '1', 1, 1, 0, 1, 1, 0),
+(6, 0, 'Cardio-Thoracic Surgery', '', 0, '237', 1, '1', 0, 1, 0, 1, 0, 0),
+(7, 0, 'Casualty', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(8, 0, 'Community Medicine', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(9, 0, 'Dental', '', 0, '338', 1, '2', 1, 1, 1, 1, 1, 1),
+(10, 0, 'Dermatology', '', 0, '366/358', 1, '2', 1, 1, 1, 1, 1, 1),
+(11, 0, 'Endocrinology', '', 0, '281/282', 1, '1', 0, 1, 0, 0, 1, 0),
+(12, 0, 'ENT', '', 0, '324', 1, '2', 1, 1, 1, 1, 1, 1),
+(13, 0, 'Forensic  Medicine', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(14, 0, 'Gastroenterology', '', 0, '279', 1, '1', 0, 0, 1, 0, 0, 1),
+(15, 0, 'General Medicine', '', 0, '175/184', 1, '0', 1, 1, 1, 1, 1, 1),
+(16, 0, 'General Surgery', '', 0, '167/168', 1, '0', 1, 1, 1, 1, 1, 1),
+(17, 0, 'Hospital Administration', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(18, 0, 'MicroBiology', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(19, 0, 'Nephrology', '', 0, '272', 1, '1', 0, 0, 1, 0, 0, 1),
+(20, 0, 'Neurology', '', 0, '275', 1, '1', 0, 1, 0, 1, 0, 0),
+(21, 0, 'Neurosurgery', '', 0, '239/240', 1, '1', 1, 0, 0, 0, 1, 0),
+(22, 0, 'Obstetrics and Gynecology', '', 0, '143', 1, '0', 1, 1, 1, 1, 1, 1),
+(23, 0, 'Ophthalmology', '', 0, '326', 1, '2', 1, 1, 1, 1, 1, 1),
+(24, 0, 'Orthopedics', '', 0, '135', 1, '0', 1, 1, 1, 1, 1, 1),
+(25, 0, 'Pathology', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(26, 0, 'Pediatric Surgery', '', 0, '242', 1, '1', 1, 0, 1, 0, 1, 0),
+(27, 0, 'Pediatrics', '', 0, '235', 1, '1', 1, 1, 1, 1, 1, 1),
+(28, 0, 'Pharmacology', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(29, 0, 'Physiology', '', 0, '', 0, '0', 1, 1, 1, 1, 1, 1),
+(30, 0, 'Plastic Surgery', '', 0, '249/250', 1, '1', 1, 0, 0, 1, 0, 0),
+(31, 0, 'Psychiatry', '', 0, '262', 1, '1', 0, 0, 0, 0, 0, 0),
+(32, 0, 'Radiology', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(33, 0, 'Urology', '', 0, '245', 1, '1', 1, 1, 0, 1, 1, 0),
+(0, 0, '', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(34, 0, 'TB&CD', '', 0, '181', 1, '0', 1, 1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -14759,7 +14821,10 @@ CREATE TABLE IF NOT EXISTS `test_group_link` (
 CREATE TABLE IF NOT EXISTS `test_master` (
 `test_master_id` int(6) NOT NULL,
   `test_name` varchar(50) NOT NULL COMMENT 'Eg : ASO, CRP, Blood Culture...',
-  `test_method_id` int(6) NOT NULL
+  `test_method_id` int(6) NOT NULL,
+  `test_area_id` int(6) DEFAULT NULL,
+  `availability` int(1) NOT NULL DEFAULT '1' COMMENT '1-available, 0-unavailable',
+  `comments` varchar(60) DEFAULT NULL COMMENT 'comments on availability'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Master list of tests performed in the labs' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -15010,7 +15075,7 @@ INSERT INTO `user_department_link` (`link_id`, `user_id`, `department_id`) VALUE
 CREATE TABLE IF NOT EXISTS `user_function` (
 `user_function_id` int(11) NOT NULL,
   `user_function` varchar(50) NOT NULL
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
 
 --
 -- Dumping data for table `user_function`
@@ -15035,7 +15100,9 @@ INSERT INTO `user_function` (`user_function_id`, `user_function`) VALUES
 (16, 'IP Summary'),
 (17, 'OP Summary'),
 (18, 'OP Detail'),
-(19, 'IP Detail');
+(19, 'IP Detail'),
+(20, 'Masters - Sanitation'),
+(21, 'Sanitation Evaluation');
 
 -- --------------------------------------------------------
 
@@ -15050,7 +15117,7 @@ CREATE TABLE IF NOT EXISTS `user_function_link` (
   `add` tinyint(1) NOT NULL,
   `edit` tinyint(1) NOT NULL,
   `view` tinyint(1) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Links users to functions with specific permissions' AUTO_INCREMENT=92 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Links users to functions with specific permissions' AUTO_INCREMENT=94 ;
 
 --
 -- Dumping data for table `user_function_link`
@@ -15136,7 +15203,9 @@ INSERT INTO `user_function_link` (`link_id`, `user_id`, `function_id`, `add`, `e
 (88, 18, 16, 1, 1, 1),
 (89, 18, 17, 1, 1, 1),
 (90, 18, 18, 1, 1, 1),
-(91, 18, 19, 1, 1, 1);
+(91, 18, 19, 1, 1, 1),
+(92, 18, 20, 1, 1, 1),
+(93, 18, 21, 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -15296,6 +15365,12 @@ ALTER TABLE `bb_slot`
  ADD PRIMARY KEY (`slot_id`);
 
 --
+-- Indexes for table `bb_status`
+--
+ALTER TABLE `bb_status`
+ ADD PRIMARY KEY (`status_id`);
+
+--
 -- Indexes for table `bb_user`
 --
 ALTER TABLE `bb_user`
@@ -15318,6 +15393,12 @@ ALTER TABLE `blood_donation_camp_date`
 --
 ALTER TABLE `blood_donor`
  ADD PRIMARY KEY (`donor_id`);
+
+--
+-- Indexes for table `blood_grouping`
+--
+ALTER TABLE `blood_grouping`
+ ADD PRIMARY KEY (`grouping_id`), ADD UNIQUE KEY `donation_id` (`donation_id`);
 
 --
 -- Indexes for table `blood_inventory`
@@ -15635,7 +15716,7 @@ ALTER TABLE `test_group_link`
 -- Indexes for table `test_master`
 --
 ALTER TABLE `test_master`
- ADD PRIMARY KEY (`test_master_id`);
+ ADD PRIMARY KEY (`test_master_id`), ADD KEY `tm_ta_fk` (`test_area_id`);
 
 --
 -- Indexes for table `test_method`
@@ -15791,7 +15872,7 @@ MODIFY `link_id` int(7) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `bb_donation`
 --
 ALTER TABLE `bb_donation`
-MODIFY `donation_id` int(7) NOT NULL AUTO_INCREMENT;
+MODIFY `donation_id` int(7) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8446;
 --
 -- AUTO_INCREMENT for table `bb_issued_inventory`
 --
@@ -15807,6 +15888,11 @@ MODIFY `replacement_patient_id` int(7) NOT NULL AUTO_INCREMENT;
 --
 ALTER TABLE `bb_slot`
 MODIFY `slot_id` int(7) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `bb_status`
+--
+ALTER TABLE `bb_status`
+MODIFY `status_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `bb_user`
 --
@@ -15828,6 +15914,11 @@ MODIFY `camp_id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `blood_donor`
 MODIFY `donor_id` int(7) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `blood_grouping`
+--
+ALTER TABLE `blood_grouping`
+MODIFY `grouping_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9491;
+--
 -- AUTO_INCREMENT for table `blood_inventory`
 --
 ALTER TABLE `blood_inventory`
@@ -15841,7 +15932,7 @@ MODIFY `issue_id` int(7) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `blood_request`
 --
 ALTER TABLE `blood_request`
-MODIFY `request_id` int(7) NOT NULL AUTO_INCREMENT;
+MODIFY `request_id` int(7) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4441;
 --
 -- AUTO_INCREMENT for table `blood_screening`
 --
@@ -16126,12 +16217,12 @@ MODIFY `link_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 -- AUTO_INCREMENT for table `user_function`
 --
 ALTER TABLE `user_function`
-MODIFY `user_function_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
+MODIFY `user_function_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
 --
 -- AUTO_INCREMENT for table `user_function_link`
 --
 ALTER TABLE `user_function_link`
-MODIFY `link_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=92;
+MODIFY `link_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=94;
 --
 -- AUTO_INCREMENT for table `user_hospital_link`
 --
@@ -16152,6 +16243,16 @@ MODIFY `contract_id` int(4) NOT NULL AUTO_INCREMENT;
 --
 ALTER TABLE `village_town`
 MODIFY `village_town_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `test_master`
+--
+ALTER TABLE `test_master`
+ADD CONSTRAINT `tm_ta_fk` FOREIGN KEY (`test_area_id`) REFERENCES `test_area` (`test_area_id`);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

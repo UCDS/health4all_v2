@@ -298,7 +298,7 @@ class Inventory_model extends CI_Model{
 		}
 		$this->db->select('*')
 		->from('blood_request')
-		->join('hospital','blood_request.hospital_id=hospital.hospital_id')
+		->join('hospital','blood_request.bloodbank_id=hospital.hospital_id')
 		->where('request_status','Pending')
 		->where('blood_request.bloodbank_id',$hospital)
 		->order_by('blood_transfusion_required desc,request_id asc');

@@ -17,11 +17,9 @@ parent::__construct();
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 }
 
-<<<<<<< HEAD
 //************************************************************************************//  	
 // Function for Add Forms in Diagnostics Module commence here   	
 //************************************************************************************//	
-=======
 function test_order(){
 	if(!$this->session->userdata('logged_in')){
 		show_404();
@@ -54,7 +52,7 @@ function test_order(){
 	}
 	$this->load->view('templates/footer');
 }
->>>>>>> 48d604eac80dd7cc628a42843b7b6aa0e0fe56a9
+
 function add($type=""){
 if(!$this->session->userdata('logged_in')){
 show_404();
@@ -316,11 +314,4 @@ $this->load->view($page,$this->data);
 $this->load->view('templates/footer');
 }
 }
-<<<<<<< HEAD
 ?>
-=======
-
-
-	
-?>
->>>>>>> 48d604eac80dd7cc628a42843b7b6aa0e0fe56a9
