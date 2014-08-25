@@ -107,7 +107,7 @@ class Sanitation extends CI_Controller {
 	}
 	
 //************************************************************************************//  	
-// Add functions commence here   	
+// Function for Add Forms in Sanitation Module commence here   
 //************************************************************************************//	
 	
 	function add($type=""){
@@ -387,7 +387,7 @@ class Sanitation extends CI_Controller {
   	}	
 
 //************************************************************************************//  	
-// Edit functions commence here   	
+// Function for Edit Forms in Sanitation Module commence here  	
 //************************************************************************************//
 
 function edit($type=""){
