@@ -57,6 +57,7 @@ class Sanitation_model extends CI_Model{
 		}
 		if($this->input->post('monthly_activity_id')){
 			$monthly_activities = $this->input->post('monthly_activity_id');
+			$date = date('Y-m-d', strtotime($this->input->post('evaluation_date')));
 			$this->db->select('activity_done_id,activity_id')->from('activity_done')->where_in('activity_id',$monthly_activities)->where("MONTH(date) = MONTH('$date')")->where("YEAR(date) = YEAR('$date')");
 			$query=$this->db->get();
 			$result=$query->result();
@@ -140,7 +141,7 @@ class Sanitation_model extends CI_Model{
 		}
 		if(count($monthly_activities)>0){
 		foreach($monthly_activities as $activity){
-		if($this->input->post('other_activity_'.$activity)){
+		if($this->input->post('comments_'.$activity)){
 			if(in_array($activity,$activities_done)){
 				$key=array_search($activity,$activities_done);
 				$update_data[]=array(
@@ -154,8 +155,10 @@ class Sanitation_model extends CI_Model{
 			}
 			$data[]=array(
 				'activity_id'=>$activity,
-				'date'=>date("Y-m-d",strtotime($this->input->post('activity_date_'.$activity))),
-				'time'=>date("H:i:s",strtotime($this->input->post('other_activity_'.$activity))),
+				'date'=>$date,
+				'time'=>date("H:i:s"),
+				'score'=>$this->input->post('activity_score_'.$activity),
+				'comments'=>$this->input->post('comments_'.$activity),
 				'user_id'=>$user_id
 			);
 		}
@@ -225,11 +228,14 @@ class Sanitation_model extends CI_Model{
 		
 		function get_scores_detail(){
 			$hospital=$this->input->post('hospital');
-			$query=$this->db->query("SELECT hospital,SUM(score) score,SUM(weightage) weightage,date,DATE_ADD(date,INTERVAL 6 DAY),activity_name
-			FROM activity_done 
-			JOIN facility_activity USING(activity_id) 
+			$from_date=$this->input->post('from_date');
+			$to_date=$this->input->post('to_date');
+			$query=$this->db->query("SELECT hospital,SUM(score) score,SUM(weightage) weightage,date,DATE_ADD(date,INTERVAL 6 DAY),
+			activity_name,comments,frequency_type
+			FROM area_activity 
+			JOIN facility_activity USING (area_activity_id) 
 			JOIN area ON facility_activity.facility_area_id = area.area_id 
-			JOIN area_activity USING(area_activity_id) 
+			LEFT JOIN activity_done USING(activity_id)
 			JOIN department USING(department_id) 
 			JOIN hospital USING(hospital_id)
 			WHERE hospital_id = $hospital

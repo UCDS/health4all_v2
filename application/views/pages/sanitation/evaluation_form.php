@@ -5,7 +5,7 @@
 $(function(){
 	$('.date').Zebra_DatePicker({
 	  disabled_dates : ['* * * *'],
-	  enabled_dates: ['1,8,15,22,29 * * *']
+	  enabled_dates: ['7,14,21,28,29,30,31 * * *']
 	});
 	$(".time").timeEntry();
 	$("#select_form").on('submit',function(e){
@@ -80,7 +80,8 @@ $(function(){
 		</select>
 		</span>
 		<?php } ?>
-		<label for="date">Date</label>
+		<hr>
+		<label for="date">Select week ending date : </label>
 		<input type="text" class="date form-control" name="date" id="date" form="select_form" required />
 		<input type="submit" value="Select" name="select_area" class="btn btn-primary btn-sm" />
 	</form>
@@ -92,7 +93,20 @@ $(function(){
 		<div class="panel panel-heading">
 		<?php if($this->input->post('date')){ ?>
 			<div class="pull-right">
-				Date : <input type="text" value="<?php echo date("d-M-Y",strtotime($this->input->post('date')));?>" name="evaluation_date" class="form-control" readonly />
+				From Date : 
+				<?php if(date("d",strtotime($this->input->post('date')))>'28'){
+							$from_date=date("29-M-Y",strtotime($this->input->post('date')));
+							$to_date=date("t-M-Y",strtotime($this->input->post('date')));
+						}
+						else {
+							$from_date = date("d-M-Y",strtotime($this->input->post('date')." - 6 days"));
+							$to_date = date("d-M-Y",strtotime($this->input->post('date')));
+						}
+				?>
+				<input type="text" value="<?php echo $from_date;?>" class="form-control" name="evaluation_date" readonly />
+				To Date : 
+				<input type="text" value="<?php echo $to_date;?>" class="form-control" readonly />
+				
 			</div>
 		<?php } ?>
 			<div class=""><h4>Evaluation Form</h4></div>
@@ -170,8 +184,9 @@ $(function(){
 						?>
 						<td>
 							<input type="checkbox" value="<?php echo $a->activity_id;?>" checked name="weekly_activity_id[]" hidden />
-							<input type="number" class="form-control score" placeholder="Score (Out of <?php echo $a->weightage;?>)" min=0 max="<?php echo $a->weightage;?>" value="<?php echo $a->weekly_score;?>" name="activity_score_<?php echo $a->activity_id;?>" size="3" required <?php if($a->weekly_score) echo "disabled";?> />
-							<textarea class="form-control comment" placeholder="Comments" name="comments_<?php echo $a->activity_id;?>" <?php if($a->weekly_score) echo "disabled";?>><?php echo $a->comments;?></textarea>
+							<input type="number" class="form-control score" placeholder="Score" min=0 max="<?php echo $a->weightage;?>" value="<?php echo $a->weekly_score;?>" name="activity_score_<?php echo $a->activity_id;?>" size="3" required <?php if($a->weekly_score) echo "disabled";?> />
+							  <textarea class="form-control comment" placeholder="Comments" name="comments_<?php echo $a->activity_id;?>" <?php if($a->weekly_score) echo "disabled";?>><?php echo $a->comments;?></textarea>
+							  <br />(Max score : <?php echo $a->weightage;?>)
 						</td>
 						<?php }
 						} ?>
@@ -214,7 +229,7 @@ $(function(){
 			<table class="table table-striped table-bordered">
 				<thead>
 					<tr>
-						<th colspan="100">Monthly</th>
+						<th colspan="100">Monthly activities for the month of <?php echo date("M, Y",strtotime($this->input->post('date')));?></th>
 					<tr>
 						<th>#</th>
 						<th>Activity</th>
@@ -230,9 +245,9 @@ $(function(){
 								if($a->activity_name == $activity){
 						?>
 						<td>
-							<input type="checkbox" value="<?php echo $a->activity_id;?>" name="monthly_activity_id[]"  />
-							<input type="text" class="date form-control" value="<?php if($a->month_activity_date) echo date("d-M-Y",strtotime($a->month_activity_date));?>" name="activity_date_<?php echo $a->activity_id;?>" />
-							<input type="text" class="time form-control" value="<?php echo $a->month_activity_time;?>" name="other_activity_<?php echo $a->activity_id;?>" size="7" /></td>
+							<input type="checkbox" value="<?php echo $a->activity_id;?>" name="monthly_activity_id[]"  checked hidden class="sr-only" />
+
+							  <textarea class="form-control comment" placeholder="Comments" name="comments_<?php echo $a->activity_id;?>" <?php if($a->monthly_score!=NULL) echo "disabled";?>><?php echo $a->comments;?></textarea>
 						<?php }
 						} ?>
 					</tr>

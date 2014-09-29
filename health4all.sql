@@ -14389,7 +14389,7 @@ CREATE TABLE IF NOT EXISTS `service_record` (
 --
 
 CREATE TABLE IF NOT EXISTS `specimen_type` (
-`speciment_type_id` int(6) NOT NULL,
+`specimen_type_id` int(6) NOT NULL,
   `specimen_type` varchar(100) NOT NULL COMMENT 'Eg. Sputum, Urine, CSF, etc.'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 

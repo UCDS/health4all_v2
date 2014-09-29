@@ -55,6 +55,7 @@ $(function(){
 		<select class="form-control" name="frequency_type">
 			<option value="" selected disabled>Select</option>
 			<option value="Weekly">Weekly</option>
+			<option value="Monthly">Monthly</option>
 		</select>
 		</div>
 	</div>

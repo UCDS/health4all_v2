@@ -47,8 +47,10 @@ $(function(){
 	$total_weightage=0;
 	$total_days=0;
 	foreach($scores as $s){
+		if($s->frequency_type == "Weekly") 
 		$activities[]=$s->activity_name;
 	}
+	
 	$activities=array_unique($activities);
 	$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 	$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -74,6 +76,12 @@ $(function(){
 		}
 	}
 	$dates=array_unique($dates);
+	$months=array();
+	foreach($dates as $date){
+		if(!in_array(date("M,Y",strtotime($date)),$months)){
+			$months[]=date("M,Y",strtotime($date));
+		}
+	}
 	?>
 	<br />
 	<br />
@@ -95,10 +103,10 @@ $(function(){
 			<tr>
 			<?php foreach($activities as $activity){ ?>
 				<th class="text-center">Score</th>
-				<th class="text-center">Weightage</th>
+				<th class="text-center">Max. Marks</th>
 			<?php } ?>
 				<th class="text-center">Score</td>
-				<th class="text-center">Weightage</td>
+				<th class="text-center">Max. Marks</td>
 				<th class="text-center">%</td>
 			</tr>
 		</thead>
@@ -117,18 +125,29 @@ $(function(){
 				$j=0;
 				foreach($activities as $activity){
 					$i=0; 
-					foreach($scores as $s){ 
-						if(date("Y-m-d",strtotime($d))==date('Y-m-d',strtotime($s->date)) && $s->activity_name==$activity){?>					
-						<td class="text-center"><?php echo $s->score;?></td>
+					foreach($scores as $s){
+						if(date("Y-m-d",strtotime($d))==date('Y-m-d',strtotime($s->date)) && $s->activity_name==$activity){
+						if($s->score==0 || $s->score == NULL) { $background_color = "#FFA3A3"; } else $background_color = "#99FF99"; ?>					
+						<td class="text-center" style="background-color : <?php echo $background_color;?> !important"><b><?php echo $s->score;?></b></td>
 						<td class="text-center"><?php echo $s->weightage;?></td>
 						<?php
 						$week_total_score+=$s->score;
 						$week_total_weightage+=$s->weightage;
 						break;
 						}
+						else if($s->score == NULL && $s->activity_name==$activity){
+							  ?>
+							<td class="text-center" style="background-color : #FFA3A3"><b>0</b></td>
+							<td class="text-center"><?php echo $s->weightage;?></td>
+						<?php 
+						
+						$week_total_weightage+=$s->weightage;
+						break; 
+						}
 						$i++;
-					if($i>=count($scores)-1 && $s->activity_name==$activity){?>
-						<td class="text-center">0</td>
+					if(($i>count($scores)-count($activities) && $s->activity_name==$activity)){
+						 ?>
+						<td class="text-center" style="background-color :#FFA3A3 !important"><b>0</b></td>
 						<td class="text-center"><?php echo $s->weightage;?></td>
 					<?php 
 						$week_total_weightage+=$s->weightage;
@@ -136,10 +155,12 @@ $(function(){
 					?>
 				<?php }
 				$j++;
-				} ?>
-				<td class="text-center"><?php echo $week_total_score;?></td>
+				}
+				
+				if($s->score==0 || $s->score == NULL) { $background_color = "#FFA3A3"; } else $background_color = "#99FF99"; ?>
+				<td class="text-center"  style="background-color : <?php echo $background_color;?> !important"><b><?php echo $week_total_score;?></b></td>
 				<td class="text-center"><?php echo $week_total_weightage;?></td>
-				<td class="text-center"><?php echo number_format(($week_total_score/$week_total_weightage)*100,2);
+				<td class="text-center" style="background-color : <?php echo $background_color;?> !important"><?php echo number_format(($week_total_score/$week_total_weightage)*100,2);
 				$total_score+=$week_total_score; $week_total_score=0;
 				$total_weightage+=$week_total_weightage; $week_total_weightage=0;?>%</td>
 			</tr>
@@ -147,5 +168,37 @@ $(function(){
 			<tfoot><th colspan="2" class="text-center">Total No. of Days</th><th class="text-center"><?php echo $total_days;?></th><th colspan="<?php echo $j*2;?>" class="text-right">	Total</th><th class="text-center"><?php echo $total_score;?></th><th class="text-center"><?php echo $total_weightage;?></th><th class="text-center"><?php echo number_format(($total_score/$total_weightage)*100,2);?>%</th></tr>
 	</table>
 	<?php } ?>
+	
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th colspan="100">Monthly</th>
+			</tr>
+			<tr>
+				<th>#</th>
+				<th>Month</th>
+				<th>Activity</th>
+				<th>Comment</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php 
+			$i=1;
+			foreach($scores as $s){
+						foreach($months as $m){
+
+				if($s->frequency_type == "Monthly" && in_array(date("M,Y",strtotime($s->date)),$months)){ ?>
+					<tr>
+						<td><?php echo $i++;?></td>
+						<td><?php echo date("M, Y",strtotime($s->date));?></td>
+						<td><?php echo $s->activity_name;?></td>
+						<td><?php echo $s->comments;?></td>
+					</tr>
+				<?php break;}
+			}
+		}
+			?>
+		</tbody>
+	</table>
 		
 </div>
