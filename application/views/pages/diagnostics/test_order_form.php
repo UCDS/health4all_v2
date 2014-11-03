@@ -2,57 +2,77 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/selectize.css">
 
+		<style type="text/css">
+		.selectize-control.repositories .selectize-dropdown > div {
+			border-bottom: 1px solid rgba(0,0,0,0.05);
+		}
+		.selectize-control.repositories .selectize-dropdown .by {
+			font-size: 11px;
+			opacity: 0.8;
+		}
+		.selectize-control.repositories .selectize-dropdown .by::before {
+			content: 'by ';
+		}
+		.selectize-control.repositories .selectize-dropdown .name {
+			font-weight: bold;
+			margin-right: 5px;
+		}
+		.selectize-control.repositories .selectize-dropdown .title {
+			display: block;
+		}
+		.selectize-control.repositories .selectize-dropdown .description {
+			font-size: 12px;
+			display: block;
+			color: #a0a0a0;
+			white-space: nowrap;
+			width: 100%;
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}
+		.selectize-control.repositories .selectize-dropdown .meta {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			font-size: 10px;
+		}
+		.selectize-control.repositories .selectize-dropdown .meta li {
+			margin: 0;
+			padding: 0;
+			display: inline;
+			margin-right: 10px;
+		}
+		.selectize-control.repositories .selectize-dropdown .meta li span {
+			font-weight: bold;
+		}
+		.selectize-control.repositories::before {
+			-moz-transition: opacity 0.2s;
+			-webkit-transition: opacity 0.2s;
+			transition: opacity 0.2s;
+			content: ' ';
+			z-index: 2;
+			position: absolute;
+			display: block;
+			top: 12px;
+			right: 34px;
+			width: 16px;
+			height: 16px;
+			background: url(<?php echo base_url();?>assets/images/spinner.gif);
+			background-size: 16px 16px;
+			opacity: 0;
+		}
+		.selectize-control.repositories.loading::before {
+			opacity: 0.4;
+		}
+		</style>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.selectize.js"></script>
 <script>
 	$(function(){
-		var url="<?php echo base_url();?>diagnostics/search_patients";
-		$('#select_patient').selectize({
-			valueField: 'title',
-			labelField: 'title',
-			searchField: 'title',
-			options: [],
-			create: false,
-			render: {
-				option: function(item, escape) {
-					var actors = [];
-					for (var i = 0, n = item.abridged_cast.length; i < n; i++) {
-						actors.push('<span>' + escape(item.abridged_cast[i].name) + '</span>');
-					}
-
-					return '<div>' +
-						'<img src="' + escape(item.posters.thumbnail) + '" alt="">' +
-						'<span class="title">' +
-							'<span class="name">' + escape(item.title) + '</span>' +
-						'</span>' +
-						'<span class="description">' + escape(item.synopsis || 'No synopsis available at this time.') + '</span>' +
-						'<span class="actors">' + (actors.length ? 'Starring ' + actors.join(', ') : 'Actors unavailable') + '</span>' +
-					'</div>';
-				}
-			},
-			load: function(query, callback) {
-				if (!query.length) return callback();
-				$.ajax({
-					url: '<?php echo base_url();?>diagnostics/search_patients',
-					type: 'POST',
-					dataType: 'JSON',
-					data: {
-						q: query,
-						page_limit: 10
-					},
-					error: function(e) {
-						alert('hi');
-						callback();
-					},
-					success: function(res) {
-						callback(res.movies);
-					}
-				});
-			}
-		});
+		<?php if(count($test_areas)>1){ ?>
 		$(".test_method").hide();
 		$("#test_area").on('change',function(){
 			$(".test_area_"+$(this).val()).show();
 		});
+		<?php } ?>
 	});
 </script>
 <div class="col-md-8 col-md-offset-2">
@@ -68,7 +88,7 @@
 	<div class="panel-body">
 		<?php echo validation_errors(); echo form_open('diagnostics/test_order',array('role'=>'form','class'=>'form-custom')); ?>
 		<div class="form-group">
-			<label for="order_by">Order by<font color='red'>*</font></label>
+			<label for="order_by">Order by</label>
 			<select name="order_by" class="form-control"  id="order_by">
 				<option value="" selected disabled>Select Doctor</option>
 				<?php
@@ -82,6 +102,7 @@
 			<input class="form-control time" name="order_time" value="<?php echo date("g:ia");?>" />
 		</div>
 		<hr>
+		<?php if(count($test_areas)>1){ ?>
 		<div class="form-group">
 			<label for="test_area">Test Area<font color='red'>*</font></label>
 			<select name="test_area" class="form-control"  id="test_area">
@@ -92,15 +113,28 @@
 				<?php } ?>
 			</select>
 		</div>
+		<?php } 
+		else if(count($test_areas)==1){ ?>
+			<input type="text" value="<?php echo $test_areas[0]->test_area_id;?>" name="test_area" class="sr-only" hidden readonly />
+			<b><?php echo $test_areas[0]->test_area;?></b>
+		<?php } ?>
 		<hr>
 		<div class="form-group">
-			<select class="form-control" name="patient_type">
-				<option value="" selected disabled>Select Patient Type</option>
+			<select class="form-control" id="visit_type" name="patient_type">
+				<option value="" disabled>Select Patient Type</option>
 				<option value="OP">OP</option>
-				<option value="IP">IP</option>
-			</select><font color='red'>*</font>
+				<option value="IP" selected>IP</option>
+			</select>
+			<select class="form-control" id="year" name="year">
+				<option value="" disabled>Select Admission Year</option>
+				<option value="<?php echo date("Y",strtotime("Last Year"));?>"><?php echo date("Y",strtotime("Last Year"));?></option>
+				<option value="<?php echo date("Y");?>" selected><?php echo date("Y");?></option>
+			</select>
+			<font color='red'>*</font>
 			<label>OP/IP Number<font color='red'>*</font></label>
-			<select  name="visit_id" id="select_patient"></select>
+			<select id="select-patient" class="repositories" placeholder="Select a Patient..." name="visit_id" ></select>
+		</div>
+		<div class='col-md-12 selected_patient'>
 		</div>
 		<hr>
 		<div class="form-group">
@@ -124,12 +158,12 @@
 		}
 		$test_methods=array_unique($test_methods);
 		foreach($test_methods as $test_method){ ?>
-			<div class="col-md-4 test_method test_area_<?php echo $test_master->test_area_id;?>">
-				<b><?php echo $test_method;?></b>
+			<div class="col-md-12 test_method test_area_<?php echo $test_master->test_area_id;?>">
+				<div class="alert alert-info"><b><?php echo $test_method;?></b></div>
 		<?php
 			foreach($test_masters as $test_master){
 				if($test_master->test_method == $test_method) { ?>
-				<div class="col-md-12 panel">
+				<div class="col-md-4 panel">
 					<div class="checkbox">
 						<input class="checkbox form-control" type="checkbox" name="test_master[]" id="<?php echo $test_master->test_name;?>" value="<?php echo $test_master->test_master_id;?>" />
 						<label for="<?php echo $test_master->test_name;?>"><?php echo $test_master->test_name;?></label>
@@ -162,3 +196,69 @@
 	</div>
 </div>
 </div>
+<script>
+		var $year=$("#year").val();
+		var $visit_type=$("#visit_type").val();
+	$(function(){
+		$("#visit_type").change(function(){
+			$visit_type=$(this).val();
+			selectize = $("#select-patient")[0].selectize;
+			selectize.clear();
+			selectize.clearOptions();
+			selectize.clearCache();
+			selectize.renderCache={};
+		});
+		$("#year").change(function(){
+			$year=$(this).val();
+			selectize = $("#select-patient")[0].selectize;
+			selectize.clear();
+			selectize.clearOptions();
+			selectize.clearCache();
+			selectize.renderCache={};
+		});
+		selectize = $("#select-patient")[0].selectize;
+		selectize.on('change',function(){
+			var test = selectize.getOption(selectize.getValue());
+			test.find('.hosp_file_no').text()!=""?$(".selected_patient").text(test.find('.hosp_file_no').text()+", "+test.find('.language').text()+", Age : "+test.find('.watchers').text()):$(".selected_patient").text("").removeClass('well well-sm');
+			$(".selected_patient").text()!=""?$(".selected_patient").addClass('well well-sm') : $(".selected_patient").removeClass('well well-sm');
+		});
+	});
+	$('#select-patient').selectize({
+    valueField: 'hosp_file_no',
+    labelField: 'hosp_file_no',
+    searchField: 'hosp_file_no',
+    create: false,
+    render: {
+        option: function(item, escape) {
+
+            return '<div>' +
+                '<span class="title">' +
+                    '<span class="hosp_file_no">' + escape(item.hosp_file_no) + '</span>' +
+                '</span>' +
+                '<ul class="meta">' +
+                    (item.first_name ? '<li class="language">' + escape(item.first_name) + ' ' : '') +
+                    (item.last_name ? '' + escape(item.last_name) + '</li>' : '') +
+                    '<li class="watchers"><span>' + escape(item.age_years) + '</span> yrs<span>' + 
+					(item.age_months!=0 ? escape(item.age_months) + '</span> months<span>' : '') + 
+					(item.age_days!=0 ? escape(item.age_days) + '</span> days</li>' : '') +
+                '</ul>' +
+            '</div>';
+        }
+    },
+    load: function(query, callback) {
+        if (!query.length) return callback();
+		$.ajax({
+            url: '<?php echo base_url();?>diagnostics/search_patients',
+            type: 'POST',
+			dataType : 'json',
+			data : {visit_type:$visit_type,year:$year,query:query},
+            error: function(res) {
+                callback();
+            },
+            success: function(res) {
+                callback(res.patients.slice(0, 10));
+            }
+        });
+    }
+	});
+</script>

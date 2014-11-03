@@ -15656,7 +15656,7 @@ ALTER TABLE `service_record`
 -- Indexes for table `specimen_type`
 --
 ALTER TABLE `specimen_type`
- ADD PRIMARY KEY (`speciment_type_id`);
+ ADD PRIMARY KEY (`specimen_type_id`);
 
 --
 -- Indexes for table `staff`
@@ -16112,7 +16112,7 @@ MODIFY `request_id` int(4) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `specimen_type`
 --
 ALTER TABLE `specimen_type`
-MODIFY `speciment_type_id` int(6) NOT NULL AUTO_INCREMENT;
+MODIFY `specimen_type_id` int(6) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `staff`
 --

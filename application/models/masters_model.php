@@ -275,7 +275,14 @@ class Masters_model extends CI_Model{
 	 		 		$search_method=strtolower($this->input->post('test_name'));
 		  	    	$this->db->like('LOWER(test_name)',$search_method,'after');
 	    	}
-			$this->db->select("test_master_id,test_name,test_master.test_method_id,test_master.test_area_id,test_method")->from("test_master")->join('test_method','test_master.test_method_id=test_method.test_method_id')->order_by('test_name');
+			if($department!=0 && count($department)>0){
+				$deps = array();
+				foreach($department as $d){
+					$deps[]=$d->department_id;
+				}
+				$this->db->where_in('department_id',$deps);
+			}
+			$this->db->select("test_master_id,test_name,test_master.test_method_id,test_master.test_area_id,test_method")->from("test_master")->join('test_method','test_master.test_method_id=test_method.test_method_id')->join('test_area','test_master.test_area_id=test_area.test_area_id')->order_by('test_name');
 
 
 		}
@@ -290,23 +297,30 @@ class Masters_model extends CI_Model{
 	 		 		$search_method=strtolower($this->input->post('test_area'));
 		  	    	$this->db->like('LOWER(test_area)',$search_method,'after');
 	    	}
+			if($department!=0 && count($department)>0){
+				$deps = array();
+				foreach($department as $d){
+					$deps[]=$d->department_id;
+				}
+				$this->db->where_in('department_id',$deps);
+			}
 			$this->db->select("test_area_id,test_area")->from("test_area")->order_by('test_area');
 
 
 		}
 		
-		elseif ($type=="antibody") {
+		elseif ($type=="antibiotic") {
 			if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
 			{
-					$test_id=$this->input->post('antibody_id');
-					$this->db->where('antibody_id',$test_id);
+					$test_id=$this->input->post('antibiotic_id');
+					$this->db->where('antibiotic_id',$test_id);
 			}
-	    	if($this->input->post('search') && $this->input->post('antibody')!="")  //query to retrieve matches for the text entered in the field from table test_type
+	    	if($this->input->post('search') && $this->input->post('antibiotic')!="")  //query to retrieve matches for the text entered in the field from table test_type
 	    	{
-	 		 		$search_method=strtolower($this->input->post('antibody'));
-		  	    	$this->db->like('LOWER(antibody)',$search_method,'after');
+	 		 		$search_method=strtolower($this->input->post('antibiotic'));
+		  	    	$this->db->like('LOWER(antibiotic)',$search_method,'after');
 	    	}
-			$this->db->select("antibody_id,antibody")->from("antibody")->order_by('antibody');
+			$this->db->select("antibiotic_id,antibiotic")->from("antibiotic")->order_by('antibiotic');
 			
 			}
 			
@@ -570,12 +584,12 @@ else if($type=="dosage"){
  	$this->db->where('test_area_id',$this->input->post('test_area_id'));
    $table="test_area";	
  }
- elseif ($type=="antibody") {
+ elseif ($type=="antibiotic") {
  		
-    $data=array('antibody'=>$this->input->post('antibody'));
- 	$r=$this->input->post('antibody_id');
- 	$this->db->where('antibody_id',$this->input->post('antibody_id'));
-   $table="antibody";	
+    $data=array('antibiotic'=>$this->input->post('antibiotic'));
+ 	$r=$this->input->post('antibiotic_id');
+ 	$this->db->where('antibiotic_id',$this->input->post('antibiotic_id'));
+   $table="antibiotic";	
  }
  elseif ($type=="micro_organism") {
  		
@@ -823,9 +837,50 @@ else if($type=="dosage"){
 		$table="test_method";			
 
 		}
-			elseif ($type=="test_group") {
-			$data=array('group_name'=>$this->input->post('group_name'));
-		$table="test_group";
+		elseif ($type=="test_group") {
+			 $binary=0;
+			 $numeric=0;
+			 $text=0;
+				foreach($this->input->post('output_format') as $output_format){
+					if($output_format==1){
+						$binary=1;
+					}
+					if($output_format==2){
+						$numeric=1;
+					}
+					if($output_format==3){
+						$text=1;
+					}
+				}
+						
+			$data=array(
+				'group_name'=>$this->input->post('test_group'),
+				'binary_result'=>$binary,
+				'numeric_result'=>$numeric,
+				'text_result'=>$text,
+				'binary_positive'=>$this->input->post('binary_pos'),
+				'binary_negative'=>$this->input->post('binary_neg'),
+				'numeric_result_unit'=>$this->input->post('numeric_result_unit')
+			);
+			$this->db->trans_start();
+			$this->db->insert('test_group',$data);
+			$group_id = $this->db->insert_id();
+			$data=array();
+			var_dump( $this->input->post('test_name'));
+			foreach($this->input->post('test_name') as $test_name){
+				$data[]=array(
+					'test_master_id'=>$test_name,
+					'group_id'=>$group_id
+				);
+			}
+			$this->db->insert_batch('test_group_link',$data);
+			$this->db->trans_complete();
+			
+			if($this->db->trans_status()===FALSE){
+				$this->db->trans_rollback();
+				return false;
+			}	
+			else return true;
 		}
 		elseif ($type=="test_area") {
 			$data=array('test_area'=>$this->input->post('test_area'));
@@ -868,9 +923,9 @@ else if($type=="dosage"){
 			$data=array('test_area'=>$this->input->post('test_area'));
 			$table="test_area";
 		}
-		elseif ($type=="antibody") {
-			$data=array('antibody'=>$this->input->post('antibody'));
-		$table="antibody";
+		elseif ($type=="antibiotic") {
+			$data=array('antibiotic'=>$this->input->post('antibiotic'));
+		$table="antibiotic";
 		}
 		elseif ($type=="micro_organism") {
 			$data=array('micro_organism'=>$this->input->post('micro_organism'));
@@ -885,7 +940,7 @@ else if($type=="dosage"){
 		$table="sample_status";
 		}
 		elseif ($type=="lab_unit") {
-			$data=array('unit'=>$this->input->post('lab_unit'));
+			$data=array('lab_unit'=>$this->input->post('lab_unit'));
 		$table="lab_unit";
 		}
 		

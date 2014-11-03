@@ -79,6 +79,31 @@ class Reports_model extends CI_Model{
 		$resource=$this->db->get();
 		return $resource->result();
 	}
+	function get_order_summary(){
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+		}
+		else if($this->input->post('from_date') || $this->input->post('to_date')){
+			$this->input->post('from_date')?$from_date=$this->input->post('from_date'):$from_date=$this->input->post('to_date');
+			$to_date=$from_date;
+		}
+		else{
+			$from_date=date("Y-m-d");
+			$to_date=$from_date;
+		}
+		$this->db->select("DATE(order_date_time) date,test_area,test_method,COUNT(test_id) count,test_area.test_area_id,test_method.test_method_id,test_master.test_master_id,test_master.test_name")
+		->from('test')
+		->join('test_order','test.order_id = test_order.order_id')
+		->join('test_area','test_order.test_area_id = test_area.test_area_id')
+		->join('test_master','test.test_master_id = test_master.test_master_id')
+		->join('test_method','test_master.test_method_id = test_method.test_method_id')
+		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')")
+		->group_by('test_method.test_method,test_master.test_master_id');
+		$resource=$this->db->get();
+		return $resource->result();
+	}
+		
 	function get_op_detail(){
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
@@ -137,6 +162,46 @@ class Reports_model extends CI_Model{
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')");		  
 		$resource=$this->db->get();
 		return $resource->result();
+	}
+	
+	function get_order_detail($test_master,$test_area,$test_method,$from_date,$to_date){
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+		}
+		else if($this->input->post('from_date') || $this->input->post('to_date')){
+			$this->input->post('from_date')?$from_date=$this->input->post('from_date'):$from_date=$this->input->post('to_date');
+			$to_date=$from_date;
+		}
+		else if($from_date=='0' && $to_date=='0'){
+			$from_date=date("Y-m-d");
+			$to_date=$from_date;
+		}
+		if($test_area!='-1'){
+			$this->db->where('test_area.test_area_id',$test_area);
+		}
+		if($test_method!='-1'){
+			$this->db->where('test_method.test_method_id',$test_method);
+		}
+		if($test_master!='-1'){
+			$this->db->where('test_master.test_master_id',$test_master);
+		}
+		$this->db->select('test_id,test_order.order_id,test_sample.sample_id,test_method,test_name,department,patient.first_name, patient.last_name,
+							staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,sample_container_type,test_status')
+		->from('test_order')
+		->join('test','test_order.order_id=test.order_id')
+		->join('test_sample','test_order.order_id=test_sample.order_id')
+		->join('test_master','test.test_master_id=test_master.test_master_id')
+		->join('test_method','test_master.test_method_id=test_method.test_method_id')
+		->join('test_area','test_master.test_area_id=test_area.test_area_id')
+		->join('staff','test_order.doctor_id=staff.staff_id','left')
+		->join('patient_visit','test_order.visit_id=patient_visit.visit_id')
+		->join('patient','patient_visit.patient_id=patient.patient_id')
+		->join('department','patient_visit.department_id=department.department_id')
+		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id')
+		 ->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')");		  
+		$query=$this->db->get();
+		return $query->result();
 	}
 	
 	function get_equipment_summary(){

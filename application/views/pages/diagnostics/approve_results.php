@@ -1,4 +1,3 @@
-
 <div class="col-md-10 col-md-offset-2">
 <?php 	echo validation_errors(); ?>
 <?php if(isset($msg)){ ?> 
@@ -7,8 +6,7 @@
 	<?php  }?>
 <br>
 <?php if(isset($order)){ ?>
-	<?php echo form_open('diagnostics/view_orders',array('role'=>'form','class'=>'form-custom','id'=>'order_submit'));?>
-		
+	<?php echo form_open('diagnostics/approve_results',array('role'=>'form','class'=>'form-custom'));?>
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<h4>Order #<?php echo $order[0]->order_id;?>
@@ -29,7 +27,7 @@
 					<?php echo $order[0]->visit_type;?>
 				</div>
 				<div class="col-md-4">
-					<b>Patient Number : </b>
+					<b><?php echo $order[0]->visit_type;?> Number : </b>
 					<?php echo $order[0]->hosp_file_no;?>
 				</div>
 			</div>
@@ -42,52 +40,104 @@
 					<b>Order By : </b>
 					<?php echo $order[0]->staff_name;?>
 				</div>
+				<div class="col-md-4">
+					<b>Provisional Diagnosis : </b>
+					<?php echo $order[0]->provisional_diagnosis;?>
+				</div>
 			</div>
+			<br />
+			<br />
+			<br />
+			<table class="table table-bordered">
+				<th>Test</th>
+				<th>Value</th>
+				<th colspan="2">Report</th>				
 			<?php foreach($order as $test){ 
 					$positive="";$negative="";
 				 if($test->test_status==1){ $readonly = "disabled"; }else $readonly="";
 			?>
-				<div class="panel panel-warning col-md-12">
-					<h4>
+			<tr>
+					<td>
 						<?php echo $test->test_name;?>
-					</h4>
+					</td>
+					<td>
+					<?php if($test->numeric_result==1){ 
+
+							if($test->test_status == 1) { 
+								$result="Test not done";
+							} 
+							else{	
+								$result=$test->test_result." ".$test->lab_unit; 
+							}
+							echo $result;
+						}
+								else echo "-";
+					 ?>
+					</td>
+					<td>
 					<?php if($test->binary_result==1){ ?>
-					<div class="col-md-4">
-						<?php if($test->test_status == 1) { if($test->test_result_binary == 1 ) $positive="checked" ; else $negative = "checked" ; } ?>
-							<input type="radio" value="1" id="binary_result_pos" form='order_submit' name="binary_result_<?php echo $test->test_id;?>" <?php echo $readonly." ".$positive;?> />
-							<label for="binary_result_pos"><?php echo $test->binary_positive;?></label>
-							<input type="radio" value="0" id="binary_result_neg" form='order_submit'  name="binary_result_<?php echo $test->test_id;?>" <?php echo $readonly." ".$negative;?> />
-							<label for="binary_result_neg"><?php echo $test->binary_negative;?></label>
-					</div>
+						<?php 
+							if($test->test_status == 0) { 
+								$result="Test not done.";
+							} 
+							else{	
+								if($test->test_result_binary == 1 ) $result=$test->binary_positive ; 
+								else $result=$test->binary_negative ; 
+							}
+						echo $result;
+						?>
+					<?php 
+					}
+						else echo "-";
+					?>
+					 </td>
+					 <td>
+					<?php if($test->text_result==1){ 
+
+						if($test->test_status == 1) { 
+							$result="Test not done";
+						} 
+						else{	
+							$result = $test->test_result_text;
+						}
+						echo $result;
+					 }
+								else echo "-"; ?>
+					 </td>
+					 <td>
+					<?php if($test->test_status == 2){ ?>
+						<label class="label label-success">Approved</label>
+					<?php } 
+					else if($test->test_status==3){ ?>
+						<label class="label label-danger">Rejected</label>
+					<?php } else { ?>	
+						<label class="btn btn-success btn-sm">
+						<input type="radio" value="1" name='approve_test_<?php echo $test->test_id;?>' /> Approve
+						</label>
+						<label class="btn btn-danger btn-sm">
+						<input type="radio" value="0" name='approve_test_<?php echo $test->test_id;?>' /> Reject
+						</label>
+					<input type="text" value="<?php echo $test->test_id;?>" name="test[]" class="sr-only hidden" />
 					<?php } ?>
-					<?php if($test->numeric_result==1){ ?>
-					<div class="col-md-4" class="form-group">
-							<input type="number" class="form-control" placeholder="Numeric" style="width:100px" form='order_submit' name="numeric_result_<?php echo $test->test_id;?>" step="any" value="<?php echo $test->test_result;?>" <?php echo $readonly;?> />
-							<label class="control-label"><?php echo $test->lab_unit;?></label>
-					</div>
-					<?php } ?>
-					<?php if($test->text_result==1){ ?>
-					<div class="col-md-4">
-							<textarea name="text_result_<?php echo $test->test_id;?>" class="form-control" form='order_submit' placeholder="Descriptive result" value="<?php echo $test->test_result_text;?>"  <?php echo $readonly;?>></textarea>
-					</div>
-					<?php } ?>
-			<input type="text" value="<?php echo $test->test_id;?>" name="test[]" class="sr-only hidden" />
-				</div>
+					</td>
+				</tr>
 			<?php } ?>
 			
+		</table>
 		</div>
 		<div class="panel-footer">
-			<input type="text" value="<?php echo $test->order_id;?>" form='order_submit' name="order_id" class="sr-only hidden" />
-			<input type="submit" value="Submit" class="btn btn-primary btn-md col-md-offset-5" form='order_submit'  name="submit_results" />
+			<input type="text" value="<?php echo $test->order_id;?>" name="order_id" class="sr-only hidden" />
+			<input type="submit" value="Submit" class="btn btn-primary btn-md col-md-offset-5" name="approve_results" />
 		</div>
 	</div>
+	</form>
 		
 <?php	
 	}
 	else{
 ?>
 <?php if(count($test_areas)>1){ ?>
-	<?php echo form_open('diagnostics/view_orders',array('role'=>'form'));?>
+	<?php echo form_open('diagnostics/approve_results',array('role'=>'form'));?>
 		<div class="form-group">
 			<label for="test_area">Test Area<font color='red'>*</font></label>
 			<select name="test_area" class="form-control"  id="test_area">
@@ -99,10 +149,10 @@
 			</select>
 		</div>
 		<input type="submit" value="Select" name="submit" class="btn btn-primary btn-md" /> 
-	</form>
 <?php 
 }
 if(isset($orders) && count($orders)>0){ ?>
+	
 <div class="panel panel-default">
 	<div class="panel-heading">
 		<h4>Test Orders</h4>
@@ -135,7 +185,7 @@ if(isset($orders) && count($orders)>0){ ?>
 					if($order->order_id==$ord){ ?>
 						<td><?php echo $i++;?></td>
 						<td>
-							<?php echo form_open('diagnostics/view_orders',array('role'=>'form','class'=>'form-custom')); ?>
+							<?php echo form_open('diagnostics/approve_results',array('role'=>'form','class'=>'form-custom')); ?>
 							<?php echo $order->order_id;?>
 							<input type="hidden" class="sr-only" name="order_id" value="<?php echo $order->order_id;?>" />
 						</td>
@@ -149,14 +199,15 @@ if(isset($orders) && count($orders)>0){ ?>
 							<?php foreach($orders as $order){
 										if($order->order_id == $ord) {
 											if($order->test_status==1) 
-												$label="label-success";
-											else $label = "label-danger";
+												$label="label-warning";
+											else if($order->test_status == 3){ $label = "label-danger";}
+											else if($order->test_status == 2){ $label = "label-success";}
 											echo "<div class='label $label'>".$order->test_name."</div><br />";
 										}
 									} 
 							?>
 						</td>
-						<td><button class="btn btn-sm btn-primary" type="submit" value="submit">Select</button></form></td>
+						<td><button class="btn btn-sm btn-primary" type="submit" value="submit" name="select_order">Select</button></form></td>
 				<?php break;
 					}
 				} ?>
@@ -175,7 +226,7 @@ if(isset($orders) && count($orders)>0){ ?>
 <?php 
 	}
 	else if(isset($orders) && count($orders)==0){
-		echo "No orders to update";
+		echo "No results pending to approve";
 	}
 } 
 ?>

@@ -158,7 +158,7 @@ pri.print();
 				</div>
 				<div class="form-group">
 				<label class="control-label">Time</label>
-				<input type="text" name="time" class="form-control time" value="<?php echo date("");?>"  required />
+				<input type="text" name="time" class="form-control time" value="<?php echo date("g:iA");?>"  required />
 				</div>
 			</div>
 			<h4><?php echo $form_name; ?></h4>

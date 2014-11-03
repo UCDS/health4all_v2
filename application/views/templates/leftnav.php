@@ -105,7 +105,28 @@
 <?php if(preg_match("^diagnostics/*^",current_url())) { ?>
 <div class="col-sm-3 col-md-2 sidebar-left">
     <ul class="nav nav-sidebar">
+	<?php 
+	 foreach($functions as $f){
+		if($f->user_function=="Diagnostics"){ ?>
+		<li class="nav-header">Diagnostics</li>
+			<li><a href="<?php echo base_url();?>diagnostics/view_orders">Update Tests</a></li>
+			<li><a href="<?php echo base_url();?>diagnostics/view_results">View Results</a></li>
+		</li>
+	<?php }
+	} 
 
+	foreach($functions as $f){
+		if($f->user_function=="Diagnostics - Order"){ ?>
+			<li><a href="<?php echo base_url();?>diagnostics/test_order">Order Tests</a></li>
+	<?php } 
+	} 
+	foreach($functions as $f){
+		if($f->user_function=="Diagnostics - Approve"){ ?>
+		<li><a href="<?php echo base_url();?>diagnostics/approve_results">Approve Tests</a></li>
+	<?php } 
+		}
+		 foreach($functions as $f){
+		if($f->user_function=="Masters - Diagnostics"){ ?>
 		<li class="nav-header">Add</li>
 
 		<li title="Methods of testing - Serology, Microscopy, etc."><a href="<?php echo base_url();?>diagnostics/add/test_method">Test Method</a></li>
@@ -113,7 +134,7 @@
 		<li title="List of status types for a test - Ordered, Approved, etc."><a href="<?php echo base_url();?>diagnostics/add/test_status_type">Test Status Type</a></li>
 		<li title="List of tests perfored in the labs - ASO, CRP, Blood culture, etc."><a href="<?php echo base_url();?>diagnostics/add/test_name">Test Name</a></li>
 		<li title="Areas where the tests are done - Pathology, Microbiology, etc."><a href="<?php echo base_url();?>diagnostics/add/test_area">Test Area</a></li>
-		<li title="List of Antibodies"><a href="<?php echo base_url();?>diagnostics/add/antibody">Antibody</a></li>
+		<li title="List of Antibodies"><a href="<?php echo base_url();?>diagnostics/add/antibiotic">antibiotic</a></li>
 		<li title="List of Micro Organisms"><a href="<?php echo base_url();?>diagnostics/add/micro_organism">Micro Organism</a></li>
 		<li title="List of Specimen types - Blood, Urine, etc."><a href="<?php echo base_url();?>diagnostics/add/specimen_type">Specimen Type</a></li>
 		<li title="List of sample statuses - Sent to lab, Received, etc."><a href="<?php echo base_url();?>diagnostics/add/sample_status">Sample Status</a></li>
@@ -124,15 +145,16 @@
 		<li><a href="<?php echo base_url();?>diagnostics/edit/test_status_type">Test Status Type</a></li>
 		<li><a href="<?php echo base_url();?>diagnostics/edit/test_name">Test Name</a></li>
 		<li><a href="<?php echo base_url();?>diagnostics/edit/test_area">Test Area</a></li>
-		<li><a href="<?php echo base_url();?>diagnostics/edit/antibody">Antibody</a></li>
+		<li><a href="<?php echo base_url();?>diagnostics/edit/antibiotic">antibiotic</a></li>
 		<li><a href="<?php echo base_url();?>diagnostics/edit/micro_organism">Micro Organism</a></li>
 		<li><a href="<?php echo base_url();?>diagnostics/edit/specimen_type">Specimen Type</a></li>
 		<li><a href="<?php echo base_url();?>diagnostics/edit/sample_status">Sample Status</a></li>
-		
+		<?php } 
+			}
+		}
+		?>
 </ul>
 </div>	
-
-<?php } ?>
 
 <?php if(preg_match("^user_panel/*^",current_url())) { ?>
 
@@ -143,16 +165,6 @@
 				<li>Forms</li>
 				<li> 
 					<a href="<?php echo base_url()."user_panel/form_layout";?>">Create New</a>
-				</li>
-				<li class="disabled"><a>Edit</a>
-					<ul>
-						<li> 
-						<a href="#">Out Patient Form</a>
-						</li>
-						<li> 
-						<a href="#">In Patient Form</a>
-						</li>
-					</ul>
 				</li>
 				<li class="nav-divider"></li>
 

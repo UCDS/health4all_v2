@@ -77,7 +77,7 @@
 						<ul class="dropdown-menu">
 						<?php foreach($functions as $f){
 								if($f->user_function=="Diagnostics"){ ?>
-									<li><a href="<?php echo base_url()."diagnostics/add/test_method";?>">Diagnostics</a></li>
+									<li><a href="<?php echo base_url()."diagnostics/test_order";?>">Diagnostics</a></li>
 						<?php
 									break;
 								}
@@ -182,7 +182,10 @@
 					if($f->user_function=="IP Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/ip_summary";?>">IP Summary</a></li>
 				<?php	} 
-					if($f->user_function=="IP Summary"){ ?>
+					if($f->user_function=="Diagnostics - Summary"){ ?>
+						  <li><a href="<?php echo base_url()."reports/order_summary";?>">Orders Summary</a></li>
+				<?php	} 
+					if($f->user_function=="BloodBank Summary"){ ?>
 						  <li><a href="<?php echo base_url()."bloodbank/reports/donation_summary";?>">Blood Donations</a></li>
 						  <li><a href="<?php echo base_url()."bloodbank/reports/issue_summary";?>">Blood Issues</a></li>
 						  <li><a href="<?php echo base_url()."bloodbank/reports/hospital_issues";?>">Blood Issues - Hospital Wise</a></li>
@@ -210,7 +213,10 @@
 			if($f->user_function=="IP Detail"){ ?>
 						<li><a href="<?php echo base_url()."reports/ip_detail";?>">IP Detail</a></li>
 			<?php }
-			if($f->user_function=="IP Detail"){ ?>
+			if($f->user_function=="Diagnostics - Detail"){ ?>
+						<li><a href="<?php echo base_url()."reports/order_detail";?>">Orders Detail</a></li>
+			<?php }
+			if($f->user_function=="BloodBank Detail"){ ?>
 						<li><a href="<?php echo base_url()."bloodbank/reports/report_donations";?>">Blood Donations</a></li>
 						<li><a href="<?php echo base_url()."bloodbank/reports/report_issue";?>">Blood Issues</a></li>
 						<li><a href="<?php echo base_url()."bloodbank/reports/report_inventory";?>">Blood Inventory</a></li>

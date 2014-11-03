@@ -30,8 +30,8 @@ function test_order(){
 	$this->load->view('templates/header',$this->data);
 	$this->load->view('templates/leftnav');
 	$this->form_validation->set_rules('visit_id','Patient','required|trim|xss_clean');
-	$this->data['test_areas']=$this->masters_model->get_data('test_area');
-	$this->data['test_masters']=$this->masters_model->get_data('test_name');
+	$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
+	$this->data['test_masters']=$this->masters_model->get_data('test_name',0,$this->data['departments']);
 	$this->data['test_groups']=$this->masters_model->get_data('test_group');
 	$this->data['specimen_types']=$this->masters_model->get_data('specimen_type');
 	if ($this->form_validation->run() === FALSE){
@@ -64,7 +64,8 @@ function view_orders(){
 	$this->load->view('templates/header',$this->data);
 	$this->load->view('templates/leftnav');
 	$this->form_validation->set_rules('order_id','Order','trim|xss_clean');
-	$this->data['test_areas']=$this->masters_model->get_data('test_area');
+	$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
+	if(count($this->data['test_areas'])>1){
 	if ($this->form_validation->run() === FALSE){
 		$this->load->view($page,$this->data);
 	}
@@ -89,14 +90,138 @@ function view_orders(){
 			$this->load->view($page,$this->data);
 		}
 	}
+	}
+	else{
+		if($this->input->post('submit_results')){
+			if($this->diagnostics_model->upload_test_results()){
+				$this->data['msg']="Test results saved successfully";
+			}
+			else{
+				$this->data['msg']="Test results could not be saved";
+			}
+			$this->data['order']=$this->diagnostics_model->get_order();
+			$this->load->view($page,$this->data);
+		}	
+			
+		else if($this->input->post('order_id')){
+			$this->data['order']=$this->diagnostics_model->get_order();
+			$this->load->view($page,$this->data);
+		}	
+		else{
+			$this->data['orders']=$this->diagnostics_model->get_tests_ordered($this->data['test_areas']);
+			$this->load->view($page,$this->data);
+		}
+	}
+		
+	$this->load->view('templates/footer');
+}
+
+
+function view_results(){
+	if(!$this->session->userdata('logged_in')){
+		show_404();
+	}
+	$this->load->helper('form');
+	$this->load->library('form_validation');
+	$user=$this->session->userdata('logged_in');
+	$this->data['user_id']=$user['user_id'];	  
+	$this->data['title']="Test Results";
+	$page="pages/diagnostics/test_results";
+	$this->load->view('templates/header',$this->data);
+	$this->load->view('templates/leftnav');
+	$this->form_validation->set_rules('order_id','Order','trim|xss_clean');
+	$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
+	if(count($this->data['test_areas'])>1){
+	if ($this->form_validation->run() === FALSE){
+		$this->load->view($page,$this->data);
+	}
+	else{
+		if($this->input->post('order_id')){
+			$this->data['order']=$this->diagnostics_model->get_order();
+			$this->load->view($page,$this->data);
+		}	
+		else{
+			$this->data['orders']=$this->diagnostics_model->get_tests_approved();
+			$this->load->view($page,$this->data);
+		}
+	}
+	}
+	else{
+		if($this->input->post('order_id')){
+			$this->data['order']=$this->diagnostics_model->get_order();
+			$this->load->view($page,$this->data);
+		}	
+		else{
+			$this->data['orders']=$this->diagnostics_model->get_tests_approved($this->data['test_areas']);
+			$this->load->view($page,$this->data);
+		}
+	}
+		
+	$this->load->view('templates/footer');
+}
+
+function approve_results(){
+	if(!$this->session->userdata('logged_in')){
+		show_404();
+	}
+	$this->load->helper('form');
+	$this->load->library('form_validation');
+	$user=$this->session->userdata('logged_in');
+	$this->data['user_id']=$user['user_id'];	  
+	$this->data['title']="Approve Results";
+	$page="pages/diagnostics/approve_results";
+	$this->load->view('templates/header',$this->data);
+	$this->load->view('templates/leftnav');
+	$this->form_validation->set_rules('order_id','Order','trim|xss_clean');
+	$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
+	if(count($this->data['test_areas'])>1){
+		if ($this->form_validation->run() === FALSE){
+			$this->load->view($page,$this->data);
+		}
+		else{
+			if($this->input->post('select_order')){
+				$this->data['order']=$this->diagnostics_model->get_order();
+				$this->load->view($page,$this->data);
+			}	
+			else if($this->input->post('approve_results')){
+				$this->diagnostics_model->approve_results();
+				$this->data['orders']=$this->diagnostics_model->get_tests_completed();
+				$this->load->view($page,$this->data);
+			}	
+			else{
+				$this->data['orders']=$this->diagnostics_model->get_tests_completed();
+				$this->load->view($page,$this->data);
+			}
+		}
+	}
+	else{
+		if($this->input->post('select_order')){
+			$this->data['order']=$this->diagnostics_model->get_order();
+			$this->load->view($page,$this->data);
+		}	
+		else if($this->input->post('approve_results')){
+			$this->diagnostics_model->approve_results();
+			$this->data['orders']=$this->diagnostics_model->get_tests_completed($this->data['test_areas']);
+			$this->load->view($page,$this->data);
+		}	
+		else{
+			$this->data['orders']=$this->diagnostics_model->get_tests_completed($this->data['test_areas']);
+			$this->load->view($page,$this->data);
+		}
+	}
+	
 	$this->load->view('templates/footer');
 }
 
 function search_patients(){
 	if($patients = $this->diagnostics_model->search_patients()){
-		return json_encode($patients);
+		$list=array(
+			'patients'=>$patients
+		);
+		
+			echo json_encode($list);
 	}
-	else return json_encode("hello");
+	else return false;
 }
 	
 //************************************************************************************//  	
@@ -152,14 +277,15 @@ function add($type=""){
 			);
 			$this->data['test_methods']=$this->masters_model->get_data("test_method");
 			$this->data['test_areas'] = $this->masters_model->get_data("test_area");
+			$this->data['lab_units'] = $this->masters_model->get_data("lab_unit");
 		}
 	if($type=="test_area"){
 			$title="Test Area";
 			$config=array(array('field' => 'test_area','label'=>'Test Area','rules'=>'required|trim|xss_clean' ));
 		}
-	if($type=="antibody"){
-			$title="antibody";
-			$config=array(array('field' => 'antibody','label'=>'Antibody','rules'=>'required|trim|xss_clean' ));
+	if($type=="antibiotic"){
+			$title="antibiotic";
+			$config=array(array('field' => 'antibiotic','label'=>'antibiotic','rules'=>'required|trim|xss_clean' ));
 
 		}
 		if($type=="micro_organism"){
@@ -278,16 +404,16 @@ function edit($type="")
 			$this->data['test_areas']=$this->masters_model->get_data("test_area");
 
 		}
-		if ($type=="antibody") {
-			$title="Edit Antibody";
+		if ($type=="antibiotic") {
+			$title="Edit antibiotic";
 			//Defining  field,name label and rules for the text field
 			$config=array( array(
-		   'field' => 'antibody',
-		   'label'   => 'Antibody ',
+		   'field' => 'antibiotic',
+		   'label'   => 'antibiotic ',
 		   'rules'   => 'trim|xss_clean',
 			));
 			//load model and execute select query in order to populate search results
-			$this->data['antibodys']=$this->masters_model->get_data("antibody");
+			$this->data['antibiotics']=$this->masters_model->get_data("antibiotic");
 
 		}
 		if ($type=="micro_organism") {

@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
  <script>
  $(function(){
+	$(":checked").attr('checked',false);
   var i=2;
     $("#b_test_name").click(function(){
         var test_name="<div id='add_test_name_"+i+"' ><div class='col-md-10'></br>";
@@ -24,6 +25,7 @@
     $("#numeric_output").click(function(){
 		if($(this).is(":checked")) { 
 			$(".numeric_output_units").show();
+			$(".numeric_output_range").show();
 			$(".numeric_output_units").find("select").attr('required',true);
 		}
 		else {
@@ -32,9 +34,6 @@
 		}
 	});
 });
-function remove_test_name(i){
-        $("#add_test_name_"+i).remove();
-}
 </script>
 <div class="col-md-8 col-md-offset-2">
 	<center>
@@ -71,7 +70,8 @@ function remove_test_name(i){
 
 		<label for="test_name" class="col-md-4">Test Name<font color='red'>*</font></label>
 		<div  class="col-md-8 test_name" id="add_test_name" >
-			<input type="text" class="form-control" placeholder="Test Name" id="test_name" form="add_test_name" name="test_name" />
+			<input type="text" class="form-control" placeholder="Test Name" id="test_name" form="add_test_name" name="test_name" required />
+			<input type="text" class="form-control" placeholder="Note" id="test_note" form="add_test_note" name="test_note" />
 		</div>
 		<br />
 		<br />
@@ -104,6 +104,11 @@ function remove_test_name(i){
 					<option value="<?php echo $unit->lab_unit_id;?>"><?php echo $unit->lab_unit;?></option>
 				<?php } ?>
 			</select>
+		</div>
+		<label for="numeric_output_range" class="col-md-4 numeric_output_range" hidden>Numeric output Range</label>
+		<div  class="col-md-8 numeric_output_range" id="numeric_output_range"  hidden>
+			<input type="text" class="form-control numeric-range-min" placeholder="Minimum" />
+			<input type="text" class="form-control numeric-range-max" placeholder="Maximum" />
 		</div>
 	
 	</div>

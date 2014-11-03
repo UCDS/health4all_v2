@@ -10,7 +10,6 @@ class Staff_model extends CI_Model{
 	   $this -> db -> where('password', MD5($password));
 	 
 	   $query = $this -> db -> get();
-	
 	   if($query -> num_rows() > 0)
 	   {
 	     return $query->result();
