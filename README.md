@@ -1,7 +1,8 @@
 health4all_v2
 =============
-
+**********************************************************************************************************
 CONTENTS
+**********************************************************************************************************
 1. Demo
 2. Installation Instruction
 
@@ -17,13 +18,12 @@ Password : password
 #2. INSTALLATION INSTRUCTIONS
 
 Setup the application
-
+-----------------------------------
 Once you downloaded the applcation, moved it into the www folder, you will need to modify a few files before
 starting to use the application.
 
 File : application/config/config.php
 ------------------------------------
-
 $config['base_url'] = 'Path to your application folder here';
 
 date_default_timezone_set("Timezone of your preference here");
@@ -40,7 +40,7 @@ the database host, username, password and database name are to be changed.
 
 
 Run the application
-
+-------------------------------------
 Once you've made these changes, you will be able to run the application from your browser.
 
 To use the features in this application after installation, you will require to login with the following credentials,
