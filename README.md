@@ -1,9 +1,12 @@
 health4all_v2
 =============
 
+CONTENTS
+1. Demo
+2. Installation Instruction
+
 ***********************************************************************************************************
-DEMO
-***********************************************************************************************************
+#1. DEMO
 
 Visit htpp://182.50.154.124/health4all_v2_test
 Username : admin
@@ -11,17 +14,9 @@ Password : password
 
 
 ***********************************************************************************************************
-INSTALLATION INSTRUCTIONS
-***********************************************************************************************************
+#2. INSTALLATION INSTRUCTIONS
 
-CONTENTS
-
-1. Setup the application
-2. Run the application
-
-***********************************************************************************************************
-
-#1. Setup the application
+Setup the application
 
 Once you downloaded the applcation, moved it into the www folder, you will need to modify a few files before
 starting to use the application.
@@ -44,9 +39,7 @@ In this file you will modify the database configurations,
 the database host, username, password and database name are to be changed.
 
 
-***********************************************************************************************************
-
-#2. Run the application
+Run the application
 
 Once you've made these changes, you will be able to run the application from your browser.
 
