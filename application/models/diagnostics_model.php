@@ -41,12 +41,38 @@ class Diagnostics_model extends CI_Model{
 			$this->db->insert('test_sample',$data);
 			$sample_id=$this->db->insert_id();
 			$data=array();
-			foreach($this->input->post('test_master') as $test_master){
-				$data[]=array(
-					'order_id'=>$order_id,
-					'sample_id'=>$sample_id,
-					'test_master_id'=>$test_master,
-				);
+			if($this->input->post('test_master'))
+				foreach($this->input->post('test_master') as $test_master){
+					$data[]=array(
+						'order_id'=>$order_id,
+						'sample_id'=>$sample_id,
+						'test_master_id'=>$test_master,
+						'group_id'=>0
+					);
+				}
+			if($this->input->post('test_group')){
+				foreach($this->input->post('test_group') as $test_group){
+					$this->db->select('test_master.test_master_id,has_result')->from('test_master')->join('test_group_link','test_master.test_master_id=test_group_link.test_master_id')
+					->join('test_group','test_group_link.group_id=test_group.group_id')
+					->where('test_group.group_id',$test_group);
+					$query=$this->db->get();
+					$result=$query->result();
+					foreach($result as $row){						
+						$data[]=array(
+							'order_id'=>$order_id,
+							'sample_id'=>$sample_id,
+							'group_id'=>$test_group,
+							'test_master_id'=>$row->test_master_id
+						);
+					}
+					if($result[0]->has_result==1) 					
+						$data[]=array(
+							'order_id'=>$order_id,
+							'sample_id'=>$sample_id,
+							'group_id'=>$test_group,
+							'test_master_id'=>0
+						);
+				}
 			}
 			$this->db->insert_batch('test',$data);
 		$this->db->trans_complete();
@@ -62,20 +88,22 @@ class Diagnostics_model extends CI_Model{
 		if(count($test_areas)==1){
 			$test_area = $test_areas[0]->test_area_id;
 		}
-		$this->db->select('test_id,test_order.order_id,test_sample.sample_id,test_method,test_name,department,patient.first_name, patient.last_name,
-							staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,sample_container_type,test_status')
+		$this->db->select('test_id,test_order.order_id,test_sample.sample_id,test_method,
+		test_name,department,patient.first_name, patient.last_name,
+		staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,sample_container_type,test_status',false)
 		->from('test_order')
 		->join('test','test_order.order_id=test.order_id')
 		->join('test_sample','test_order.order_id=test_sample.order_id')
-		->join('test_master','test.test_master_id=test_master.test_master_id')
-		->join('test_method','test_master.test_method_id=test_method.test_method_id')
+		->join('test_group','test.group_id=test_group.group_id','left')
+		->join('test_master as ts','test.test_master_id=ts.test_master_id','left')
+		->join('test_method tms','ts.test_method_id=tms.test_method_id','left')
 		->join('staff','test_order.doctor_id=staff.staff_id','left')
 		->join('patient_visit','test_order.visit_id=patient_visit.visit_id')
 		->join('patient','patient_visit.patient_id=patient.patient_id')
 		->join('department','patient_visit.department_id=department.department_id')
 		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id')
 		->where('order_status !=',2)
-		->where('test_master.test_area_id',$test_area);
+		->where('ts.test_area_id',$test_area);
 		$query=$this->db->get();
 		return $query->result();
 	}
@@ -129,16 +157,25 @@ class Diagnostics_model extends CI_Model{
 	
 	function get_order(){
 		$order_id=$this->input->post('order_id');
-		$this->db->select('test_id,test_order.order_id,test_sample.sample_id,test_method,
+		$this->db->select('test_id,test.test_master_id,test_group.group_id,test_order.order_id,test_sample.sample_id,test_method,
 		test_name,department,patient.first_name, patient.last_name,patient_visit.visit_type,
 		staff.first_name staff_name,order_date_time,hosp_file_no,sample_code,specimen_type,sample_container_type,
-		binary_result,numeric_result,text_result,binary_positive,binary_negative,lab_unit,test_status,
-		test_result_binary,test_result,test_result_text,hospital,hospital.place,district,state,test_area,provisional_diagnosis')
+		ts.binary_result,
+		ts.numeric_result,
+		ts.text_result,
+		ts.binary_positive,
+		ts.binary_negative,
+		lus.lab_unit,
+		test_status,
+		test_result_binary,
+		test_result,
+		test_result_text,hospital,hospital.place,district,state,test_area,provisional_diagnosis',false)
 		->from('test_order')->join('test','test_order.order_id=test.order_id')->join('test_sample','test_order.order_id=test_sample.order_id')
-		->join('test_master','test.test_master_id=test_master.test_master_id')
-		->join('lab_unit','test_master.numeric_result_unit=lab_unit.lab_unit_id','left')
-		->join('test_method','test_master.test_method_id=test_method.test_method_id')
-		->join('test_area','test_master.test_area_id=test_area.test_area_id')
+		->join('test_group','test.group_id=test_group.group_id','left')
+		->join('test_master as ts','test.test_master_id=ts.test_master_id','left')		
+		->join('lab_unit lus','ts.numeric_result_unit=lus.lab_unit_id','left')
+		->join('test_method tms','ts.test_method_id=tms.test_method_id','left')
+		->join('test_area tas','ts.test_area_id=tas.test_area_id','left')
 		->join('staff','test_order.doctor_id=staff.staff_id','left')
 		->join('patient_visit','test_order.visit_id=patient_visit.visit_id')
 		->join('patient','patient_visit.patient_id=patient.patient_id')

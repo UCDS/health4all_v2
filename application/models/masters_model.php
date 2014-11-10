@@ -854,7 +854,7 @@ else if($type=="dosage"){
 				}
 						
 			$data=array(
-				'group_name'=>$this->input->post('test_group'),
+				'group_name'=>$this->input->post('group_name'),
 				'binary_result'=>$binary,
 				'numeric_result'=>$numeric,
 				'text_result'=>$text,
@@ -866,7 +866,6 @@ else if($type=="dosage"){
 			$this->db->insert('test_group',$data);
 			$group_id = $this->db->insert_id();
 			$data=array();
-			var_dump( $this->input->post('test_name'));
 			foreach($this->input->post('test_name') as $test_name){
 				$data[]=array(
 					'test_master_id'=>$test_name,

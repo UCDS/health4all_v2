@@ -224,6 +224,21 @@ class Staff_model extends CI_Model{
 		else return true;
 	}
 
+	
+	function change_password($user_id){
+		$this->db->select('password')->from('user')->where('user_id',$user_id);
+		$query=$this->db->get();
+		$password=$query->row();
+		$form_password=$this->input->post('old_password');
+		if($password->password==md5($form_password)){
+			$this->db->where('user_id',$user_id);
+			if($this->db->update('user',array('password'=>md5($this->input->post('password'))))){
+				return true;
+				}
+			else return false;
+		}
+		else return false;
+	}
 			
 }
 ?>

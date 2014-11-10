@@ -43,7 +43,38 @@
 					<?php echo $order[0]->staff_name;?>
 				</div>
 			</div>
-			<?php foreach($order as $test){ 
+			<?php 
+			$groups=array();
+			$group_tests=array();
+			$i=0;
+			foreach($order as $test){
+				if($test->group_id!=0){
+					$groups[]=$test->group_id;
+					$group_tests[]=array(
+						'group_id'=>$test->group_id,
+						'test_id'=>$test->test_id,
+						'test_name'=>$test->test_name,
+						'test_status'=>$test->test_status,
+						'binary_result'=>$test->binary_result,
+						'numeric_result'=>$test->numeric_result,
+						'text_result'=>$test->text_result,
+						'test_result_binary'=>$test->test_result_binary,
+						'test_result'=>$test->test_result,
+						'test_result_text'=>$test->test_result_text,
+						'binary_postitive'=>$test->binary_positive,
+						'binary_negative'=>$test->binary_negative,
+						'lab_unit'=>$test->lab_unit
+					);
+					array_splice($order,$i,1);
+					$i--;
+				}
+				$i++;
+			}
+			$groups=array_unique($groups);
+			foreach($groups as $group){
+				echo $group;
+			}
+			foreach($order as $test){ 
 					$positive="";$negative="";
 				 if($test->test_status==1){ $readonly = "disabled"; }else $readonly="";
 			?>

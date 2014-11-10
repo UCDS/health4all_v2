@@ -45,17 +45,6 @@
 	</center>
 	
 	<div class="form-group">
-		<label for="test_method" class="col-md-4">Test Method<font color='red'>*</font></label>
-		<div  class="col-md-8">
-		<select name="test_method" id="test_method" class="form-control">
-		<?php foreach($test_methods as $d){
-			echo "<option value='$d->test_method_id'>$d->test_method</option>";
-		}
-		?>
-		</select>
-		</div>
-		<br />
-		<br />
 		<label for="test_area" class="col-md-4">Test Area<font color='red'>*</font></label>
 		<div  class="col-md-8">
 		<select name="test_area" id="test_area" class="form-control">
@@ -68,6 +57,17 @@
 		<br />
 		<br />
 
+		<label for="test_method" class="col-md-4">Test Method<font color='red'>*</font></label>
+		<div  class="col-md-8">
+		<select name="test_method" id="test_method" class="form-control">
+		<?php foreach($test_methods as $d){
+			echo "<option value='$d->test_method_id'>$d->test_method</option>";
+		}
+		?>
+		</select>
+		</div>
+		<br />
+		<br />
 		<label for="test_name" class="col-md-4">Test Name<font color='red'>*</font></label>
 		<div  class="col-md-8 test_name" id="add_test_name" >
 			<input type="text" class="form-control" placeholder="Test Name" id="test_name" form="add_test_name" name="test_name" required />

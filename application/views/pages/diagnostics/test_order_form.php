@@ -175,7 +175,6 @@
 		<?php } ?>
 		</div>
 		<hr>
-		<?php /*
 		<h5>Test Groups</h5>
 		<?php foreach($test_groups as $test_group){ ?>
 			<div class="col-md-3 panel test_group test_group_<?php echo $test_group->group_id;?>">
@@ -184,9 +183,7 @@
 					<label for="<?php echo $test_group->group_name;?>"><?php echo $test_group->group_name;?></label>
 				</div>
 			</div>
-		<?php } 
-		*/
-		?>
+		<?php } 		?>
 	</div>
 	<div class="panel-footer">
 		<div class="col-md-offset-4">
