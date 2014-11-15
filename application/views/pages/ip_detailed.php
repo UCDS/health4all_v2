@@ -20,7 +20,7 @@ $(function(){
 	<br />
 	
 	<?php 
-	if($report && count($report)>0){ ?>
+	if(isset($report) && count($report)>0){ ?>
 	<table class="table table-bordered table-striped">
 	<thead>
 		<th>IP No.</th>

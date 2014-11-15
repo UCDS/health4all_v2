@@ -10,7 +10,6 @@ class Staff_model extends CI_Model{
 	   $this -> db -> where('password', MD5($password));
 	 
 	   $query = $this -> db -> get();
-	
 	   if($query -> num_rows() > 0)
 	   {
 	     return $query->result();
@@ -136,9 +135,9 @@ class Staff_model extends CI_Model{
 	}
 	function create_user(){
 		$data=array(
-		'username'=>$this->input->post('username'),
-		'password'=>md5($this->input->post('password')),
-		'staff_id'=>$this->input->post('staff')
+			'username'=>$this->input->post('username'),
+			'password'=>md5($this->input->post('password')),
+			'staff_id'=>$this->input->post('staff')
 		);
 		$this->db->trans_start();
 		$this->db->insert('user',$data);
@@ -156,11 +155,11 @@ class Staff_model extends CI_Model{
 					if($access=="view") $view=1;
 				}
 				$user_function_data[]=array(
-					'user_id'=>$user_id,
-					'function_id'=>$u,
-					'add'=>$add,
-					'edit'=>$edit,
-					'view'=>$view
+				'user_id'=>$user_id,
+				'function_id'=>$u,
+				'add'=>$add,
+				'edit'=>$edit,
+				'view'=>$view
 				);
 			}
 		}
@@ -172,14 +171,74 @@ class Staff_model extends CI_Model{
 			$department=0;
 		}
 		else
-			$department=$result->department_id;
+		$department=$result->department_id;
 		$hospital=$result->hospital_id;
 		$this->db->insert('user_department_link',array('user_id'=>$user_id,'department_id'=>$department));
 		$this->db->insert('user_hospital_link',array('user_id'=>$user_id,'hospital_id'=>$hospital));
 		$this->db->trans_complete();
 		if($this->db->trans_status()===TRUE) return true; else return false;
 	}
-			
+
+	function staff_list($hospital_id=0){
+		$userdata=$this->session->userdata('hospital');
+		if($hospital_id==0) $hospital_id=$userdata['hospital_id'];
+		
+		$this->db->select("*")->from("staff")->where("department_id","4")->where("hospital_id",$hospital_id);
+		$query=$this->db->get();
+		return $query->result();
+	}
+	function get_hospital(){
+		$this->db->select("*")->from("hospital")->order_by('hospital','asc');
+		$query=$this->db->get();
+		return $query->result();
+	}
+	function add_camp($hospital_id){
+		
+		$data=array(
+			'camp_name'=>$this->input->post('camp'),
+			'location'=>$this->input->post('location'),
+			'hospital_id'=>$hospital_id
+			);
+		$this->db->trans_start();
+			$this->db->insert('blood_donation_camp',$data);
+		$this->db->trans_complete();
+		if($this->db->trans_status() === FALSE){
+			return false;
+		}
+		else return true;
+	}
+	
+	function add_hospital(){
+		$data=array(
+			'hospital'=>$this->input->post('hospital'),
+			'place'=>$this->input->post('location'),
+			'district'=>$this->input->post('district'),
+			'state'=>$this->input->post('state')
+			);
+		$this->db->trans_start();
+			$this->db->insert('hospital',$data);
+		$this->db->trans_complete();
+		if($this->db->trans_status() === FALSE){
+			return false;
+		}
+		else return true;
+	}
+
+	
+	function change_password($user_id){
+		$this->db->select('password')->from('user')->where('user_id',$user_id);
+		$query=$this->db->get();
+		$password=$query->row();
+		$form_password=$this->input->post('old_password');
+		if($password->password==md5($form_password)){
+			$this->db->where('user_id',$user_id);
+			if($this->db->update('user',array('password'=>md5($this->input->post('password'))))){
+				return true;
+				}
+			else return false;
+		}
+		else return false;
+	}
 			
 }
 ?>

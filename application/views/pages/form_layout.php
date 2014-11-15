@@ -97,6 +97,7 @@
 
       <?php echo form_open('user_panel/form_layout',array('role'=>'form','class'=>'form-custom','id'=>'new-form')); ?>
 			<div class="col-md-10" >
+				<h4>Create Form for Patient Registration</h4>
 				<div class="panel panel-default">
 				<div class="panel-heading">
 				<div class="row">

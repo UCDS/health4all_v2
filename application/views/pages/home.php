@@ -1,6 +1,6 @@
 
 	<div class="row">
-		<h1>Welcome to Health4All! <small>a Free and Open Source application supported by <a href="www.yousee.in" target="_blank">YouSee</a></small></h1>
+		<h1>Welcome to Health4All! <small>a Free and Open Source application supported by <a href="http://www.yousee.in" target="_blank">YouSee</a></small></h1>
 		<p>
 		<?php 
 		if($this->session->userdata('hospital')){

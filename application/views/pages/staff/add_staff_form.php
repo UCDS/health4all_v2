@@ -3,7 +3,13 @@
 
 <script type="text/javascript">
 	$(function(){
-		$("#date_of_birth").Zebra_DatePicker();
+		$("#date_of_birth").Zebra_DatePicker({direction:false});
+		$("#department option").hide().attr('disabled',true);
+		$("#hospital").on('change',function(){
+			var hospital_id=$(this).val();
+			$("#department option").hide().attr('disabled',true);
+			$("#department option[class="+hospital_id+"]").show().attr('disabled',false);
+		});
 		$("#department").on('change',function(){
 			var department_id=$(this).val();
 			$("#unit option,#area option").hide();
@@ -23,7 +29,6 @@
 		<?php echo validation_errors(); ?>
 	</center>
 	<?php 
-	//What is form_open ?
 	echo form_open('staff/add/staff',array('class'=>'form-horizontal','role'=>'form','id'=>'add_staff')); 
 	?>
 
@@ -71,13 +76,27 @@
 
 	<div class="form-group">
 		<div class="col-md-3">
+			<label for="hospital" class="control-label">Hospital</label>
+		</div>
+		<div class="col-md-6">
+			<select class="form-control" id="hospital" name="hospital" >
+				<option value="">Hospital</option>
+				<?php foreach($hospital as $d){
+				echo "<option value='$d->hospital_id'>$d->hospital</option>";
+				}?>
+			</select>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<div class="col-md-3">
 			<label for="department" class="control-label">Department</label>
 		</div>
 		<div class="col-md-6">
 			<select class="form-control" id="department" name="department" >
 				<option value="">Department</option>
 				<?php foreach($department as $d){
-				echo "<option value='$d->department_id'>$d->department</option>";
+				echo "<option value='$d->department_id' class='$d->hospital_id'>$d->department</option>";
 				}?>
 			</select>
 		</div>
@@ -163,7 +182,7 @@
 			<label for="email" class="control-label">Email</label>
 		</div>
 		<div class="col-md-6">
-			<input type="text" class="form-control" placeholder="Email" id="email" name="email" />
+			<input type="email" class="form-control" placeholder="Email" id="email" name="email" />
 		</div>
 	</div>
 

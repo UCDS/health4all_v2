@@ -82,5 +82,35 @@ class User_panel extends CI_Controller {
 			show_404();
 		}
 	}
+	
+	
+	function change_password(){
+		if($this->session->userdata('logged_in')){
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+		$this->data['title']="Change password";
+		$this->data['userdata']=$this->session->userdata('logged_in');
+		$user_id=$this->data['userdata']['user_id'];
+		$this->load->view('templates/header',$this->data);
+		$this->form_validation->set_rules('password','Password','required|trim|xss_clean');
+ 		if ($this->form_validation->run() === FALSE)
+		{
+		$this->load->view('pages/change_password',$this->data);
+		}
+		else{
+			if($this->staff_model->change_password($user_id)){
+				$this->data['msg']="Password has been changed successfully";
+			}
+			else{
+				$this->data['msg']="Password could not be changed";
+			}
+		$this->load->view('pages/change_password',$this->data);
+		}
+		$this->load->view('templates/footer');	
+		}
+		else{
+			show_404();
+		}
+	}
 
 }

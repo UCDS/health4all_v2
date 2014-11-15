@@ -1,0 +1,28 @@
+#Health4All
+	Implementations
+	1. Gandhi Hospital, Hyderabad
+	2. APMSIDC (Andhra Pradesh Medical Services Infrastructure Development Corporation)
+	3. IRCS(Indian Red Cross Society) - VidyaNagar* 
+	4. IRCS - Waranagal*
+	5. IRCS - Mancherial*
+	6. Test Implementation
+
+	Volunteer Activities
+	1. Documentation (Code/End User)
+	2. Bug Fixes
+	3. Feature Enhancements (ICD 10 coding)
+	4. New modules (Diagnostics)
+	5. Testing
+
+	Update Changes to 
+	1. Github
+	2. Test Environment
+	3. Production Implementations
+
+	Test Environment Details
+		Application Link : http://182.50.154.124/health4all_v2_test
+		Username : admin
+		Password : abc123
+		Application Code Repository: https://github.com/UCDS/health4all_v2
+
+* will merge to a single implementation in September 2014

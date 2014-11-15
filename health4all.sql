@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.4
+-- version 4.2.7.1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 01, 2014 at 01:28 PM
--- Server version: 5.6.12-log
--- PHP Version: 5.4.12
+-- Generation Time: Aug 25, 2014 at 09:04 AM
+-- Server version: 10.0.13-MariaDB-log
+-- PHP Version: 5.5.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,22 +17,33 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `health4all_test`
+-- Database: `health4all`
 --
-CREATE DATABASE IF NOT EXISTS `health4all_test` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `health4all_test`;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `affiliations`
+-- Table structure for table `activity_done`
 --
 
-CREATE TABLE IF NOT EXISTS `affiliations` (
-  `affiliation_id` int(6) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `activity_done` (
+  `activity_done_id` int(11) NOT NULL,
+  `activity_id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `time` time NOT NULL,
+  `staff_id` int(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `affiliation`
+--
+
+CREATE TABLE IF NOT EXISTS `affiliation` (
+`affiliation_id` int(6) NOT NULL,
   `staff_id` int(6) NOT NULL,
-  `affiliated_institution` varchar(100) NOT NULL,
-  PRIMARY KEY (`affiliation_id`)
+  `affiliated_institution` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -42,16 +53,14 @@ CREATE TABLE IF NOT EXISTS `affiliations` (
 --
 
 CREATE TABLE IF NOT EXISTS `antenatal_visit` (
-  `antenatal_visit_id` int(7) NOT NULL AUTO_INCREMENT,
+`antenatal_visit_id` int(7) NOT NULL,
   `visit_id` int(7) NOT NULL,
   `fundal_height` varchar(50) NOT NULL,
   `presentation` varchar(50) NOT NULL,
   `fetal_heart_rate` varchar(50) NOT NULL,
   `liquor` varchar(50) NOT NULL,
   `scan_finding` varchar(500) NOT NULL,
-  `advice` varchar(500) NOT NULL,
-  PRIMARY KEY (`antenatal_visit_id`),
-  KEY `visit_id` (`visit_id`)
+  `advice` varchar(500) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -61,9 +70,8 @@ CREATE TABLE IF NOT EXISTS `antenatal_visit` (
 --
 
 CREATE TABLE IF NOT EXISTS `antibody` (
-  `antibody_id` int(6) NOT NULL AUTO_INCREMENT,
-  `antobody` varchar(50) NOT NULL,
-  PRIMARY KEY (`antibody_id`)
+`antibody_id` int(6) NOT NULL,
+  `antibody` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='List of antibodies' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -73,32 +81,30 @@ CREATE TABLE IF NOT EXISTS `antibody` (
 --
 
 CREATE TABLE IF NOT EXISTS `antibody_test` (
-  `antibody_test_id` int(6) NOT NULL AUTO_INCREMENT,
+`antibody_test_id` int(6) NOT NULL,
   `antibody_id` int(6) NOT NULL,
   `micro_organism_test_id` int(6) NOT NULL,
-  `antibody_result` tinyint(1) NOT NULL COMMENT '0 - Negative, 1 - Positive',
-  PRIMARY KEY (`antibody_test_id`)
+  `antibody_result` tinyint(1) NOT NULL COMMENT '0 - Negative, 1 - Positive'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Antibody tests performed on micro organisms' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `areas`
+-- Table structure for table `area`
 --
 
-CREATE TABLE IF NOT EXISTS `areas` (
-  `area_id` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `area` (
+`area_id` int(4) NOT NULL,
   `area_name` varchar(20) NOT NULL,
   `department_id` int(4) NOT NULL,
-  `beds` int(4) NOT NULL,
-  PRIMARY KEY (`area_id`)
+  `beds` int(4) NOT NULL
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Areas in hospitals' AUTO_INCREMENT=13 ;
 
 --
--- Dumping data for table `areas`
+-- Dumping data for table `area`
 --
 
-INSERT INTO `areas` (`area_id`, `area_name`, `department_id`, `beds`) VALUES
+INSERT INTO `area` (`area_id`, `area_name`, `department_id`, `beds`) VALUES
 (1, 'CTRR', 6, 0),
 (2, 'OTs Ward', 6, 0),
 (3, 'AS Ward', 6, 0),
@@ -115,11 +121,80 @@ INSERT INTO `areas` (`area_id`, `area_name`, `department_id`, `beds`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `area_activity`
+--
+
+CREATE TABLE IF NOT EXISTS `area_activity` (
+`area_activity_id` int(4) NOT NULL,
+  `activity_name` varchar(10) NOT NULL,
+  `frequency` int(2) NOT NULL COMMENT 'frequency of the activity in a day',
+  `weightage` int(3) NOT NULL COMMENT 'weighted score of the activity',
+  `area_type_id` int(3) NOT NULL,
+  `frequency_type` varchar(10) NOT NULL COMMENT 'daily, weekly, fortnightly, monthly'
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+
+--
+-- Dumping data for table `area_activity`
+--
+
+INSERT INTO `area_activity` (`area_activity_id`, `activity_name`, `frequency`, `weightage`, `area_type_id`, `frequency_type`) VALUES
+(1, 'cleaning', 2, 2, 0, 'daily'),
+(2, 'clean', 2, 13, 0, 'daily'),
+(3, 'work', 2, 13, 1, 'daily'),
+(5, 'kbb', 0, 54, 10, 'gandhi'),
+(6, 'gandhi', 2, 2, 1, 'daily'),
+(7, 'gandhi', 2, 2, 1, 'daily'),
+(8, 'asdf', 2, 0, 23, 'adqqwe'),
+(9, 'sanitation', 123, 0, 23, 'asdf');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `area_types`
+--
+
+CREATE TABLE IF NOT EXISTS `area_types` (
+`area_type_id` int(2) NOT NULL,
+  `area_type` varchar(50) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='areas like ICU,Ward,OT' AUTO_INCREMENT=24 ;
+
+--
+-- Dumping data for table `area_types`
+--
+
+INSERT INTO `area_types` (`area_type_id`, `area_type`) VALUES
+(1, 'Intensive Care Unit'),
+(2, 'Operation Theater'),
+(3, ''),
+(4, 'Consultation Room'),
+(5, 'Lab'),
+(6, 'Kitchen'),
+(7, 'gandhi'),
+(8, 'gandhi nagar'),
+(9, 'body'),
+(10, 'adares'),
+(11, 'Ghatkesar'),
+(12, 'asf'),
+(13, 'sd'),
+(14, 'sd'),
+(15, 'ad'),
+(16, 'asf'),
+(17, 'mvcvgnf'),
+(18, 'adarea'),
+(19, 'adarea'),
+(20, 'adarea'),
+(21, 'adarea'),
+(22, 'a'),
+(23, 'Hyderabad');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `audiology`
 --
 
 CREATE TABLE IF NOT EXISTS `audiology` (
-  `aud_test_id` int(7) NOT NULL AUTO_INCREMENT,
+`aud_test_id` int(7) NOT NULL,
   `date_of_test` date NOT NULL,
   `type_of_test` varchar(20) NOT NULL,
   `ip_no` int(7) NOT NULL,
@@ -127,9 +202,15 @@ CREATE TABLE IF NOT EXISTS `audiology` (
   `oael_outcome` varchar(20) NOT NULL,
   `oaer_outcome` varchar(20) NOT NULL,
   `remarks` varchar(50) NOT NULL,
-  `staff_id` int(5) NOT NULL,
-  PRIMARY KEY (`aud_test_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  `staff_id` int(5) NOT NULL
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `audiology`
+--
+
+INSERT INTO `audiology` (`aud_test_id`, `date_of_test`, `type_of_test`, `ip_no`, `test_no`, `oael_outcome`, `oaer_outcome`, `remarks`, `staff_id`) VALUES
+(1, '0000-00-00', 'OAE', 0, 0, '', '', '', 0);
 
 -- --------------------------------------------------------
 
@@ -138,12 +219,11 @@ CREATE TABLE IF NOT EXISTS `audiology` (
 --
 
 CREATE TABLE IF NOT EXISTS `bb_appointment` (
-  `appointment_id` int(7) NOT NULL AUTO_INCREMENT,
+`appointment_id` int(7) NOT NULL,
   `donor_id` int(7) NOT NULL,
   `slot_id` int(7) NOT NULL,
   `datetime` datetime NOT NULL,
-  `status` varchar(50) COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`appointment_id`)
+  `status` varchar(50) COLLATE utf8_bin NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -153,21 +233,20 @@ CREATE TABLE IF NOT EXISTS `bb_appointment` (
 --
 
 CREATE TABLE IF NOT EXISTS `bb_app_slot_link` (
-  `link_id` int(7) NOT NULL AUTO_INCREMENT,
+`link_id` int(7) NOT NULL,
   `appointment_id` int(7) NOT NULL,
   `slot_id` int(7) NOT NULL,
-  `datetime` datetime NOT NULL,
-  PRIMARY KEY (`link_id`)
+  `datetime` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bb_donation_details`
+-- Table structure for table `bb_donation`
 --
 
-CREATE TABLE IF NOT EXISTS `bb_donation_details` (
-  `donation_id` int(7) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `bb_donation` (
+`donation_id` int(7) NOT NULL,
   `donor_id` int(7) NOT NULL,
   `replacement_patient_id` int(7) NOT NULL,
   `weight` varchar(10) COLLATE utf8_bin NOT NULL,
@@ -182,9 +261,11 @@ CREATE TABLE IF NOT EXISTS `bb_donation_details` (
   `collected_by` int(5) NOT NULL,
   `donation_date` date NOT NULL,
   `status` varchar(100) COLLATE utf8_bin NOT NULL,
+  `status_id` int(11) NOT NULL,
   `camp_id` int(11) NOT NULL,
-  PRIMARY KEY (`donation_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+  `hospital_id` int(11) NOT NULL,
+  `screening_result` tinyint(1) NOT NULL
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=8446 ;
 
 -- --------------------------------------------------------
 
@@ -193,10 +274,9 @@ CREATE TABLE IF NOT EXISTS `bb_donation_details` (
 --
 
 CREATE TABLE IF NOT EXISTS `bb_issued_inventory` (
-  `issued_inventory_id` int(7) NOT NULL AUTO_INCREMENT,
+`issued_inventory_id` int(7) NOT NULL,
   `issue_id` int(7) NOT NULL,
-  `inventory_id` int(7) NOT NULL,
-  PRIMARY KEY (`issued_inventory_id`)
+  `inventory_id` int(7) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -206,37 +286,63 @@ CREATE TABLE IF NOT EXISTS `bb_issued_inventory` (
 --
 
 CREATE TABLE IF NOT EXISTS `bb_replacement_patient` (
-  `replacement_patient_id` int(7) NOT NULL AUTO_INCREMENT,
+`replacement_patient_id` int(7) NOT NULL,
   `ip_number` int(7) NOT NULL,
   `name` varchar(200) COLLATE utf8_bin NOT NULL,
   `ward_unit` varchar(100) COLLATE utf8_bin NOT NULL,
-  `blood_group` varchar(5) COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`replacement_patient_id`)
+  `blood_group` varchar(5) COLLATE utf8_bin NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bb_slots`
+-- Table structure for table `bb_slot`
 --
 
-CREATE TABLE IF NOT EXISTS `bb_slots` (
-  `slot_id` int(7) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `bb_slot` (
+`slot_id` int(7) NOT NULL,
   `date` date NOT NULL,
   `from_time` time NOT NULL,
   `to_time` time NOT NULL,
   `no_appointments` int(3) NOT NULL,
-  PRIMARY KEY (`slot_id`)
+  `hospital_id` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bb_users`
+-- Table structure for table `bb_status`
 --
 
-CREATE TABLE IF NOT EXISTS `bb_users` (
-  `user_id` int(7) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `bb_status` (
+`status_id` int(11) NOT NULL,
+  `status` varchar(100) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+
+--
+-- Dumping data for table `bb_status`
+--
+
+INSERT INTO `bb_status` (`status_id`, `status`) VALUES
+(1, 'Registered'),
+(2, 'Medical'),
+(3, 'Incomplete'),
+(4, 'Donated'),
+(5, 'Grouped'),
+(6, 'Screened'),
+(7, 'Available'),
+(8, 'Issued'),
+(9, 'Discarded'),
+(10, 'Archived');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bb_user`
+--
+
+CREATE TABLE IF NOT EXISTS `bb_user` (
+`user_id` int(7) NOT NULL,
   `username` varchar(200) COLLATE utf8_bin NOT NULL,
   `password` varchar(128) COLLATE utf8_bin NOT NULL,
   `registration_date` datetime NOT NULL,
@@ -247,50 +353,55 @@ CREATE TABLE IF NOT EXISTS `bb_users` (
   `issuer` tinyint(1) NOT NULL,
   `requester` tinyint(1) NOT NULL,
   `admin` tinyint(1) NOT NULL,
-  `displayname` varchar(200) COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`user_id`)
+  `displayname` varchar(200) COLLATE utf8_bin NOT NULL
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
 
 --
--- Dumping data for table `bb_users`
+-- Dumping data for table `bb_user`
 --
 
-INSERT INTO `bb_users` (`user_id`, `username`, `password`, `registration_date`, `registrar`, `examiner`, `technician`, `screener`, `issuer`, `requester`, `admin`, `displayname`) VALUES
+INSERT INTO `bb_user` (`user_id`, `username`, `password`, `registration_date`, `registrar`, `examiner`, `technician`, `screener`, `issuer`, `requester`, `admin`, `displayname`) VALUES
 (1, 'admin', 'e3274be5c857fb42ab72d786e281b4b8', '2013-12-02 00:00:00', 0, 0, 0, 0, 0, 0, 1, 'Admin');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `blood_donation_camps`
+-- Table structure for table `blood_donation_camp`
 --
 
-CREATE TABLE IF NOT EXISTS `blood_donation_camps` (
-  `camp_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `blood_donation_camp` (
+`camp_id` int(11) NOT NULL,
   `camp_name` varchar(100) NOT NULL,
   `location` varchar(100) NOT NULL,
-  PRIMARY KEY (`camp_id`)
+  `hospital_id` int(11) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `blood_donation_camp`
+--
+
+INSERT INTO `blood_donation_camp` (`camp_id`, `camp_name`, `location`, `hospital_id`) VALUES
+(1, 'YouSee', 'Panjagutta', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `blood_donation_camp_date`
+--
+
+CREATE TABLE IF NOT EXISTS `blood_donation_camp_date` (
+`camp_id` int(11) NOT NULL,
+  `camp_date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `blood_donation_camp_dates`
+-- Table structure for table `blood_donor`
 --
 
-CREATE TABLE IF NOT EXISTS `blood_donation_camp_dates` (
-  `camp_id` int(11) NOT NULL AUTO_INCREMENT,
-  `camp_date` date NOT NULL,
-  PRIMARY KEY (`camp_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `blood_donors`
---
-
-CREATE TABLE IF NOT EXISTS `blood_donors` (
-  `donor_id` int(7) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `blood_donor` (
+`donor_id` int(7) NOT NULL,
   `name` varchar(200) COLLATE utf8_bin NOT NULL,
   `parent_spouse` varchar(200) COLLATE utf8_bin NOT NULL,
   `maritial_status` varchar(20) COLLATE utf8_bin NOT NULL,
@@ -302,9 +413,32 @@ CREATE TABLE IF NOT EXISTS `blood_donors` (
   `phone` varchar(20) COLLATE utf8_bin NOT NULL,
   `email` varchar(200) COLLATE utf8_bin NOT NULL,
   `address` mediumtext COLLATE utf8_bin NOT NULL,
-  `alerts` tinyint(1) NOT NULL,
-  PRIMARY KEY (`donor_id`)
+  `alerts` tinyint(1) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `blood_grouping`
+--
+
+CREATE TABLE IF NOT EXISTS `blood_grouping` (
+`grouping_id` int(11) NOT NULL,
+  `donation_id` int(11) NOT NULL,
+  `blood_group` varchar(10) NOT NULL,
+  `sub_group` varchar(5) NOT NULL,
+  `anti_a` varchar(5) NOT NULL,
+  `anti_b` varchar(5) NOT NULL,
+  `anti_ab` varchar(5) NOT NULL,
+  `anti_d` varchar(5) NOT NULL,
+  `a_cells` varchar(5) NOT NULL,
+  `b_cells` varchar(5) NOT NULL,
+  `o_cells` varchar(5) NOT NULL,
+  `du` varchar(5) NOT NULL,
+  `forward_done_by` int(11) NOT NULL,
+  `reverse_done_by` int(11) NOT NULL,
+  `grouping_date` date NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9491 ;
 
 -- --------------------------------------------------------
 
@@ -313,18 +447,17 @@ CREATE TABLE IF NOT EXISTS `blood_donors` (
 --
 
 CREATE TABLE IF NOT EXISTS `blood_inventory` (
-  `inventory_id` int(7) NOT NULL AUTO_INCREMENT,
+`inventory_id` int(7) NOT NULL,
   `component_type` varchar(20) COLLATE utf8_bin NOT NULL,
   `inv_status` varchar(20) COLLATE utf8_bin NOT NULL COMMENT 'Unscreened,Screened,Expired,Dispatched,Issued',
+  `status_id` int(11) NOT NULL,
   `donation_id` int(7) NOT NULL,
   `volume` int(4) NOT NULL,
   `created_by` int(7) NOT NULL COMMENT 'user_id',
   `expiry_date` date NOT NULL,
   `notes` text COLLATE utf8_bin NOT NULL,
-  `datetime` datetime NOT NULL,
-  PRIMARY KEY (`inventory_id`),
-  KEY `donor_id` (`donation_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+  `datetime` datetime NOT NULL
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=15988 ;
 
 -- --------------------------------------------------------
 
@@ -333,13 +466,12 @@ CREATE TABLE IF NOT EXISTS `blood_inventory` (
 --
 
 CREATE TABLE IF NOT EXISTS `blood_issue` (
-  `issue_id` int(7) NOT NULL AUTO_INCREMENT,
+`issue_id` int(7) NOT NULL,
   `issue_date` datetime NOT NULL,
   `issue_time` time NOT NULL,
   `request_id` int(7) NOT NULL,
   `issued_by` int(7) NOT NULL COMMENT 'user id',
-  `cross_matched_by` int(5) NOT NULL,
-  PRIMARY KEY (`issue_id`)
+  `cross_matched_by` int(5) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -349,24 +481,29 @@ CREATE TABLE IF NOT EXISTS `blood_issue` (
 --
 
 CREATE TABLE IF NOT EXISTS `blood_request` (
-  `request_id` int(7) NOT NULL AUTO_INCREMENT,
+`request_id` int(7) NOT NULL,
+  `bloodbank_id` int(11) NOT NULL,
+  `request_type` tinyint(1) NOT NULL COMMENT '0 - Patients, 1 - Bulk',
   `staff_id` int(7) NOT NULL,
   `patient_name` varchar(100) COLLATE utf8_bin NOT NULL,
   `patient_id` int(7) NOT NULL,
+  `hospital_id` int(11) NOT NULL,
   `ward_unit` varchar(200) COLLATE utf8_bin NOT NULL,
+  `referred_by` varchar(50) COLLATE utf8_bin NOT NULL,
   `department` varchar(200) COLLATE utf8_bin NOT NULL,
   `blood_group` varchar(5) COLLATE utf8_bin NOT NULL,
   `diagnosis` longtext COLLATE utf8_bin NOT NULL,
   `blood_transfusion_required` tinyint(1) NOT NULL,
   `whole_blood_units` int(5) NOT NULL,
   `packed_cell_units` int(5) NOT NULL,
+  `fp_units` int(5) NOT NULL,
   `ffp_units` int(5) NOT NULL,
-  `platelets_units` int(5) NOT NULL,
+  `prp_units` int(5) NOT NULL,
+  `platelet_concentrate_units` int(5) NOT NULL,
   `cryoprecipitate_units` int(5) NOT NULL,
   `request_date` datetime NOT NULL,
-  `request_status` varchar(20) COLLATE utf8_bin NOT NULL,
-  PRIMARY KEY (`request_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+  `request_status` varchar(20) COLLATE utf8_bin NOT NULL
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=4441 ;
 
 -- --------------------------------------------------------
 
@@ -375,7 +512,7 @@ CREATE TABLE IF NOT EXISTS `blood_request` (
 --
 
 CREATE TABLE IF NOT EXISTS `blood_screening` (
-  `screening_id` int(7) NOT NULL AUTO_INCREMENT,
+`screening_id` int(7) NOT NULL,
   `donation_id` int(7) NOT NULL,
   `test_hiv` tinyint(1) NOT NULL DEFAULT '0',
   `test_hbsag` tinyint(1) NOT NULL DEFAULT '0',
@@ -385,10 +522,30 @@ CREATE TABLE IF NOT EXISTS `blood_screening` (
   `test_irregular_ab` tinyint(1) NOT NULL DEFAULT '0',
   `screening_result` tinyint(1) NOT NULL DEFAULT '0',
   `screening_datetime` datetime NOT NULL,
-  `screened_by` int(5) NOT NULL,
-  PRIMARY KEY (`screening_id`),
-  UNIQUE KEY `donation_id` (`donation_id`)
+  `screened_by` int(5) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ci_sessions`
+--
+
+CREATE TABLE IF NOT EXISTS `ci_sessions` (
+  `session_id` varchar(40) NOT NULL DEFAULT '0',
+  `ip_address` varchar(45) NOT NULL DEFAULT '0',
+  `user_agent` varchar(120) NOT NULL,
+  `last_activity` int(10) unsigned NOT NULL DEFAULT '0',
+  `user_data` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ci_sessions`
+--
+
+INSERT INTO `ci_sessions` (`session_id`, `ip_address`, `user_agent`, `last_activity`, `user_data`) VALUES
+('a7cc35cf8b85a096376ce22b361aa492', '::1', 'Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0', 1408956373, 'a:3:{s:9:"user_data";s:0:"";s:9:"logged_in";a:2:{s:7:"user_id";s:2:"18";s:8:"username";s:7:"vivek.c";}s:8:"hospital";a:7:{s:11:"hospital_id";s:1:"2";s:8:"hospital";s:45:"Sri Sathya Sai Seva Organisations - Hyderabad";s:11:"description";s:28:"Free Mobile Medical Services";s:5:"place";s:7:"Rajapet";s:8:"district";s:8:"Nalgonda";s:5:"state";s:14:"Andhra Pradesh";s:4:"logo";s:42:"/health4all/assets/images/organisation.jpg";}}'),
+('fd042ce1abe5c9c7326f21a5a5a5cd53', '::1', 'Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Firefox/31.0', 1408957043, 'a:4:{s:9:"user_data";s:0:"";s:9:"logged_in";a:2:{s:7:"user_id";s:2:"18";s:8:"username";s:7:"vivek.c";}s:8:"hospital";a:7:{s:11:"hospital_id";s:1:"2";s:8:"hospital";s:45:"Sri Sathya Sai Seva Organisations - Hyderabad";s:11:"description";s:28:"Free Mobile Medical Services";s:5:"place";s:7:"Rajapet";s:8:"district";s:8:"Nalgonda";s:5:"state";s:14:"Andhra Pradesh";s:4:"logo";s:42:"/health4all/assets/images/organisation.jpg";}s:5:"place";a:2:{s:7:"camp_id";i:0;s:4:"name";s:45:"Sri Sathya Sai Seva Organisations - Hyderabad";}}');
 
 -- --------------------------------------------------------
 
@@ -397,44 +554,43 @@ CREATE TABLE IF NOT EXISTS `blood_screening` (
 --
 
 CREATE TABLE IF NOT EXISTS `contact_person` (
-  `contact_person_id` int(11) NOT NULL AUTO_INCREMENT,
+`contact_person_id` int(11) NOT NULL,
   `contact_person_first_name` varchar(50) NOT NULL,
   `contact_person_last_name` varchar(50) NOT NULL,
   `contact_person_email` varchar(50) NOT NULL,
   `contact_person_contact` int(50) NOT NULL,
-  `vendor_id` int(11) NOT NULL,
-  PRIMARY KEY (`contact_person_id`)
+  `vendor_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Vendor contact persons' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `counters`
+-- Table structure for table `counter`
 --
 
-CREATE TABLE IF NOT EXISTS `counters` (
-  `counter_id` int(7) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `counter` (
+`counter_id` int(7) NOT NULL,
   `count` int(7) NOT NULL,
-  `counter_name` varchar(10) NOT NULL,
-  PRIMARY KEY (`counter_id`)
+  `counter_name` varchar(10) NOT NULL
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `counters`
+-- Dumping data for table `counter`
 --
 
-INSERT INTO `counters` (`counter_id`, `count`, `counter_name`) VALUES
-(1, 3461, 'OP'),
-(2, 3484, 'IP');
+INSERT INTO `counter` (`counter_id`, `count`, `counter_name`) VALUES
+(1, 3466, 'OP'),
+(2, 0, 'IP');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `departments`
+-- Table structure for table `department`
 --
 
-CREATE TABLE IF NOT EXISTS `departments` (
+CREATE TABLE IF NOT EXISTS `department` (
   `department_id` int(3) NOT NULL,
+  `hospital_id` int(11) NOT NULL,
   `department` varchar(50) NOT NULL,
   `description` text NOT NULL,
   `number_of_units` int(3) NOT NULL,
@@ -446,69 +602,67 @@ CREATE TABLE IF NOT EXISTS `departments` (
   `wed` tinyint(1) NOT NULL DEFAULT '0',
   `thr` tinyint(1) NOT NULL DEFAULT '0',
   `fri` tinyint(1) NOT NULL DEFAULT '0',
-  `sat` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`department_id`)
+  `sat` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `departments`
+-- Dumping data for table `department`
 --
 
-INSERT INTO `departments` (`department_id`, `department`, `description`, `number_of_units`, `op_room_no`, `clinical`, `floor`, `mon`, `tue`, `wed`, `thr`, `fri`, `sat`) VALUES
-(1, 'Anatomy', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(2, 'Anesthesia', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(3, 'BioChemistry', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(4, 'Blood Bank', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(5, 'Cardiology', '', 0, '266', 1, '1', 1, 1, 0, 1, 1, 0),
-(6, 'Cardio-Thoracic Surgery', '', 0, '237', 1, '1', 0, 1, 0, 1, 0, 0),
-(7, 'Casualty', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(8, 'Community Medicine', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(9, 'Dental', '', 0, '338', 1, '2', 1, 1, 1, 1, 1, 1),
-(10, 'Dermatology', '', 0, '366/358', 1, '2', 1, 1, 1, 1, 1, 1),
-(11, 'Endocrinology', '', 0, '281/282', 1, '1', 0, 1, 0, 0, 1, 0),
-(12, 'ENT', '', 0, '324', 1, '2', 1, 1, 1, 1, 1, 1),
-(13, 'Forensic  Medicine', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(14, 'Gastroenterology', '', 0, '279', 1, '1', 0, 0, 1, 0, 0, 1),
-(15, 'General Medicine', '', 0, '175/184', 1, '0', 1, 1, 1, 1, 1, 1),
-(16, 'General Surgery', '', 0, '167/168', 1, '0', 1, 1, 1, 1, 1, 1),
-(17, 'Hospital Administration', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(18, 'MicroBiology', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(19, 'Nephrology', '', 0, '272', 1, '1', 0, 0, 1, 0, 0, 1),
-(20, 'Neurology', '', 0, '275', 1, '1', 0, 1, 0, 1, 0, 0),
-(21, 'Neurosurgery', '', 0, '239/240', 1, '1', 1, 0, 0, 0, 1, 0),
-(22, 'Obstetrics and Gynecology', '', 0, '143', 1, '0', 1, 1, 1, 1, 1, 1),
-(23, 'Ophthalmology', '', 0, '326', 1, '2', 1, 1, 1, 1, 1, 1),
-(24, 'Orthopedics', '', 0, '135', 1, '0', 1, 1, 1, 1, 1, 1),
-(25, 'Pathology', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(26, 'Pediatric Surgery', '', 0, '242', 1, '1', 1, 0, 1, 0, 1, 0),
-(27, 'Pediatrics', '', 0, '235', 1, '1', 1, 1, 1, 1, 1, 1),
-(28, 'Pharmacology', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(29, 'Physiology', '', 0, '', 0, '0', 1, 1, 1, 1, 1, 1),
-(30, 'Plastic Surgery', '', 0, '249/250', 1, '1', 1, 0, 0, 1, 0, 0),
-(31, 'Psychiatry', '', 0, '262', 1, '1', 0, 0, 0, 0, 0, 0),
-(32, 'Radiology', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(33, 'Urology', '', 0, '245', 1, '1', 1, 1, 0, 1, 1, 0),
-(0, '', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
-(34, 'TB&CD', '', 0, '181', 1, '0', 1, 1, 1, 1, 1, 1);
+INSERT INTO `department` (`department_id`, `hospital_id`, `department`, `description`, `number_of_units`, `op_room_no`, `clinical`, `floor`, `mon`, `tue`, `wed`, `thr`, `fri`, `sat`) VALUES
+(1, 0, 'Anatomy', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(2, 0, 'Anesthesia', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(3, 0, 'BioChemistry', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(4, 0, 'Blood Bank', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(5, 0, 'Cardiology', '', 0, '266', 1, '1', 1, 1, 0, 1, 1, 0),
+(6, 0, 'Cardio-Thoracic Surgery', '', 0, '237', 1, '1', 0, 1, 0, 1, 0, 0),
+(7, 0, 'Casualty', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(8, 0, 'Community Medicine', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(9, 0, 'Dental', '', 0, '338', 1, '2', 1, 1, 1, 1, 1, 1),
+(10, 0, 'Dermatology', '', 0, '366/358', 1, '2', 1, 1, 1, 1, 1, 1),
+(11, 0, 'Endocrinology', '', 0, '281/282', 1, '1', 0, 1, 0, 0, 1, 0),
+(12, 0, 'ENT', '', 0, '324', 1, '2', 1, 1, 1, 1, 1, 1),
+(13, 0, 'Forensic  Medicine', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(14, 0, 'Gastroenterology', '', 0, '279', 1, '1', 0, 0, 1, 0, 0, 1),
+(15, 0, 'General Medicine', '', 0, '175/184', 1, '0', 1, 1, 1, 1, 1, 1),
+(16, 0, 'General Surgery', '', 0, '167/168', 1, '0', 1, 1, 1, 1, 1, 1),
+(17, 0, 'Hospital Administration', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(18, 0, 'MicroBiology', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(19, 0, 'Nephrology', '', 0, '272', 1, '1', 0, 0, 1, 0, 0, 1),
+(20, 0, 'Neurology', '', 0, '275', 1, '1', 0, 1, 0, 1, 0, 0),
+(21, 0, 'Neurosurgery', '', 0, '239/240', 1, '1', 1, 0, 0, 0, 1, 0),
+(22, 0, 'Obstetrics and Gynecology', '', 0, '143', 1, '0', 1, 1, 1, 1, 1, 1),
+(23, 0, 'Ophthalmology', '', 0, '326', 1, '2', 1, 1, 1, 1, 1, 1),
+(24, 0, 'Orthopedics', '', 0, '135', 1, '0', 1, 1, 1, 1, 1, 1),
+(25, 0, 'Pathology', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(26, 0, 'Pediatric Surgery', '', 0, '242', 1, '1', 1, 0, 1, 0, 1, 0),
+(27, 0, 'Pediatrics', '', 0, '235', 1, '1', 1, 1, 1, 1, 1, 1),
+(28, 0, 'Pharmacology', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(29, 0, 'Physiology', '', 0, '', 0, '0', 1, 1, 1, 1, 1, 1),
+(30, 0, 'Plastic Surgery', '', 0, '249/250', 1, '1', 1, 0, 0, 1, 0, 0),
+(31, 0, 'Psychiatry', '', 0, '262', 1, '1', 0, 0, 0, 0, 0, 0),
+(32, 0, 'Radiology', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(33, 0, 'Urology', '', 0, '245', 1, '1', 1, 1, 0, 1, 1, 0),
+(0, 0, '', '', 0, '', 0, '', 0, 0, 0, 0, 0, 0),
+(34, 0, 'TB&CD', '', 0, '181', 1, '0', 1, 1, 1, 1, 1, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `districts`
+-- Table structure for table `district`
 --
 
-CREATE TABLE IF NOT EXISTS `districts` (
+CREATE TABLE IF NOT EXISTS `district` (
   `district_id` int(3) NOT NULL,
   `district` varchar(50) NOT NULL,
-  `state` varchar(50) NOT NULL,
-  PRIMARY KEY (`district_id`)
+  `state` varchar(50) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `districts`
+-- Dumping data for table `district`
 --
 
-INSERT INTO `districts` (`district_id`, `district`, `state`) VALUES
+INSERT INTO `district` (`district_id`, `district`, `state`) VALUES
 (0, '', ''),
 (1, 'Adilabad', 'Andhra Pradesh'),
 (2, 'Anantpur', 'Andhra Pradesh'),
@@ -542,14 +696,13 @@ INSERT INTO `districts` (`district_id`, `district`, `state`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `dosages`
+-- Table structure for table `dosage`
 --
 
-CREATE TABLE IF NOT EXISTS `dosages` (
-  `dosage_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `dosage` (
+`dosage_id` int(11) NOT NULL,
   `dosage_unit` varchar(30) NOT NULL,
-  `dosage` int(11) NOT NULL,
-  PRIMARY KEY (`dosage_id`)
+  `dosage` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -559,20 +712,29 @@ CREATE TABLE IF NOT EXISTS `dosages` (
 --
 
 CREATE TABLE IF NOT EXISTS `drug_type` (
-  `drug_type_id` int(20) NOT NULL AUTO_INCREMENT,
+`drug_type_id` int(20) NOT NULL,
   `drug_type` varchar(50) NOT NULL,
-  `description` varchar(100) NOT NULL,
-  PRIMARY KEY (`drug_type_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  `description` varchar(100) NOT NULL
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `drug_type`
+--
+
+INSERT INTO `drug_type` (`drug_type_id`, `drug_type`, `description`) VALUES
+(1, 'Antibiotics', 'Used to treat the Bacterial infections'),
+(2, 'Analgesic', 'Applied to reduce the inflammation and to reduce the pain'),
+(3, 'Antacids', 'Commonly used to treat the gastro reflux diseases'),
+(4, 'Antipyritics', 'Commonly used to treat the headache');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `equipments`
+-- Table structure for table `equipment`
 --
 
-CREATE TABLE IF NOT EXISTS `equipments` (
-  `equipment_id` int(6) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `equipment` (
+`equipment_id` int(6) NOT NULL,
   `equipment_type_id` int(3) NOT NULL,
   `make` varchar(100) DEFAULT NULL,
   `model` varchar(20) DEFAULT NULL,
@@ -590,9 +752,76 @@ CREATE TABLE IF NOT EXISTS `equipments` (
   `area_id` int(6) NOT NULL,
   `unit_id` int(6) NOT NULL,
   `staff_id` int(4) NOT NULL,
-  `equipment_status` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`equipment_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='List of equipments in hospital' AUTO_INCREMENT=1 ;
+  `equipment_status` tinyint(1) NOT NULL DEFAULT '1'
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='List of equipments in hospital' AUTO_INCREMENT=63 ;
+
+--
+-- Dumping data for table `equipment`
+--
+
+INSERT INTO `equipment` (`equipment_id`, `equipment_type_id`, `make`, `model`, `serial_number`, `asset_number`, `procured_by`, `cost`, `vendor_id`, `supply_date`, `warranty_start_date`, `warranty_end_date`, `service_person_id`, `hospital_id`, `department_id`, `area_id`, `unit_id`, `staff_id`, `equipment_status`) VALUES
+(1, 95, ' GE', ' Lullaby', 'SF812371463PA', 'W001', 'Donated', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 0, 1, 27, 0, 0, 2, 0),
+(2, 95, 'GE', 'Lullaby', 'SF812371475PA', 'W002', 'Donated', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 0, 1, 27, 0, 0, 2, 1),
+(3, 95, 'Zeal', 'RHW2101A', 'RHW210/A/0912/212', 'W003', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(4, 95, 'GE', 'Lullaby', 'SF812371479PA', 'W009', 'Donated', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 0, 1, 27, 0, 0, 2, 1),
+(5, 95, 'Zeal', 'RHW2101A', 'RHW210/A/0912/222', 'W004', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(6, 95, 'Zeal', 'RHW2101A', 'RHW2101A/1112/998', 'W005', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(7, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/1112/997', 'W007', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(8, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/0912/214', 'W006', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(9, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/0912/207', 'W008', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(10, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/0912/226', 'W010', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(11, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/0912/224', 'W011', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(12, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/0912/208', 'W012', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(13, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/0912/219', 'W013', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(14, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/0912/218', 'W014', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(15, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/0912/223', 'W015', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(16, 95, 'Zeal', 'RHW2101A', 'RHW 2101A /1112/1009', 'W016', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(17, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/1112/995', 'W017', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(18, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/0912/217', 'W018', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(19, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/1112/992', 'W019', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(20, 95, '', 'RHW2101A', 'RHW 2101A/1112/1003', 'W020', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(21, 95, '', 'RHW2101A', 'RHW 2101A/1112/1007', 'W021', '', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(22, 95, '', 'RHW2101A', 'RHW 2101A/1112/1005', 'W022', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(23, 95, '', 'RHW2101A', 'RHW 2101A/1112/1002', 'W023', '', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(24, 95, '', 'RHW2101A', 'RHW 2101A/1112/996', 'W024', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(25, 95, '', 'RHW2101A', 'RHW 2101A/1112/1008', 'W025', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(26, 95, '', 'RHW2101A', 'RHW 2101A/1112/993', 'W026', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(27, 95, '', 'RHW2101A', 'RHW 2101A/1112/1004', 'W027', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(28, 95, '', 'RHW2101A', 'SF812371458PA', 'W028', 'Donated', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 0, 1, 27, 0, 0, 2, 1),
+(29, 95, '', 'RHW2101A', 'RHW 2101A/0912/211', 'W029', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(30, 95, '', 'RHW2101A', 'RHW 2101A/0912/215', 'W030', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(31, 95, '', 'RHW2101A', 'RHW 2101A/0912/206', 'W031', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(32, 95, '', 'RHW2101A', 'RHW 2101A/0912/210', 'W032', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(33, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/1112/1006', 'W034', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(34, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/1112/1010', 'W035', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(35, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/1112/994', 'W036', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(36, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/1112/1011', 'W037', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(37, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/1112/999', 'W039', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(38, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/1112/216', 'W040', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(39, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/1112/1000', 'W041', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(40, 95, 'GE', 'OCW 100', '3898', 'W0033', 'Donated', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 0, 1, 27, 0, 0, 2, 1),
+(41, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/0912/209', 'W038', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(42, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/1112/999', 'w039', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(43, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/0912/216', 'W040', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(44, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/1112/1000', 'W041', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(45, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/0912/221', 'W042', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(46, 95, 'Zeal', 'RHW2101A', 'RHW 2101A/0912/225', 'W043', 'Central Government', 0, 0, '2012-10-10', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(47, 94, 'VIASYS', 'SS', 'CVTG - KB - 02 - 0440910', 'V001', 'Central Government', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(48, 94, 'NEUMOVENT', 'Graphnet advance', 'THC - 11419', 'W002', 'Central Government', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(49, 94, 'NEUMOVENT', 'Graphnet advance', 'THC - 11407', 'W003', 'Central Government', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(50, 94, 'VIASYS', 'SS', 'CVF - KB - 02 - 0460809', 'W004', 'Central Government', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(51, 69, 'GE', 'Lullaby', 'SGT 12371113PA', 'P001', 'Central Government', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(52, 69, 'GE', 'Lullaby', 'SGT 12371142PA', 'P002', '', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(53, 69, 'Zeal', 'PT 3101', 'PT 3101/1012/228', 'P003', 'Donated', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 0, 1, 27, 0, 0, 2, 1),
+(54, 69, 'GE', 'Lullaby', 'SGT 12371134PA', 'P004', 'Central Government', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(55, 69, 'GE', 'Lullaby', 'SGT 12371126PA', 'P005', 'Central Government', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 2147483647, 1, 27, 0, 0, 2, 1),
+(56, 69, 'Photolux', 'Photolux', '', 'P006', 'Donated', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 0, 1, 27, 0, 0, 2, 1),
+(57, 69, 'Zeal', 'PT 3101', 'PT 3101/1012/226', 'P007', 'Donated', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 0, 1, 27, 0, 0, 2, 1),
+(58, 69, 'Zeal', 'PT 3101', 'PT 3101/1012/227', 'P008', 'Donated', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 0, 1, 27, 0, 0, 2, 1),
+(59, 69, 'Zeal', 'PT 3101', 'PT 3101/1012/229', 'P009', 'Donated', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 0, 1, 27, 0, 0, 2, 1),
+(60, 98, 'Allengers AF', 'OPEL 2.5', '2K120302035-X/HF', 'X-Ray - 001', 'Central Government', 0, 0, '0000-00-00', '0000-00-00', '0000-00-00', 0, 1, 27, 0, 0, 2, 1),
+(61, 2, 'ABG', 'MAchine', '12989', '1W21', 'Somebody', 0, 0, '2014-04-15', '1970-01-01', '1970-01-01', 0, 2, 10, 0, 49, 1, 1),
+(62, 3, 'aIR', 'APPARATUS', 'B2124', '123', 'Self', 0, 0, '2014-04-26', '2014-04-26', '2014-04-30', 0, 2, 27, 5, 39, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -618,9 +847,8 @@ CREATE TABLE IF NOT EXISTS `equipment_maintenance_contract` (
 --
 
 CREATE TABLE IF NOT EXISTS `equipment_type` (
-  `equipment_type_id` int(3) NOT NULL AUTO_INCREMENT,
-  `equipment_type` varchar(200) NOT NULL,
-  PRIMARY KEY (`equipment_type_id`)
+`equipment_type_id` int(3) NOT NULL,
+  `equipment_type` varchar(200) NOT NULL
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='List of equipment types' AUTO_INCREMENT=99 ;
 
 --
@@ -730,17 +958,189 @@ INSERT INTO `equipment_type` (`equipment_type_id`, `equipment_type`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `facility`
+--
+
+CREATE TABLE IF NOT EXISTS `facility` (
+`facility_id` int(4) NOT NULL,
+  `facility_name` varchar(100) NOT NULL,
+  `facility_type_id` int(2) NOT NULL,
+  `address` int(200) NOT NULL,
+  `village_town_id` int(4) NOT NULL,
+  `latitude` decimal(6,6) NOT NULL,
+  `longitude` decimal(6,6) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+
+--
+-- Dumping data for table `facility`
+--
+
+INSERT INTO `facility` (`facility_id`, `facility_name`, `facility_type_id`, `address`, `village_town_id`, `latitude`, `longitude`) VALUES
+(1, 'NHO', 2, 342, 2, '0.999999', '0.999999'),
+(2, 'device', 20, 17, 1, '0.999999', '0.999999'),
+(3, 'gandhi', 2, 17, 3, '0.999999', '0.999999'),
+(4, 'shiva', 6, 0, 4, '0.000000', '0.000000'),
+(5, 'file', 21, 0, 3, '0.000000', '0.000000'),
+(6, '', 2, 0, 0, '0.000000', '0.000000');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `facility_activity`
+--
+
+CREATE TABLE IF NOT EXISTS `facility_activity` (
+`activity_id` int(6) NOT NULL,
+  `facility_area_id` int(2) NOT NULL,
+  `area_activity_id` int(3) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `facility_activity`
+--
+
+INSERT INTO `facility_activity` (`activity_id`, `facility_area_id`, `area_activity_id`) VALUES
+(1, 1, 1),
+(2, 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `facility_area`
+--
+
+CREATE TABLE IF NOT EXISTS `facility_area` (
+`facility_area_id` int(4) NOT NULL,
+  `area_name` varchar(10) NOT NULL COMMENT 'e.g. Unit-1, NICU, MICU',
+  `facility_id` int(4) NOT NULL,
+  `department_id` int(2) NOT NULL,
+  `area_type_id` int(2) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='list of area in the faclities like MICU, SICU, NICU' AUTO_INCREMENT=22 ;
+
+--
+-- Dumping data for table `facility_area`
+--
+
+INSERT INTO `facility_area` (`facility_area_id`, `area_name`, `facility_id`, `department_id`, `area_type_id`) VALUES
+(1, 'hydearbad', 1, 0, 0),
+(2, '0', 0, 0, 0),
+(3, '0', 0, 0, 0),
+(4, '0', 0, 0, 0),
+(5, '0', 0, 0, 0),
+(6, '0', 0, 0, 0),
+(7, '0', 0, 0, 0),
+(8, '0', 0, 0, 0),
+(9, '0', 0, 0, 0),
+(10, '0', 0, 0, 0),
+(11, '0', 0, 0, 0),
+(12, '0', 0, 0, 0),
+(13, '0', 0, 0, 0),
+(14, '0', 0, 0, 0),
+(15, '0', 0, 0, 0),
+(16, '0', 0, 0, 0),
+(17, 'hydearbad', 1, 0, 0),
+(18, 'hydearbad', 1, 0, 0),
+(19, 'hydearbad', 1, 0, 0),
+(20, 'hydearbad', 1, 3, 9),
+(21, 'bottu', 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `facility_type`
+--
+
+CREATE TABLE IF NOT EXISTS `facility_type` (
+`facility_type_id` int(2) NOT NULL,
+  `facility_type` varchar(50) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=64 ;
+
+--
+-- Dumping data for table `facility_type`
+--
+
+INSERT INTO `facility_type` (`facility_type_id`, `facility_type`) VALUES
+(1, 'Speciality Hospital'),
+(2, 'Medical College Hospital'),
+(3, 'District Hospital'),
+(4, 'Area Hospital'),
+(5, 'Primary Health Center'),
+(6, 'Community Health Center'),
+(18, 'ajith'),
+(19, 'ajith'),
+(20, 'ajith'),
+(21, 'suresh'),
+(22, 'suresh'),
+(23, '0'),
+(24, '0'),
+(25, '0'),
+(26, '0'),
+(27, '0'),
+(28, '0'),
+(29, '0'),
+(30, '0'),
+(31, '0'),
+(32, '0'),
+(33, '0'),
+(34, '0'),
+(35, '0'),
+(36, '0'),
+(37, '0'),
+(38, '0'),
+(39, '0'),
+(40, '0'),
+(41, '0'),
+(42, '0'),
+(43, '0'),
+(44, '0'),
+(45, '0'),
+(46, '0'),
+(47, '0'),
+(48, '0'),
+(49, '0'),
+(50, '0'),
+(51, '0'),
+(52, '0'),
+(53, '0'),
+(54, '0'),
+(55, '0'),
+(56, '0'),
+(57, '0'),
+(58, '0'),
+(59, '0'),
+(60, '0'),
+(61, 'hosiptal'),
+(62, 'shivabottu'),
+(63, 'asdf');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `form`
 --
 
 CREATE TABLE IF NOT EXISTS `form` (
-  `form_id` int(11) NOT NULL AUTO_INCREMENT,
+`form_id` int(11) NOT NULL,
   `form_name` varchar(30) NOT NULL,
   `num_columns` smallint(6) NOT NULL,
   `form_type` varchar(10) NOT NULL,
-  `print_layout_id` int(6) NOT NULL,
-  PRIMARY KEY (`form_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  `print_layout_id` int(6) NOT NULL
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+
+--
+-- Dumping data for table `form`
+--
+
+INSERT INTO `form` (`form_id`, `form_name`, `num_columns`, `form_type`, `print_layout_id`) VALUES
+(1, 'OP ', 3, 'OP', 1),
+(3, 'In Patient', 3, 'IP', 0),
+(4, 'IP2', 3, 'IP', 0),
+(5, 'IP3', 3, 'IP', 0),
+(6, 'IP4', 3, 'IP', 2),
+(7, 'IP5', 3, 'IP', 2),
+(8, 'OP2', 3, 'OP', 1),
+(9, '', 3, '', 0),
+(10, 'IP Tesst', 3, 'IP', 2);
 
 -- --------------------------------------------------------
 
@@ -749,12 +1149,121 @@ CREATE TABLE IF NOT EXISTS `form` (
 --
 
 CREATE TABLE IF NOT EXISTS `form_layout` (
-  `id` int(6) NOT NULL AUTO_INCREMENT,
+`id` int(6) NOT NULL,
   `field_name` varchar(100) NOT NULL,
   `mandatory` tinyint(1) NOT NULL,
-  `form_id` int(6) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+  `form_id` int(6) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=115 ;
+
+--
+-- Dumping data for table `form_layout`
+--
+
+INSERT INTO `form_layout` (`id`, `field_name`, `mandatory`, `form_id`) VALUES
+(1, 'patient_name', 0, 1),
+(2, 'age', 0, 1),
+(3, 'gender', 0, 1),
+(4, 'district', 0, 1),
+(5, 'department', 0, 1),
+(16, 'patient_name', 0, 3),
+(17, 'age', 0, 3),
+(18, 'gender', 0, 3),
+(19, 'address', 0, 3),
+(20, 'place', 0, 3),
+(21, 'district', 0, 3),
+(22, 'phone', 0, 3),
+(23, 'father_name', 0, 3),
+(24, 'spouse_name', 0, 3),
+(25, 'department', 0, 3),
+(26, 'patient_name', 0, 4),
+(27, 'age', 0, 4),
+(28, 'gender', 0, 4),
+(29, 'address', 0, 4),
+(30, 'place', 0, 4),
+(31, 'district', 0, 4),
+(32, 'phone', 0, 4),
+(33, 'father_name', 0, 4),
+(34, 'spouse_name', 0, 4),
+(35, 'department', 0, 4),
+(36, 'patient_name', 0, 5),
+(37, 'age', 0, 5),
+(38, 'gender', 0, 5),
+(39, 'address', 0, 5),
+(40, 'place', 0, 5),
+(41, 'district', 0, 5),
+(42, 'phone', 0, 5),
+(43, 'father_name', 0, 5),
+(44, 'spouse_name', 0, 5),
+(45, 'department', 0, 5),
+(46, 'patient_name', 0, 6),
+(47, 'age', 0, 6),
+(48, 'gender', 0, 6),
+(49, 'address', 0, 6),
+(50, 'place', 0, 6),
+(51, 'district', 0, 6),
+(52, 'phone', 0, 6),
+(53, 'father_name', 0, 6),
+(54, 'spouse_name', 0, 6),
+(55, 'department', 0, 6),
+(56, 'patient_name', 1, 7),
+(57, 'age', 1, 7),
+(58, 'gender', 1, 7),
+(59, 'address', 0, 7),
+(60, 'place', 0, 7),
+(61, 'district', 1, 7),
+(62, 'phone', 1, 7),
+(63, 'father_name', 0, 7),
+(64, 'spouse_name', 0, 7),
+(65, 'department', 1, 7),
+(66, 'area', 0, 7),
+(67, 'unit', 0, 7),
+(68, 'mlc', 1, 7),
+(69, 'mlc_number', 0, 7),
+(70, 'ps_name', 0, 7),
+(71, 'presenting_complaints', 0, 7),
+(72, 'outcome', 0, 7),
+(73, 'outcome_date', 0, 7),
+(74, 'outcome_time', 0, 7),
+(75, 'final_diagnosis', 0, 7),
+(76, 'first_name', 0, 8),
+(77, 'last_name', 0, 8),
+(78, 'age', 0, 8),
+(79, 'gender', 0, 8),
+(80, 'department', 0, 8),
+(81, 'first_name', 0, 9),
+(82, 'last_name', 0, 9),
+(83, 'age', 0, 9),
+(84, 'gender', 0, 9),
+(85, 'address', 0, 9),
+(86, 'place', 0, 9),
+(87, 'district', 0, 9),
+(88, 'phone', 0, 9),
+(89, 'father_name', 0, 9),
+(90, 'spouse_name', 0, 9),
+(91, 'department', 0, 9),
+(92, 'area', 0, 9),
+(93, 'unit', 0, 9),
+(94, 'mlc', 0, 9),
+(95, 'mlc_number', 0, 9),
+(96, 'ps_name', 0, 9),
+(97, 'presenting_complaints', 0, 9),
+(98, 'first_name', 0, 10),
+(99, 'last_name', 0, 10),
+(100, 'age', 0, 10),
+(101, 'gender', 0, 10),
+(102, 'address', 0, 10),
+(103, 'place', 0, 10),
+(104, 'district', 0, 10),
+(105, 'phone', 0, 10),
+(106, 'father_name', 0, 10),
+(107, 'spouse_name', 0, 10),
+(108, 'department', 0, 10),
+(109, 'area', 0, 10),
+(110, 'unit', 0, 10),
+(111, 'mlc', 0, 10),
+(112, 'mlc_number', 0, 10),
+(113, 'ps_name', 0, 10),
+(114, 'presenting_complaints', 0, 10);
 
 -- --------------------------------------------------------
 
@@ -763,36 +1272,34 @@ CREATE TABLE IF NOT EXISTS `form_layout` (
 --
 
 CREATE TABLE IF NOT EXISTS `generic_item` (
-  `generic_item_id` int(11) NOT NULL AUTO_INCREMENT,
+`generic_item_id` int(11) NOT NULL,
   `generic_name` varchar(50) NOT NULL,
   `drug_type_id` int(11) NOT NULL,
-  `item_type_id` int(11) NOT NULL,
-  PRIMARY KEY (`generic_item_id`)
+  `item_type_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `hospitals`
+-- Table structure for table `hospital`
 --
 
-CREATE TABLE IF NOT EXISTS `hospitals` (
-  `hospital_id` int(3) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `hospital` (
+`hospital_id` int(3) NOT NULL,
   `hospital` varchar(200) NOT NULL,
   `description` varchar(200) NOT NULL,
   `place` varchar(50) NOT NULL,
   `district` varchar(50) NOT NULL,
   `state` varchar(50) NOT NULL,
-  `logo` varchar(200) NOT NULL,
-  PRIMARY KEY (`hospital_id`)
+  `logo` varchar(200) NOT NULL
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='List of hospitals' AUTO_INCREMENT=4 ;
 
 --
--- Dumping data for table `hospitals`
+-- Dumping data for table `hospital`
 --
 
-INSERT INTO `hospitals` (`hospital_id`, `hospital`, `description`, `place`, `district`, `state`, `logo`) VALUES
-(1, 'Test Hospital', '', '', 'Hyderabad', 'Andhra Pradesh', ''),
+INSERT INTO `hospital` (`hospital_id`, `hospital`, `description`, `place`, `district`, `state`, `logo`) VALUES
+(1, 'Test Hospital', 'something', 'somewhere', 'Hyderabad', 'Andhra Pradesh', 'something'),
 (2, 'Sri Sathya Sai Seva Organisations - Hyderabad', 'Free Mobile Medical Services', 'Rajapet', 'Nalgonda', 'Andhra Pradesh', '/health4all/assets/images/organisation.jpg'),
 (3, 'Sri Sathya Sai Seva Organisations - Hyderabad', 'Free Mobile Medical Services', 'Cherikonda', 'Mahaboob Nagar', 'Andhra Pradesh', '/health4all/assets/images/organisation.jpg');
 
@@ -13293,9 +13800,8 @@ INSERT INTO `icd_code` (`icd_code`, `block_id`, `icd_10`, `icd_10_ext`, `code_ti
 --
 
 CREATE TABLE IF NOT EXISTS `id_proof_type` (
-  `id_proof_type_id` int(4) NOT NULL AUTO_INCREMENT,
-  `id_proof_type` varchar(50) NOT NULL,
-  PRIMARY KEY (`id_proof_type_id`)
+`id_proof_type_id` int(4) NOT NULL,
+  `id_proof_type` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13305,14 +13811,13 @@ CREATE TABLE IF NOT EXISTS `id_proof_type` (
 --
 
 CREATE TABLE IF NOT EXISTS `indent` (
-  `indent_id` int(6) NOT NULL AUTO_INCREMENT,
+`indent_id` int(6) NOT NULL,
   `indent_date` date NOT NULL,
   `from_id` int(6) NOT NULL,
   `to_id` int(6) NOT NULL,
   `approver_id` int(6) NOT NULL COMMENT 'staff_id',
   `issuer_id` int(6) NOT NULL COMMENT 'staff_id',
-  `indent_status` varchar(50) NOT NULL COMMENT 'Indented, approved, issued',
-  PRIMARY KEY (`indent_id`)
+  `indent_status` varchar(50) NOT NULL COMMENT 'Indented, approved, issued'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Indent for consumables' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13322,15 +13827,14 @@ CREATE TABLE IF NOT EXISTS `indent` (
 --
 
 CREATE TABLE IF NOT EXISTS `indent_item` (
-  `indent_item_id` int(6) NOT NULL AUTO_INCREMENT,
+`indent_item_id` int(6) NOT NULL,
   `indent_id` int(6) NOT NULL,
   `item_id` int(6) NOT NULL,
   `quantity_indented` int(11) NOT NULL,
   `quantity_issued` int(11) NOT NULL,
   `indent_status` varchar(50) NOT NULL COMMENT 'Indented, Issued, Rejected, etc.,',
   `issue_date` date NOT NULL,
-  `consumption_status` varchar(50) NOT NULL COMMENT 'In stock, expired, damaged, etc.,',
-  PRIMARY KEY (`indent_item_id`)
+  `consumption_status` varchar(50) NOT NULL COMMENT 'In stock, expired, damaged, etc.,'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='List of items for each indent' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13340,7 +13844,7 @@ CREATE TABLE IF NOT EXISTS `indent_item` (
 --
 
 CREATE TABLE IF NOT EXISTS `item` (
-  `item_id` int(11) NOT NULL AUTO_INCREMENT,
+`item_id` int(11) NOT NULL,
   `item_name_id` int(6) NOT NULL,
   `generic_item_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
@@ -13354,8 +13858,7 @@ CREATE TABLE IF NOT EXISTS `item` (
   `warranty_period` int(3) NOT NULL COMMENT 'in months',
   `manufacturing_date` date NOT NULL,
   `expire_date` date NOT NULL,
-  `item_status` varchar(50) NOT NULL COMMENT 'Expired, in stock, issued, partially issued, etc.,',
-  PRIMARY KEY (`item_id`)
+  `item_status` varchar(50) NOT NULL COMMENT 'Expired, in stock, issued, partially issued, etc.,'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13365,9 +13868,8 @@ CREATE TABLE IF NOT EXISTS `item` (
 --
 
 CREATE TABLE IF NOT EXISTS `item_form` (
-  `item_form_id` int(6) NOT NULL AUTO_INCREMENT,
-  `item_form` varchar(20) NOT NULL,
-  PRIMARY KEY (`item_form_id`)
+`item_form_id` int(6) NOT NULL,
+  `item_form` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13377,11 +13879,10 @@ CREATE TABLE IF NOT EXISTS `item_form` (
 --
 
 CREATE TABLE IF NOT EXISTS `item_name` (
-  `item_name_id` int(6) NOT NULL AUTO_INCREMENT,
+`item_name_id` int(6) NOT NULL,
   `item_name` varchar(100) NOT NULL,
   `dosage_id` int(6) NOT NULL,
-  `item_form_id` int(6) NOT NULL,
-  PRIMARY KEY (`item_name_id`)
+  `item_form_id` int(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13391,10 +13892,9 @@ CREATE TABLE IF NOT EXISTS `item_name` (
 --
 
 CREATE TABLE IF NOT EXISTS `item_type` (
-  `item_type_id` int(11) NOT NULL AUTO_INCREMENT,
-  `item_type` varchar(50) NOT NULL,
-  PRIMARY KEY (`item_type_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+`item_type_id` int(11) NOT NULL,
+  `item_type` varchar(50) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Type of items, Eg. Drugs, Surgicals, Reagents, etc.,' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -13403,13 +13903,11 @@ CREATE TABLE IF NOT EXISTS `item_type` (
 --
 
 CREATE TABLE IF NOT EXISTS `marital_info` (
-  `marital_history_id` int(7) NOT NULL AUTO_INCREMENT,
+`marital_history_id` int(7) NOT NULL,
   `patient_id` int(5) NOT NULL,
   `marital_life` int(3) NOT NULL,
   `consanguinous` varchar(3) NOT NULL,
-  `marital_status` varchar(20) NOT NULL,
-  PRIMARY KEY (`marital_history_id`),
-  KEY `patient_id` (`patient_id`)
+  `marital_status` varchar(20) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13419,13 +13917,12 @@ CREATE TABLE IF NOT EXISTS `marital_info` (
 --
 
 CREATE TABLE IF NOT EXISTS `menstrual_history` (
-  `menstrual_history_id` int(7) NOT NULL AUTO_INCREMENT,
+`menstrual_history_id` int(7) NOT NULL,
   `visit_id` int(7) NOT NULL,
   `regularity` varchar(50) NOT NULL,
   `cycle` varchar(5) NOT NULL,
   `flow_amount` varchar(10) NOT NULL,
-  `dysmenorrhea` binary(3) NOT NULL,
-  PRIMARY KEY (`menstrual_history_id`)
+  `dysmenorrhea` binary(3) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13435,10 +13932,9 @@ CREATE TABLE IF NOT EXISTS `menstrual_history` (
 --
 
 CREATE TABLE IF NOT EXISTS `micro_organism` (
-  `micro_organism_id` int(6) NOT NULL AUTO_INCREMENT,
+`micro_organism_id` int(6) NOT NULL,
   `micro_organism` varchar(100) NOT NULL,
-  `micro_organism_type` varchar(20) NOT NULL COMMENT 'Eg. Fungal, Bacterial, Viral, etc.',
-  PRIMARY KEY (`micro_organism_id`)
+  `micro_organism_type` varchar(20) NOT NULL COMMENT 'Eg. Fungal, Bacterial, Viral, etc.'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='List of micro organisms' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13448,10 +13944,9 @@ CREATE TABLE IF NOT EXISTS `micro_organism` (
 --
 
 CREATE TABLE IF NOT EXISTS `micro_organism_test` (
-  `micro_organism_test_id` int(6) NOT NULL AUTO_INCREMENT,
+`micro_organism_test_id` int(6) NOT NULL,
   `test_id` int(6) NOT NULL,
-  `micro_organism_id` int(6) NOT NULL,
-  PRIMARY KEY (`micro_organism_test_id`)
+  `micro_organism_id` int(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Tests done with micro organisms' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13463,10 +13958,15 @@ CREATE TABLE IF NOT EXISTS `micro_organism_test` (
 CREATE TABLE IF NOT EXISTS `mlc` (
   `visit_id` int(7) NOT NULL,
   `mlc_number` int(6) NOT NULL,
-  `ps_name` varchar(50) NOT NULL,
-  PRIMARY KEY (`visit_id`),
-  UNIQUE KEY `visit_id` (`visit_id`)
+  `ps_name` varchar(50) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `mlc`
+--
+
+INSERT INTO `mlc` (`visit_id`, `mlc_number`, `ps_name`) VALUES
+(84, 1234, 'Adikmet');
 
 -- --------------------------------------------------------
 
@@ -13475,7 +13975,7 @@ CREATE TABLE IF NOT EXISTS `mlc` (
 --
 
 CREATE TABLE IF NOT EXISTS `obstetric_history` (
-  `obstetric_history_id` int(7) NOT NULL AUTO_INCREMENT,
+`obstetric_history_id` int(7) NOT NULL,
   `patient_id` int(7) NOT NULL,
   `pregnancy_number` int(7) NOT NULL,
   `gestation` varchar(25) NOT NULL,
@@ -13495,18 +13995,17 @@ CREATE TABLE IF NOT EXISTS `obstetric_history` (
   `nicu_admission_reason` varchar(200) NOT NULL,
   `dod` date NOT NULL,
   `cause_of_death` varchar(200) NOT NULL,
-  `booking_status` varchar(50) NOT NULL,
-  PRIMARY KEY (`obstetric_history_id`)
+  `booking_status` varchar(50) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `patients`
+-- Table structure for table `patient`
 --
 
-CREATE TABLE IF NOT EXISTS `patients` (
-  `patient_id` int(7) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `patient` (
+`patient_id` int(7) NOT NULL,
   `first_name` varchar(50) NOT NULL DEFAULT '',
   `last_name` varchar(50) NOT NULL DEFAULT '',
   `dob` date NOT NULL,
@@ -13538,10 +14037,94 @@ CREATE TABLE IF NOT EXISTS `patients` (
   `delivery_location_type` varchar(8) NOT NULL COMMENT 'In-born or Out-born',
   `delivery_plan` varchar(10) NOT NULL,
   `birth_weight` int(4) NOT NULL,
-  `congenital_anomalies` varchar(500) NOT NULL,
-  PRIMARY KEY (`patient_id`),
-  UNIQUE KEY `patient_id` (`patient_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `congenital_anomalies` varchar(500) NOT NULL
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=81 ;
+
+--
+-- Dumping data for table `patient`
+--
+
+INSERT INTO `patient` (`patient_id`, `first_name`, `last_name`, `dob`, `age_years`, `age_months`, `age_days`, `gender`, `address`, `place`, `district_id`, `phone`, `father_name`, `mother_name`, `spouse_name`, `id_proof_type_id`, `id_proof_number`, `occupation`, `education_level`, `education_qualification`, `blood_group`, `mr_no`, `bc_no`, `gestation`, `gestation_type`, `delivery_mode`, `delivery_place`, `delivery_location`, `hospital_type`, `delivery_location_type`, `delivery_plan`, `birth_weight`, `congenital_anomalies`) VALUES
+(1, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(2, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(3, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(4, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(5, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(6, 'Vivek', 'Chintalapati', '0000-00-00', 21, 0, 0, 'M', '', 'Hyderabad', 7, '7702508920', 'C V Rao', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(7, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(8, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(9, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(10, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(11, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(12, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(13, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(14, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(15, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(16, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(17, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(18, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(19, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(20, 'Vivek', 'ch', '0000-00-00', 21, 0, 0, 'M', '', 'Place', 5, '7702508920', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(21, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(22, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', '0', 3, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(23, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', '', 3, '0', '', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(24, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '0', 5, '0', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(25, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', 'ADdress', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(26, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(27, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(28, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(29, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(30, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(31, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(32, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(33, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(34, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(35, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(36, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(37, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(38, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(39, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(40, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(41, '', '', '0000-00-00', 22, 0, 0, 'M', 'Some address', 'Jogipet', 12, '7702508920', 'C V Rao', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(42, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(43, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(44, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(45, 'Vivek', 'Chintalapati', '0000-00-00', 22, 0, 0, 'M', 'Address', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(46, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(47, 'Vivek', 'Chintalapati', '0000-00-00', 22, 0, 0, 'M', 'Address', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(48, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(49, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(50, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(51, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(52, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(53, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(54, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(55, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(56, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(57, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(58, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(59, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(60, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(61, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(62, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(63, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(64, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(65, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(66, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(67, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(68, 'Vivek', '', '0000-00-00', 22, 0, 0, 'M', '', 'Place', 3, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(69, 'Vivek ', 'ch', '0000-00-00', 21, 0, 0, 'M', '', 'Place', 3, '7702508920', '0', '', '0', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(70, 'Vivek ', 'c', '0000-00-00', 22, 0, 0, 'M', '', 'Hyderabad', 7, '7702508920', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(71, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '', 0, '0', '', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(72, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '', 0, '0', '', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(73, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '', 0, '0', '', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(74, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '', 0, '0', '', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(75, 'Vivek', '', '0000-00-00', 21, 0, 0, 'M', '', '', 0, '0', '', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(76, 'Vivek', 'Chintalapati', '0000-00-00', 21, 0, 0, 'M', '', '', 0, '0', '', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(77, 'Vivek', 'Chintalapati', '0000-00-00', 21, 0, 0, 'M', '', '', 0, '0', '', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(78, 'Vivek', 'Chintalapati', '0000-00-00', 21, 0, 0, 'M', '', '', 0, '0', '', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(79, 'Vivek', 'Chintalapati', '0000-00-00', 21, 0, 0, 'M', '', '', 0, '0', '', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, ''),
+(80, 'Vivek', 'Ch', '0000-00-00', 21, 0, 0, 'M', '2-1-255/1', 'Place', 1, '7702509209', 'Father', '', '', 0, '', '', '', '', '', '', '', 0, '', '', '', '', '', '', '', 0, '');
 
 -- --------------------------------------------------------
 
@@ -13550,25 +14133,24 @@ CREATE TABLE IF NOT EXISTS `patients` (
 --
 
 CREATE TABLE IF NOT EXISTS `patient_treatment` (
-  `treatment_id` int(10) NOT NULL AUTO_INCREMENT,
+`treatment_id` int(10) NOT NULL,
   `visit_id` bigint(10) NOT NULL,
   `treatment_type` varchar(20) NOT NULL,
   `treatment` varchar(50) NOT NULL,
   `treatment_date` date NOT NULL,
   `treatment_time` time NOT NULL,
   `duration` varchar(12) NOT NULL,
-  `notes` varchar(300) NOT NULL,
-  PRIMARY KEY (`treatment_id`)
+  `notes` varchar(300) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `patient_visits`
+-- Table structure for table `patient_visit`
 --
 
-CREATE TABLE IF NOT EXISTS `patient_visits` (
-  `visit_id` int(7) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `patient_visit` (
+`visit_id` int(7) NOT NULL,
   `hospital_id` int(11) NOT NULL,
   `admit_id` int(7) NOT NULL,
   `visit_type` varchar(8) NOT NULL,
@@ -13600,28 +14182,131 @@ CREATE TABLE IF NOT EXISTS `patient_visits` (
   `outcome_date` date NOT NULL,
   `outcome_time` time NOT NULL,
   `ip_file_received` date NOT NULL,
-  `mlc` tinyint(1) NOT NULL,
-  KEY `visit_id` (`visit_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='All visits made by patients' AUTO_INCREMENT=1 ;
+  `mlc` tinyint(1) NOT NULL
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='All visits made by patients' AUTO_INCREMENT=100 ;
+
+--
+-- Dumping data for table `patient_visit`
+--
+
+INSERT INTO `patient_visit` (`visit_id`, `hospital_id`, `admit_id`, `visit_type`, `patient_id`, `hosp_file_no`, `admit_date`, `admit_time`, `department_id`, `unit`, `area`, `doctor`, `nurse`, `insurance_case`, `insurance_no`, `presenting_complaints`, `past_history`, `admit_weight`, `pulse_rate`, `respiratory_rate`, `temperature`, `sbp`, `dbp`, `provisional_diagnosis`, `final_diagnosis`, `icd_10`, `icd_10_ext`, `discharge_weight`, `outcome`, `outcome_date`, `outcome_time`, `ip_file_received`, `mlc`) VALUES
+(1, 0, 0, 'OP', 2, 0, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(2, 0, 0, 'OP', 3, 0, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(3, 0, 0, 'OP', 4, 0, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(4, 0, 0, 'OP', 5, 0, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(5, 0, 0, 'OP', 6, 0, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(6, 0, 0, 'OP', 7, 0, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(7, 0, 0, 'OP', 8, 0, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(8, 0, 0, 'OP', 9, 0, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(9, 0, 0, 'OP', 10, 0, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(10, 0, 0, 'OP', 11, 0, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(11, 0, 0, 'OP', 12, 3444, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(12, 0, 0, 'OP', 13, 3444, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(13, 0, 0, 'OP', 14, 3445, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(14, 0, 0, 'OP', 15, 3445, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(15, 0, 0, 'OP', 16, 3445, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(16, 0, 0, 'OP', 17, 3445, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(17, 0, 0, 'OP', 18, 3446, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(18, 0, 0, 'OP', 19, 3447, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(19, 0, 0, 'OP', 20, 3448, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(20, 0, 0, 'OP', 21, 3449, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(21, 0, 0, 'OP', 22, 3450, '2014-04-22', '19:02:00', 12, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(22, 0, 0, 'OP', 23, 3451, '2014-04-22', '19:02:00', 12, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(23, 0, 0, 'OP', 24, 3452, '2014-04-22', '18:42:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(24, 0, 0, 'OP', 25, 3453, '2014-04-22', '19:02:00', 12, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(25, 0, 25, 'OP', 0, 0, '2014-04-22', '19:07:00', 14, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(26, 0, 0, 'IP', 27, 2, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(27, 0, 0, 'IP', 28, 3, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(28, 0, 0, 'IP', 29, 4, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(29, 0, 0, 'IP', 30, 5, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(30, 0, 30, 'IP', 31, 6, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(31, 0, 31, 'IP', 32, 7, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(32, 0, 32, 'IP', 33, 8, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(33, 0, 33, 'IP', 34, 9, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(34, 0, 34, 'IP', 35, 10, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(35, 0, 35, 'IP', 36, 11, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(36, 0, 36, 'IP', 37, 12, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(37, 0, 37, 'IP', 38, 13, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(38, 0, 38, 'IP', 39, 14, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(39, 0, 39, 'IP', 40, 15, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(40, 0, 40, 'IP', 41, 3478, '2014-04-26', '04:05:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '12:00:00', '0000-00-00', 0),
+(41, 0, 41, 'IP', 42, 17, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(42, 0, 42, 'IP', 43, 18, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(43, 0, 43, 'IP', 44, 19, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(44, 0, 44, 'IP', 45, 3482, '2014-04-26', '04:32:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '05:30:00', '0000-00-00', 0),
+(45, 0, 45, 'IP', 46, 21, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(46, 0, 46, 'IP', 47, 3483, '2014-04-26', '04:34:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '05:30:00', '0000-00-00', 0),
+(47, 0, 47, 'IP', 48, 23, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(48, 0, 48, 'IP', 49, 24, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(49, 0, 49, 'IP', 50, 25, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(50, 0, 50, 'IP', 51, 26, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(51, 0, 51, 'IP', 52, 27, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(52, 0, 52, 'IP', 53, 28, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(53, 0, 53, 'IP', 54, 29, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(54, 0, 54, 'IP', 55, 30, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(55, 0, 55, 'IP', 56, 31, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(56, 0, 56, 'IP', 57, 32, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(57, 0, 57, 'IP', 58, 33, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(58, 0, 58, 'IP', 59, 34, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(59, 0, 59, 'IP', 60, 35, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(60, 0, 60, 'IP', 61, 36, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(61, 0, 61, 'IP', 62, 37, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(62, 0, 62, 'IP', 63, 38, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(63, 0, 63, 'IP', 64, 39, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(64, 0, 64, 'IP', 65, 40, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(65, 0, 65, 'IP', 66, 41, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(66, 0, 66, 'IP', 67, 42, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(67, 0, 67, 'IP', 68, 43, '2014-04-23', '11:55:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(68, 0, 68, '0', 69, 3454, '2014-04-24', '11:39:00', 9, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(69, 0, 69, '0', 70, 3455, '2014-04-24', '11:39:00', 12, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(70, 0, 70, '0', 70, 3456, '2014-04-24', '11:45:00', 6, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(71, 0, 71, 'IP', 69, 3462, '2014-04-24', '13:07:00', 0, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(76, 0, 76, 'IP', 20, 3465, '2014-04-24', '13:11:00', 15, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(72, 0, 72, 'IP', 69, 3458, '2014-04-24', '13:00:00', 0, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(73, 0, 73, 'IP', 69, 3464, '2014-04-24', '13:10:00', 10, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(74, 0, 74, 'IP', 69, 3460, '2014-04-24', '13:02:00', 0, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(75, 0, 75, 'IP', 69, 3461, '2014-04-24', '13:02:00', 0, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(77, 0, 77, 'IP', 20, 3468, '2014-04-24', '13:17:00', 6, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(78, 0, 78, 'IP', 20, 3469, '2014-04-24', '13:19:00', 6, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(79, 0, 79, 'IP', 20, 3470, '2014-04-24', '13:19:00', 6, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(80, 0, 80, 'IP', 20, 3471, '2014-04-24', '13:19:00', 6, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(81, 0, 81, 'IP', 20, 3472, '2014-04-24', '13:19:00', 6, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(82, 0, 82, 'IP', 20, 3473, '2014-04-24', '13:19:00', 6, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(83, 0, 83, 'IP', 20, 3474, '2014-04-24', '13:19:00', 6, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '', '0000-00-00', '00:00:00', '0000-00-00', 0),
+(84, 0, 84, 'IP', 6, 3477, '2014-04-24', '04:46:00', 5, '46', '', '', '', '', '', 'Something ', '', 0, 0, 0, 0, 0, 0, '0', 'Final Diag', '', '', 0, 'Discharge', '2014-04-24', '08:56:00', '0000-00-00', 1),
+(85, 0, 85, 'OP', 71, 3457, '2014-04-26', '12:45:00', 9, '0', '0', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '05:30:00', '0000-00-00', 0),
+(86, 0, 86, 'OP', 72, 3458, '2014-04-26', '12:51:00', 9, '0', '0', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '05:30:00', '0000-00-00', 0),
+(87, 0, 87, 'OP', 73, 3459, '2014-04-26', '12:51:00', 9, '0', '0', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '05:30:00', '0000-00-00', 0),
+(88, 0, 88, 'OP', 74, 3460, '2014-04-26', '12:51:00', 9, '0', '0', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '05:30:00', '0000-00-00', 0),
+(89, 0, 89, 'OP', 75, 3461, '2014-04-26', '12:51:00', 9, '0', '0', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '05:30:00', '0000-00-00', 0),
+(90, 0, 90, 'IP', 25, 3479, '2014-04-26', '04:18:00', 27, '', '5', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '05:30:00', '0000-00-00', 0),
+(91, 0, 91, 'IP', 25, 3480, '2014-04-26', '04:18:00', 27, '', '5', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '05:30:00', '0000-00-00', 0),
+(92, 0, 92, 'IP', 25, 3481, '2014-04-26', '04:18:00', 27, '', '5', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '05:30:00', '0000-00-00', 0),
+(93, 0, 93, 'IP', 23, 3484, '2014-05-01', '11:27:00', 0, '', '', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '05:30:00', '0000-00-00', 0),
+(94, 0, 94, 'OP', 76, 3462, '2014-06-19', '12:05:00', 9, '0', '0', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '05:30:00', '0000-00-00', 0),
+(95, 0, 95, 'OP', 77, 3463, '2014-06-19', '12:05:00', 9, '0', '0', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '05:30:00', '0000-00-00', 0),
+(96, 0, 96, 'OP', 78, 3464, '2014-06-19', '12:05:00', 9, '0', '0', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '05:30:00', '0000-00-00', 0),
+(97, 0, 97, 'OP', 79, 3465, '2014-06-19', '12:05:00', 9, '0', '0', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '05:30:00', '0000-00-00', 0),
+(98, 0, 98, 'OP', 80, 3466, '2014-06-21', '01:58:00', 6, '0', '0', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '05:30:00', '0000-00-00', 0),
+(99, 0, 99, 'IP', 80, 0, '2014-06-21', '01:59:00', 9, '6', '2', '', '', '', '', '', '', 0, 0, 0, 0, 0, 0, '', '', '', '', 0, '0', '1970-01-01', '05:30:00', '0000-00-00', 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `print_layouts`
+-- Table structure for table `print_layout`
 --
 
-CREATE TABLE IF NOT EXISTS `print_layouts` (
-  `print_layout_id` int(6) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `print_layout` (
+`print_layout_id` int(6) NOT NULL,
   `print_layout_name` varchar(100) NOT NULL,
-  `print_layout_page` varchar(100) NOT NULL,
-  PRIMARY KEY (`print_layout_id`)
+  `print_layout_page` varchar(100) NOT NULL
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `print_layouts`
+-- Dumping data for table `print_layout`
 --
 
-INSERT INTO `print_layouts` (`print_layout_id`, `print_layout_name`, `print_layout_page`) VALUES
+INSERT INTO `print_layout` (`print_layout_id`, `print_layout_name`, `print_layout_page`) VALUES
 (1, 'Gandhi OP', 'gandhi_op'),
 (2, 'In Patient', 'in_patient');
 
@@ -13632,12 +14317,11 @@ INSERT INTO `print_layouts` (`print_layout_id`, `print_layout_name`, `print_layo
 --
 
 CREATE TABLE IF NOT EXISTS `publication` (
-  `publication_id` int(6) NOT NULL AUTO_INCREMENT,
+`publication_id` int(6) NOT NULL,
   `staff_id` int(6) NOT NULL,
   `title` text NOT NULL,
   `journal` varchar(100) NOT NULL,
-  `edition` varchar(50) NOT NULL,
-  PRIMARY KEY (`publication_id`)
+  `edition` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13647,12 +14331,11 @@ CREATE TABLE IF NOT EXISTS `publication` (
 --
 
 CREATE TABLE IF NOT EXISTS `qualification` (
-  `qualification_id` int(6) NOT NULL AUTO_INCREMENT,
+`qualification_id` int(6) NOT NULL,
   `staff_id` int(6) NOT NULL,
   `degree` varchar(50) NOT NULL,
   `year_of_completion` int(4) NOT NULL,
-  `university` varchar(100) NOT NULL,
-  PRIMARY KEY (`qualification_id`)
+  `university` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13662,10 +14345,19 @@ CREATE TABLE IF NOT EXISTS `qualification` (
 --
 
 CREATE TABLE IF NOT EXISTS `sample_status` (
-  `sample_status_id` int(6) NOT NULL AUTO_INCREMENT,
-  `sample_status` varchar(50) NOT NULL,
-  PRIMARY KEY (`sample_status_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Status of the samples sent for testing' AUTO_INCREMENT=1 ;
+`sample_status_id` int(6) NOT NULL,
+  `sample_status` varchar(50) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Status of the samples sent for testing' AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `sample_status`
+--
+
+INSERT INTO `sample_status` (`sample_status_id`, `sample_status`) VALUES
+(1, 'Collected'),
+(2, 'Recieved at Lab'),
+(3, 'Tested'),
+(4, 'Lost');
 
 -- --------------------------------------------------------
 
@@ -13674,7 +14366,7 @@ CREATE TABLE IF NOT EXISTS `sample_status` (
 --
 
 CREATE TABLE IF NOT EXISTS `service_record` (
-  `request_id` int(4) NOT NULL AUTO_INCREMENT,
+`request_id` int(4) NOT NULL,
   `equipment_id` int(6) NOT NULL,
   `staff_id` int(4) NOT NULL,
   `call_date` date DEFAULT NULL,
@@ -13687,9 +14379,7 @@ CREATE TABLE IF NOT EXISTS `service_record` (
   `service_date` date DEFAULT NULL,
   `service_time` time DEFAULT NULL,
   `problem_status` varchar(17) DEFAULT NULL,
-  `working_status` tinyint(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`request_id`),
-  UNIQUE KEY `request_id` (`request_id`)
+  `working_status` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Service records log for equipments' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13699,9 +14389,8 @@ CREATE TABLE IF NOT EXISTS `service_record` (
 --
 
 CREATE TABLE IF NOT EXISTS `specimen_type` (
-  `speciment_type_id` int(6) NOT NULL AUTO_INCREMENT,
-  `specimen_type` varchar(100) NOT NULL COMMENT 'Eg. Sputum, Urine, CSF, etc.',
-  PRIMARY KEY (`speciment_type_id`)
+`specimen_type_id` int(6) NOT NULL,
+  `specimen_type` varchar(100) NOT NULL COMMENT 'Eg. Sputum, Urine, CSF, etc.'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13711,7 +14400,7 @@ CREATE TABLE IF NOT EXISTS `specimen_type` (
 --
 
 CREATE TABLE IF NOT EXISTS `staff` (
-  `staff_id` int(4) NOT NULL AUTO_INCREMENT,
+`staff_id` int(4) NOT NULL,
   `hospital_id` int(3) NOT NULL,
   `department_id` int(2) NOT NULL,
   `unit_id` int(6) NOT NULL,
@@ -13734,9 +14423,266 @@ CREATE TABLE IF NOT EXISTS `staff` (
   `research` varchar(200) NOT NULL,
   `personal_note` text NOT NULL,
   `staff_status` varchar(30) NOT NULL COMMENT 'Default : Active, Transferred, Resigned, Retired, etc.,',
-  `status_date` date NOT NULL,
-  PRIMARY KEY (`staff_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Staff details working at the hospital' AUTO_INCREMENT=1 ;
+  `status_date` date NOT NULL
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Staff details working at the hospital' AUTO_INCREMENT=256 ;
+
+--
+-- Dumping data for table `staff`
+--
+
+INSERT INTO `staff` (`staff_id`, `hospital_id`, `department_id`, `unit_id`, `area_id`, `first_name`, `last_name`, `date_of_birth`, `gender`, `staff_category`, `staff_category_id`, `staff_type`, `staff_role`, `staff_role_id`, `email`, `phone`, `image`, `designation`, `research_area`, `specialisation`, `research`, `personal_note`, `staff_status`, `status_date`) VALUES
+(1, 1, 1, 0, 0, 'Dr. Seema Madan', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(2, 1, 1, 0, 0, 'Dr. L. Vinodhini', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(3, 1, 1, 0, 0, 'Dr. K. Sudharani', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(4, 1, 1, 0, 0, 'Dr. A. Jayashree', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(5, 1, 1, 0, 0, 'Dr. V. Padmaja', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(6, 1, 1, 0, 0, 'Dr. M. Yesender', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(7, 1, 1, 0, 0, 'Dr. N. Radhika Rani', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(8, 1, 1, 0, 0, 'Dr. Ramkumar Kabra', '', '0000-00-00', '', 'Tutor ', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(9, 1, 1, 0, 0, 'Dr. U. Sujatha', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(10, 1, 1, 0, 0, 'Dr. A. Rama Devi', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(11, 1, 1, 0, 0, 'Dr. M. Shahana', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(12, 1, 29, 0, 0, 'Dr. B. Srinivasa Rao', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(13, 1, 29, 0, 0, 'Dr. D. Joya Rani', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(14, 1, 29, 0, 0, 'Dr. V.S. Dhanasree Naidu', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(15, 1, 29, 0, 0, 'Dr. M. Rama Devi', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(16, 1, 29, 0, 0, 'Dr. K. Ganesh', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(17, 1, 29, 0, 0, 'Dr. O. Padmini', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(18, 1, 29, 0, 0, 'Dr. K. Anitha', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(19, 1, 29, 0, 0, 'Dr. I.V. Padma', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(20, 1, 29, 0, 0, 'Dr. A. Padma', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(21, 1, 29, 0, 0, 'Dr. D. Krishna Murthy', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(22, 1, 29, 0, 0, 'Dr. G. Anuradha', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(23, 1, 29, 0, 0, 'Dr. Yashoda', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(24, 1, 3, 0, 0, 'Dr. D.M.M. Raj Kumari', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(25, 1, 3, 0, 0, 'Dr. C. Rekha', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(26, 1, 3, 0, 0, 'Dr. A. Sujatha Rani', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(27, 1, 3, 0, 0, 'Dr. P. Kiranmai', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(28, 1, 3, 0, 0, 'Dr. Ch. Kalavathi', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(29, 1, 3, 0, 0, 'Dr. S. Laxmi Narayana', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(30, 1, 3, 0, 0, 'Dr. Rama Shouri', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(31, 1, 3, 0, 0, 'Dr. Ch. Anitha', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(32, 1, 3, 0, 0, 'Dr. A. Bhagya Lakshmi', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(33, 1, 3, 0, 0, 'Dr. N. Jaya', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(34, 1, 28, 0, 0, 'Dr. T.S. Usha Sree', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(35, 1, 28, 0, 0, 'Dr. T. Manmohan', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(36, 1, 28, 0, 0, 'Dr. T. Chakradhar', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(37, 1, 28, 0, 0, 'Dr. N. Karuna Sree', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(38, 1, 28, 0, 0, 'Dr. S.U.M. Raju', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(39, 1, 28, 0, 0, 'Dr. D. Aruna', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(40, 1, 28, 0, 0, 'Dr. T. Sunitha', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(41, 1, 28, 0, 0, 'Dr. B. Raghuveer', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(42, 1, 28, 0, 0, 'Dr. G. Padmaja', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(43, 1, 28, 0, 0, 'Dr. P. Chandrasekhar', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(44, 1, 18, 0, 0, 'Dr.P.R. Anuradha', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(45, 1, 18, 0, 0, 'Dr. K. Nagamani', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(46, 1, 18, 0, 0, 'Dr. G. Jyothi Lakshmi', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(47, 1, 18, 0, 0, 'Dr. K. Prasanthi', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(48, 1, 18, 0, 0, 'Dr. P. Roopa', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(49, 1, 18, 0, 0, 'Dr. D. Sudha Madhuri', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(50, 1, 18, 0, 0, 'Dr. Syed Amtul Muqeeth', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(51, 1, 18, 0, 0, 'Dr. M.L. Kavitha Latha', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(52, 1, 18, 0, 0, 'Dr. M. Babitha', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(53, 1, 18, 0, 0, 'Dr. Darahasa', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(54, 1, 18, 0, 0, 'Dr. K. Rani', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(55, 1, 13, 0, 0, 'Dr. K. Ashok Kumar', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(56, 1, 13, 0, 0, 'Dr. J. Jaya Raj', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(57, 1, 13, 0, 0, 'Dr. W. Sandhya Manohar', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(58, 1, 13, 0, 0, 'Dr. B. Sree Ramulu', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(59, 1, 13, 0, 0, 'Dr. S. Mohan Singh', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(60, 1, 13, 0, 0, 'Dr. P. Vijaya Sagar', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(61, 1, 13, 0, 0, 'Dr. Ch. Laxman Rao', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(62, 1, 13, 0, 0, 'Dr. P. Vanisree', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(63, 1, 13, 0, 0, 'Dr. Narender Babu', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(64, 1, 13, 0, 0, 'Dr. Y.K.C. Rangaiah', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(65, 1, 25, 0, 0, 'Dr. P. Jijiya Bai', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(66, 1, 25, 0, 0, 'Dr. O. Shravan Kumar', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(67, 1, 25, 0, 0, 'Dr. K. Bramaramba', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(68, 1, 25, 0, 0, 'Dr. B. Bheeshma', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(69, 1, 25, 0, 0, 'Dr. N. Srivani', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(70, 1, 25, 0, 0, 'Dr. V. Srinivasa Kumar', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(71, 1, 25, 0, 0, 'Dr. I. Srilakshmi', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(72, 1, 25, 0, 0, 'Dr. SSS. Quadri', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(73, 1, 25, 0, 0, 'Dr. K. Rama Devi', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(74, 1, 25, 0, 0, 'Dr. Padma Sunethri', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(75, 1, 25, 0, 0, 'Dr. A. Sirisha', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(76, 1, 25, 0, 0, 'Dr. Padma Malini', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(77, 1, 25, 0, 0, 'Dr. D. Kalyani', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(78, 1, 25, 0, 0, 'Dr. V. Geetha', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(79, 1, 25, 0, 0, 'Dr. T. Sundari Devi', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(80, 1, 25, 0, 0, 'Dr. Syamala Srujana', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(81, 1, 8, 0, 0, 'Dr. V.V. Sastry', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(82, 1, 8, 0, 0, 'Dr. K.V.S. Murthy', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(83, 1, 8, 0, 0, 'Dr. R.L. Lakshman Rao', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(84, 1, 8, 0, 0, 'Dr. B. Kiranmai', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(85, 1, 8, 0, 0, 'Dr. V. Suhasini', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(86, 1, 8, 0, 0, 'Dr. Sangeetha Jaya Raj', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(87, 1, 8, 0, 0, 'Dr. K. Usha Manjulatha', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(88, 1, 8, 0, 0, 'Dr. C.V.S. Rayudu', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(89, 1, 8, 0, 0, 'Dr. Asra Sultana', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(90, 1, 8, 0, 0, 'Dr. T. Dinesh Kumar', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(91, 1, 8, 0, 0, 'Dr. D. Komaraiah', '', '0000-00-00', '', 'Tutor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(92, 1, 8, 0, 0, 'Dr. K. Srihari', '', '0000-00-00', '', 'Lecturer in Statistics', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(93, 1, 15, 0, 0, 'Dr. K.S. Ashok Kumar', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(94, 1, 15, 0, 0, 'Dr. B. Ramulu', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(95, 1, 15, 0, 0, 'Dr. B.S.V. Manjula', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(96, 1, 15, 0, 0, 'Dr. A. Vinay Kumar', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(97, 1, 15, 0, 0, 'Dr. K. Narasimhulu', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(98, 1, 15, 0, 0, 'Dr. K.B.R. Sastry', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(99, 1, 15, 0, 0, 'Dr. M. Raja Rao', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(100, 1, 15, 0, 0, 'Dr. D. Nagendar', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(101, 1, 15, 0, 0, 'Dr. B. Praveen Kumar', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(102, 1, 15, 0, 0, 'Dr. M. Narendra', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(103, 1, 15, 0, 0, 'Dr. P. Deepak', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(104, 1, 15, 0, 0, 'Dr. D. Anil Kumar', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(105, 1, 15, 0, 0, 'Dr. B. Thrilok Chander', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(106, 1, 15, 0, 0, 'Dr. B. Srinivas', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(107, 1, 15, 0, 0, 'Dr. V.N. Madhava Rao', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(108, 1, 15, 0, 0, 'Dr. S. Kondal Reddy', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(109, 1, 15, 0, 0, 'Dr. V. Rushendra Kumari', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(110, 1, 15, 0, 0, 'Dr. P. Anuradha', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(111, 1, 16, 0, 0, 'Dr. K. Venkatesh', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(112, 1, 16, 0, 0, 'Dr. S.V. Masood', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(113, 1, 16, 0, 0, 'Dr. S. Mahaboob', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(114, 1, 16, 0, 0, 'Dr. P.V. Chalam', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(115, 1, 16, 0, 0, 'Dr. B.N. Uma Maheswar Rao', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(116, 1, 16, 0, 0, 'Dr. M. Ramulu', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(117, 1, 16, 0, 0, 'Dr. N. Krishna Mohan', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(118, 1, 16, 0, 0, 'Dr. M. Iylaiah', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(119, 1, 16, 0, 0, 'Dr. M. Muralidhar', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(120, 1, 16, 0, 0, 'Dr. P. Praveen', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(121, 1, 16, 0, 0, 'Dr. B. Balkishan', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(122, 1, 16, 0, 0, 'Dr. Geetha Subhnani', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(123, 1, 16, 0, 0, 'Dr. R. Sadguna Chary', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(124, 1, 16, 0, 0, 'Dr. Raghu.R.', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(125, 1, 16, 0, 0, 'Dr. Suneel Kumar.K.', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(126, 1, 16, 0, 0, 'Dr. Jayasree Kasula', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(127, 1, 16, 0, 0, 'Dr. M.V.A. Lakshmi', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(128, 1, 22, 0, 0, 'Dr. M. Tripura Sundari', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(129, 1, 22, 0, 0, 'Dr. G. Uma Devi', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(130, 1, 22, 0, 0, 'Dr. S. Rani', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(131, 1, 22, 0, 0, 'Dr. H. Anupama', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(132, 1, 22, 0, 0, 'Dr. J.V. Reddy', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(133, 1, 22, 0, 0, 'Dr. C.V. Laxmi Rao', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(134, 1, 22, 0, 0, 'Dr. G. Mahalakshmi', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(135, 1, 22, 0, 0, 'Dr. R. Andallu', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(136, 1, 22, 0, 0, 'Dr. B. Rajeshwari', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(137, 1, 22, 0, 0, 'Dr. V. Aruna Devi', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(138, 1, 22, 0, 0, 'Dr. K. Sunanda', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(139, 1, 22, 0, 0, 'Dr. A. Swarupa Rani', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(140, 1, 22, 0, 0, 'Dr. P. Rajini', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(141, 1, 22, 0, 0, 'Dr. T. Shobha', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(142, 1, 22, 0, 0, 'Dr. T. Vijaya Krishna', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(143, 1, 22, 0, 0, 'Dr. Badhe Rekha', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(144, 1, 22, 0, 0, 'Dr. J. Rajeswari', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(145, 1, 22, 0, 0, 'Dr. J. Sowjanya Kumari', '', '0000-00-00', '', 'Asst.Professor ? FP', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(146, 1, 22, 0, 0, 'Dr. P. Radhika', '', '0000-00-00', '', 'Asst.Professor ? FP', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(147, 1, 2, 0, 0, 'Dr. P. Upender Gowd', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(148, 1, 2, 0, 0, 'Dr. G. Venkateshwarlu', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(149, 1, 2, 0, 0, 'Dr. M.V. Bhimeswar', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(150, 1, 2, 0, 0, 'Dr. G. Harinath', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(151, 1, 2, 0, 0, 'Dr. Sadhana Roy', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(152, 1, 2, 0, 0, 'Dr. D. Suresh Chander', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(153, 1, 2, 0, 0, 'Dr. A. Rupa Kumari', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(154, 1, 2, 0, 0, 'Dr. S.J.V. Kameswara Rao', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(155, 1, 2, 0, 0, 'Dr. P. Sreedevi', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(156, 1, 2, 0, 0, 'Dr. T. Ravi', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(157, 1, 9, 0, 0, 'Dr. M. Manjula', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(158, 1, 9, 0, 0, 'Dr. K. Suhasini', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(159, 1, 9, 0, 0, 'Dr. J. Sanjeev Naik', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(160, 1, 9, 0, 0, 'Dr. Tara Singh', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(161, 1, 12, 0, 0, 'Dr. S. Rama Krishna', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(162, 1, 12, 0, 0, 'Dr. Md. Naveed Ahmed', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(163, 1, 12, 0, 0, 'Dr. K. Samson Deva Kumar', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(164, 1, 12, 0, 0, 'Dr. A.S. Aruna Kumari', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(165, 1, 12, 0, 0, 'Dr. G. Sreekanth', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(166, 1, 12, 0, 0, 'Dr. Ahmed Abdul Khabeer', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(167, 1, 23, 0, 0, 'Dr. G. Kulasekhar Rao', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(168, 1, 23, 0, 0, 'Dr. Mohd. Athar', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(169, 1, 23, 0, 0, 'Dr. Karunakar', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(170, 1, 23, 0, 0, 'Dr. B. Malleshwari', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(171, 1, 23, 0, 0, 'Dr. PGP Kumar Naidu', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(172, 1, 23, 0, 0, 'Dr. V. Elisha Raju', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(173, 1, 23, 0, 0, 'Dr. Rahmathunnisa', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(174, 1, 24, 0, 0, 'Dr. B. Ravi Babu', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(175, 1, 24, 0, 0, 'Dr. B. Valya', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(176, 1, 24, 0, 0, 'Dr. Omkarnath', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(177, 1, 24, 0, 0, 'Dr. K. Chandrasekhar', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(178, 1, 24, 0, 0, 'Dr. N. Brahma Chary', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(179, 1, 24, 0, 0, 'Dr. Bachu Srinivas', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(180, 1, 24, 0, 0, 'Dr. J. Ashok Vardhan Reddy', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(181, 1, 24, 0, 0, 'Dr. G. Ramesh', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(182, 1, 24, 0, 0, 'Dr. A. Krishna Reddy', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(183, 1, 27, 0, 0, 'Dr. J. Venkateswar Rao', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(184, 1, 27, 0, 0, 'Dr. T. Ramesh Babu', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(185, 1, 27, 0, 0, 'Dr. K. Siva Ram Prasad', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(186, 1, 27, 0, 0, 'Dr. Vasudeva Murali', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(187, 1, 27, 0, 0, 'Dr. K. madhusudhan', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(188, 1, 27, 0, 0, 'Dr. T. Usha Rani', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(189, 1, 27, 0, 0, 'Dr. Nirmala.C.', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(190, 1, 27, 0, 0, 'Dr. Srinivasa Suresh.N', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(191, 1, 27, 0, 0, 'Dr. M. Ratna Manjula', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(192, 1, 27, 0, 0, 'Dr. Mohd. Azam', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(193, 1, 32, 0, 0, 'Dr. D. Mahesh Cander', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(194, 1, 32, 0, 0, 'Dr. N.L.N. Moorthy', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(195, 1, 32, 0, 0, 'Dr. V. Sahanthi Sree', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(196, 1, 32, 0, 0, 'Dr. Shivani Gogi', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(197, 1, 31, 0, 0, 'Dr. N. Murali Krishna', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(198, 1, 31, 0, 0, 'Dr. M. Gireesh Kumar', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(199, 1, 34, 0, 0, 'Dr. H. Krishna Murthy', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(200, 1, 34, 0, 0, 'Dr. Mahaboob Khan', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(201, 1, 34, 0, 0, 'Dr. T. Pramod Kumar', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(202, 1, 10, 0, 0, 'Dr. A. Geeta Kiran', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(203, 1, 10, 0, 0, 'Dr. K. Siva Rami Reddy', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(204, 1, 10, 0, 0, 'Dr. C. Sudha Rani', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(205, 1, 10, 0, 0, 'Dr. D. Indira', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(206, 1, 10, 0, 0, 'Dr. D. Sudha Vani', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(207, 1, 26, 0, 0, 'Dr. G. Rajendra Prasad', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(208, 1, 26, 0, 0, 'Dr. M. Jagan Mohan', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(209, 1, 26, 0, 0, 'Dr. G. Hasanthi', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(210, 1, 21, 0, 0, 'Dr. G. Prakash Rao', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(211, 1, 21, 0, 0, 'Dr. S. Srinivasa Satyanarayana', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(212, 1, 21, 0, 0, 'Dr. K. Ravi', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(213, 1, 21, 0, 0, 'Dr. Pratap Kumar', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(214, 1, 21, 0, 0, 'Dr. K. Srinivas', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(215, 1, 30, 0, 0, 'Dr. D. Mohan Krishna', '', '0000-00-00', '', 'Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(216, 1, 30, 0, 0, 'Dr. A. Subodh Kumar', '', '0000-00-00', '', 'Assoc.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(217, 1, 30, 0, 0, 'Dr. G. Ranga Swamy', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(218, 1, 30, 0, 0, 'Dr. P. Ramesh', '', '0000-00-00', '', 'Asst.Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(219, 1, 4, 0, 0, 'Dr.B.Bheeshma', '', '0000-00-00', '', 'Associate Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(220, 1, 4, 0, 0, 'Dr.V.Geetha', '', '0000-00-00', '', 'Assistant Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(221, 1, 4, 0, 0, 'Dr.D.R.Yashoda', '', '0000-00-00', '', 'Medical Officer', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(222, 1, 4, 0, 0, 'A.Krishna Murthy', '', '0000-00-00', '', 'Lab Technician', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(223, 1, 4, 0, 0, 'L.S.Lesley', '', '0000-00-00', '', 'Staff Nurse', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(224, 1, 4, 0, 0, 'E.Sreenivas Reddy', '', '0000-00-00', '', 'Technical Supervisor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(225, 1, 4, 0, 0, 'M.Sravan Kumar', '', '0000-00-00', '', 'Technical Supervisor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(226, 1, 4, 0, 0, 'P.Shoba Rani', '', '0000-00-00', '', 'Lab Technician', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(227, 1, 4, 0, 0, 'Md. Khaja', '', '0000-00-00', '', 'Lab Technician', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(228, 1, 4, 0, 0, 'G.Veerendra Kumar', '', '0000-00-00', '', 'Lab Technician', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(229, 1, 4, 0, 0, 'N.Sudhakar', '', '0000-00-00', '', 'Lab Technician', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(230, 1, 4, 0, 0, 'Md.Fareeduddin', '', '0000-00-00', '', 'Lab Technician', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(231, 1, 4, 0, 0, 'K.Pushpa Latha', '', '0000-00-00', '', 'Lab Technician', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(232, 1, 4, 0, 0, 'M. Venu Kamal', '', '0000-00-00', '', 'Counselor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(233, 1, 4, 0, 0, 'A.Sunitha', '', '0000-00-00', '', 'Counselor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(237, 1, 6, 0, 0, 'Dr.G .Ravindra', '', '0000-00-00', '', 'Professor & HOD', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(238, 1, 6, 0, 0, 'Dr. Abhijeet Dashetwar', '', '0000-00-00', '', 'Associate Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(239, 1, 6, 0, 0, 'Dr. Anitha Bhalla', '', '0000-00-00', '', 'Assistant Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(240, 1, 6, 0, 0, 'Dr. K Mamtha', '', '0000-00-00', '', 'Assistant Professor', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(241, 1, 6, 0, 0, 'Dr. Vedant', '', '0000-00-00', '', 'Senior Resident', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(242, 1, 6, 0, 0, 'Dr. Ramakrishna', '', '0000-00-00', '', 'Associate Professor - Anaesthesiology', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(243, 1, 6, 0, 0, 'Dr. Saritha', '', '0000-00-00', '', 'Assistant Professor - Anaesthesiology', 0, '', '', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(244, 1, 0, 0, 0, 'Anil', '', '0000-00-00', 'M', 'Volunteer - HelenKeller Institute', 0, '', 'Audiologist', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(245, 1, 0, 0, 0, 'Bharani', '', '0000-00-00', 'F', 'Volunteer - HelenKeller Institute', 0, '', 'Audiologist', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(246, 1, 0, 0, 0, 'Raghu', '', '0000-00-00', '', 'Volunteer - HelenKeller Institute', 0, '', 'Audiologist', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(247, 1, 0, 0, 0, 'Rupali', '', '0000-00-00', 'F', 'Volunteer - HelenKeller Institute', 0, '', 'Audiologist', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(248, 1, 0, 0, 0, 'Narsing', '', '0000-00-00', 'M', 'Volunteer - HelenKeller Institute', 0, '', 'Audiologist', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(249, 1, 0, 0, 0, 'Aparna', '', '0000-00-00', 'F', 'AYJ-NIHH', 0, '', 'Audiologist', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(250, 1, 0, 0, 0, 'Pavith Kumar', '', '0000-00-00', 'M', 'Volunteer - HelenKeller Institute', 0, '', 'Audiologist', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(251, 1, 0, 0, 0, 'Nalini', '', '0000-00-00', 'F', 'Volunteer - HelenKeller Institute', 0, '', 'Audiologist', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(252, 1, 0, 0, 0, 'Sony', '', '0000-00-00', 'F', 'Volunteer - HelenKeller Institute', 0, '', 'Audiologist', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(253, 1, 0, 0, 0, 'Babitha', '', '0000-00-00', 'F', 'AYJ-NIHH', 0, '', 'Audiologist', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(254, 1, 0, 0, 0, 'Sachin', '', '0000-00-00', 'M', 'Volunteer - HelenKeller Institute', 0, '', 'Audiologist', 0, '', '0', '', '', '', '', '', '', '', '0000-00-00'),
+(255, 0, 14, 48, 0, 'Vivek', 'Chintalapati', '0000-00-00', '1', '', 0, 'Contract', '', 0, 'vivek.chintalapati@gmail.com', '770258902', '', '', 'asdf', 'Nothin', 'oiwe', '', '', '0000-00-00');
 
 -- --------------------------------------------------------
 
@@ -13745,10 +14691,16 @@ CREATE TABLE IF NOT EXISTS `staff` (
 --
 
 CREATE TABLE IF NOT EXISTS `staff_category` (
-  `staff_category_id` int(11) NOT NULL AUTO_INCREMENT,
-  `staff_category` varchar(50) NOT NULL COMMENT 'Eg: Prof, Asst. Prof, Assoc. Prof., etc.',
-  PRIMARY KEY (`staff_category_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Seniority based designation/categorization' AUTO_INCREMENT=1 ;
+`staff_category_id` int(11) NOT NULL,
+  `staff_category` varchar(50) NOT NULL COMMENT 'Eg: Prof, Asst. Prof, Assoc. Prof., etc.'
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Seniority based designation/categorization' AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `staff_category`
+--
+
+INSERT INTO `staff_category` (`staff_category_id`, `staff_category`) VALUES
+(1, 'Admin');
 
 -- --------------------------------------------------------
 
@@ -13757,10 +14709,16 @@ CREATE TABLE IF NOT EXISTS `staff_category` (
 --
 
 CREATE TABLE IF NOT EXISTS `staff_role` (
-  `staff_role_id` int(6) NOT NULL AUTO_INCREMENT,
-  `staff_role` varchar(100) NOT NULL COMMENT 'Eg. Doctor, Nurse, Technician, etc.',
-  PRIMARY KEY (`staff_role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+`staff_role_id` int(6) NOT NULL,
+  `staff_role` varchar(100) NOT NULL COMMENT 'Eg. Doctor, Nurse, Technician, etc.'
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `staff_role`
+--
+
+INSERT INTO `staff_role` (`staff_role_id`, `staff_role`) VALUES
+(1, 'MRD');
 
 -- --------------------------------------------------------
 
@@ -13769,12 +14727,36 @@ CREATE TABLE IF NOT EXISTS `staff_role` (
 --
 
 CREATE TABLE IF NOT EXISTS `staff_service` (
-  `service_id` int(6) NOT NULL AUTO_INCREMENT,
+`service_id` int(6) NOT NULL,
   `date_of_joining` date NOT NULL,
   `designation` varchar(100) NOT NULL,
-  `institution` varchar(100) NOT NULL,
-  PRIMARY KEY (`service_id`)
+  `institution` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `states`
+--
+
+CREATE TABLE IF NOT EXISTS `states` (
+`state_id` int(2) NOT NULL,
+  `state` varchar(50) NOT NULL,
+  `latitude` decimal(6,6) NOT NULL,
+  `longitude` decimal(6,6) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+
+--
+-- Dumping data for table `states`
+--
+
+INSERT INTO `states` (`state_id`, `state`, `latitude`, `longitude`) VALUES
+(1, 'hyderabad', '0.999999', '0.000000'),
+(2, 'ap', '0.999999', '0.000000'),
+(3, 'ap', '0.999999', '0.000000'),
+(4, 'ap', '0.999999', '0.000000'),
+(5, 'AP', '0.999999', '0.000000'),
+(6, 'AP', '0.000000', '0.000000');
 
 -- --------------------------------------------------------
 
@@ -13783,18 +14765,17 @@ CREATE TABLE IF NOT EXISTS `staff_service` (
 --
 
 CREATE TABLE IF NOT EXISTS `test` (
-  `test_id` int(6) NOT NULL AUTO_INCREMENT,
+`test_id` int(6) NOT NULL,
   `order_id` int(6) NOT NULL,
   `sample_id` int(6) NOT NULL,
   `test_master_id` int(6) NOT NULL,
   `group_id` int(6) NOT NULL,
-  `test_result` int(11) NOT NULL COMMENT 'Where test results are numeric',
+  `test_result` double NOT NULL COMMENT 'Where test results are numeric',
   `test_result_binary` tinyint(1) NOT NULL COMMENT '0 - Negative, 1 - Positive',
   `test_result_text` text NOT NULL COMMENT 'Any descriptive test results',
   `test_date_time` datetime NOT NULL,
   `test_done_by` int(6) NOT NULL COMMENT 'staff_id',
-  `test_approved_by` int(6) NOT NULL COMMENT 'staff_id',
-  PRIMARY KEY (`test_id`)
+  `test_approved_by` int(6) NOT NULL COMMENT 'staff_id'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Details of tests done' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13804,9 +14785,8 @@ CREATE TABLE IF NOT EXISTS `test` (
 --
 
 CREATE TABLE IF NOT EXISTS `test_area` (
-  `test_area_id` int(6) NOT NULL AUTO_INCREMENT,
-  `test_area` varchar(100) NOT NULL COMMENT 'Eg. Microbiology, Pathology, etc.',
-  PRIMARY KEY (`test_area_id`)
+`test_area_id` int(6) NOT NULL,
+  `test_area` varchar(100) NOT NULL COMMENT 'Eg. Microbiology, Pathology, etc.'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Areas where the tests are done' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13816,9 +14796,8 @@ CREATE TABLE IF NOT EXISTS `test_area` (
 --
 
 CREATE TABLE IF NOT EXISTS `test_group` (
-  `group_id` int(6) NOT NULL AUTO_INCREMENT,
-  `group_name` varchar(50) NOT NULL COMMENT 'LFT, RFT, etc.,',
-  PRIMARY KEY (`group_id`)
+`group_id` int(6) NOT NULL,
+  `group_name` varchar(50) NOT NULL COMMENT 'LFT, RFT, etc.,'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Standard grouping of tests or test panels' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13828,10 +14807,9 @@ CREATE TABLE IF NOT EXISTS `test_group` (
 --
 
 CREATE TABLE IF NOT EXISTS `test_group_link` (
-  `link_id` int(6) NOT NULL AUTO_INCREMENT,
+`link_id` int(6) NOT NULL,
   `group_id` int(6) NOT NULL,
-  `test_master_id` int(6) NOT NULL,
-  PRIMARY KEY (`link_id`)
+  `test_master_id` int(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13841,10 +14819,12 @@ CREATE TABLE IF NOT EXISTS `test_group_link` (
 --
 
 CREATE TABLE IF NOT EXISTS `test_master` (
-  `test_master_id` int(6) NOT NULL AUTO_INCREMENT,
+`test_master_id` int(6) NOT NULL,
   `test_name` varchar(50) NOT NULL COMMENT 'Eg : ASO, CRP, Blood Culture...',
   `test_method_id` int(6) NOT NULL,
-  PRIMARY KEY (`test_master_id`)
+  `test_area_id` int(6) DEFAULT NULL,
+  `availability` int(1) NOT NULL DEFAULT '1' COMMENT '1-available, 0-unavailable',
+  `comments` varchar(60) DEFAULT NULL COMMENT 'comments on availability'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Master list of tests performed in the labs' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13854,9 +14834,8 @@ CREATE TABLE IF NOT EXISTS `test_master` (
 --
 
 CREATE TABLE IF NOT EXISTS `test_method` (
-  `test_method_id` int(6) NOT NULL AUTO_INCREMENT,
-  `test_method` varchar(100) NOT NULL COMMENT 'Eg. Serology, Microscopy, etc.)',
-  PRIMARY KEY (`test_method_id`)
+`test_method_id` int(6) NOT NULL,
+  `test_method` varchar(100) NOT NULL COMMENT 'Eg. Serology, Microscopy, etc.)'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Methods of testing' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13866,14 +14845,13 @@ CREATE TABLE IF NOT EXISTS `test_method` (
 --
 
 CREATE TABLE IF NOT EXISTS `test_order` (
-  `order_id` int(6) NOT NULL AUTO_INCREMENT,
+`order_id` int(6) NOT NULL,
   `visit_id` int(6) NOT NULL,
   `doctor_id` int(6) NOT NULL COMMENT 'staff_id',
   `test_area_id` int(6) NOT NULL,
   `order_date_time` datetime NOT NULL,
   `received_date_time` datetime NOT NULL,
-  `order_status` tinyint(1) NOT NULL COMMENT '0 - Ordered, 1 - Received',
-  PRIMARY KEY (`order_id`)
+  `order_status` tinyint(1) NOT NULL COMMENT '0 - Ordered, 1 - Received'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Orders placed for diagnostic test' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13883,14 +14861,13 @@ CREATE TABLE IF NOT EXISTS `test_order` (
 --
 
 CREATE TABLE IF NOT EXISTS `test_sample` (
-  `sample_id` int(6) NOT NULL AUTO_INCREMENT,
+`sample_id` int(6) NOT NULL,
   `sample_code` varchar(10) NOT NULL,
   `sample_date_time` datetime NOT NULL,
   `order_id` int(6) NOT NULL,
   `specimen_type_id` int(6) NOT NULL,
   `sample_container_type` varchar(50) NOT NULL,
-  `sample_status_id` int(4) NOT NULL,
-  PRIMARY KEY (`sample_id`)
+  `sample_status_id` int(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Samples sent for test' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13900,11 +14877,10 @@ CREATE TABLE IF NOT EXISTS `test_sample` (
 --
 
 CREATE TABLE IF NOT EXISTS `test_status` (
-  `test_status_id` int(6) NOT NULL AUTO_INCREMENT,
+`test_status_id` int(6) NOT NULL,
   `test_id` int(6) NOT NULL,
   `test_status_type_id` int(6) NOT NULL,
-  `status_date_time` datetime NOT NULL,
-  PRIMARY KEY (`test_status_id`)
+  `status_date_time` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Status logs of tests' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13914,9 +14890,8 @@ CREATE TABLE IF NOT EXISTS `test_status` (
 --
 
 CREATE TABLE IF NOT EXISTS `test_status_type` (
-  `test_status_type_id` int(6) NOT NULL AUTO_INCREMENT,
-  `test_status` varchar(100) NOT NULL COMMENT 'Not performed, performed, approved, failed, etc.,',
-  PRIMARY KEY (`test_status_type_id`)
+`test_status_type_id` int(6) NOT NULL,
+  `test_status` varchar(100) NOT NULL COMMENT 'Not performed, performed, approved, failed, etc.,'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Master list of status types for a test' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -13926,9 +14901,8 @@ CREATE TABLE IF NOT EXISTS `test_status_type` (
 --
 
 CREATE TABLE IF NOT EXISTS `treatment_type` (
-  `treatment_type_id` int(3) NOT NULL AUTO_INCREMENT,
-  `treatment_type` varchar(50) NOT NULL,
-  PRIMARY KEY (`treatment_type_id`)
+`treatment_type_id` int(3) NOT NULL,
+  `treatment_type` varchar(50) NOT NULL
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
@@ -13949,22 +14923,21 @@ INSERT INTO `treatment_type` (`treatment_type_id`, `treatment_type`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `units`
+-- Table structure for table `unit`
 --
 
-CREATE TABLE IF NOT EXISTS `units` (
-  `unit_id` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `unit` (
+`unit_id` int(4) NOT NULL,
   `unit_name` varchar(20) NOT NULL,
   `department_id` int(4) NOT NULL,
-  `beds` int(4) NOT NULL,
-  PRIMARY KEY (`unit_id`)
+  `beds` int(4) NOT NULL
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COMMENT='Units belonging to departments in hospital' AUTO_INCREMENT=51 ;
 
 --
--- Dumping data for table `units`
+-- Dumping data for table `unit`
 --
 
-INSERT INTO `units` (`unit_id`, `unit_name`, `department_id`, `beds`) VALUES
+INSERT INTO `unit` (`unit_id`, `unit_name`, `department_id`, `beds`) VALUES
 (5, 'UNIT-I', 22, 0),
 (6, 'UNIT-II', 22, 0),
 (7, 'UNIT-III', 22, 0),
@@ -14015,27 +14988,35 @@ INSERT INTO `units` (`unit_id`, `unit_name`, `department_id`, `beds`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Table structure for table `user`
 --
 
-CREATE TABLE IF NOT EXISTS `users` (
-  `user_id` int(4) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `user` (
+`user_id` int(4) NOT NULL,
   `username` varchar(20) NOT NULL,
   `password` varchar(64) NOT NULL,
+  `staff_id` int(6) NOT NULL,
   `present_login_time` time NOT NULL,
   `present_login_date` date NOT NULL,
   `past_login_time` time NOT NULL,
-  `past_login_date` date NOT NULL,
-  PRIMARY KEY (`user_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+  `past_login_date` date NOT NULL
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `user`
 --
 
-INSERT INTO `users` (`user_id`, `username`, `password`, `present_login_time`, `present_login_date`, `past_login_time`, `past_login_date`) VALUES
-(1, 'admin', '5f4dcc3b5aa765d61d8327deb882cf99', '06:17:23', '2014-01-12', '16:47:28', '2014-01-11'),
-(2, 'user', 'password', '19:07:02', '2014-04-22', '14:34:02', '2014-04-09');
+INSERT INTO `user` (`user_id`, `username`, `password`, `staff_id`, `present_login_time`, `present_login_date`, `past_login_time`, `past_login_date`) VALUES
+(1, 'admin', '5f4dcc3b5aa765d61d8327deb882cf99', 0, '06:17:23', '2014-01-12', '16:47:28', '2014-01-11'),
+(13, 'vivek', '5f4dcc3b5aa765d61d8327deb882cf99', 21, '00:00:00', '0000-00-00', '00:00:00', '0000-00-00'),
+(14, 'vivek1', '5f4dcc3b5aa765d61d8327deb882cf99', 15, '00:00:00', '0000-00-00', '00:00:00', '0000-00-00'),
+(16, 'vivek2', '5f4dcc3b5aa765d61d8327deb882cf99', 1, '00:00:00', '0000-00-00', '00:00:00', '0000-00-00'),
+(17, 'yashasvi', '5f4dcc3b5aa765d61d8327deb882cf99', 12, '00:00:00', '0000-00-00', '00:00:00', '0000-00-00'),
+(18, 'vivek.c', '5f4dcc3b5aa765d61d8327deb882cf99', 58, '00:00:00', '0000-00-00', '00:00:00', '0000-00-00'),
+(19, 'vvk92', '5f4dcc3b5aa765d61d8327deb882cf99', 11, '00:00:00', '0000-00-00', '00:00:00', '0000-00-00'),
+(20, 'testuser', 'e16b2ab8d12314bf4efbd6203906ea6c', 254, '00:00:00', '0000-00-00', '00:00:00', '0000-00-00'),
+(21, 'sudhakar', '5f4dcc3b5aa765d61d8327deb882cf99', 229, '00:00:00', '0000-00-00', '00:00:00', '0000-00-00'),
+(22, 'vivek.yousee', '5f4dcc3b5aa765d61d8327deb882cf99', 254, '00:00:00', '0000-00-00', '00:00:00', '0000-00-00');
 
 -- --------------------------------------------------------
 
@@ -14044,12 +15025,11 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `present_login_time`, `p
 --
 
 CREATE TABLE IF NOT EXISTS `user_activity` (
-  `update_id` int(7) NOT NULL AUTO_INCREMENT,
+`update_id` int(7) NOT NULL,
   `visit_id` int(7) NOT NULL,
   `user_id` int(4) NOT NULL,
   `register` tinyint(1) NOT NULL,
-  `event_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`update_id`)
+  `event_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
@@ -14063,85 +15043,196 @@ INSERT INTO `user_activity` (`update_id`, `visit_id`, `user_id`, `register`, `ev
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_department_links`
+-- Table structure for table `user_department_link`
 --
 
-CREATE TABLE IF NOT EXISTS `user_department_links` (
-  `link_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `user_department_link` (
+`link_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `department_id` int(11) NOT NULL,
-  PRIMARY KEY (`link_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+  `department_id` int(11) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Links users with departments' AUTO_INCREMENT=9 ;
 
 --
--- Dumping data for table `user_department_links`
+-- Dumping data for table `user_department_link`
 --
 
-INSERT INTO `user_department_links` (`link_id`, `user_id`, `department_id`) VALUES
-(1, 1, 0);
+INSERT INTO `user_department_link` (`link_id`, `user_id`, `department_id`) VALUES
+(1, 1, 0),
+(2, 16, 1),
+(3, 17, 29),
+(4, 18, 13),
+(5, 19, 1),
+(6, 20, 0),
+(7, 21, 4),
+(8, 22, 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_functions`
+-- Table structure for table `user_function`
 --
 
-CREATE TABLE IF NOT EXISTS `user_functions` (
-  `user_function_id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_function` varchar(20) NOT NULL,
-  PRIMARY KEY (`user_function_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+CREATE TABLE IF NOT EXISTS `user_function` (
+`user_function_id` int(11) NOT NULL,
+  `user_function` varchar(50) NOT NULL
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=22 ;
 
 --
--- Dumping data for table `user_functions`
+-- Dumping data for table `user_function`
 --
 
-INSERT INTO `user_functions` (`user_function_id`, `user_function`) VALUES
-(1, 'All');
+INSERT INTO `user_function` (`user_function_id`, `user_function`) VALUES
+(1, 'All'),
+(2, 'Out Patient Registration'),
+(3, 'In Patient Registration'),
+(4, 'Diagnostics'),
+(5, 'HR'),
+(6, 'Equipment'),
+(7, 'Consumables'),
+(8, 'Bloodbank'),
+(9, 'Create Forms'),
+(10, 'Masters - Application'),
+(11, 'Masters - Equipment'),
+(12, 'Masters - Staff'),
+(13, 'Masters - Diagnostics'),
+(14, 'Masters - Consumables'),
+(15, 'Masters - Bloodbank'),
+(16, 'IP Summary'),
+(17, 'OP Summary'),
+(18, 'OP Detail'),
+(19, 'IP Detail'),
+(20, 'Masters - Sanitation'),
+(21, 'Sanitation Evaluation');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_function_links`
+-- Table structure for table `user_function_link`
 --
 
-CREATE TABLE IF NOT EXISTS `user_function_links` (
-  `link_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `user_function_link` (
+`link_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `function_id` int(11) NOT NULL,
   `add` tinyint(1) NOT NULL,
   `edit` tinyint(1) NOT NULL,
-  `view` tinyint(1) NOT NULL,
-  PRIMARY KEY (`link_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+  `view` tinyint(1) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Links users to functions with specific permissions' AUTO_INCREMENT=94 ;
 
 --
--- Dumping data for table `user_function_links`
+-- Dumping data for table `user_function_link`
 --
 
-INSERT INTO `user_function_links` (`link_id`, `user_id`, `function_id`, `add`, `edit`, `view`) VALUES
-(1, 1, 1, 0, 0, 0);
+INSERT INTO `user_function_link` (`link_id`, `user_id`, `function_id`, `add`, `edit`, `view`) VALUES
+(1, 1, 1, 0, 0, 0),
+(2, 4, 1, 0, 1, 0),
+(3, 5, 1, 0, 1, 0),
+(4, 6, 1, 1, 0, 0),
+(5, 7, 1, 0, 1, 0),
+(6, 8, 1, 0, 1, 0),
+(7, 9, 1, 0, 1, 0),
+(8, 10, 1, 0, 1, 0),
+(9, 11, 1, 0, 0, 1),
+(10, 12, 1, 1, 1, 1),
+(11, 13, 1, 1, 1, 1),
+(13, 16, 1, 1, 1, 1),
+(14, 17, 1, 0, 1, 0),
+(25, 19, 2, 1, 1, 1),
+(26, 19, 4, 1, 1, 1),
+(27, 19, 5, 1, 1, 1),
+(28, 19, 9, 1, 1, 1),
+(29, 20, 2, 1, 1, 1),
+(30, 20, 3, 1, 1, 1),
+(31, 20, 4, 1, 1, 1),
+(32, 20, 5, 1, 1, 1),
+(33, 20, 6, 1, 1, 1),
+(34, 20, 7, 1, 1, 1),
+(35, 20, 8, 1, 1, 1),
+(36, 20, 9, 1, 1, 1),
+(37, 20, 10, 1, 1, 1),
+(38, 21, 2, 1, 1, 1),
+(39, 21, 3, 1, 1, 1),
+(40, 21, 4, 1, 1, 1),
+(41, 21, 5, 1, 1, 1),
+(42, 21, 6, 1, 1, 1),
+(43, 21, 7, 1, 1, 1),
+(44, 21, 8, 1, 1, 1),
+(45, 21, 9, 1, 1, 1),
+(46, 21, 10, 1, 1, 1),
+(47, 21, 11, 1, 1, 1),
+(48, 21, 12, 1, 1, 1),
+(49, 21, 13, 1, 1, 1),
+(50, 21, 14, 1, 1, 1),
+(51, 21, 15, 1, 1, 1),
+(52, 21, 16, 0, 0, 1),
+(53, 21, 17, 0, 0, 1),
+(54, 21, 18, 0, 0, 1),
+(55, 21, 19, 0, 0, 1),
+(56, 22, 1, 1, 1, 1),
+(57, 22, 2, 1, 1, 1),
+(58, 22, 3, 1, 1, 1),
+(59, 22, 4, 1, 0, 0),
+(60, 22, 5, 1, 0, 0),
+(61, 22, 6, 1, 0, 0),
+(62, 22, 7, 1, 0, 0),
+(63, 22, 8, 1, 0, 0),
+(64, 22, 9, 1, 0, 0),
+(65, 22, 10, 1, 0, 0),
+(66, 22, 11, 1, 0, 0),
+(67, 22, 12, 1, 0, 0),
+(68, 22, 13, 1, 0, 0),
+(69, 22, 16, 1, 0, 0),
+(70, 22, 17, 1, 0, 0),
+(71, 22, 18, 1, 0, 0),
+(72, 22, 19, 1, 0, 0),
+(73, 18, 1, 1, 1, 1),
+(74, 18, 2, 1, 1, 1),
+(75, 18, 3, 1, 1, 1),
+(76, 18, 4, 1, 1, 1),
+(77, 18, 5, 1, 1, 1),
+(78, 18, 6, 1, 1, 1),
+(79, 18, 7, 1, 1, 1),
+(80, 18, 8, 1, 1, 1),
+(81, 18, 9, 1, 1, 1),
+(82, 18, 10, 1, 1, 1),
+(83, 18, 11, 1, 1, 1),
+(84, 18, 12, 1, 1, 1),
+(85, 18, 13, 1, 1, 1),
+(86, 18, 14, 1, 1, 1),
+(87, 18, 15, 1, 1, 1),
+(88, 18, 16, 1, 1, 1),
+(89, 18, 17, 1, 1, 1),
+(90, 18, 18, 1, 1, 1),
+(91, 18, 19, 1, 1, 1),
+(92, 18, 20, 1, 1, 1),
+(93, 18, 21, 1, 1, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_hospital_links`
+-- Table structure for table `user_hospital_link`
 --
 
-CREATE TABLE IF NOT EXISTS `user_hospital_links` (
-  `link_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `user_hospital_link` (
+`link_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `hospital_id` int(11) NOT NULL,
-  PRIMARY KEY (`link_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+  `hospital_id` int(11) NOT NULL
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Links users with hospitals' AUTO_INCREMENT=10 ;
 
 --
--- Dumping data for table `user_hospital_links`
+-- Dumping data for table `user_hospital_link`
 --
 
-INSERT INTO `user_hospital_links` (`link_id`, `user_id`, `hospital_id`) VALUES
+INSERT INTO `user_hospital_link` (`link_id`, `user_id`, `hospital_id`) VALUES
 (1, 1, 2),
-(2, 1, 3);
+(2, 1, 3),
+(3, 16, 1),
+(4, 17, 1),
+(5, 18, 2),
+(6, 19, 1),
+(7, 20, 1),
+(8, 21, 1),
+(9, 22, 1);
 
 -- --------------------------------------------------------
 
@@ -14150,15 +15241,1017 @@ INSERT INTO `user_hospital_links` (`link_id`, `user_id`, `hospital_id`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `vendor` (
-  `vendor_id` int(11) NOT NULL AUTO_INCREMENT,
+`vendor_id` int(11) NOT NULL,
   `vendor_name` varchar(30) NOT NULL,
   `contact_person_id` int(11) NOT NULL,
   `vendor_address` varchar(50) NOT NULL,
   `vendor_city` varchar(50) NOT NULL,
   `vendor_state` varchar(50) NOT NULL,
-  `vendor_country` varchar(50) NOT NULL,
-  PRIMARY KEY (`vendor_id`)
+  `vendor_country` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='List of vendors' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vendor_contracts`
+--
+
+CREATE TABLE IF NOT EXISTS `vendor_contracts` (
+`contract_id` int(4) NOT NULL,
+  `vendor_id` int(4) NOT NULL,
+  `facility_id` int(4) NOT NULL,
+  `from_date` date NOT NULL,
+  `to_date` date NOT NULL,
+  `status` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `village_town`
+--
+
+CREATE TABLE IF NOT EXISTS `village_town` (
+`village_town_id` int(6) NOT NULL,
+  `village_town` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `affiliation`
+--
+ALTER TABLE `affiliation`
+ ADD PRIMARY KEY (`affiliation_id`);
+
+--
+-- Indexes for table `antenatal_visit`
+--
+ALTER TABLE `antenatal_visit`
+ ADD PRIMARY KEY (`antenatal_visit_id`), ADD KEY `visit_id` (`visit_id`);
+
+--
+-- Indexes for table `antibody`
+--
+ALTER TABLE `antibody`
+ ADD PRIMARY KEY (`antibody_id`);
+
+--
+-- Indexes for table `antibody_test`
+--
+ALTER TABLE `antibody_test`
+ ADD PRIMARY KEY (`antibody_test_id`);
+
+--
+-- Indexes for table `area`
+--
+ALTER TABLE `area`
+ ADD PRIMARY KEY (`area_id`);
+
+--
+-- Indexes for table `area_activity`
+--
+ALTER TABLE `area_activity`
+ ADD PRIMARY KEY (`area_activity_id`);
+
+--
+-- Indexes for table `area_types`
+--
+ALTER TABLE `area_types`
+ ADD PRIMARY KEY (`area_type_id`);
+
+--
+-- Indexes for table `audiology`
+--
+ALTER TABLE `audiology`
+ ADD PRIMARY KEY (`aud_test_id`);
+
+--
+-- Indexes for table `bb_appointment`
+--
+ALTER TABLE `bb_appointment`
+ ADD PRIMARY KEY (`appointment_id`);
+
+--
+-- Indexes for table `bb_app_slot_link`
+--
+ALTER TABLE `bb_app_slot_link`
+ ADD PRIMARY KEY (`link_id`);
+
+--
+-- Indexes for table `bb_donation`
+--
+ALTER TABLE `bb_donation`
+ ADD PRIMARY KEY (`donation_id`);
+
+--
+-- Indexes for table `bb_issued_inventory`
+--
+ALTER TABLE `bb_issued_inventory`
+ ADD PRIMARY KEY (`issued_inventory_id`);
+
+--
+-- Indexes for table `bb_replacement_patient`
+--
+ALTER TABLE `bb_replacement_patient`
+ ADD PRIMARY KEY (`replacement_patient_id`);
+
+--
+-- Indexes for table `bb_slot`
+--
+ALTER TABLE `bb_slot`
+ ADD PRIMARY KEY (`slot_id`);
+
+--
+-- Indexes for table `bb_status`
+--
+ALTER TABLE `bb_status`
+ ADD PRIMARY KEY (`status_id`);
+
+--
+-- Indexes for table `bb_user`
+--
+ALTER TABLE `bb_user`
+ ADD PRIMARY KEY (`user_id`);
+
+--
+-- Indexes for table `blood_donation_camp`
+--
+ALTER TABLE `blood_donation_camp`
+ ADD PRIMARY KEY (`camp_id`);
+
+--
+-- Indexes for table `blood_donation_camp_date`
+--
+ALTER TABLE `blood_donation_camp_date`
+ ADD PRIMARY KEY (`camp_id`);
+
+--
+-- Indexes for table `blood_donor`
+--
+ALTER TABLE `blood_donor`
+ ADD PRIMARY KEY (`donor_id`);
+
+--
+-- Indexes for table `blood_grouping`
+--
+ALTER TABLE `blood_grouping`
+ ADD PRIMARY KEY (`grouping_id`), ADD UNIQUE KEY `donation_id` (`donation_id`);
+
+--
+-- Indexes for table `blood_inventory`
+--
+ALTER TABLE `blood_inventory`
+ ADD PRIMARY KEY (`inventory_id`), ADD KEY `donor_id` (`donation_id`);
+
+--
+-- Indexes for table `blood_issue`
+--
+ALTER TABLE `blood_issue`
+ ADD PRIMARY KEY (`issue_id`);
+
+--
+-- Indexes for table `blood_request`
+--
+ALTER TABLE `blood_request`
+ ADD PRIMARY KEY (`request_id`);
+
+--
+-- Indexes for table `blood_screening`
+--
+ALTER TABLE `blood_screening`
+ ADD PRIMARY KEY (`screening_id`), ADD UNIQUE KEY `donation_id` (`donation_id`);
+
+--
+-- Indexes for table `ci_sessions`
+--
+ALTER TABLE `ci_sessions`
+ ADD PRIMARY KEY (`session_id`), ADD KEY `last_activity_idx` (`last_activity`);
+
+--
+-- Indexes for table `contact_person`
+--
+ALTER TABLE `contact_person`
+ ADD PRIMARY KEY (`contact_person_id`);
+
+--
+-- Indexes for table `counter`
+--
+ALTER TABLE `counter`
+ ADD PRIMARY KEY (`counter_id`);
+
+--
+-- Indexes for table `department`
+--
+ALTER TABLE `department`
+ ADD PRIMARY KEY (`department_id`);
+
+--
+-- Indexes for table `district`
+--
+ALTER TABLE `district`
+ ADD PRIMARY KEY (`district_id`);
+
+--
+-- Indexes for table `dosage`
+--
+ALTER TABLE `dosage`
+ ADD PRIMARY KEY (`dosage_id`);
+
+--
+-- Indexes for table `drug_type`
+--
+ALTER TABLE `drug_type`
+ ADD PRIMARY KEY (`drug_type_id`);
+
+--
+-- Indexes for table `equipment`
+--
+ALTER TABLE `equipment`
+ ADD PRIMARY KEY (`equipment_id`);
+
+--
+-- Indexes for table `equipment_type`
+--
+ALTER TABLE `equipment_type`
+ ADD PRIMARY KEY (`equipment_type_id`);
+
+--
+-- Indexes for table `facility`
+--
+ALTER TABLE `facility`
+ ADD PRIMARY KEY (`facility_id`);
+
+--
+-- Indexes for table `facility_activity`
+--
+ALTER TABLE `facility_activity`
+ ADD PRIMARY KEY (`activity_id`), ADD UNIQUE KEY `activity_id` (`activity_id`);
+
+--
+-- Indexes for table `facility_area`
+--
+ALTER TABLE `facility_area`
+ ADD PRIMARY KEY (`facility_area_id`);
+
+--
+-- Indexes for table `facility_type`
+--
+ALTER TABLE `facility_type`
+ ADD PRIMARY KEY (`facility_type_id`);
+
+--
+-- Indexes for table `form`
+--
+ALTER TABLE `form`
+ ADD PRIMARY KEY (`form_id`);
+
+--
+-- Indexes for table `form_layout`
+--
+ALTER TABLE `form_layout`
+ ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `generic_item`
+--
+ALTER TABLE `generic_item`
+ ADD PRIMARY KEY (`generic_item_id`);
+
+--
+-- Indexes for table `hospital`
+--
+ALTER TABLE `hospital`
+ ADD PRIMARY KEY (`hospital_id`);
+
+--
+-- Indexes for table `id_proof_type`
+--
+ALTER TABLE `id_proof_type`
+ ADD PRIMARY KEY (`id_proof_type_id`);
+
+--
+-- Indexes for table `indent`
+--
+ALTER TABLE `indent`
+ ADD PRIMARY KEY (`indent_id`);
+
+--
+-- Indexes for table `indent_item`
+--
+ALTER TABLE `indent_item`
+ ADD PRIMARY KEY (`indent_item_id`);
+
+--
+-- Indexes for table `item`
+--
+ALTER TABLE `item`
+ ADD PRIMARY KEY (`item_id`);
+
+--
+-- Indexes for table `item_form`
+--
+ALTER TABLE `item_form`
+ ADD PRIMARY KEY (`item_form_id`);
+
+--
+-- Indexes for table `item_name`
+--
+ALTER TABLE `item_name`
+ ADD PRIMARY KEY (`item_name_id`);
+
+--
+-- Indexes for table `item_type`
+--
+ALTER TABLE `item_type`
+ ADD PRIMARY KEY (`item_type_id`);
+
+--
+-- Indexes for table `marital_info`
+--
+ALTER TABLE `marital_info`
+ ADD PRIMARY KEY (`marital_history_id`), ADD KEY `patient_id` (`patient_id`);
+
+--
+-- Indexes for table `menstrual_history`
+--
+ALTER TABLE `menstrual_history`
+ ADD PRIMARY KEY (`menstrual_history_id`);
+
+--
+-- Indexes for table `micro_organism`
+--
+ALTER TABLE `micro_organism`
+ ADD PRIMARY KEY (`micro_organism_id`);
+
+--
+-- Indexes for table `micro_organism_test`
+--
+ALTER TABLE `micro_organism_test`
+ ADD PRIMARY KEY (`micro_organism_test_id`);
+
+--
+-- Indexes for table `mlc`
+--
+ALTER TABLE `mlc`
+ ADD PRIMARY KEY (`visit_id`), ADD UNIQUE KEY `visit_id` (`visit_id`);
+
+--
+-- Indexes for table `obstetric_history`
+--
+ALTER TABLE `obstetric_history`
+ ADD PRIMARY KEY (`obstetric_history_id`);
+
+--
+-- Indexes for table `patient`
+--
+ALTER TABLE `patient`
+ ADD PRIMARY KEY (`patient_id`), ADD UNIQUE KEY `patient_id` (`patient_id`);
+
+--
+-- Indexes for table `patient_treatment`
+--
+ALTER TABLE `patient_treatment`
+ ADD PRIMARY KEY (`treatment_id`);
+
+--
+-- Indexes for table `patient_visit`
+--
+ALTER TABLE `patient_visit`
+ ADD KEY `visit_id` (`visit_id`);
+
+--
+-- Indexes for table `print_layout`
+--
+ALTER TABLE `print_layout`
+ ADD PRIMARY KEY (`print_layout_id`);
+
+--
+-- Indexes for table `publication`
+--
+ALTER TABLE `publication`
+ ADD PRIMARY KEY (`publication_id`);
+
+--
+-- Indexes for table `qualification`
+--
+ALTER TABLE `qualification`
+ ADD PRIMARY KEY (`qualification_id`);
+
+--
+-- Indexes for table `sample_status`
+--
+ALTER TABLE `sample_status`
+ ADD PRIMARY KEY (`sample_status_id`);
+
+--
+-- Indexes for table `service_record`
+--
+ALTER TABLE `service_record`
+ ADD PRIMARY KEY (`request_id`), ADD UNIQUE KEY `request_id` (`request_id`);
+
+--
+-- Indexes for table `specimen_type`
+--
+ALTER TABLE `specimen_type`
+ ADD PRIMARY KEY (`specimen_type_id`);
+
+--
+-- Indexes for table `staff`
+--
+ALTER TABLE `staff`
+ ADD PRIMARY KEY (`staff_id`);
+
+--
+-- Indexes for table `staff_category`
+--
+ALTER TABLE `staff_category`
+ ADD PRIMARY KEY (`staff_category_id`);
+
+--
+-- Indexes for table `staff_role`
+--
+ALTER TABLE `staff_role`
+ ADD PRIMARY KEY (`staff_role_id`);
+
+--
+-- Indexes for table `staff_service`
+--
+ALTER TABLE `staff_service`
+ ADD PRIMARY KEY (`service_id`);
+
+--
+-- Indexes for table `states`
+--
+ALTER TABLE `states`
+ ADD PRIMARY KEY (`state_id`);
+
+--
+-- Indexes for table `test`
+--
+ALTER TABLE `test`
+ ADD PRIMARY KEY (`test_id`);
+
+--
+-- Indexes for table `test_area`
+--
+ALTER TABLE `test_area`
+ ADD PRIMARY KEY (`test_area_id`);
+
+--
+-- Indexes for table `test_group`
+--
+ALTER TABLE `test_group`
+ ADD PRIMARY KEY (`group_id`);
+
+--
+-- Indexes for table `test_group_link`
+--
+ALTER TABLE `test_group_link`
+ ADD PRIMARY KEY (`link_id`);
+
+--
+-- Indexes for table `test_master`
+--
+ALTER TABLE `test_master`
+ ADD PRIMARY KEY (`test_master_id`), ADD KEY `tm_ta_fk` (`test_area_id`);
+
+--
+-- Indexes for table `test_method`
+--
+ALTER TABLE `test_method`
+ ADD PRIMARY KEY (`test_method_id`);
+
+--
+-- Indexes for table `test_order`
+--
+ALTER TABLE `test_order`
+ ADD PRIMARY KEY (`order_id`);
+
+--
+-- Indexes for table `test_sample`
+--
+ALTER TABLE `test_sample`
+ ADD PRIMARY KEY (`sample_id`);
+
+--
+-- Indexes for table `test_status`
+--
+ALTER TABLE `test_status`
+ ADD PRIMARY KEY (`test_status_id`);
+
+--
+-- Indexes for table `test_status_type`
+--
+ALTER TABLE `test_status_type`
+ ADD PRIMARY KEY (`test_status_type_id`);
+
+--
+-- Indexes for table `treatment_type`
+--
+ALTER TABLE `treatment_type`
+ ADD PRIMARY KEY (`treatment_type_id`);
+
+--
+-- Indexes for table `unit`
+--
+ALTER TABLE `unit`
+ ADD PRIMARY KEY (`unit_id`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+ ADD PRIMARY KEY (`user_id`), ADD UNIQUE KEY `username` (`username`);
+
+--
+-- Indexes for table `user_activity`
+--
+ALTER TABLE `user_activity`
+ ADD PRIMARY KEY (`update_id`);
+
+--
+-- Indexes for table `user_department_link`
+--
+ALTER TABLE `user_department_link`
+ ADD PRIMARY KEY (`link_id`);
+
+--
+-- Indexes for table `user_function`
+--
+ALTER TABLE `user_function`
+ ADD PRIMARY KEY (`user_function_id`);
+
+--
+-- Indexes for table `user_function_link`
+--
+ALTER TABLE `user_function_link`
+ ADD PRIMARY KEY (`link_id`);
+
+--
+-- Indexes for table `user_hospital_link`
+--
+ALTER TABLE `user_hospital_link`
+ ADD PRIMARY KEY (`link_id`);
+
+--
+-- Indexes for table `vendor`
+--
+ALTER TABLE `vendor`
+ ADD PRIMARY KEY (`vendor_id`);
+
+--
+-- Indexes for table `vendor_contracts`
+--
+ALTER TABLE `vendor_contracts`
+ ADD PRIMARY KEY (`contract_id`);
+
+--
+-- Indexes for table `village_town`
+--
+ALTER TABLE `village_town`
+ ADD PRIMARY KEY (`village_town_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `affiliation`
+--
+ALTER TABLE `affiliation`
+MODIFY `affiliation_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `antenatal_visit`
+--
+ALTER TABLE `antenatal_visit`
+MODIFY `antenatal_visit_id` int(7) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `antibody`
+--
+ALTER TABLE `antibody`
+MODIFY `antibody_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `antibody_test`
+--
+ALTER TABLE `antibody_test`
+MODIFY `antibody_test_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `area`
+--
+ALTER TABLE `area`
+MODIFY `area_id` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=13;
+--
+-- AUTO_INCREMENT for table `area_activity`
+--
+ALTER TABLE `area_activity`
+MODIFY `area_activity_id` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
+--
+-- AUTO_INCREMENT for table `area_types`
+--
+ALTER TABLE `area_types`
+MODIFY `area_type_id` int(2) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=24;
+--
+-- AUTO_INCREMENT for table `audiology`
+--
+ALTER TABLE `audiology`
+MODIFY `aud_test_id` int(7) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `bb_appointment`
+--
+ALTER TABLE `bb_appointment`
+MODIFY `appointment_id` int(7) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `bb_app_slot_link`
+--
+ALTER TABLE `bb_app_slot_link`
+MODIFY `link_id` int(7) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `bb_donation`
+--
+ALTER TABLE `bb_donation`
+MODIFY `donation_id` int(7) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8446;
+--
+-- AUTO_INCREMENT for table `bb_issued_inventory`
+--
+ALTER TABLE `bb_issued_inventory`
+MODIFY `issued_inventory_id` int(7) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `bb_replacement_patient`
+--
+ALTER TABLE `bb_replacement_patient`
+MODIFY `replacement_patient_id` int(7) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `bb_slot`
+--
+ALTER TABLE `bb_slot`
+MODIFY `slot_id` int(7) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `bb_status`
+--
+ALTER TABLE `bb_status`
+MODIFY `status_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
+--
+-- AUTO_INCREMENT for table `bb_user`
+--
+ALTER TABLE `bb_user`
+MODIFY `user_id` int(7) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `blood_donation_camp`
+--
+ALTER TABLE `blood_donation_camp`
+MODIFY `camp_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `blood_donation_camp_date`
+--
+ALTER TABLE `blood_donation_camp_date`
+MODIFY `camp_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `blood_donor`
+--
+ALTER TABLE `blood_donor`
+MODIFY `donor_id` int(7) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `blood_grouping`
+--
+ALTER TABLE `blood_grouping`
+MODIFY `grouping_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9491;
+--
+-- AUTO_INCREMENT for table `blood_inventory`
+--
+ALTER TABLE `blood_inventory`
+MODIFY `inventory_id` int(7) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15988;
+--
+-- AUTO_INCREMENT for table `blood_issue`
+--
+ALTER TABLE `blood_issue`
+MODIFY `issue_id` int(7) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `blood_request`
+--
+ALTER TABLE `blood_request`
+MODIFY `request_id` int(7) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4441;
+--
+-- AUTO_INCREMENT for table `blood_screening`
+--
+ALTER TABLE `blood_screening`
+MODIFY `screening_id` int(7) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `contact_person`
+--
+ALTER TABLE `contact_person`
+MODIFY `contact_person_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `counter`
+--
+ALTER TABLE `counter`
+MODIFY `counter_id` int(7) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `dosage`
+--
+ALTER TABLE `dosage`
+MODIFY `dosage_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `drug_type`
+--
+ALTER TABLE `drug_type`
+MODIFY `drug_type_id` int(20) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `equipment`
+--
+ALTER TABLE `equipment`
+MODIFY `equipment_id` int(6) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=63;
+--
+-- AUTO_INCREMENT for table `equipment_type`
+--
+ALTER TABLE `equipment_type`
+MODIFY `equipment_type_id` int(3) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=99;
+--
+-- AUTO_INCREMENT for table `facility`
+--
+ALTER TABLE `facility`
+MODIFY `facility_id` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT for table `facility_activity`
+--
+ALTER TABLE `facility_activity`
+MODIFY `activity_id` int(6) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `facility_area`
+--
+ALTER TABLE `facility_area`
+MODIFY `facility_area_id` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
+--
+-- AUTO_INCREMENT for table `facility_type`
+--
+ALTER TABLE `facility_type`
+MODIFY `facility_type_id` int(2) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=64;
+--
+-- AUTO_INCREMENT for table `form`
+--
+ALTER TABLE `form`
+MODIFY `form_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
+--
+-- AUTO_INCREMENT for table `form_layout`
+--
+ALTER TABLE `form_layout`
+MODIFY `id` int(6) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=115;
+--
+-- AUTO_INCREMENT for table `generic_item`
+--
+ALTER TABLE `generic_item`
+MODIFY `generic_item_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `hospital`
+--
+ALTER TABLE `hospital`
+MODIFY `hospital_id` int(3) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `id_proof_type`
+--
+ALTER TABLE `id_proof_type`
+MODIFY `id_proof_type_id` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `indent`
+--
+ALTER TABLE `indent`
+MODIFY `indent_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `indent_item`
+--
+ALTER TABLE `indent_item`
+MODIFY `indent_item_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `item`
+--
+ALTER TABLE `item`
+MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `item_form`
+--
+ALTER TABLE `item_form`
+MODIFY `item_form_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `item_name`
+--
+ALTER TABLE `item_name`
+MODIFY `item_name_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `item_type`
+--
+ALTER TABLE `item_type`
+MODIFY `item_type_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `marital_info`
+--
+ALTER TABLE `marital_info`
+MODIFY `marital_history_id` int(7) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `menstrual_history`
+--
+ALTER TABLE `menstrual_history`
+MODIFY `menstrual_history_id` int(7) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `micro_organism`
+--
+ALTER TABLE `micro_organism`
+MODIFY `micro_organism_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `micro_organism_test`
+--
+ALTER TABLE `micro_organism_test`
+MODIFY `micro_organism_test_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `obstetric_history`
+--
+ALTER TABLE `obstetric_history`
+MODIFY `obstetric_history_id` int(7) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `patient`
+--
+ALTER TABLE `patient`
+MODIFY `patient_id` int(7) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=81;
+--
+-- AUTO_INCREMENT for table `patient_treatment`
+--
+ALTER TABLE `patient_treatment`
+MODIFY `treatment_id` int(10) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `patient_visit`
+--
+ALTER TABLE `patient_visit`
+MODIFY `visit_id` int(7) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=100;
+--
+-- AUTO_INCREMENT for table `print_layout`
+--
+ALTER TABLE `print_layout`
+MODIFY `print_layout_id` int(6) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `publication`
+--
+ALTER TABLE `publication`
+MODIFY `publication_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `qualification`
+--
+ALTER TABLE `qualification`
+MODIFY `qualification_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `sample_status`
+--
+ALTER TABLE `sample_status`
+MODIFY `sample_status_id` int(6) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT for table `service_record`
+--
+ALTER TABLE `service_record`
+MODIFY `request_id` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `specimen_type`
+--
+ALTER TABLE `specimen_type`
+MODIFY `specimen_type_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `staff`
+--
+ALTER TABLE `staff`
+MODIFY `staff_id` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=256;
+--
+-- AUTO_INCREMENT for table `staff_category`
+--
+ALTER TABLE `staff_category`
+MODIFY `staff_category_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `staff_role`
+--
+ALTER TABLE `staff_role`
+MODIFY `staff_role_id` int(6) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `staff_service`
+--
+ALTER TABLE `staff_service`
+MODIFY `service_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `states`
+--
+ALTER TABLE `states`
+MODIFY `state_id` int(2) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT for table `test`
+--
+ALTER TABLE `test`
+MODIFY `test_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `test_area`
+--
+ALTER TABLE `test_area`
+MODIFY `test_area_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `test_group`
+--
+ALTER TABLE `test_group`
+MODIFY `group_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `test_group_link`
+--
+ALTER TABLE `test_group_link`
+MODIFY `link_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `test_master`
+--
+ALTER TABLE `test_master`
+MODIFY `test_master_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `test_method`
+--
+ALTER TABLE `test_method`
+MODIFY `test_method_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `test_order`
+--
+ALTER TABLE `test_order`
+MODIFY `order_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `test_sample`
+--
+ALTER TABLE `test_sample`
+MODIFY `sample_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `test_status`
+--
+ALTER TABLE `test_status`
+MODIFY `test_status_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `test_status_type`
+--
+ALTER TABLE `test_status_type`
+MODIFY `test_status_type_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `treatment_type`
+--
+ALTER TABLE `treatment_type`
+MODIFY `treatment_type_id` int(3) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
+--
+-- AUTO_INCREMENT for table `unit`
+--
+ALTER TABLE `unit`
+MODIFY `unit_id` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=51;
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+MODIFY `user_id` int(4) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=23;
+--
+-- AUTO_INCREMENT for table `user_activity`
+--
+ALTER TABLE `user_activity`
+MODIFY `update_id` int(7) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `user_department_link`
+--
+ALTER TABLE `user_department_link`
+MODIFY `link_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+--
+-- AUTO_INCREMENT for table `user_function`
+--
+ALTER TABLE `user_function`
+MODIFY `user_function_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=22;
+--
+-- AUTO_INCREMENT for table `user_function_link`
+--
+ALTER TABLE `user_function_link`
+MODIFY `link_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=94;
+--
+-- AUTO_INCREMENT for table `user_hospital_link`
+--
+ALTER TABLE `user_hospital_link`
+MODIFY `link_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
+--
+-- AUTO_INCREMENT for table `vendor`
+--
+ALTER TABLE `vendor`
+MODIFY `vendor_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `vendor_contracts`
+--
+ALTER TABLE `vendor_contracts`
+MODIFY `contract_id` int(4) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `village_town`
+--
+ALTER TABLE `village_town`
+MODIFY `village_town_id` int(6) NOT NULL AUTO_INCREMENT;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `test_master`
+--
+ALTER TABLE `test_master`
+ADD CONSTRAINT `tm_ta_fk` FOREIGN KEY (`test_area_id`) REFERENCES `test_area` (`test_area_id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
