@@ -4,11 +4,13 @@
 $(function(){
 	$("#from_date").Zebra_DatePicker({
 	  disabled_dates : ['* * * *'],
-	  enabled_dates: ['1,8,15,22,29 * * *']
+	  enabled_dates: ['1,8,15,22,29 * * *'],
+	  direction:false
 	});
 	$("#to_date").Zebra_DatePicker({
 	  disabled_dates : ['* * * *'],
-	  enabled_dates: ['7,14,21,28-31 * * *']
+	  enabled_dates: ['7,14,21,28-31 * * *'],
+	  direction:false
 	});
 });
 </script>
@@ -58,6 +60,7 @@ $(function(){
 	$date=$from_date;
 	$dates[]=$date;
 	while($i==0){
+		if(date('d',strtotime($date))<28)
 		$date=date("Y-m-d",strtotime($date."+7 days"));	
 		if($date>$to_date){
 			$i++;
@@ -167,8 +170,7 @@ $(function(){
 		<?php $total_days+=$days; } ?>
 			<tfoot><th colspan="2" class="text-center">Total No. of Days</th><th class="text-center"><?php echo $total_days;?></th><th colspan="<?php echo $j*2;?>" class="text-right">	Total</th><th class="text-center"><?php echo $total_score;?></th><th class="text-center"><?php echo $total_weightage;?></th><th class="text-center"><?php echo number_format(($total_score/$total_weightage)*100,2);?>%</th></tr>
 	</table>
-	<?php } ?>
-	
+	<?php if(count($months)>0){ ?>
 	<table class="table table-bordered table-striped">
 		<thead>
 			<tr>
@@ -200,5 +202,6 @@ $(function(){
 			?>
 		</tbody>
 	</table>
-		
+	<?php } ?>
+	<?php } ?>
 </div>

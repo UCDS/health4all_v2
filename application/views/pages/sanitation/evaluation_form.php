@@ -5,7 +5,8 @@
 $(function(){
 	$('.date').Zebra_DatePicker({
 	  disabled_dates : ['* * * *'],
-	  enabled_dates: ['7,14,21,28,29,30,31 * * *']
+	  enabled_dates: ['7,14,21,28,29,30,31 * * *'],
+	  direction:false
 	});
 	$(".time").timeEntry();
 	$("#select_form").on('submit',function(e){

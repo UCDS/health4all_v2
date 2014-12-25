@@ -64,9 +64,11 @@
 			opacity: 0.4;
 		}
 		</style>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.selectize.js"></script>
 <script>
 	$(function(){
+		$(".date").Zebra_DatePicker();
 		<?php if(count($test_areas)>1){ ?>
 		$(".test_method").hide();
 		$("#test_area").on('change',function(){
@@ -87,21 +89,6 @@
 	</div>
 	<div class="panel-body">
 		<?php echo validation_errors(); echo form_open('diagnostics/test_order',array('role'=>'form','class'=>'form-custom')); ?>
-		<div class="form-group">
-			<label for="order_by">Order by</label>
-			<select name="order_by" class="form-control"  id="order_by">
-				<option value="" selected disabled>Select Doctor</option>
-				<?php
-					foreach($doctors as $doctor){ ?>
-						<option value="<?php echo $doctor->staff_id;?>"><?php echo $doctor->name;?></option>
-				<?php } ?>
-			</select>
-		</div>
-		<div class="form-group pull-right">
-			<input class="form-control date" name="order_date" value="<?php echo date("d-M-Y");?>" />
-			<input class="form-control time" name="order_time" value="<?php echo date("g:ia");?>" />
-		</div>
-		<hr>
 		<?php if(count($test_areas)>1){ ?>
 		<div class="form-group">
 			<label for="test_area">Test Area<font color='red'>*</font></label>
@@ -118,6 +105,10 @@
 			<input type="text" value="<?php echo $test_areas[0]->test_area_id;?>" name="test_area" class="sr-only" hidden readonly />
 			<b><?php echo $test_areas[0]->test_area;?></b>
 		<?php } ?>
+		<div class="form-group pull-right">
+			<label>Order Date-Time</label> <input class="form-control date" name="order_date" value="<?php echo date("d-M-Y");?>" size="10" />
+			<input class="form-control time" name="order_time" value="<?php echo date("g:ia");?>"  size="5" /> 
+		</div>
 		<hr>
 		<div class="form-group">
 			<select class="form-control" id="visit_type" name="patient_type">
@@ -131,6 +122,8 @@
 				<option value="<?php echo date("Y");?>" selected><?php echo date("Y");?></option>
 			</select>
 			<font color='red'>*</font>
+			<br />
+			<br />
 			<label>OP/IP Number<font color='red'>*</font></label>
 			<select id="select-patient" class="repositories" placeholder="Select a Patient..." name="visit_id" ></select>
 		</div>
@@ -171,19 +164,21 @@
 				</div>
 			<?php }
 				} ?>
-			</div>
-		<?php } ?>
-		</div>
-		<hr>
-		<h5>Test Groups</h5>
-		<?php foreach($test_groups as $test_group){ ?>
-			<div class="col-md-3 panel test_group test_group_<?php echo $test_group->group_id;?>">
+
+		<?php foreach($test_groups as $test_group){
+				if($test_master->test_method == $test_method) { ?>
+			<div class="col-md-4 panel test_group test_group_<?php echo $test_group->group_id;?>">
 				<div class="checkbox">
 					<input class="checkbox form-control" type="checkbox" name="test_group[]" id="<?php echo $test_group->group_name;?>" value="<?php echo $test_group->group_id;?>" />
 					<label for="<?php echo $test_group->group_name;?>"><?php echo $test_group->group_name;?></label>
 				</div>
 			</div>
-		<?php } 		?>
+		<?php }
+		} 		?>
+		
+			</div>
+		<?php } ?>
+		</div>
 	</div>
 	<div class="panel-footer">
 		<div class="col-md-offset-4">

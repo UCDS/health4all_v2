@@ -65,6 +65,9 @@ function view_orders(){
 	$this->load->view('templates/leftnav');
 	$this->form_validation->set_rules('order_id','Order','trim|xss_clean');
 	$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
+	$this->data['micro_organisms']=$this->masters_model->get_data('micro_organism');
+	$this->data['antibiotics']=$this->masters_model->get_data('antibiotic');
+	$this->data['test_methods']=$this->masters_model->get_data("test_method");
 	if(count($this->data['test_areas'])>1){
 	if ($this->form_validation->run() === FALSE){
 		$this->load->view($page,$this->data);
@@ -77,7 +80,7 @@ function view_orders(){
 			else{
 				$this->data['msg']="Test results could not be saved";
 			}
-			$this->data['order']=$this->diagnostics_model->get_order();
+			$this->data['orders']=$this->diagnostics_model->get_tests_ordered($this->data['test_areas']);
 			$this->load->view($page,$this->data);
 		}	
 			
@@ -86,7 +89,7 @@ function view_orders(){
 			$this->load->view($page,$this->data);
 		}	
 		else{
-			$this->data['orders']=$this->diagnostics_model->get_tests_ordered();
+			$this->data['orders']=$this->diagnostics_model->get_tests_ordered($this->data['test_areas']);
 			$this->load->view($page,$this->data);
 		}
 	}
@@ -103,7 +106,7 @@ function view_orders(){
 			$this->load->view($page,$this->data);
 		}	
 			
-		else if($this->input->post('order_id')){
+		else if($this->input->post('order_id')){		
 			$this->data['order']=$this->diagnostics_model->get_order();
 			$this->load->view($page,$this->data);
 		}	
@@ -131,6 +134,7 @@ function view_results(){
 	$this->load->view('templates/leftnav');
 	$this->form_validation->set_rules('order_id','Order','trim|xss_clean');
 	$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
+	$this->data['test_methods']=$this->masters_model->get_data("test_method");
 	if(count($this->data['test_areas'])>1){
 	if ($this->form_validation->run() === FALSE){
 		$this->load->view($page,$this->data);
@@ -141,7 +145,7 @@ function view_results(){
 			$this->load->view($page,$this->data);
 		}	
 		else{
-			$this->data['orders']=$this->diagnostics_model->get_tests_approved();
+			$this->data['orders']=$this->diagnostics_model->get_tests_approved($this->data['test_areas']);
 			$this->load->view($page,$this->data);
 		}
 	}
@@ -164,6 +168,7 @@ function approve_results(){
 	if(!$this->session->userdata('logged_in')){
 		show_404();
 	}
+					$this->load->library('email');
 	$this->load->helper('form');
 	$this->load->library('form_validation');
 	$user=$this->session->userdata('logged_in');
@@ -174,6 +179,7 @@ function approve_results(){
 	$this->load->view('templates/leftnav');
 	$this->form_validation->set_rules('order_id','Order','trim|xss_clean');
 	$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
+	$this->data['test_methods']=$this->masters_model->get_data("test_method");
 	if(count($this->data['test_areas'])>1){
 		if ($this->form_validation->run() === FALSE){
 			$this->load->view($page,$this->data);
@@ -184,12 +190,24 @@ function approve_results(){
 				$this->load->view($page,$this->data);
 			}	
 			else if($this->input->post('approve_results')){
-				$this->diagnostics_model->approve_results();
-				$this->data['orders']=$this->diagnostics_model->get_tests_completed();
+				if($result=$this->diagnostics_model->approve_results()){
+					if($this->input->post('send_email')==1){
+						$this->data['order_mail'] = $this->diagnostics_model->get_order();
+						if($result->a_id != NULL && $result->a_id != "") { $email = $result->a_email; $first_name = $result->a_first_name; $phone = $result->a_phone; }
+						else if($result->u_id != NULL && $result->u_id != "") { $email = $result->u_email; $first_name = $result->u_first_name; $phone = $result->u_phone; }
+						else if($result->d_id != NULL && $result->d_id != "") { $email = $result->d_email; $first_name = $result->d_first_name; $phone = $result->d_phone; }
+						else {$email = ""; $first_name = ""; $phone = ""; }
+						$this->data['email']=$email;
+						$this->data['name']=$first_name;
+						$this->data['phone']=$phone;
+						$this->load->view('pages/diagnostics/order_mail',$this->data);
+					}
+				}
+				$this->data['orders']=$this->diagnostics_model->get_tests_completed($this->data['test_areas']);
 				$this->load->view($page,$this->data);
 			}	
 			else{
-				$this->data['orders']=$this->diagnostics_model->get_tests_completed();
+				$this->data['orders']=$this->diagnostics_model->get_tests_completed($this->data['test_areas']);
 				$this->load->view($page,$this->data);
 			}
 		}
@@ -200,7 +218,19 @@ function approve_results(){
 			$this->load->view($page,$this->data);
 		}	
 		else if($this->input->post('approve_results')){
-			$this->diagnostics_model->approve_results();
+			if($result=$this->diagnostics_model->approve_results()){
+					if($this->input->post('send_email')==1){
+						$this->data['order_mail'] = $this->diagnostics_model->get_order();
+						if($result->a_id != NULL && $result->a_id != "") { $email = $result->a_email; $first_name = $result->a_first_name; $phone = $result->a_phone; }
+						else if($result->u_id != NULL && $result->u_id != "") { $email = $result->u_email; $first_name = $result->u_first_name; $phone = $result->u_phone; }
+						else if($result->d_id != NULL && $result->d_id != "") { $email = $result->d_email; $first_name = $result->d_first_name; $phone = $result->d_phone; }
+						else {$email = ""; $first_name = ""; $phone = ""; }
+						$this->data['email']=$email;
+						$this->data['first_name']=$first_name;
+						$this->data['phone']=$phone;
+						$this->load->view('pages/diagnostics/order_mail',$this->data);
+					}
+			}
 			$this->data['orders']=$this->diagnostics_model->get_tests_completed($this->data['test_areas']);
 			$this->load->view($page,$this->data);
 		}	
@@ -248,6 +278,7 @@ function add($type=""){
 	if($type=="test_group"){
 			$title="Test Group";
 			$config=array(array('field' => 'group_name','label'=>'Group_Name','rules'=>'required|trim|xss_clean' ));
+			$this->data['test_methods']=$this->masters_model->get_data("test_method");
 			$this->data['test_names']=$this->masters_model->get_data("test_name");
 
 		}

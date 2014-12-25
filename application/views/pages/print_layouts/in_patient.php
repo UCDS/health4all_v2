@@ -154,7 +154,7 @@
 			</div>
 		</div>	
 		<div class="row">
-			<div class="heading">Gandhi Hospital - Gate Pass</div>
+			<div class="heading"><?php $hospital=$this->session->userdata('hospital'); echo $hospital['hospital'];?> - Gate Pass</div>
 			<div class="column">
 				<b>IP No:</b> <?php echo $registered->hosp_file_no; ?>
 			</div>

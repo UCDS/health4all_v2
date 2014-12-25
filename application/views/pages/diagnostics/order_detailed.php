@@ -12,7 +12,12 @@ $(function(){
 </script>
 	<div class="row">
 		<h4>Test Order Detailed report</h4>	
-		<?php echo form_open("reports/order_detail",array('role'=>'form','class'=>'form-custom')); ?> 
+		<?php echo form_open("reports/order_detail/$type",array('role'=>'form','class'=>'form-custom')); ?> 
+					Visit Type : <select class="form-control" name="visit_type">
+									<option value="">All</option>
+									<option value="OP">OP</option>
+									<option value="IP">IP</option>
+								</select>
 					From Date : <input type="text" class="form-control" value="<?php echo date("d-M-Y"); ?>" name="from_date" id="from_date" size="15" />
 					To Date : <input type="text" class="form-control" value="<?php echo date("d-M-Y"); ?>" name="to_date" id="to_date" size="15" />
 					<input type="submit" class="btn btn-primary btn-sm" value="Submit" />
@@ -48,7 +53,7 @@ $(function(){
 					if($order->order_id==$ord){ ?>
 						<td><?php echo $i++;?></td>
 						<td>
-							<?php echo form_open('diagnostics/view_orders',array('role'=>'form','class'=>'form-custom')); ?>
+							<?php echo form_open("diagnostics/view_orders",array('role'=>'form','class'=>'form-custom')); ?>
 							<?php echo $order->order_id;?>
 							<input type="hidden" class="sr-only" name="order_id" value="<?php echo $order->order_id;?>" />
 						</td>
@@ -65,6 +70,7 @@ $(function(){
 												$label="label-warning";
 											else if($order->test_status == 3){ $label = "label-danger";}
 											else if($order->test_status == 2){ $label = "label-success";}
+											else if($order->test_status == 0){ $label = "label-default";}
 											echo "<div class='label $label'>".$order->test_name."</div><br />";
 										}
 									} 

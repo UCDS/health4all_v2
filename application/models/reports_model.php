@@ -79,7 +79,17 @@ class Reports_model extends CI_Model{
 		$resource=$this->db->get();
 		return $resource->result();
 	}
-	function get_order_summary(){
+	function get_order_summary($type){
+		if($type == "department"){
+			$this->db->select('department.department,department.department_id as department_id');
+			$this->db->group_by('department.department_id');
+		}
+		else{
+			$this->db->select('test_area as department, test_area.test_area_id as department_id');
+		}
+		if($this->input->post('visit_type')){
+			$this->db->where('patient_visit.visit_type',$this->input->post('visit_type'));
+		}
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -92,10 +102,17 @@ class Reports_model extends CI_Model{
 			$from_date=date("Y-m-d");
 			$to_date=$from_date;
 		}
-		$this->db->select("DATE(order_date_time) date,test_area,test_method,COUNT(test_id) count,test_area.test_area_id,test_method.test_method_id,test_master.test_master_id,test_master.test_name")
-		->from('test')
-		->join('test_order','test.order_id = test_order.order_id')
+		$this->db->select("test_method,test_id,
+		SUM(CASE WHEN test.test_status = 0 THEN 1 ELSE 0 END) tests_ordered,
+		SUM(CASE WHEN test.test_status = 1 THEN 1 ELSE 0 END) tests_completed,
+		SUM(CASE WHEN test.test_status = 2 THEN 1 ELSE 0 END) tests_reported,
+		SUM(CASE WHEN test.test_status = 3 THEN 1 ELSE 0 END) tests_rejected,
+		test_method.test_method_id,test_master.test_master_id,test_master.test_name",false)
+		->from('test_order')
+		->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
+		->join('department','patient_visit.department_id = department.department_id')
 		->join('test_area','test_order.test_area_id = test_area.test_area_id')
+		->join('test','test_order.order_id = test.order_id')
 		->join('test_master','test.test_master_id = test_master.test_master_id')
 		->join('test_method','test_master.test_method_id = test_method.test_method_id')
 		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')")
@@ -164,7 +181,7 @@ class Reports_model extends CI_Model{
 		return $resource->result();
 	}
 	
-	function get_order_detail($test_master,$test_area,$test_method,$from_date,$to_date){
+	function get_order_detail($test_master,$test_area,$test_method,$visit_type,$from_date,$to_date,$status,$type){
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -177,14 +194,28 @@ class Reports_model extends CI_Model{
 			$from_date=date("Y-m-d");
 			$to_date=$from_date;
 		}
+		if($this->input->post('visit_type')){
+			$this->db->where('patient_visit.visit_type',$this->input->post('visit_type'));
+		}
 		if($test_area!='-1'){
-			$this->db->where('test_area.test_area_id',$test_area);
+			if($type=="department"){
+				$this->db->where('department.department_id',$test_area);
+			}
+			else{
+				$this->db->where('test_area.test_area_id',$test_area);
+			}
 		}
 		if($test_method!='-1'){
 			$this->db->where('test_method.test_method_id',$test_method);
 		}
 		if($test_master!='-1'){
 			$this->db->where('test_master.test_master_id',$test_master);
+		}
+		if($visit_type!='0'){
+			$this->db->where('patient_visit.visit_type',$visit_type);
+		}
+		if($status!='-1'){
+			$this->db->where('test.test_status',$status);
 		}
 		$this->db->select('test_id,test_order.order_id,test_sample.sample_id,test_method,test_name,department,patient.first_name, patient.last_name,
 							staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,sample_container_type,test_status')
@@ -220,6 +251,35 @@ class Reports_model extends CI_Model{
 		$query=$this->db->get();
 		return $query->result();
 		
+	}
+	
+	function get_sensitivity_summary(){
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+		}
+		else if($this->input->post('from_date') || $this->input->post('to_date')){
+			$this->input->post('from_date')?$from_date=$this->input->post('from_date'):$from_date=$this->input->post('to_date');
+			$to_date=$from_date;
+		}
+		else{
+			$from_date=date("Y-m-d");
+			$to_date=$from_date;
+		}
+		
+		$this->db->select('SUM(CASE WHEN antibiotic_result = 1 THEN 1 ELSE 0 END) `sensitive`,
+			SUM(CASE WHEN 1  THEN 1 ELSE 0 END) total_antibiotic,
+			antibiotic,micro_organism',false)
+			->from('antibiotic_test')
+			->join('micro_organism_test','antibiotic_test.micro_organism_test_id = micro_organism_test.micro_organism_test_id')
+			->join('micro_organism','micro_organism_test.micro_organism_id = micro_organism.micro_organism_id')
+			->join('antibiotic','antibiotic_test.antibiotic_id = antibiotic.antibiotic_id')
+			->join('test','micro_organism_test.test_id=test.test_id')
+			->where("(DATE(test_date_time) BETWEEN '$from_date' AND '$to_date')")
+			->group_by('antibiotic.antibiotic_id,micro_organism.micro_organism_id')
+			->order_by('antibiotic,micro_organism');
+		$query=$this->db->get();
+		return $query->result();
 	}
 }
 ?>

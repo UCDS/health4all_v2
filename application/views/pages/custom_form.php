@@ -50,8 +50,6 @@ $(function(){
 			$(".mlc:text").parent().parent().hide();
 		}
 	});
-			
-		
 });
 function DaysInMonth(Y, M) {
     	with (new Date(Y, M, 1, 12)) {

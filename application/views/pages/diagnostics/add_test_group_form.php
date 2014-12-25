@@ -3,7 +3,7 @@
  $(function(){
   var i=2;
   	$(":checked").attr('checked',false);
-
+	$(".result_fields").hide();
     $("#b_test_name").click(function(){
         var test_name="<div id='add_test_group_"+i+"' ><div class='col-md-10'></br>";
         test_name+="<select form='add_test_group' name='test_name[]' id='test_name' class='form-control'>";
@@ -15,6 +15,13 @@
         $("#add_test_name").append(test_name);
         i++;
     });
+	
+	$("input:radio[name='has_result']").change(function(){
+		if($(this).val()==1){
+			$(".result_fields").show();
+		}
+		else $(".result_fields").hide();
+	});
 	
     $("#binary_output").click(function(){
 		if($(this).is(":checked")) { 
@@ -54,6 +61,18 @@ function remove_test_name(i){
 	</center>
 	<?php echo form_open('diagnostics/add/test_group',array('role'=>'form','id'=>'add_test_group')); ?>
 	<div class="form-group">
+	
+		<label for="test_method" class="col-md-4">Test Method<font color='red'>*</font></label>
+		<div  class="col-md-8">
+		<select name="test_method" id="test_method" class="form-control">
+		<?php foreach($test_methods as $d){
+			echo "<option value='$d->test_method_id'>$d->test_method</option>";
+		}
+		?>
+		</select>
+		</div>
+		<br />
+		<br />
 		<label for="test_group" class="col-md-4">Test Group<font color='red'>*</font></label>
 		<div  class="col-md-8">
 			<input type="text" class="form-control" placeholder="Test Group" id="group_name" name="group_name" />
@@ -77,6 +96,20 @@ function remove_test_name(i){
 		</div>
 		</div>
 		
+		<label for="has_result" class="col-md-4">Has Result?<font color='red'>*</font></label>
+		<div  class="col-md-8 has_result" id="has_result" >
+			<label id="has_result_yes">
+			<input type="radio" form="add_test_group" class="has_result" value="1" name="has_result" />
+			Yes
+			</label>
+			<label id="has_result_no">
+			<input type="radio" form="add_test_group" class="has_result" value="0" name="has_result" />
+			No
+			</label>
+		</div>
+		<br />
+		<br />
+		<div class="result_fields">
 		<label for="output_format" class="col-md-4">Output Format<font color='red'>*</font></label>
 		<div  class="col-md-8 output_format" id="add_output_format" >
 			<input type="checkbox" id="binary_output" form="add_test_group" value="1" name="output_format[]" />
@@ -111,7 +144,7 @@ function remove_test_name(i){
 			<input type="text" class="form-control numeric-range-min" placeholder="Minimum" />
 			<input type="text" class="form-control numeric-range-max" placeholder="Maximum" />
 		</div>
-	
+		</div>
 	</div>
    	<div class="col-md-3 col-md-offset-4">
 	</br>

@@ -182,11 +182,17 @@ class Sanitation_model extends CI_Model{
 	function get_scores_summary(){
 		$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 		$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+		if($this->input->post('order_by')){
+			if($this->input->post('order_by')=="desc") $order = "weekly_score DESC";
+			if($this->input->post('order_by')=="asc") $order = "weekly_score ASC";
+			if($this->input->post('order_by')=="alpha") $order = "hospital ASC";
+		}
+		else $order = 'weekly_score ASC';
 			$date1 = new DateTime($from_date);
 			$date2 = new DateTime($to_date);
 			$number1 = (int)$date1->format('U');
 			$number2 = (int)$date2->format('U');
-			$num_weeks= round(($number2 - $number1)/60/60/24/31*5,0);
+			$num_weeks= ceil(($number2 - $number1)/60/60/24/31*5);
 			$fortnight_start_date=date("Y-m-1",strtotime($from_date));
 			if($num_weeks == 0) $num_weeks=1;
 			if($from_date-$fortnight_start_date>15)
@@ -222,14 +228,14 @@ class Sanitation_model extends CI_Model{
 				JOIN area ON facility_activity.facility_area_id = area.area_id
 				JOIN department USING ( department_id )
 				JOIN hospital USING ( hospital_id )
-				GROUP BY hospital_id) weightages ON scores.hospital_id = weightages.hospital_id");
+				GROUP BY hospital_id) weightages ON scores.hospital_id = weightages.hospital_id ORDER BY $order");
 			return $query->result();
 		}
 		
 		function get_scores_detail(){
 			$hospital=$this->input->post('hospital');
-			$from_date=$this->input->post('from_date');
-			$to_date=$this->input->post('to_date');
+			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
 			$query=$this->db->query("SELECT hospital,SUM(score) score,SUM(weightage) weightage,date,DATE_ADD(date,INTERVAL 6 DAY),
 			activity_name,comments,frequency_type
 			FROM area_activity 
@@ -239,6 +245,7 @@ class Sanitation_model extends CI_Model{
 			JOIN department USING(department_id) 
 			JOIN hospital USING(hospital_id)
 			WHERE hospital_id = $hospital
+			AND (date BETWEEN '$from_date' AND '$to_date')
 			GROUP BY date,area_activity_id");
 			return $query->result();
 		}

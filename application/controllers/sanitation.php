@@ -85,7 +85,7 @@ class Sanitation extends CI_Controller {
 	function view_summary(){
 		$access=0;
 		foreach($this->data['functions'] as $f){
-			if($f->user_function=="Masters - Sanitation" && $f->view ==1){
+			if(($f->user_function=="Masters - Sanitation" && $f->view ==1) || ($f->user_function=="Sanitation Summary" && $f->view ==1)){
 				$access=1;
 			}
 		}

@@ -855,6 +855,7 @@ else if($type=="dosage"){
 						
 			$data=array(
 				'group_name'=>$this->input->post('group_name'),
+				'test_method_id'=>$this->input->post('test_method'),
 				'binary_result'=>$binary,
 				'numeric_result'=>$numeric,
 				'text_result'=>$text,

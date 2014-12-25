@@ -184,6 +184,8 @@
 				<?php	} 
 					if($f->user_function=="Diagnostics - Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/order_summary";?>">Orders Summary</a></li>
+						  <li><a href="<?php echo base_url()."reports/order_summary/department";?>">Orders Summary - Department</a></li>
+						  <li><a href="<?php echo base_url()."reports/sensitivity_summary";?>">Sensitivity Report</a></li>
 				<?php	} 
 					if($f->user_function=="BloodBank Summary"){ ?>
 						  <li><a href="<?php echo base_url()."bloodbank/reports/donation_summary";?>">Blood Donations</a></li>
@@ -191,7 +193,7 @@
 						  <li><a href="<?php echo base_url()."bloodbank/reports/hospital_issues";?>">Blood Issues - Hospital Wise</a></li>
 						  <li><a href="<?php echo base_url()."bloodbank/reports/available_blood";?>">Available Blood</a></li>
 				<?php	}
-					if($f->user_function=="Masters - Sanitation"){ ?>
+					if($f->user_function=="Masters - Sanitation" || $f->user_function == "Sanitation Summary"){ ?>
 						<li><a href="<?php echo base_url()."sanitation/view_summary";?>">Sanitation Evaluation</a></li>
 				<?php	
 					} 
@@ -251,12 +253,12 @@
 				foreach($functions as $f){
 				if($f->user_function=="Masters - Application"){ ?>
                   <li><a href="<?php echo base_url()."user_panel/settings";?>">Settings</a></li>
-                  <li><a href="<?php echo base_url()."user_panel/change_password";?>">Change Password</a></li>
 				  <li class="divider"></li>
 				<?php break;
 					}
 				}
 				?>
+                  <li><a href="<?php echo base_url()."user_panel/change_password";?>">Change Password</a></li>
 				  <li><a href="<?php echo base_url();?>home/logout">Logout</a></li>
                 </ul>
 			</li>

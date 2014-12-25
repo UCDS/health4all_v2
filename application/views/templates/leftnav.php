@@ -106,25 +106,34 @@
 <div class="col-sm-3 col-md-2 sidebar-left">
     <ul class="nav nav-sidebar">
 	<?php 
-	 foreach($functions as $f){
+	
+	foreach($functions as $f){
 		if($f->user_function=="Diagnostics"){ ?>
 		<li class="nav-header">Diagnostics</li>
-			<li><a href="<?php echo base_url();?>diagnostics/view_orders">Update Tests</a></li>
-			<li><a href="<?php echo base_url();?>diagnostics/view_results">View Results</a></li>
-		</li>
-	<?php }
-	} 
-
+		<?php } 
+	}
 	foreach($functions as $f){
 		if($f->user_function=="Diagnostics - Order"){ ?>
-			<li><a href="<?php echo base_url();?>diagnostics/test_order">Order Tests</a></li>
+			<li <?php if(preg_match("^test_order^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/test_order">Order Tests</a></li>
+	<?php } 
+	} 
+	foreach($functions as $f){
+		if($f->user_function=="Diagnostics"){ ?>
+			<li <?php if(preg_match("^view_orders^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/view_orders">Update Tests</a></li>
 	<?php } 
 	} 
 	foreach($functions as $f){
 		if($f->user_function=="Diagnostics - Approve"){ ?>
-		<li><a href="<?php echo base_url();?>diagnostics/approve_results">Approve Tests</a></li>
+		<li <?php if(preg_match("^approve_results^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/approve_results">Approve Tests</a></li>
 	<?php } 
 		}
+	 foreach($functions as $f){
+		if($f->user_function=="Diagnostics"){ ?>
+			<li <?php if(preg_match("^view_results^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/view_results">View Results</a></li>
+		</li>
+	<?php }
+	} 
+
 		 foreach($functions as $f){
 		if($f->user_function=="Masters - Diagnostics"){ ?>
 		<li class="nav-header">Add</li>
