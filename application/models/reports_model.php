@@ -103,7 +103,7 @@ class Reports_model extends CI_Model{
 			$to_date=$from_date;
 		}
 		$this->db->select("test_method,test_id,
-		SUM(CASE WHEN test.test_status = 0 THEN 1 ELSE 0 END) tests_ordered,
+		SUM(CASE WHEN 1 THEN 1 ELSE 0 END) tests_ordered,
 		SUM(CASE WHEN test.test_status = 1 THEN 1 ELSE 0 END) tests_completed,
 		SUM(CASE WHEN test.test_status = 2 THEN 1 ELSE 0 END) tests_reported,
 		SUM(CASE WHEN test.test_status = 3 THEN 1 ELSE 0 END) tests_rejected,
@@ -214,7 +214,7 @@ class Reports_model extends CI_Model{
 		if($visit_type!='0'){
 			$this->db->where('patient_visit.visit_type',$visit_type);
 		}
-		if($status!='-1'){
+		if($status!='0'){
 			$this->db->where('test.test_status',$status);
 		}
 		$this->db->select('test_id,test_order.order_id,test_sample.sample_id,test_method,test_name,department,patient.first_name, patient.last_name,
