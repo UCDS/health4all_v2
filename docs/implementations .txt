@@ -22,7 +22,7 @@
 	Test Environment Details
 		Application Link : http://182.50.154.124/health4all_v2_test
 		Username : admin
-		Password : abc123
+		Password : password
 		Application Code Repository: https://github.com/UCDS/health4all_v2
 
 * will merge to a single implementation in September 2014
