@@ -192,7 +192,8 @@ class Sanitation_model extends CI_Model{
 			$date2 = new DateTime($to_date);
 			$number1 = (int)$date1->format('U');
 			$number2 = (int)$date2->format('U');
-			$num_weeks= ceil(($number2 - $number1)/60/60/24/31*5);
+			$num_weeks= round(($number2 - $number1)/60/60/24)/7;
+			echo $num_weeks;
 			$fortnight_start_date=date("Y-m-1",strtotime($from_date));
 			if($num_weeks == 0) $num_weeks=1;
 			if($from_date-$fortnight_start_date>15)
