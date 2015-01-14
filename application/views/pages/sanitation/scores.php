@@ -41,6 +41,7 @@ $(function(){
 		?>
 	<script>
 	$(function(){
+	/*
 	sortType="Alpha";
     chart=new Highcharts.Chart({
         chart: {
@@ -100,6 +101,7 @@ $(function(){
         }]
     });
 	});
+	*/
 	</script>
 	<br />
 	<br />
@@ -124,8 +126,10 @@ $(function(){
 			</tr>
 			<th>#</th>
 			<th>Hospital</th>
+			<!--
 			<th>Score</th>
 			<th>%</th>
+			-->
 		</thead>
 	<?php $i=1; foreach($scores as $s){ 
 			$total_score=$s->daily_score+$s->weekly_score+$s->fortnightly_score+$s->monthly_score;
@@ -141,12 +145,14 @@ $(function(){
 					</form>
 				</td>
 				<td><?php echo $s->hospital;?></td>
+				<!--
 				<td><?php echo number_format($s->weekly_score);?>/<?php echo number_format($s->weekly_total);?></td>
 				<td><?php echo number_format(($total_score/$total)*100,1);?>%</td>	
+				-->
 			</tr>
 		<?php } ?>
 	</table>
 	<?php } ?>
-	<div id="container1" style="min-width: 310px; max-width: 800px; margin: 0 auto;background:#ccc"></div>
+	<!-- <div id="container1" style="min-width: 310px; max-width: 800px; margin: 0 auto;background:#ccc"></div> -->
 	
 </div>
