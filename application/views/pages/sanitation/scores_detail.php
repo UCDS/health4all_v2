@@ -164,11 +164,11 @@ $(function(){
 				<td class="text-center"  style="background-color : <?php echo $background_color;?> !important"><b><?php echo $week_total_score;?></b></td>
 				<td class="text-center"><?php echo $week_total_weightage;?></td>
 				<td class="text-center" style="background-color : <?php echo $background_color;?> !important"><?php echo number_format(($week_total_score/$week_total_weightage)*100,2);
-				$total_score+=$week_total_score; $week_total_score=0;
-				$total_weightage+=$week_total_weightage; $week_total_weightage=0;?>%</td>
+				$total_score+=$week_total_score*$days; $week_total_score=0;
+				$total_weightage+=$week_total_weightage*$days; $week_total_weightage=0;?>%</td>
 			</tr>
 		<?php $total_days+=$days; } ?>
-			<tfoot><th colspan="2" class="text-center">Total No. of Days</th><th class="text-center"><?php echo $total_days;?></th><th colspan="<?php echo $j*2;?>" class="text-right">	Total</th><th class="text-center"><?php echo $total_score;?></th><th class="text-center"><?php echo $total_weightage;?></th><th class="text-center"><?php echo number_format(($total_score/$total_weightage)*100,2);?>%</th></tr>
+			<tfoot><th colspan="2" class="text-center">Total No. of Days</th><th class="text-center"><?php echo $total_days;?></th><th colspan="<?php echo ($j*2)+2;?>" class="text-right">	Total Weighted Score</th><th class="text-center"><?php echo number_format((($total_score/$total_days)/($total_weightage/$total_days))*100,2);?>%</th></tr>
 	</table>
 	<?php if(count($months)>0){ ?>
 	<table class="table table-bordered table-striped">

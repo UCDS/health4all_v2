@@ -7,7 +7,7 @@ class Diagnostics_model extends CI_Model{
 		$this->db->select('visit_id')->from('patient_visit')
 		->where('hosp_file_no',$this->input->post('visit_id'))
 		->where('visit_type',$this->input->post('patient_type'))
-		->where('YEAR(admit_date)',"YEAR(CURDATE())",false);
+		->where('YEAR(admit_date)',$this->input->post('year'),false);
 		$query=$this->db->get();
 		$row=$query->row();
 		$visit_id=$row->visit_id;
