@@ -121,7 +121,7 @@ pri.print();
 						
 						<?php if($test->test_result_binary==1 && preg_match("^Culture*^",$test->test_method)) { 
 						$micro_organism_test_ids = array();
-					//	echo $test->micro_organism_test;
+						//echo $test->micro_organism_test;
 						$res = explode("^",trim($test->micro_organism_test,"^"));
 						$k=0;
 						foreach($res as $r) {
@@ -152,7 +152,7 @@ pri.print();
 					<?php if($test->text_result==1){ 
 
 						if($test->test_status == 2) { 
-							echo $test->test_result_text;
+							$result = $test->test_result_text;
 						} 
 						else{	
 							$result="Test not done.";
@@ -260,7 +260,7 @@ pri.print();
 							if($test->text_result==1){ 
 
 								if($test->test_status == 2) { 
-									echo $test->test_result_text;
+									$result = $test->test_result_text;
 								} 
 								else{	
 									$result="Test not done.";
@@ -348,7 +348,7 @@ pri.print();
 							if($test->text_result==1){ 
 
 								if($test->test_status == 2) { 
-									echo $test->test_result_text;
+									$result = $test->test_result_text;
 								} 
 								else{	
 									$result="Test not done.";
