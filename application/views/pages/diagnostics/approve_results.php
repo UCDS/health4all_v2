@@ -152,10 +152,10 @@
 						<label class="label label-danger">Rejected</label>
 					<?php } else { ?>	
 						<label class="btn btn-success btn-sm">
-						<input type="radio" value="1" name='approve_test_<?php echo $test->test_id;?>' /> Approve
+						<input type="radio" value="1" name='approve_test_<?php echo $test->test_id;?>' required /> Approve
 						</label>
 						<label class="btn btn-danger btn-sm">
-						<input type="radio" value="0" name='approve_test_<?php echo $test->test_id;?>' /> Reject
+						<input type="radio" value="0" name='approve_test_<?php echo $test->test_id;?>' required /> Reject
 						</label>
 					<input type="text" value="<?php echo $test->test_id;?>" name="test[]" class="sr-only hidden" />
 					<?php } ?>
