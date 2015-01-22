@@ -164,9 +164,10 @@ pri.print();
 		<div class="panel-body">
 			<?php
 			foreach($fields as $field=>$mandatory){
+				//HERE WE ARE USING SWITCH FOR DISPLAY OF ONLY REQUIRED FIELD THAT WE NEED 
 				switch($field){
-				
-					case "first_name": ?>
+//here we are using input type class to obtain a textbox for fields like first_name,last_name,dob,age 				
+				case "first_name": ?>   
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">First Name<?php if($mandatory) { ?><span class="mandatory">*</span><?php } ?></label>
@@ -198,6 +199,7 @@ pri.print();
 					<div class="<?php echo $class;?> sr-only">
 						<div class="form-group">
 						<label class="control-label">Age<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<label class="control-label">Age<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<input type="text" name="age_years" class="form-control" size="1"  value="<?php if($patient)  echo $patient->age_years;?>" <?php if($mandatory) echo "required"; ?> />Y
 						<input type="text" name="age_months" class="form-control" size="1" value="<?php if($patient)  echo $patient->age_months;?>" <?php if($mandatory) echo "required"; ?> />M
 						<input type="text" name="age_days" class="form-control" size="1"  value="<?php if($patient)  echo $patient->age_days;?>" <?php if($mandatory) echo "required"; ?> />D
@@ -217,7 +219,7 @@ pri.print();
 					</div>
 				<?php 
 					break;
-					
+//here we are using radio class to obtain radio button for field :gender 					
 					case "gender" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="radio">
@@ -229,7 +231,7 @@ pri.print();
 					</div>
 				<?php 
 					break;
-					
+//here we are using input type class to obtain a text box for fields like address,place,district 					
 					case "address" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -257,6 +259,7 @@ pri.print();
 						<select name="district" class="form-control" <?php if($mandatory) echo "required"; ?>>
 						<option value="">--Select--</option>
 						<?php 
+//HERE WE ARE USING FOREACH STATEMENT AS WE CAN SELECT THE DISTRICT FROM DROPDOWN LIST 						
 						foreach($districts as $district){
 							echo "<option value='".$district->district_id."'";
 							if($patient) if($district->district_id==$patient->district_id) echo " selected ";
@@ -268,7 +271,7 @@ pri.print();
 					</div>
 				<?php 
 					break;
-					
+//here we are using input type class to obtain a text box for fields like phone,father_name,mother_name,spouse_name
 					case "phone" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -286,6 +289,7 @@ pri.print();
 						<input type="text" name="father_name" class="form-control" value="<?php if($patient) echo $patient->father_name;?>" <?php if($mandatory) echo "required"; ?> />
 						</div>
 					</div>
+				
 				<?php 
 					break;
 					case "mother_name" : ?>
@@ -302,22 +306,257 @@ pri.print();
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Spouse Name<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-						<input type="text" name="spouse_name" id="spouse_name" class="form-control" value="<?php if($patient) echo $patient->spouse_name;?>" <?php if($mandatory) echo "required"; ?> />
+						<input type="text" name="spouse_name" id="spouse_name" class="form-control" value="<?php if ($patient) echo $patient->spouse_name;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+				<?php 
+					break;
+//here we are using select class to obtain a drop down box for field :id_proof_type				
+					case "id_proof_type" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Id Proof Type<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<select name="id_proof_type" class="form-control" <?php if($mandatory) echo "required"; ?>>
+						<option value="">--Select--</option>
+						<?php 
+						foreach($id_proof_types as $id_proof_type){
+							echo "<option value='".$id_proof_type->id_proof_type_id."'";
+							if($patient) if($id_proof->id_proof_id==$patient->id_proof_id) echo " selected ";
+							echo ">".$id_proof_type->id_proof_type."</option>";
+						}
+						?>
+						</select>
+						</div>
+					</div>
+				<?php 
+					break;
+//here we are using input type class to obtain a text box for fields like id_proof_no					
+				    case "id_proof_no" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Id Proof No<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="id_proof_no" id="id_proof_no" class="form-control" value="<?php if($patient) echo $patient->id_proof_no;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>	
+				<?php 
+					break;
+//here we are using select class to obtain a drop down box for field :occupation					
+					case "occupation" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Occupation<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<select name="occupation" class="form-control" <?php if($mandatory) echo "required"; ?>>
+						<option value="">--Select--</option>
+							<option value="private">Non government</option>
+							<option value="government">Government</option>
+						</select>
+						<?php if($patient) echo $patient->occupation;?>
+						<?php if($mandatory)?> 
+						</div>
+					</div>
+				<?php 
+					break;
+//here we are using select class to obtain a drop down box for field :gestation_type					
+					case "gestation_type" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+					    <label class="control-label">Gestation Type<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<select name="gestation_type" class="form-control" <?php if($mandatory) echo "required"; ?>>
+							<option value="select">--select--</option>
+							<option value="long_peroid">Long Period</option>
+							<option value="short_period">Short Period</option>
+						</select>
+						<?php if($patient) echo $patient->occupation;?>
+						<?php if($mandatory)?> 
+						</div>
+					</div>
+				<?php 
+					break;
+//here we are using input type class to obtain a text box for field:education_level					
+					case "education_level" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Education Level<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="education_level" id="education_level" class="form-control" value="<?php if($patient) echo $patient->educational_level;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>	
+				
+				<?php 
+					break;
+//here we are using select class to obtain a drop down box for field :blood_group					
+					case "blood_group" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Blood Group<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<select name="blood_group" class="form-control" <?php if($mandatory) echo "required"; ?>>
+						<option value="">--Select--</option> 
+							<option value="">Select</option>
+							<option value="A+">A+</option>
+							<option value="A-">A-</option>
+							<option value="B+">B+</option>
+							<option value="B-">B-</option>
+				            <option value="AB+">AB+</option>
+							<option value="AB-">AB-</option>
+							<option value="O+">O+</option>
+							<option value="O-">O-</option>
+						</select>
+						<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?>
+						<?php if($patient) echo $patient->blood_group ;?>
+						<?php if($mandatory) ?> 
+						</div>
+					</div>
+				<?php 
+					break;
+//here we are using select class to obtain a drop down box for field :education_qualification					
+					case "education_qualification" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Education Qualification <?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<select name="education_qualification" class="form-control" <?php if($mandatory) echo "required"; ?>>
+							<option value="">Select</option>
+							<option value="SSC">ssc</option>
+							<option value="INTERMEDIATE">Intermediate</option>
+							<option value="B.TECH">B.tech</option>
+							<option value="M.TECH">M.tech</option>
+				            <option value="M.Sc">M.Sc</option>
+							<option value="Undergraduate">Undergraduate</option>
+						</select> 
+						<?php if($patient) echo $patient->education_qualification ;?>
+						<?php if($mandatory) echo "required"; ?>
+						</div>
+					</div>
+				<?php 
+					break;
+//here we are using input type class to obtain a text box for fields like gestation,insurance_case,insurance_no					
+					case "gestation" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Gestation<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="gestation" class="form-control" value="<?php if($patient) echo $patient->gestation ;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+				<?php 
+					break;
+						case "insurance_case" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="radio">
+						<label class="control-label">Insurance Case<input type="radio" class="insurance_case" value="Yes" name="insurance_case" <?php if($patient)  if($patient->insurance_case=="Yes") echo " checked ";?> <?php if($mandatory) echo "required"; ?> />Yes</label>
+						<label class="control-label"><input type="radio" class="insurance_case" value="No" name="insurance_case" <?php if($patient)  if($patient->insurance_case=="No") echo " checked ";?> <?php if($mandatory) echo "required"; ?> />No</label>
+						<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?>
+						</div>
+					</div>
+				<?php 
+					break;
+					case "insurance_no" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Insurance No.<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="insurance_no" class="form-control" value="<?php if($patient) echo $patient->insurance_no ;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>	
+					</div>
+				<?php 
+					break;
+//here we are using select class to obtain a drop down box for field :delivery_mode					
+					case "delivery_mode" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+					    <label class="control-label">Delivery Mode <?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<select name="delivery_mode" class="form-control" <?php if($mandatory) echo "required"; ?>>
+							<option value="">Select</option>
+							<option value="normal">Normal</option>
+							<option value="surgical">Surgical</option>
+                        </select>
+						<?php if($patient) echo $patient->delivery_mode ;?>
+						<?php if($mandatory) echo "required"; ?> 
+						</div>
+					</div>
+				<?php 
+					break;
+//here we are using input type class to obtain a text box for fields like delivery_place,delivery_location,delivery_type					
+					case "delivery_place" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Delivery Place<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="delivery_place" class="form-control" value="<?php if($patient) echo $patient->delivery_place ;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+				<?php 
+					break;
+					case "delivery_location" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Delivery Location<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="delivery_location" class="form-control" value="<?php if($patient) echo $patient->delivery_location ;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+				<?php 
+					break;
+					case "delivery_type" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Delivery type<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="delivery_type" class="form-control" value="<?php if($patient) echo $patient->delivery_typedelivery_type ;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+				<?php 
+					break;
+//here we are using select class to obtain a drop down box for field :delivery_location_type					
+					case "delivery_location_type" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+                        <label class="control-label">Delivery Location Type <?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<select name="delivery_location_type" class="form-control" <?php if($mandatory) echo "required"; ?>>
+							<option value="">Select</option>
+							<option value="private">Private</option>
+							<option value="government">Government</option>
+						</select>
+						<?php if($patient) echo $patient->delivery_location_type ;?>
+						<?php if($mandatory)?> 
+						</div>
+					</div>
+				<?php 
+					break;
+//here we are using input type class to obtain a text box for fields like delivery_plan,birth_weight,congenital_anomalies,presenting_complaints					
+					case "delivery_plan" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Deliver Plan<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="delivery_plan" class="form-control" value="<?php if($patient) echo $patient->delivery_plan ;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+				<?php 
+					break;
+					case "birth_weight" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Birth Weight<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="birth_weight" class="form-control" value="<?php if($patient) echo $patient->birth_weight ;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+				<?php 
+					break;
+					case "congenial_anomalies" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Congenital Anomalies<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="congenital_anomalies" class="form-control" value="<?php if($patient) echo $patient->congential_anomalies ;?>" <?php if($mandatory) echo "required"; ?> />
 						</div>
 					</div>
 				<?php 
 					break;
 					
+					
 					case "presenting_complaints" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
-						<label class="control-label">Complaints<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<label class="control-label">Presenting Complaint<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<input type="text" name="presenting_complaints" class="form-control" value="<?php if($patient) echo $patient->presenting_complaints;?>" <?php if($mandatory) echo "required"; ?> />
 						</div>
 					</div>
 				<?php 
 					break;
-					
+					break;
+//here we are using select class to obtain a drop down box for field :department					
 					case "department" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -336,7 +575,33 @@ pri.print();
 					</div>
 				<?php 
 					break;
-					
+//here we are using select class to obtain a drop down box for field :hospital_type					
+				    case "hospital_type" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Hospital Type <?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<select name="hospital_type" class="form-control" <?php if($mandatory) echo "required"; ?>>
+							<option value="">Select</option>
+							<option value="private">Private</option>
+							<option value="government">Government</option>
+						</select>
+						<?php if($patient) echo $patient->hospital_type;?>
+						<?php if($mandatory)?> 
+						</div>
+					</div>
+				<?php 
+					break;
+//here we are using input type class to obtain a text box for field:hospital					
+					case "hospital" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Hospital<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="hospital" class="form-control" value="<?php if($patient) echo $patient->hospital ;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+					<?php
+					break;
+//here we are using select class to obtain a drop down box for field :unit					
 					case "unit" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -356,9 +621,8 @@ pri.print();
 					</div>
 				<?php 
 					break;
-					
-					
-					case "area" : ?>
+//here we are using select class to obtain a drop down box for field :area					
+				    case "area" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Area<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
@@ -377,7 +641,7 @@ pri.print();
 					</div>
 				<?php 
 					break;
-					
+//here we are using radio class to obtain a radio button for field :					
 					case "mlc" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="radio">
@@ -399,6 +663,71 @@ pri.print();
 					</div>
 				<?php 
 					break;
+//here we are using input type class to obtain a text box for fields like past_history,admit_weight,discharge_weight,pulse_rate,respiratory_rate,ps_name					
+					case "past_history" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Past history<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="past_history" class="form-control past_history" value="<?php if($update) echo $patient->past_history;?>"  <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+				<?php 
+					break;
+					case "admit_weight" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Admit Weight<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="admit_weight" class="form-control mlc" value="<?php if($update) echo $patient->admit_weight;?>"  <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+					<?php 
+					break;
+					case "discharge_weight" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Discharge Weight<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="discharge_weight" class="form-control mlc" value="<?php if($update) echo $patient->discharge_weight;?>"  <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+					<?php 
+					break;
+					case "pulse_rate" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Pulse Rate<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="pulse_rate" class="form-control pulse_rate" value="<?php if($update) echo $patient->pulse_rate;?>"  <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+					<?php 
+					break;
+					case "temperature" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Temperature<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="temperature" class="form-control mlc" value="<?php if($update) echo $patient->temperature;?>"  <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+					<?php 
+					break;
+                    case "blood_pressure" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Blood Pressure<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="sbp" style="width:50px" class="form-control blood_pressure" value="<?php if($update) echo $patient->blood_pressure;?>"  <?php if($mandatory) echo "required"; ?> />/
+	                    <input type="text" name="dbp"  style="width:50px" class="form-control blood_pressure" value="<?php if($update) echo $patient->blood_pressure;?>"  <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+					<?php 
+					break;
+					case "respiratory_rate" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Respiratory Rate<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="respiratory_rate" class="form-control mlc" value="<?php if($update) echo $patient->respiratory_rate;?>"  <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+					<?php 
+					break;
 					
 					case "ps_name" : ?>
 					<div class="<?php echo $class;?>">
@@ -409,7 +738,7 @@ pri.print();
 					</div>
 				<?php 
 					break;
-					
+//here we are using select class to obtain a drop down box for field :outbox					
 					case "outcome" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="radio">
@@ -463,7 +792,16 @@ pri.print();
 					</div>
 				<?php 
 					break;
-				}
+                case "congenital_anomalies" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label"> Congenital Anomalies<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="congenital_anomalies" class="form-control mlc" value="<?php if($update) echo $patient->congenital_anomalies;?>"  <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+				<?php 
+					break;
+					}
 			}
 			?>
 			</div>
@@ -561,6 +899,7 @@ pri.print();
 											<td><?php echo $patient->name; ?></td>
 											<td>
 												<?php 
+//HERE THE AGE IS DISPLAYED IN DATE-MONTH-YEAR FORMAT
 													if($patient->age_years!=0) echo $patient->age_years."y ";
 													if($patient->age_months) echo $patient->age_months."m "; 
 													if($patient->age_days) echo $patient->age_days."d "; 
@@ -568,6 +907,7 @@ pri.print();
 											</td>
 											<td><?php echo $patient->gender;?></td>
 											<td><?php echo $patient->department;?></td>
+								             <!--HERE THE DATE IS DISPLAYED IN ADMITDATE-MONTH-YEAR FORMAT -->
 											<td><?php echo date("d-M-Y",strtotime($patient->admit_date));?></td>
 											<td><?php echo $patient->phone;?></td>
 											<td><?php echo $patient->parent_spouse;?></td>
