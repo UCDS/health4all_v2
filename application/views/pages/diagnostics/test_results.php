@@ -28,13 +28,14 @@ pri.print();
 	</div>
 	<?php  }?>
 <br>
+<!--display the age if not 0-->
 <?php if(isset($order)){ 
 	$age="";
 	if($order[0]->age_years!=0) $age.=$order[0]->age_years."Y ";
 	if($order[0]->age_months!=0) $age.=$order[0]->age_months."M ";
 	if($order[0]->age_days!=0) $age.=$order[0]->age_days."D ";
 	?>
-		
+	<!--displaying the order date-->	
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<h4>Order #<?php echo $order[0]->order_id;?>
@@ -44,6 +45,7 @@ pri.print();
 			</small>
 			</h4>
 		</div>
+		<!--displaying the patient visit details-->
 		<div class="panel-body">
 			<div class="row col-md-12">
 				<div class="col-md-4">
@@ -77,9 +79,11 @@ pri.print();
 			<br />
 			<br />
 			<table class="table table-bordered">
-				<th>Test</th>
+			<!-- patient test results-->
+				<th>Test</th
 				<th>Value</th>
-				<th colspan="2">Report</th>				
+				<th colspan="4">Report</th>
+				<!-- if the test_status value is not equal to 2 then no test is done i.e the test is not completed,else print the result-->
 			<?php foreach($order as $test){ 
 					$positive="";$negative="";
 				 if($test->test_status==2){ $readonly = "disabled"; }else $readonly="";
@@ -119,31 +123,79 @@ pri.print();
 						else echo "-";
 					?>
 						
-						<?php if($test->test_result_binary==1 && preg_match("^Culture*^",$test->test_method)) { 
+						<?php if($test->test_result_binary==1 && preg_match("^Culture*^",$test->test_method)) {   //this function matches all occurrences of pattern in string 
 						$micro_organism_test_ids = array();
-						//echo $test->micro_organism_test;
+					//	echo $test->micro_organism_test;
 						$res = explode("^",trim($test->micro_organism_test,"^"));
 						$k=0;
+						//grouping all sensitive and resistive antibiotics separately
+						//creating arrays to store sensitive and resistant values separately
+							$sensitive=array();
+							$resistivetive=array();
+					
 						foreach($res as $r) {
-							$temp=explode(",",trim($r," ,"));
-							$temp[3]==1?$temp[3]="Sensitive":$temp[3]="Resistant";
-							if(!in_array($temp[0],$micro_organism_test_ids)){
-								if(count($micro_organism_test_ids)>0) echo "</div></div></div>"
-								?>
-								<div class="col-md-12"><div class="well" style="background:white;font-size:0.7em;">
-									<b><?php echo $temp[1];?></b>
-									<div class='row'>
-									<div class='col-md-6'><?php echo $temp[2]." - ".$temp[3];?>	</div>
-							<?php 
-								foreach($temp as $t){?>
-							<?php 
+							$temp=explode(",",trim($r," ,")); // Break the strings and store them into an array: using explode() function
+								if($temp[3]==1){
+								$sensitive[]=array(
+									'micro_organism_test_id'=>$temp[0], //storing the type of tests in micro_organism_test_id 
+									'antibiotic'=>$temp[2]//store anitbiotic type in variable antibiotic
+								);
 								}
+							if($temp[3]==0){
+								$resistive[]=array(
+								'micro_organism_test_id'=>$temp[0],//storing resistives in same variables as in sensitive array
+								'antibiotic'=>$temp[2]
+							);}
+							}	
+							
+						foreach($res as $r) {
+							$temp=explode(",",trim($r," ,"));//Break tne strings and store them into an array: using explode() function
+							$temp[3]==1?$temp[3]="Sensitive":$temp[3]="Resistant";
+						
+							if(!in_array($temp[0],$micro_organism_test_ids)){ //in_array Searches for a value in an array
+								
+								if(count($micro_organism_test_ids)>0) echo "</table></div></div>";
+								?>
+							
+								
+								<div class="well well-sm" style="background:white;font-size:0.5em;">
+								
+								
+									<div style="font-size:1.5em;">
+										<h5><b><?php echo $temp[1];?></b></h5>
+								<!--displaying the antibiotic types in a table-->	
+								<table class="table">
+								<tr><th style="width:400px;">Sensitive</th><th>Resistant</th></tr>	
+								<div class="col-md-2">
+							<?php 
 								$micro_organism_test_ids[]=$temp[0];
-							}
-							else echo "<div class='col-md-6'>$temp[2] - $temp[3]</div>";	
+							?>
+										
+									<tr>
+										<td>
+											 <!--display all the sensitive antibiotics in series if they belong to their corresponding test-->
+										<ol type=1> <?php foreach($sensitive as $se){      
+											if($se['micro_organism_test_id']==$temp[0]){
+												echo "<li>$se[antibiotic]</li>";
+											}
+										}
+										?></ol>
+										</td>
+		
+										<td>
+											<!--display all the resistive antibiotics in series if they belong to their crresponding test-->
+										 <ol type=1> <?php foreach($resistive as $re){		
+											if($re['micro_organism_test_id']==$temp[0]){       
+											echo "<li>$re[antibiotic]</li>";
+											}
+										}
+										?> </ol>
+										</td>
+									</tr>
+							<?php }
 							$k++;
 							if($k==count($res))
-								echo "</div></div></div>";
+								echo "</table></div></div>";
 							}
 							
 						} ?>
@@ -241,7 +293,7 @@ pri.print();
 				</tr>
 			<tr>
 				<td colspan="10" align="center">
-					<?php if(preg_match("^Culture*^",$order[0]->test_method)){ ?>
+					<?php if(preg_match("^Culture*^",$order[0]->test_method)){ ?>  <!-- this function matches all occurrences of pattern in string-->
 						
 					<table class="inner" style="boder:1px solid #ccc; border-collapse:collapse;">
 					<thead>
@@ -285,29 +337,80 @@ pri.print();
 							
 						<?php if($test->test_result_binary==1) { 
 						$micro_organism_test_ids = array();
-						$res = explode("^",trim($test->micro_organism_test,"^"));
+						$res = explode("^",trim($test->micro_organism_test,"^")); //
 						$k=0;
+						//grouping all sensitive and resistive antibiotics separately
+							//creating arrays to store sensitive and resistive values  separately
+							$sensitive=array();
+							$resistive=array();
+						 
+						foreach($res as $r) {
+							$temp=explode(",",trim($r," ,")); //expolde will Break a string into an array:
+								if($temp[3]==1){
+								$sensitive[]=array(
+									'micro_organism_test_id'=>$temp[0],//storing the type of tests in micro_organism_test_id 
+							//store antibiotic type in other varible antibiotic
+									'antibiotic'=>$temp[2]
+								);
+								}
+							if($temp[3]==0){ 
+								$resistive[]=array(
+								'micro_organism_test_id'=>$temp[0], //storing reisitives in same variables as in sensitive array
+								'antibiotic'=>$temp[2]
+							);
+							}
+							}	
 						foreach($res as $r) {
 							$temp=explode(",",trim($r," ,"));
 							$temp[3]==1?$temp[3]="<b>Sensitive</b>":$temp[3]="Resistant";
-							if(!in_array($temp[0],$micro_organism_test_ids)){
-								if(count($micro_organism_test_ids)>0) echo "</tr></tbody></table>"
+							if(!in_array($temp[0],$micro_organism_test_ids)){  //in_array Searches for a value in an array
+								if(count($micro_organism_test_ids)>0) echo "</tbody></table>"
 								?>
 								<table style="border:1px solid #ccc; border-collapse:collapse;margin:5px;"><thead><th colspan="2" style="text-align:center"><?php echo $temp[1];?></th></thead>
 								<tbody>
-								<tr>
-									<td><?php echo $temp[2]." - ".$temp[3];?>	</td>
+								<!--displaying the antibiotic types in a table-->
+								<tr><th style="width:300px;">Sensitive</th><th>Resistant</th></tr>	
+								
+							<?php 
+								$micro_organism_test_ids[]=$temp[0];
+							?>
+										
+									<tr>
+										<td>
+											 		<!--display all the sensitive antibiotics in series if they belong to their corresponding test-->
+										<ol type=1>
+										 <?php foreach($sensitive as $se){
+											if($se['micro_organism_test_id']==$temp[0]){        
+												echo "<li>$se[antibiotic]</li>"."<br />" ;
+											}
+										}
+										?> </ol>
+										</td>
+		
+										<td>
+											<!--display all the resistive antibiotics in series if they belong to their corresponding test-->
+										<ol type=1>
+										 <?php foreach($resistive as $re){		
+											if($re['micro_organism_test_id']==$temp[0]){ 
+											echo "<li>$re[antibiotic]</li>"."<br />" ;
+											}
+										}
+										?></ol>
+										</td>
+									</tr>
+								
+								
 							<?php 
 								foreach($temp as $t){?>
 							<?php 
 								}
 								$micro_organism_test_ids[]=$temp[0];
 							}
-							else echo "<td>$temp[2] - $temp[3]</td>";
+							
 							if($k%2==1) echo "</tr>";
 							$k++;
 							if($k==count($res))
-								echo "</tr></tbody></table>";													
+								echo "</tbody></table>";													
 							}
 						} ?>
 						</td>
@@ -463,7 +566,8 @@ if(count($orders)>0){ ?>
 						</td>
 						<td><?php echo $order->staff_name;?></td>
 						<td><?php echo $order->sample_code;?></td>
-						<td><?php echo $order->specimen_type;?></td>
+						
+						<td><?php echo $order->specimen_type; if($order->specimen_source!="") echo " - ".$order->specimen_source;?> </td><!--printing the specimen source in the test results beside the specimen type if the specimen type is not null-->
 						<td><?php echo $order->hosp_file_no;?></td>
 						<td><?php echo $order->first_name." ".$order->last_name;?></td>
 						<td><?php echo $order->department;?></td>
