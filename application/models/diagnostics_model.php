@@ -7,7 +7,7 @@ class Diagnostics_model extends CI_Model{
 		$this->db->select('visit_id')->from('patient_visit')
 		->where('hosp_file_no',$this->input->post('visit_id'))
 		->where('visit_type',$this->input->post('patient_type'))
-		->where('YEAR(admit_date)',$this->input->post('year'),false);
+		->where('YEAR(admit_date)',$this->input->post('year'),false); 
 		$query=$this->db->get();
 		$row=$query->row();
 		$visit_id=$row->visit_id;
@@ -28,6 +28,7 @@ class Diagnostics_model extends CI_Model{
 			$sample_code=$this->input->post('sample_id');
 			$sample_date_time = date("Y-m-d H:i:s");
 			$specimen_type_id=$this->input->post('specimen_type');
+			$specimen_source=$this->input->post('specimen_source');//--adding an extra field specimen source in order form
 			$sample_container_type=$this->input->post('sample_container');
 			$sample_status_id=1;
 			$data=array(
@@ -35,6 +36,7 @@ class Diagnostics_model extends CI_Model{
 				'sample_date_time'=>$sample_date_time,
 				'order_id'=>$order_id,
 				'specimen_type_id'=>$specimen_type_id,
+				'specimen_source'=>$specimen_source,//including source field in the array containing the fields present in the order form
 				'sample_container_type'=>$sample_container_type,
 				'sample_status_id'=>$sample_status_id
 			);
@@ -108,7 +110,7 @@ class Diagnostics_model extends CI_Model{
 		}
 		$this->db->select('test_id,test_order.order_id,test_sample.sample_id,test_method,
 		test_name,department,patient.first_name, patient.last_name,
-		staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,sample_container_type,test_status',false)
+		staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,specimen_source,sample_container_type,test_status',false)//including the specimen source in update tests
 		->from('test_order')
 		->join('test','test_order.order_id=test.order_id')
 		->join('test_sample','test_order.order_id=test_sample.order_id')
@@ -153,7 +155,7 @@ class Diagnostics_model extends CI_Model{
 			$this->db->where('visit_type',$this->input->post('patient_type_search'));
 		}
 		$this->db->select('test_id,test_order.order_id,test_sample.sample_id,test_method,test_name,department,patient.first_name, patient.last_name,
-							staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,sample_container_type,test_status')
+							staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,specimen_source,sample_container_type,test_status')//adding the specimen source in the update tests
 		->from('test_order')
 		->join('test','test_order.order_id=test.order_id')
 		->join('test_sample','test_order.order_id=test_sample.order_id')
@@ -164,6 +166,7 @@ class Diagnostics_model extends CI_Model{
 		->join('patient','patient_visit.patient_id=patient.patient_id')
 		->join('department','patient_visit.department_id=department.department_id')
 		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id')
+		
 		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')") 
 		->where('test_master.test_area_id',$test_area);
 
@@ -196,7 +199,7 @@ class Diagnostics_model extends CI_Model{
 			$this->db->where('visit_type',$this->input->post('patient_type_search'));
 		}
 		$this->db->select('test_id,test_order.order_id,test_sample.sample_id,test_method,test_name,department,patient.first_name, patient.last_name,
-							staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,sample_container_type,test_status')
+							staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,specimen_source,sample_container_type,test_status')//adding the specimen source in the update tests
 		->from('test_order')
 		->join('test','test_order.order_id=test.order_id')
 		->join('test_sample','test_order.order_id=test_sample.order_id')
