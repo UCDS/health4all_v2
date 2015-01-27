@@ -142,30 +142,27 @@ class Sanitation extends CI_Controller {
 			}
 		}
 		if($access==0) show_404();		
-			$title="Add Area Activity";
-			$config=array(
-               array(
+		$title="Add Area Activity";
+		$config=array(
+        array(
                      'field'   => 'activity_name',
-                     'label'   => ' activity_name',
+                     'label'   => 'activity_name',
                      'rules'   => 'required|trim|xss_clean'
-                  ) 	
-		     
-			);
+                  )
+			);	
 			$this->data['area_types']=$this->masters_model->get_data("area_types");
-		
-		
 		}
-		else if($type=="department"){
-			$access=0;
-			foreach($this->data['functions'] as $f){
-				if($f->user_function=="Masters - Facility" && $f->add ==1){
-					$access=1;
-				}
+	else if($type=="department"){
+		$access=0;
+		foreach($this->data['functions'] as $f){
+			if($f->user_function=="Masters - Facility" && $f->add ==1){
+				$access=1;
 			}
-			if($access==0) show_404();		
-			$title="Add Department";
-			$config=array(
-               array(
+		}
+	if($access==0) show_404();		
+		$title="Add Department";
+		$config=array(
+        array(
                      'field'   => 'department_name',
                      'label'   => 'department_name',
                      'rules'   => 'required|trim|xss_clean'
@@ -319,7 +316,7 @@ class Sanitation extends CI_Controller {
 	    else if($type=="vendor_contracts"){
 			$access=0;
 			foreach($this->data['functions'] as $f){
-				if($f->user_function=="Masters - Facility" && $f->add ==1){
+				if($f->user_function=="Masters - Sanitation" && $f->add ==1){
 					$access=1;
 				}
 			}
