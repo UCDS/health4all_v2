@@ -242,7 +242,6 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-					<!-- here the variable id_proof_type is given as per the database variable which is available in patient table -->
 					<div class="layout-div col-md-4 id_proof_type">
 					<div class="form-group">
 						<label class="control-label"> ID Proof Type</label>
@@ -263,9 +262,8 @@
 						</div>
 					</div>
 						<div class="layout-div col-md-4 occupation">
-						<div class="form_group">
 						<label class="control-label"> Occupation: </label>
-						<select class="form-control" name="occupation" id="occupation" required >
+						<select class="form-control" name="occupation" id="occupation" >
 							<option value="">Select</option>
 							<option value="private">Private</option>
 							<option value="government">Government</option>
@@ -432,7 +430,6 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-					<!-- here we should mention it as toggle mandatory as we may display only reqired fields compulsory -->
 					<div class="layout-div col-md-4 insurance_case">
 						<div class="radio ">
 						<label class="control-label">
@@ -564,6 +561,48 @@
 						<div class="form-group">
 						<label class="control-label">Provisional Diag.</label>
 						<input type="text" name="provisional_diagnosis" style="width: 170px" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 past_history">
+						<div class="form-group">
+						<label class="control-label">Past history</label>
+						<input type="text" name="" class="past_history"-class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 admit_weight">
+						<div class="form-group">
+						<label class="control-label">Admit Weight</label>
+						<input type="text" name="" class="admit_weight"-class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 pulse_rate">
+						<div class="form-group">
+						<label class="control-label">Pulse Rate</label>
+						<input type="text" name="" class="pulse_rate form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 respiratory_rate">
+						<div class="form-group">
+						<label class="control-label">Respiratory Rate</label>
+						<input type="text" name="" class="respiratory_rate form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 temperature">
+						<div class="form-group">
+						<label class="control-label">Temperature</label>
+						<input type="text" name="" class="temperature"-class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 blood_pressure">
+						<div class="form-group">
+						<label class="control-label">Blood Pressure</label>
+						<input type="text" name="" class="blood_pressure"-class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
