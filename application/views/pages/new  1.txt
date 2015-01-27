@@ -1,0 +1,23 @@
+case "id_proof_type" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label"> ID Proof Type</label>
+						<select name="district" class="form-control" <?php if($mandatory) echo "required"; ?>>
+							<option value="">Select</option>
+                  <?php 
+						foreach($id_proof_type as $id_proof_type){
+							echo "<option value='".$id_proof_type->id_proof_type."'";
+							if($patient) if($district->id_proof_type==$patient->id_proof_type) echo " selected ";
+							echo ">".$district->district."</option>";
+						}
+						?>							
+							<option value="id_type_proof">Pan Card</option>
+							<option value="id_type_proof">Aadhar Card</option>
+							<option value="id_type_proof">Voter Card</option>
+                        </select>
+					<?php if($patient) echo $patient->id_proof_type;?>
+					<?php if($mandatory)?> 
+						</div>
+					</div>
+				<?php 
+				    break;
