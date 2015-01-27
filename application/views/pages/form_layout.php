@@ -94,8 +94,7 @@
 		
 	});
   </script>
-
-      <?php echo form_open('user_panel/form_layout',array('role'=>'form','class'=>'form-custom','id'=>'new-form')); ?>
+<?php echo form_open('user_panel/form_layout',array('role'=>'form','class'=>'form-custom','id'=>'new-form')); ?>
 			<div class="col-md-10" >
 				<h4>Create Form for Patient Registration</h4>
 				<div class="panel panel-default">
@@ -112,7 +111,7 @@
 						<div class="radio">
 							<label class="control-label"><input type="radio" value="3" name="cols" class="num_cols" checked />3</label>
 						</div>
-					</div>
+					</div>					
 					<div class="col-md-4">
 						<div class="form-group">
 						<label class="control-label">Select form type</label>
@@ -168,7 +167,6 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-					<!--here gender must be in radio button in order to know the  category of gender-->
 					<div class="layout-div col-md-4 gender">
 						<div class="radio ">
 						<label class="control-label">
@@ -183,8 +181,7 @@
 						</div>					
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 					</div>
-
-					<div class="layout-div col-md-4 address">
+                    <div class="layout-div col-md-4 address">
 						<div class="form-group">
 						<label class="control-label">    Address    </label>
 						<input type="text" name="address" style="width: 170px" class="form-control"/>
