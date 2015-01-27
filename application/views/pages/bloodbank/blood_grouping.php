@@ -206,14 +206,14 @@
 			<select name="forward_by" required>
 				<option value="" disabled selected>Forward Done By</option>
 				<?php foreach($staff as $s){
-					echo "<option value='$s->staff_id'>$s->name</option>";
+					echo "<option value='$s->staff_id'>$s->first_name $s->last_name</option>";
 				}
 				?>
 			</select>
 			<select name="reverse_by" required>
 				<option value="" disabled selected>Reverse Done By</option>
 				<?php foreach($staff as $s){
-					echo "<option value='$s->staff_id'>$s->name</option>";
+					echo "<option value='$s->staff_id'>$s->first_name $s->last_name</option>";
 				}
 				?>
 			</select>

@@ -20,7 +20,7 @@
 		foreach($donors as $donor){
 		?>
 		<tr>
-		<?php echo form_open("register/bleeding");?>
+		<?php echo form_open("bloodbank/register/bleeding");?>
 			<td>
 				<input type="text" value="<?php echo $donor['donation_id'];?>" size="4" name="donation_id" hidden />
 				<?php echo $donor['name'];?></td>
@@ -54,7 +54,7 @@
 			<select name="staff" style="width:80px" required >
 				<option value="" disabled selected>Done By</option>
 				<?php foreach($staff as $s){
-					echo "<option value='$s->staff_id'>$s->name</option>";
+					echo "<option value='$s->staff_id'>$s->first_name $s->last_name</option>";
 				}
 				?>
 			</select></td>

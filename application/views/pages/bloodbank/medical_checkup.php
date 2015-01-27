@@ -30,7 +30,7 @@
 	?>
 	</table>
 	<h1>Register Blood Donation</h1>
-	<?php echo form_open("register/medical_checkup/0/$donation_id");?>
+	<?php echo form_open("bloodbank/register/medical_checkup/0/$donation_id");?>
 	<table>
 	<tr><td>Weight : </td><td><input type="text" placeholder="Weight" size="5" id="weight" name="weight" required />Kgs</td></tr>
 	<tr><td>Pulse : </td><td><input type="text" placeholder="Pulse" size="4" id="pulse" name="pulse" required />/min</td></tr>

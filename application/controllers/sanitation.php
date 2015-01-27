@@ -726,7 +726,6 @@ function edit($type=""){
 				$this->load->view($page,$this->data);
 			}
 			else if($this->input->post('search')){
-				echo "search";
 				$this->data['mode']="search";
 				$this->data[$type]=$this->masters_model->get_data($type);
 				$this->load->view($page,$this->data);
