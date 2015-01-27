@@ -75,7 +75,7 @@
 			}
 			if($(this).val()==3){
 				$(".form .layout-div").each(function(){
-					$(this).removeClass("col-md-6").removeClass("col-md-12").addClass("col-md-4");
+					$(this).removeClass("col-md-4").removeClass("col-md-12").addClass("col-md-6");
 					$(this).css('width','33%');
 				});
 			}
@@ -148,25 +148,27 @@
 				<div class="form row" id="sortable">
 					<div class="layout-div col-md-4 first_name">
 						<div class="form-group">
-						<label class="control-label">First Name</label>
-						<input type="text" name="first_name" placeholder="First Name" class="form-control" />
+						<label class="control-label">   First Name  </label>
+							<input type="text" name="first_name" style="width: 170px" class="form-control"/>
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
+					<!-- here we use input type for obtaining textbox for first_name,last_name,age, place, Phone-->
 					<div class="layout-div col-md-4 last_name">
 						<div class="form-group">
-						<label class="control-label">Last Name</label>
-						<input type="text" name="last_name" placeholder="Last Name" class="form-control" />
+						<label class="control-label">  Last Name    </label>
+							<input type="text" name="last_name" style="width: 170px" class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
 					<div class="layout-div col-md-4 age">
 						<div class="form-group">
-						<label class="control-label">Age</label>
-						<input type="text" name="age" class="form-control" size="1" />
+						<label class="control-label">   Age          </label>
+						<input type="text" name="age" style="width: 170px" class="form-control"/>
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
+					<!--here gender must be in radio button in order to know the  category of gender-->
 					<div class="layout-div col-md-4 gender">
 						<div class="radio ">
 						<label class="control-label">
@@ -184,21 +186,21 @@
 
 					<div class="layout-div col-md-4 address">
 						<div class="form-group">
-						<label class="control-label">Address</label>
-						<input type="text" name="address" class="form-control" />
+						<label class="control-label">    Address    </label>
+						<input type="text" name="address" style="width: 170px" class="form-control"/>
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
 					<div class="layout-div col-md-4 place">
 						<div class="form-group">
-						<label class="control-label">Place</label>
-						<input type="text" name="place" class="form-control" />
+						<label class="control-label">   Place      </label>
+							<input type="text" name="place" style="width: 170px" class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
 					<div class="layout-div col-md-4 district">
 						<div class="form-group">
-						<label class="control-label">District</label>
+						<label class="control-label">   District   </label>
 						<select name="district" class="form-control">
 						<option value="">--Select--</option>
 						<?php 
@@ -212,36 +214,306 @@
 					</div>
 					<div class="layout-div col-md-4 phone">
 						<div class="form-group">
-						<label class="control-label">Phone</label>
-						<input type="text" name="phone" class="form-control" />
+						<label class="control-label">    Phone    </label>
+						<input type="text" name="phone" style="width: 170px" class="form-control"/>
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
+					<!-- here we use input type for obtaining textbox for father_name,mother_name-->
 					<div class="layout-div col-md-4 father_name">
 						<div class="form-group">
-						<label class="control-label">Father Name</label>
-						<input type="text" name="father_name" class="form-control" />
+						<label class="control-label"> Father Name </label>
+						<input type="text" name="father_name" style="width: 170px" class="form-control"/>
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
 					<div class="layout-div col-md-4 mother_name">
 						<div class="form-group">
-						<label class="control-label">Mother Name</label>
-						<input type="text" name="mother_name" class="form-control" />
+						<label class="control-label"> Mother Name  </label>
+						<input type="text" name="mother_name" style="width: 170px"  class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
+					<!-- here spouse_name is display only if the patient is female -->
 					<div class="layout-div col-md-4 spouse_name">
 						<div class="form-group">
-						<label class="control-label">Spouse Name</label>
-						<input type="text" name="spouse_name" class="form-control" />
+						<label class="control-label"> Spouse Name </label>
+						<input type="text" name="spouse_name" style="width: 170px"  class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
+<<<<<<< HEAD
+					<div class="layout-div col-md-4 id_proof">
+						<div class="form-group">
+						<label class="control-label">ID Proof</label>
+						<input type="text" name="id_proof" class="form-control" />
+=======
+					<!-- here the variable id_proof_type is given as per the database variable which is available in patient table -->
+					<div class="layout-div col-md-4 id_proof_type">
+					<div class="form-group">
+						<label class="control-label"> ID Proof Type</label>
+						<select class="form-control" name="id_proof_type" id="id_proof_type" required >
+							<option value="">Select</option>				
+							<option value="id type1">Pan Card</option>
+							<option value="id type2">Aadhar Card</option>
+							<option value="id type3">Voter Card</option>
+                        </select>
+				       <span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+				      </div>
+					</div>
+					<div class="layout-div col-md-4 id_proof_no">
+					    <div class="form-group">
+				         <label class="control-label">ID proof No.</label>
+							<input type="text" name="id_proof_no" style="width:170px" class="form-control" />
+>>>>>>> feb3ba6c530acb3b65d5fc1f13a9316fda52fab9
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+						<div class="layout-div col-md-4 occupation">
+<<<<<<< HEAD
+						<div class="form-group">
+						<label class="control-label">Occupation</label>
+						<input type="text" name="occupation" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 education_level">
+						<div class="form-group">
+						<label class="control-label">Education Level</label>
+						<input type="text" name="education_level" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 education_qualification">
+						<div class="form-group">
+						<label class="control-label">Education Qualification</label>
+						<input type="text" name="education_qualification" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 blood_group">
+					    <div class="form-group">
+						<label class="control-label">Blood Group</label>
+						<input type="text" name="blood_group" class="form-control" />
+=======
+						<div class="form_group">
+						<label class="control-label"> Occupation: </label>
+						<select class="form-control" name="occupation" id="occupation" required >
+							<option value="">Select</option>
+							<option value="private">Private</option>
+							<option value="government">Government</option>
+						</select>
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+					    </div>
+					</div>
+					<div class="layout-div col-md-4 education_level">
+						<div class="form-group">
+						<label class="control-label"> Education Level </label>
+					    <input type="text" name="education_level" style="width: 170px" class="form-control" />
+					<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+					 </div>
+					</div>
+					<!-- here we use select class in order to obtain a drop-down box for Education Qualification -->
+					<div class="layout-div col-md-4 education_qualification">
+						<div class="form-group">
+						<label class="control-label">Education Qualification</label>
+						<select class="form-control" name="education_qualification" id="education_qualification" required >
+							<option value="">Select</option>
+							<option value="SSC">ssc</option>
+							<option value="INTERMEDIATE">Intermediate</option>
+							<option value="B.TECH">B.tech</option>
+							<option value="M.TECH">M.tech</option>
+				            <option value="M.Sc">M.Sc</option>
+							<option value="Undergraduate">Undergraduate</option>
+						</select>
+					<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<!-- here we use select class in order to obtain a drop-down box for Blood Group -->
+					<div class="layout-div col-md-4 blood_group">
+					    <div class="form-group">
+						<label class="control-label">Blood Group</label>
+						<select class="form-control" name="blood_group" id="blood_group" required >
+							<option value="">Select</option>
+							<option value="A+">A+</option>
+							<option value="A-">A-</option>
+							<option value="B+">B+</option>
+							<option value="B-">B-</option>
+				            <option value="AB+">AB+</option>
+							<option value="AB-">AB-</option>
+							<option value="O+">O+</option>
+							<option value="O-">O-</option>
+						</select>
+>>>>>>> feb3ba6c530acb3b65d5fc1f13a9316fda52fab9
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 birth_information">
+						<div class="form-group">
+						<label class="control-label">Birth Information</label>
+<<<<<<< HEAD
+						<input type="text" name="birth_information" class="form-control" />
+=======
+						<input type="text" name="birth_information" style="width: 170px"  class="form-control" />
+>>>>>>> feb3ba6c530acb3b65d5fc1f13a9316fda52fab9
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 gestation">
+						<div class="form-group">
+						<label class="control-label">Gestation</label>
+<<<<<<< HEAD
+						<input type="text" name="gestation" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 gestation_type">
+						<div class="form-group">
+						<label class="control-label">Gestation Type</label>
+						<input type="text" name="gestation_type" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 delivery_mode">
+						<div class="form-group">
+						<label class="control-label">Delivery Mode</label>
+						<input type="text" name="delivery_mode" class="form-control" />
+=======
+						<input type="text" name="gestation" style="width: 170px"  class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<!-- here we use select class in order to obtain a drop-down box for Gestation Type -->
+					<div class="layout-div col-md-4 gestation_type">
+						<div class="form-group">
+						<label class="control-label"> Gestation Type </label>
+						<select class="form-control" name="gestation_type" id="gestation_type" required >
+							<option value="">Select</option>
+							<option value="long_peroid">Long Peroid</option>
+							<option value="short_peroid">Short Period</option>
+                        </select>
+						</div>
+					</div>
+					<!-- here we use select class in order to obtain a drop-down box for Delivery Mode -->
+					<div class="layout-div col-md-4 delivery_mode">
+						<div class="form-group">
+						<label class="control-label">Delivery Mode</label>
+						<select class="form-control" name="delivery_mode" id="delivery_mode" required >
+							<option value="">Select</option>
+							<option value="normal">Normal</option>
+							<option value="surgical">Surgical</option>
+                        </select>
+>>>>>>> feb3ba6c530acb3b65d5fc1f13a9316fda52fab9
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 delivery_place">
+						<div class="form-group">
+<<<<<<< HEAD
+						<label class="control-label">Delivery Place</label>
+						<input type="text" name="delivery_place" class="form-control" />
+=======
+						<label class="control-label"> Delivery Place </label>
+						<input type="text" name="delivery_place" style="width: 170px" class="form-control" />
+>>>>>>> feb3ba6c530acb3b65d5fc1f13a9316fda52fab9
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 delivery_location">
+						<div class="form-group">
+<<<<<<< HEAD
+						<label class="control-label">Delivery Location</label>
+						<input type="text" name="delivery_location" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 hospital_type">
+						<div class="form-group">
+						<label class="control-label">Hospital_Type</label>
+						<input type="text" name="hospital_type" class="form-control" />
+=======
+						<label class="control-label"> Delivery Location </label>
+						<input type="text" name="delivery_location" style="width: 170px" class="form-control" />
+>>>>>>> feb3ba6c530acb3b65d5fc1f13a9316fda52fab9
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 delivery_location_type">
+						<div class="form-group">
+						<label class="control-label">Delivery Location Type</label>
+<<<<<<< HEAD
+						<input type="text" name="delivery_location_type" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 delivery_plan">
+						<div class="form-group">
+						<label class="control-label">Delivery Plan</label>
+						<input type="text" name="delivery_plan" class="form-control" />
+=======
+						<select class="form-control" name="delivery_location_type" id="delivery_location_type" required >
+							<option value="">Select</option>
+							<option value="private">Private</option>
+							<option value="government">Government</option>
+						</select>
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+					    </div>
+					</div>
+					<div class="layout-div col-md-4 delivery_plan">
+						<div class="form-group">
+						<label class="control-label">  Delivery Plan   </label>
+						<input type="text" name="delivery_plan" style="width: 170px" class="form-control" />
+>>>>>>> feb3ba6c530acb3b65d5fc1f13a9316fda52fab9
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 birth_weight">
+						<div class="form-group">
+<<<<<<< HEAD
+						<label class="control-label">Birth Weight</label>
+						<input type="text" name="birth_weight" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 congenial_anomalies">
+						<div class="form-group">
+						<label class="control-label"> Congenial Anomalies</label>
+						<input type="text" name=" congenial_anomalies" class="form-control" />
+=======
+						<label class="control-label">   Birth Weight  </label>
+						<input type="text" name="birth_weight" style="width: 170px" class="form-control" />
+>>>>>>> feb3ba6c530acb3b65d5fc1f13a9316fda52fab9
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+                    <div class="layout-div col-md-4 visit_information">
+						<div class="form-group">
+<<<<<<< HEAD
+						<label class="control-label">Visit Information</label>
+						<input type="text" name="visit_information" class="form-control" />
+=======
+						<label class="control-label"> Visit Information </label>
+						<input type="text" name="visit_information" style="width: 170px" class="form-control" />
+>>>>>>> feb3ba6c530acb3b65d5fc1f13a9316fda52fab9
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+						</div>
+						<div class="layout-div col-md-4 hospital">
+						<div class="form-group">
+<<<<<<< HEAD
+						<label class="control-label">Hospital</label>
+						<input type="text" name="hospital" class="form-control" />
+=======
+						<label class="control-label">   Hospital   </label>
+						<input type="text" name="hospital" style="width: 170px" class="form-control" />
+>>>>>>> feb3ba6c530acb3b65d5fc1f13a9316fda52fab9
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>				
 					<div class="layout-div col-md-4 department">
 						<div class="form-group">
-						<label class="control-label">Department</label>
-						<select name="department" class="form-control">
+						<label class="control-label">  Department   </label>
+						<select name="department" style="width: 170px" class="form-control">
 						<option value="">--Select--</option>
 						<?php 
 						foreach($departments as $department){
@@ -254,7 +526,7 @@
 					</div>
 					<div class="layout-div col-md-4 area">
 						<div class="form-group">
-						<label class="control-label">Area</label>
+						<label class="control-label">   Area   </label>
 						<select name="area" class="form-control">
 						<option value="">--Select--</option>
 						<?php 
@@ -263,6 +535,63 @@
 						}
 						?>
 						</select>	
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+<<<<<<< HEAD
+					<div class="layout-div col-md-4 doctor">
+						<div class="form-group">
+						<label class="control-label">Doctor</label>
+						<input type="text" name="doctor" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 nurse">
+						<div class="form-group">
+						<label class="control-label">Nurse</label>
+						<input type="text" name="nurse" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 insurance">
+						<div class="form-group">
+						<label class="control-label">Insurance>
+						<input type="text" name="insurance" class="form-control" />
+=======
+					<!-- here we should mention it as toggle mandatory as we may display only reqired fields compulsory -->
+					<div class="layout-div col-md-4 insurance_case">
+						<div class="radio ">
+						<label class="control-label">
+							<input type="radio" name="insurance_case" value="1" checked />No
+						</label>
+						<label class="control-label">
+							<input type="radio" name="insurance_case" value="1" />Yes
+						</label>
+						</div>					
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+					</div>
+					
+					<div class="layout-div col-md-4 insurance_no">
+						<div class="form-group">
+						<label class="control-label">Insurance Number</label>
+						<input type="text" name="insurance_no" style="width: 170px" class="form-control" />
+>>>>>>> feb3ba6c530acb3b65d5fc1f13a9316fda52fab9
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 hospital_type">
+						<div class="form-group">
+<<<<<<< HEAD
+						<label class="control-label">Hospital_Type</label>
+						<input type="text" name="hospital_type" class="form-control" />
+=======
+						<label class="control-label">Hospital Type</label>
+						<select class="form-control" name="hospital_type id="hospital_type" required >
+							<option value="">Select</option>
+							<option value="private">PRIVATE</option>
+							<option value="government">GOVERNMENT</option>
+						</select>
+>>>>>>> feb3ba6c530acb3b65d5fc1f13a9316fda52fab9
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
@@ -295,28 +624,125 @@
 					<div class="layout-div col-md-4 mlc_number">
 						<div class="form-group">
 						<label class="control-label">MLC Number</label>
-						<input type="text" name="mlc_number" class="form-control" />
+						<input type="text" name="mlc_number" style="width: 170px" class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
 					<div class="layout-div col-md-4 ps_name">
 						<div class="form-group">
 						<label class="control-label">PS Name</label>
-						<input type="text" name="ps_name" class="form-control" />
+						<input type="text" name="ps_name" style="width: 170px" class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-					<div class="layout-div col-md-4 presenting_complaints">
+					<div class="layout-div col-md-4 presenting_complaint">
 						<div class="form-group">
-						<label class="control-label">Complaints</label>
+						<label class="control-label">Complaint</label>
+						<input type="text" name="presenting_complaint" style="width: 170px" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 past_history">
+						<div class="form-group">
+						<label class="control-label">Past history</label>
+						<input type="text" name="" class="past_history"-class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 admit_weight">
+						<div class="form-group">
+						<label class="control-label">Admit Weight</label>
+						<input type="text" name="" class="admit_weight"-class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 discharge_weight ">
+						<div class="form-group">
+						<label class="control-label">Discharge Weight</label>
+						<input type="text" name="" class="discharge_weight"-class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 pulse_rate">
+						<div class="form-group">
+						<label class="control-label">Pulse Rate</label>
+						<input type="text" name=" control-label" style="width: 170px"class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 respiratory_rate">
+						<div class="form-group">
+						<label class="control-label">Respiratory Rate</label>
+						<input type="text" name="id_no" style="width: 170px" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 temperature">
+						<div class="form-group">
+						<label class="control-label">Temperature</label>
+					    <input type="text" name="temperature" style="width: 170px" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 blood_pressure">
+						<div class="form-group">
+<<<<<<< HEAD
+						<label class="control-label">Presenting Complaints</label>
 						<input type="text" name="presenting_complaints" class="form-control" />
+=======
+						<label class="control-label">BP</label>
+							<input type="text" name="sbp" style="width: 50px" class="form-control"/>/
+							<input type="text" name="dbp" style="width: 50px" class="form-control"/>
+>>>>>>> feb3ba6c530acb3b65d5fc1f13a9316fda52fab9
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
 					<div class="layout-div col-md-4 provisional_diagnosis">
 						<div class="form-group">
 						<label class="control-label">Provisional Diag.</label>
-						<input type="text" name="provisional_diagnosis" class="form-control" />
+						<input type="text" name="provisional_diagnosis" style="width: 170px" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 past_history">
+						<div class="form-group">
+						<label class="control-label">Past history</label>
+						<input type="text" name="" class="past_history"-class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 admit_weight">
+						<div class="form-group">
+						<label class="control-label">Admit Weight</label>
+						<input type="text" name="" class="admit_weight"-class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 pulse_rate">
+						<div class="form-group">
+						<label class="control-label">Pulse Rate</label>
+						<input type="text" name="" class="pulse_rate form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 respiratory_rate">
+						<div class="form-group">
+						<label class="control-label">Respiratory Rate</label>
+						<input type="text" name="" class="respiratory_rate form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 temperature">
+						<div class="form-group">
+						<label class="control-label">Temperature</label>
+						<input type="text" name="" class="temperature"-class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 blood_pressure">
+						<div class="form-group">
+						<label class="control-label">Blood Pressure</label>
+						<input type="text" name="" class="blood_pressure"-class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
@@ -340,25 +766,32 @@
 					<div class="layout-div col-md-4 outcome_date">
 						<div class="form-group">
 						<label class="control-label">Outcome Date</label>
-						<input type="text" name="outcome_date" class="form-control" />
+							<input type="text" name="outcome_date" style="width: 170px" class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
 					<div class="layout-div col-md-4 outcome_time">
 						<div class="form-group">
 						<label class="control-label">Outcome Time</label>
-						<input type="text" name="outcome_time" class="form-control" />
+						<input type="text" name="outcome_time" style="width: 170px" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 congenital_anomalies">
+						<div class="form-group">
+						<label class="control-label">Congenital anomalies</label>
+						<input type="text" name="congenital_anomalies" style="width: 170px" class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
 					<div class="layout-div col-md-4 final_diagnosis">
 						<div class="form-group">
 						<label class="control-label">Final Diag.</label>
-						<input type="text" name="final_diagnosis" class="form-control" />
+						<input type="text" name="final_diag." style="width: 170px" class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-					</div>
+			        </div>
 				</div>
 				<div class="panel-footer">
 					<button type="submit" class="btn btn-primary" id="save-form">Save</button>
@@ -368,6 +801,7 @@
 			<div class="col-sm-3 col-md-2 sidebar">
 			<strong>Patient Information</strong>
 			  <ul class="nav nav-sidebar">
+			  <!--here we are labelling the field_name on the left side of the form-->
 				<li>  
 					<div class="checkbox">
 						<label><input type="checkbox" value="1" id="first_name" class="checklist" />First name</label>
@@ -425,7 +859,12 @@
 				</li>
 				<li>  
 					<div class="checkbox">
-						<label><input type="checkbox" value="1" id="id_proof" class="checklist" />ID Proof</label>
+						<label><input type="checkbox" value="1" id="id_proof_type" class="checklist" />ID Proof Type</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="id_proof_no " class="checklist" />ID Proof NO.</label>
 					</div>
 				</li>
 				<li>  
@@ -498,7 +937,7 @@
 				</li>
 				<li>  
 					<div class="checkbox">
-						<label><input type="checkbox" value="1" id="congenial_anomalies" class="checklist" />Congenial Anomalies</label>
+						<label><input type="checkbox" value="1" id="congenital_anomalies" class="checklist" />Congenital Anomalies</label>
 					</div>
 				</li>     
 			  </ul>
@@ -526,17 +965,12 @@
 				</li>
 				<li>  
 					<div class="checkbox">
-						<label><input type="checkbox" value="1" id="doctor" class="checklist" />Doctor</label>
+						<label><input type="checkbox" value="1" id="insurance_case" class="checklist" />Insurance Case</label>
 					</div>
 				</li>
 				<li>  
 					<div class="checkbox">
-						<label><input type="checkbox" value="1" id="nurse" class="checklist" />Nurse</label>
-					</div>
-				</li>
-				<li>  
-					<div class="checkbox">
-						<label><input type="checkbox" value="1" id="insurance" class="checklist" />Insurance</label>
+						<label><input type="checkbox" value="1" id="insurance_no" class="checklist" />Insurance No.</label>
 					</div>
 				</li>
 				<li>  
@@ -556,7 +990,7 @@
 				</li>
 				<li>  
 					<div class="checkbox">
-						<label><input type="checkbox" value="1" id="presenting_complaints" class="checklist" />Presenting Complaints</label>
+						<label><input type="checkbox" value="1" id="presenting_complaint" class="checklist" />Presenting Complaint</label>
 					</div>
 				</li>  
 				<li>  
@@ -568,7 +1002,12 @@
 					<div class="checkbox">
 						<label><input type="checkbox" value="1" id="admit_weight" class="checklist" />Admit Weight</label>
 					</div>
-				</li>  
+				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="discharge_weight" class="checklist" />Discharge Weight </label>
+					</div>
+				</li>				
 				<li>  
 					<div class="checkbox">
 						<label><input type="checkbox" value="1" id="pulse_rate" class="checklist" />Pulse Rate</label>

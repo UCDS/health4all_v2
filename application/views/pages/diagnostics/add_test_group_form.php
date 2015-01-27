@@ -78,24 +78,29 @@ function remove_test_name(i){
 			<input type="text" class="form-control" placeholder="Test Group" id="group_name" name="group_name" />
 		</div>
 		</br>		</br>
-	
 
 		<label for="test_name" class="col-md-4">Test Name<font color='red'>*</font></label>
+		
 		<div  class="col-md-8" id="add_test_name">
 		<div class="col-md-10">
 		<select name="test_name[]" id="test_name" class="form-control" form="add_test_group">
-		<option value="">Test Name</option>
+		<option value="">Test Name</option> 
+		
 		<?php foreach($test_names as $d){
-			echo "<option value='$d->test_master_id'>$d->test_name</option>";
+		echo "<option value='$d->test_master_id'>$d->test_name</option>";
 		}
 		?>
 		</select>
 		</div>
-		<div class='col-md-2'>
+		</div><!--printing the add button down the test names if many are selected by putting out to the div tag-->
+		
+		
+		<div class='col-md-12 text-right'>	
 		<input type='button' id='b_test_name' class="btn btn-sm btn-primary" value='Add' />
 		</div>
-		</div>
 		
+		
+		</div>
 		<label for="has_result" class="col-md-4">Has Result?<font color='red'>*</font></label>
 		<div  class="col-md-8 has_result" id="has_result" >
 			<label id="has_result_yes">

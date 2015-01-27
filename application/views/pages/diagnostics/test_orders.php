@@ -226,8 +226,8 @@
 									new_organism += " <label><input type='radio' form='order_submit' name='antibiotic_results_<?php echo $test->test_id;?>_0' value='1' />Sensitive</label>";
 									new_organism += " <label><input type='radio' form='order_submit' name='antibiotic_results_<?php echo $test->test_id;?>_0' value='0' />Resistant</label>";
 									new_organism += " <input type='text' value='1' name='antibiotics_<?php echo $test->test_id;?>_"+$(this).val()+"[]'  form='order_submit' hidden />";
-									new_organism += '</div><div class="col-md-2"><button type="button" class="btn btn-primary btn-md add_antibiotic_<?php echo $test->test_id;?>" id="add_antibiotic_<?php echo $test->test_id;?>" style="background-color:#F8FCC2;color:black;border:1px solid #ccc;">+</button></div>';
-									new_organism += '</div></div>';
+									new_organism += '</div>';
+									new_organism += '</div><div class="col-md-12"><button type="button" class="btn btn-primary btn-md add_antibiotic_<?php echo $test->test_id;?>" id="add_antibiotic_<?php echo $test->test_id;?>" style="background-color:#F8FCC2;color:black;border:1px solid #ccc;">+</button></div></div>';
 									new_organism += '<div class="col-md-2 remove_organism_<?php echo $test->test_id;?> remove_'+j+'"><button type="button" class="btn btn-danger btn-md" onclick="removeRow(2,'+j+')">X</button>';
 									$(this).parent().parent().append(new_organism);
 									j++;
@@ -427,7 +427,7 @@ if(count($orders)>0){ ?>
 						</td>
 						<td><?php echo $order->staff_name;?></td>
 						<td><?php echo $order->sample_code;?></td>
-						<td><?php echo $order->specimen_type;?></td>
+						<td><?php echo $order->specimen_type; if($order->specimen_source!="") echo " - ".$order->specimen_source;?> </td><!--mentioning the specimen source beside the specimen type if the specimen type is not null-->
 						<td><?php echo $order->hosp_file_no;?></td>
 						<td><?php echo $order->first_name." ".$order->last_name;?></td>
 						<td><?php echo $order->department;?></td>
