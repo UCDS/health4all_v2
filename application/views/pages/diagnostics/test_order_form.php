@@ -137,6 +137,9 @@
 					<option value="<?php echo $specimen->specimen_type_id;?>"><?php echo $specimen->specimen_type;?></option>
 				<?php } ?>
 			</select><font color='red'>*</font>
+			
+			<label>Specimen Source<font color='red'></font></label><!--creating a label for the new field specimen_source-->
+			<input type="text" placeholder="Specimen source" class="form-control" name="specimen_source" /><br><br><!--creating the input field for the specimen_source-->
 			<label>Sample ID<font color='red'>*</font></label>
 			<input type="text" placeholder="Sample ID" name="sample_id" class="form-control" />
 			<input type="text" placeholder="Sample Container Type" name="sample_container" class="form-control" />

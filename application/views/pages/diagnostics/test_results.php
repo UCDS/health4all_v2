@@ -28,13 +28,14 @@ pri.print();
 	</div>
 	<?php  }?>
 <br>
+<!--display the age if not 0-->
 <?php if(isset($order)){ 
 	$age="";
 	if($order[0]->age_years!=0) $age.=$order[0]->age_years."Y ";
 	if($order[0]->age_months!=0) $age.=$order[0]->age_months."M ";
 	if($order[0]->age_days!=0) $age.=$order[0]->age_days."D ";
 	?>
-		
+	<!--displaying the order date-->	
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<h4>Order #<?php echo $order[0]->order_id;?>
@@ -44,6 +45,7 @@ pri.print();
 			</small>
 			</h4>
 		</div>
+		<!--displaying the patient visit details-->
 		<div class="panel-body">
 			<div class="row col-md-12">
 				<div class="col-md-4">
@@ -77,9 +79,11 @@ pri.print();
 			<br />
 			<br />
 			<table class="table table-bordered">
-				<th>Test</th>
+			<!-- patient test results-->
+				<th>Test</th
 				<th>Value</th>
-				<th colspan="2">Report</th>				
+				<th colspan="4">Report</th>
+				<!-- if the test_status value is not equal to 2 then no test is done i.e the test is not completed,else print the result-->
 			<?php foreach($order as $test){ 
 					$positive="";$negative="";
 				 if($test->test_status==2){ $readonly = "disabled"; }else $readonly="";
@@ -119,31 +123,82 @@ pri.print();
 						else echo "-";
 					?>
 						
-						<?php if($test->test_result_binary==1 && preg_match("^Culture*^",$test->test_method)) { 
+						<?php if($test->test_result_binary==1 && preg_match("^Culture*^",$test->test_method)) {   //if the test has a binary result and the test method is Culture & Sensitivity 
 						$micro_organism_test_ids = array();
-					//	echo $test->micro_organism_test;
-						$res = explode("^",trim($test->micro_organism_test,"^"));
+						$res = explode("^",trim($test->micro_organism_test,"^")); 
 						$k=0;
+						//to group all sensitive and resistive antibiotics separately
+						//creating arrays to store sensitive and resistant values separately
+							$sensitive=array();
+							$resistive=array();
+					
 						foreach($res as $r) {
-							$temp=explode(",",trim($r," ,"));
-							$temp[3]==1?$temp[3]="Sensitive":$temp[3]="Resistant";
-							if(!in_array($temp[0],$micro_organism_test_ids)){
-								if(count($micro_organism_test_ids)>0) echo "</div></div></div>"
-								?>
-								<div class="col-md-12"><div class="well" style="background:white;font-size:0.7em;">
-									<b><?php echo $temp[1];?></b>
-									<div class='row'>
-									<div class='col-md-6'><?php echo $temp[2]." - ".$temp[3];?>	</div>
-							<?php 
-								foreach($temp as $t){?>
-							<?php 
+							// Break the strings contaning the micro organism test details 
+							//and store them into an array: using explode() function
+							$temp=explode(",",trim($r," ,")); 
+								if($temp[3]==1){
+								//Storing all the antibiotics that are sensitive into the $sensitive variable.
+								$sensitive[]=array(
+									'micro_organism_test_id'=>$temp[0], 
+									'antibiotic'=>$temp[2]
+								);
 								}
-								$micro_organism_test_ids[]=$temp[0];
-							}
-							else echo "<div class='col-md-6'>$temp[2] - $temp[3]</div>";	
+							if($temp[3]==0){
+								//Storing all the antibiotics that are resistant into the $resistant variable.
+								$resistive[]=array(
+								'micro_organism_test_id'=>$temp[0],//storing resistives in same variables as in sensitive array
+								'antibiotic'=>$temp[2]
+							);}
+							}	
+							
+						foreach($res as $r) {
+							$temp=explode(",",trim($r," ,"));//Break tne strings and store them into an array: using explode() function, to get an array of test results.
+							$temp[3]==1?$temp[3]="Sensitive":$temp[3]="Resistant"; //$temp[3] contains the antibiotic result.
+						
+							if(!in_array($temp[0],$micro_organism_test_ids)){ //in_array Searches for the currrent micro organism test ID in the array of all micro_organism_test_ids encountered so far.
+								
+								if(count($micro_organism_test_ids)>0) echo "</table></div></div>"; //except for the first time, close the div tags and table tag that are opened in the previous iteration.
+								?>
+							
+								
+								<div class="well well-sm" style="background:white;font-size:0.5em;">
+								
+								
+									<div style="font-size:1.5em;">
+										<h5><b><?php echo $temp[1]; //prnit the micro organism name.?></b></h5>
+								<!--displaying the antibiotic results in a table-->	
+								<table class="table">
+								<tr><th style="width:400px;">Sensitive</th><th>Resistant</th></tr>	
+								<div class="col-md-2">
+							<?php 
+								$micro_organism_test_ids[]=$temp[0]; //add the current micro organism test to the array.
+							?>
+										
+									<tr>
+										<td>
+											 <!--display all the sensitive antibiotics in series if they belong to their corresponding test-->
+										<ol type=1> <?php foreach($sensitive as $se){      
+											if($se['micro_organism_test_id']==$temp[0]){
+												echo "<li>$se[antibiotic]</li>";
+											}
+										}
+										?></ol>
+										</td>
+		
+										<td>
+											<!--display all the resistive antibiotics in series if they belong to their crresponding test-->
+										 <ol type=1> <?php foreach($resistive as $re){		
+											if($re['micro_organism_test_id']==$temp[0]){       
+											echo "<li>$re[antibiotic]</li>";
+											}
+										}
+										?> </ol>
+										</td>
+									</tr>
+							<?php }
 							$k++;
 							if($k==count($res))
-								echo "</div></div></div>";
+								echo "</table></div></div>"; //in the last iteration, close the table tags and div tags.
 							}
 							
 						} ?>
@@ -152,7 +207,8 @@ pri.print();
 					<?php if($test->text_result==1){ 
 
 						if($test->test_status == 2) { 
-							echo $test->test_result_text;
+							$result = $test->test_result_text;  <!-- here we are assigning $test->test_result_text to $result so that it wont take previous result value to print -->
+							$result = $test->test_result_text;
 						} 
 						else{	
 							$result="Test not done.";
@@ -241,7 +297,7 @@ pri.print();
 				</tr>
 			<tr>
 				<td colspan="10" align="center">
-					<?php if(preg_match("^Culture*^",$order[0]->test_method)){ ?>
+					<?php if(preg_match("^Culture*^",$order[0]->test_method)){ ?>  <!-- this condition checks if the test method is Culture and Sensitivity-->
 						
 					<table class="inner" style="boder:1px solid #ccc; border-collapse:collapse;">
 					<thead>
@@ -260,7 +316,7 @@ pri.print();
 							if($test->text_result==1){ 
 
 								if($test->test_status == 2) { 
-									echo $test->test_result_text;
+									$result = $test->test_result_text;
 								} 
 								else{	
 									$result="Test not done.";
@@ -285,29 +341,81 @@ pri.print();
 							
 						<?php if($test->test_result_binary==1) { 
 						$micro_organism_test_ids = array();
-						$res = explode("^",trim($test->micro_organism_test,"^"));
+						$res = explode("^",trim($test->micro_organism_test,"^")); //
 						$k=0;
+						// to group all sensitive and resistive antibiotics separately
+							//creating arrays to store sensitive and resistive values  separately
+							$sensitive=array();
+							$resistive=array();
+						 
+						foreach($res as $r) {
+							$temp=explode(",",trim($r," ,")); ////Break tne strings and store them into an array: using explode() function, to get an array of test results.
+								if($temp[3]==1){
+								//Storing all the antibiotics that are sensitive into the $sensitive variable.
+								$sensitive[]=array(
+									'micro_organism_test_id'=>$temp[0],
+									'antibiotic'=>$temp[2]
+								);
+								}
+							if($temp[3]==0){ 
+								//Storing all the antibiotics that are resistive into the $resistive variable.
+								$resistive[]=array(
+								'micro_organism_test_id'=>$temp[0],
+								'antibiotic'=>$temp[2]
+							);
+							}
+							}	
 						foreach($res as $r) {
 							$temp=explode(",",trim($r," ,"));
 							$temp[3]==1?$temp[3]="<b>Sensitive</b>":$temp[3]="Resistant";
-							if(!in_array($temp[0],$micro_organism_test_ids)){
-								if(count($micro_organism_test_ids)>0) echo "</tr></tbody></table>"
+							if(!in_array($temp[0],$micro_organism_test_ids)){   //in_array Searches for the currrent micro organism test ID in the array of all micro_organism_test_ids encountered so far.
+								if(count($micro_organism_test_ids)>0) echo "</tbody></table>"
 								?>
 								<table style="border:1px solid #ccc; border-collapse:collapse;margin:5px;"><thead><th colspan="2" style="text-align:center"><?php echo $temp[1];?></th></thead>
 								<tbody>
-								<tr>
-									<td><?php echo $temp[2]." - ".$temp[3];?>	</td>
+								<!--displaying the antibiotic types in a table-->
+								<tr><th style="width:300px;">Sensitive</th><th>Resistant</th></tr>	
+								
+							<?php 
+								$micro_organism_test_ids[]=$temp[0];
+							?>
+										
+									<tr>
+										<td>
+											 		<!--display all the sensitive antibiotics in series if they belong to their corresponding test-->
+										<ol type=1>
+										 <?php foreach($sensitive as $se){
+											if($se['micro_organism_test_id']==$temp[0]){        
+												echo "<li>$se[antibiotic]</li>"."<br />" ;
+											}
+										}
+										?> </ol>
+										</td>
+		
+										<td>
+											<!--display all the resistive antibiotics in series if they belong to their corresponding test-->
+										<ol type=1>
+										 <?php foreach($resistive as $re){		
+											if($re['micro_organism_test_id']==$temp[0]){ 
+											echo "<li>$re[antibiotic]</li>"."<br />" ;
+											}
+										}
+										?></ol>
+										</td>
+									</tr>
+								
+								
 							<?php 
 								foreach($temp as $t){?>
 							<?php 
 								}
 								$micro_organism_test_ids[]=$temp[0];
 							}
-							else echo "<td>$temp[2] - $temp[3]</td>";
+							
 							if($k%2==1) echo "</tr>";
 							$k++;
 							if($k==count($res))
-								echo "</tr></tbody></table>";													
+								echo "</tbody></table>";//in the last iteration, close the table tags and  tbody tags.													
 							}
 						} ?>
 						</td>
@@ -348,7 +456,7 @@ pri.print();
 							if($test->text_result==1){ 
 
 								if($test->test_status == 2) { 
-									echo $test->test_result_text;
+									$result = $test->test_result_text;
 								} 
 								else{	
 									$result="Test not done.";
@@ -371,6 +479,20 @@ pri.print();
 								?>
 							<?php } ?>
 						</td>
+								<td>
+							<?php 
+							if($test->text_result==1){ 
+
+								if($test->test_status == 2) { 
+									$result = $test->test_result_text; <!--here we are assigning $test->test_result_text to $result so that it wont take previous result value to print --> 
+								} 
+								else{	
+									$result="Test not done.";
+								}
+								echo $result;
+							 }
+								else echo "-"; ?>
+							</td>
 						</tr>
 					<?php } ?>
 					</table>
@@ -463,7 +585,8 @@ if(count($orders)>0){ ?>
 						</td>
 						<td><?php echo $order->staff_name;?></td>
 						<td><?php echo $order->sample_code;?></td>
-						<td><?php echo $order->specimen_type;?></td>
+						
+						<td><?php echo $order->specimen_type; if($order->specimen_source!="") echo " - ".$order->specimen_source;?> </td><!--printing the specimen source in the test results beside the specimen type if the specimen type is not null-->
 						<td><?php echo $order->hosp_file_no;?></td>
 						<td><?php echo $order->first_name." ".$order->last_name;?></td>
 						<td><?php echo $order->department;?></td>

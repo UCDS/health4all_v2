@@ -91,7 +91,7 @@ class Sanitation_model extends CI_Model{
 		}
 		if(count($weekly_activities)>0){
 		foreach($weekly_activities as $activity){
-		if($this->input->post('activity_score_'.$activity)){
+		if($this->input->post('activity_score_'.$activity) != NULL){
 			if(in_array($activity,$activities_done)){
 				$key=array_search($activity,$activities_done);
 				$update_data[]=array(
