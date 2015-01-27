@@ -3,10 +3,10 @@ class Register_model extends CI_Model{
 	function __construct(){
 		parent::__construct();
 	}
+	//register() function does the patient registration or updating the existing patient records.
 	function register(){
-		//HERE WE USE IF STATEMENT FOR DISPLAYING REQUIRED FIELD THAT WE NEED 
-		//HER WE ARE KEEPING THE FIELDS LIKE first_name,last_name,age_days,age_months,age_years,address,dob,spouse_name,father_name,mother_name,id_proof_type in patient table 
-		//HER WE ARE KEEPING THE FIELDS LIKE id_proof_no,occupation,education_level,education_qualification,gestation,gestation_type,blood_group,delivery_location in patient table
+		//All the post variables are stored in local variables; 
+		//based on the field type we modify the data as required before storing in the variables.
 		$date=date("Y-m-d",strtotime($this->input->post('date')));
 		$time=date_format(date_create_from_format('h:ia', $this->input->post('time')),'H:i:s');
 		if($this->input->post('first_name')) $first_name=$this->input->post('first_name'); else $first_name="";
@@ -67,17 +67,22 @@ class Register_model extends CI_Model{
 		$outcome_time=date("h:i:s",strtotime($this->input->post('outcome_time')));
 		if($this->input->post('final_diagnosis')) $final_diagnosis=$this->input->post('final_diagnosis'); else $final_diagnosis="";
 		if($this->input->post('congenital_anomalies')) $congenital_anomalies=$this->input->post('congenital_anomalies'); else $congenital_anomalies="";
+		
 		if($form_type=="IP"){
-		$hosp_file_no=$this->input->post('hosp_file_no');
+			//If it's an IP form, get the hospital file number from the input field.
+			$hosp_file_no=$this->input->post('hosp_file_no');
 		}
 		else{
+			//else, select the counter from the database to check the last OP number, increment it and 
+			//use it as the hospital file number for out patients.
 			$this->db->select('count')->from('counter')->where('counter_name',$form_type);
 			$query=$this->db->get();
 			$result=$query->row();
 			$hosp_file_no=++$result->count;
 		}
+		
+		//Creating an array with the database column names as keys and the post values as values. 
 		$data=array(
-//HER WE ARE KEEPING THE FIELDS LIKE first_name,last_name,age_days,age_months,age_years,address,dob,spouse_name,father_name,mother_name,id_proof_type,id_proof_no,occupation,education_level,education_qualification,gestation,gestation_type,blood_group,delivery_location,hospital_type,delivery_location_type,delivery_mode,delivery_place,delivery_plan in patent table
 	        'first_name'=>$first_name,
 			'last_name'=>$last_name,
 			'age_years'=>$age_years,
@@ -109,18 +114,25 @@ class Register_model extends CI_Model{
 			'phone'=>$phone,
 			'district_id'=>$district
 		);
+		
+		//Start a mysql transaction.
 		$this->db->trans_start();
+		
 		if($this->input->post('patient_id')){
+			//if the patient id is received in the post variables, use it to update the particular patient.
 			$patient_id=$this->input->post('patient_id');
 			$this->db->where('patient_id',$patient_id);
 			$this->db->update('patient',$data);
 		}
 		else{
+			// else if it's a new patient, insert into the patient table using the data array.
 			$this->db->insert('patient',$data);
+			//get the patient id from the inserted row.
 			$patient_id=$this->db->insert_id();
 		}
-		//here we are using the array to store the values of patient_visit table 
-		//here hospital_id is column name and in that we are storing the variable values in subsequent column name 
+		
+		
+		//Creating an array with the database column names as keys and the post values as values. 
 		$visit_data=array( 
 		    'hospital_id'=>$hospital_id,
 			'department_id'=>$department,
@@ -136,7 +148,6 @@ class Register_model extends CI_Model{
 			'visit_type'=>$form_type,
 			'patient_id'=>$patient_id,
 			'hosp_file_no'=>$hosp_file_no,
-			'department_id'=>$department,
 			'unit'=>$unit,
 			'area'=>$area,
 			'provisional_diagnosis'=>$provisional_diagnosis,
@@ -151,33 +162,45 @@ class Register_model extends CI_Model{
 			'final_diagnosis'=>$final_diagnosis
 		);
 		if($this->input->post('visit_id')){
+			//if it's an update form, use the visit id from the post variables and update the record in the patient_visit table
 			$visit_id=$this->input->post('visit_id');
 			$this->db->where('visit_id',$visit_id);
 			$this->db->update('patient_visit',$visit_data);
 		}
 		else{
+			//else use the visit_data array and insert a new record into the patient visit table.
 		$this->db->insert('patient_visit',$visit_data,false);
-		$visit_id=$this->db->insert_id();
+		$visit_id=$this->db->insert_id(); //store the visit_id from the inserted record
 		}
 		if($mlc==1 || $this->input->post('visit_id')){
+			// if the mlc field is selected as "Yes"
 			if($this->input->post('visit_id')){
+				//if it's an update form, use the visit id to update the mlc record in the databse - mlc table.
 			$this->db->where('visit_id',$visit_id);
 			$this->db->update('mlc',array('mlc_number'=>$mlc_number,'ps_name'=>$ps_name));
 			}
 			else{
+				//if it's a new entry, store the mlc data from the post variables.
 			$mlc_data=array(
 				'visit_id'=>$visit_id,
 				'mlc_number'=>$mlc_number,
 				'ps_name'=>$ps_name
 			);
+			//insert into the mlc table.
 			$this->db->insert('mlc',$mlc_data);
 			}
 		}
+		//update the admit id, setting it equal to the visit id, only changes for transfer cases.
 		$this->db->where('visit_id',$visit_id);
 		$this->db->update('patient_visit',array('admit_id'=>$visit_id));
+		//update the counter table with the new hospital file number.
 		$this->db->where('counter_name',$form_type);
 		$this->db->update('counter',array('count'=>$hosp_file_no));
+		
+		//Transaction ends here.
 		$this->db->trans_complete();
+		
+		//Select the inserted or updated patient record with the visit_id 
 		$this->db->select('patient.patient_id,patient_visit.visit_id,hosp_file_no,admit_date,
 		admit_time,CONCAT(IF(first_name=NULL,"",first_name)," ",IF(last_name=NULL,"",last_name)) name,
 		age_years,age_months,age_days,gender,
@@ -191,10 +214,13 @@ class Register_model extends CI_Model{
 		->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
 		->where('patient_visit.visit_id',$visit_id);
 		$resource=$this->db->get();
+		//return the result array to the controller
 		return $resource->row();
 
 	}
+	
 	function search(){
+		//Build the where conditions based on the input given by the user.
 		if($this->input->post('search_patient_id')){
 			$this->db->where('patient.patient_id',$this->input->post('search_patient_id'));
 		}
@@ -213,28 +239,31 @@ class Register_model extends CI_Model{
 		if($this->input->post('search_phone')){
 			$this->db->where('phone',$this->input->post('search_phone'));
 		}
+		//Build the query to retrieve the patient records based on the search query.
 		$this->db->select("patient.patient_id,visit_type,visit_id,first_name,last_name,CONCAT(first_name,' ',last_name) name,
 		age_years,age_months,age_days,gender,phone,department,
 		IF(father_name=NULL OR father_name='',spouse_name,father_name) parent_spouse,admit_date",false)
 		->from('patient')
 		->join('patient_visit','patient.patient_id=patient_visit.patient_id')
-		->join('department','patient_visit.department_id=department.department_id')
+		->join('department','patient_visit.department_id=department.department_id','left')
 		->order_by('name','ASC');
 		$query=$this->db->get();
+		//return the search results
 		return $query->result();
 	}
 	function select($visit_id=0){
-		if($visit_id!=0)
+		if($visit_id!=0) //if the visit_id is true, select the patient where visit_id equals the given visit id
 			$this->db->where('patient_visit.visit_id',$visit_id);
-		else return false;
+		else return false; 
 		
 		$this->db->select('patient.*,patient_visit.*,department.department,unit.unit_id,unit.unit_name,area.area_id,area.area_name,mlc.mlc_number,mlc.ps_name')
 		->from('patient')->join('patient_visit','patient.patient_id=patient_visit.patient_id')
-		->join('department','patient_visit.department_id=department.department_id')
+		->join('department','patient_visit.department_id=department.department_id','left')
 		->join('unit','patient_visit.unit=unit.unit_id','left')
 		->join('area','patient_visit.area=area.area_id','left')
 		->join('mlc','patient_visit.visit_id=mlc.visit_id','left');
 	    $query=$this->db->get();
+		//return the patient details in a single row.
 		return $query->row();
 
 	}
