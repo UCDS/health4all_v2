@@ -152,7 +152,7 @@ pri.print();
 					<?php if($test->text_result==1){ 
 
 						if($test->test_status == 2) { 
-							echo $test->test_result_text;
+							$result = $test->test_result_text;  <!-- here we are assigning $test->test_result_text to $result so that it wont take previous result value to print -->
 						} 
 						else{	
 							$result="Test not done.";
@@ -260,7 +260,7 @@ pri.print();
 							if($test->text_result==1){ 
 
 								if($test->test_status == 2) { 
-									echo $test->test_result_text;
+									$result = $test->test_result_text;
 								} 
 								else{	
 									$result="Test not done.";
@@ -344,20 +344,6 @@ pri.print();
 							 ?>
 								</td>
 								<td>
-							<?php 
-							if($test->text_result==1){ 
-
-								if($test->test_status == 2) { 
-									echo $test->test_result_text;
-								} 
-								else{	
-									$result="Test not done.";
-								}
-								echo $result;
-							 }
-								else echo "-"; ?>
-							</td>
-								<td>
 							<?php if($test->binary_result==1){ ?>
 								<?php 
 									if($test->test_status == 2) { 
@@ -371,6 +357,20 @@ pri.print();
 								?>
 							<?php } ?>
 						</td>
+								<td>
+							<?php 
+							if($test->text_result==1){ 
+
+								if($test->test_status == 2) { 
+									$result = $test->test_result_text; <!--here we are assigning $test->test_result_text to $result so that it wont take previous result value to print --> 
+								} 
+								else{	
+									$result="Test not done.";
+								}
+								echo $result;
+							 }
+								else echo "-"; ?>
+							</td>
 						</tr>
 					<?php } ?>
 					</table>
