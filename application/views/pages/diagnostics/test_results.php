@@ -207,6 +207,7 @@ pri.print();
 					<?php if($test->text_result==1){ 
 
 						if($test->test_status == 2) { 
+							$result = $test->test_result_text;  <!-- here we are assigning $test->test_result_text to $result so that it wont take previous result value to print -->
 							$result = $test->test_result_text;
 						} 
 						else{	
@@ -478,6 +479,20 @@ pri.print();
 								?>
 							<?php } ?>
 						</td>
+								<td>
+							<?php 
+							if($test->text_result==1){ 
+
+								if($test->test_status == 2) { 
+									$result = $test->test_result_text; <!--here we are assigning $test->test_result_text to $result so that it wont take previous result value to print --> 
+								} 
+								else{	
+									$result="Test not done.";
+								}
+								echo $result;
+							 }
+								else echo "-"; ?>
+							</td>
 						</tr>
 					<?php } ?>
 					</table>
