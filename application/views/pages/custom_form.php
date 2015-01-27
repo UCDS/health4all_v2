@@ -93,6 +93,7 @@ pri.print();
 		<div class="sr-only" id="print-div" style="width:100%;height:100%;"> 
 		<?php $this->load->view($print_layout);?>
 		</div>
+		<!--we divide the form into panel-header,panel-body and panel-footer -->
 		<div class="row">
 			<div class="panel panel-success col-md-6 col-md-offset-3" >
 				<div class="panel-heading">		<h5><?php echo $form_name; ?> - Inserted Successfully</div>
@@ -105,12 +106,13 @@ pri.print();
 							<td><?php echo $registered->hosp_file_no;?></td>
 						</tr>
 						<tr>
+<!-- here we are printing the details of patient -->
 							<th>Patient Name</th>
 							<td><?php echo $registered->name;?></td>
 							<th>Age</th>
 							<td><?php echo $registered->age_years;?></td>
 						</tr>
-						<tr>
+						<tr> 
 							<th>Gender</th>
 							<td><?php echo $registered->gender;?></td>
 							<th>Department</th>
@@ -118,13 +120,14 @@ pri.print();
 						</tr>
 					</table>
 				</div>
+<!--here in the panel-footer print button is displayed -->				
 				<div class="panel-footer">
 					<button type="submit" class="btn btn-primary col-md-offset-5" onclick="printDiv('print-div')"> Print</button>
 				</div>
 			</div>
 			</div>
 		<?php } ?>
-
+<!--the form is partitioned based on the no. of columns -->
 		<?php 
 			if($columns==1){ $class="col-md-12";}
 			else if($columns==2){$class="col-md-6";}
@@ -164,9 +167,8 @@ pri.print();
 		<div class="panel-body">
 			<?php
 			foreach($fields as $field=>$mandatory){
-				//HERE WE ARE USING SWITCH FOR DISPLAY OF ONLY REQUIRED FIELD THAT WE NEED 
-				switch($field){
-//here we are using input type class to obtain a textbox for fields like first_name,last_name,dob,age 				
+//here we are using switch for display of only required to specify a form 
+				switch($field){				
 				case "first_name": ?>   
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -218,8 +220,7 @@ pri.print();
 						</div>
 					</div>
 				<?php 
-					break;
-//here we are using radio class to obtain radio button for field :gender 					
+					break; 					
 					case "gender" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="radio">
@@ -230,8 +231,7 @@ pri.print();
 						</div>
 					</div>
 				<?php 
-					break;
-//here we are using input type class to obtain a text box for fields like address,place,district 					
+					break;					
 					case "address" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -241,7 +241,6 @@ pri.print();
 					</div>
 				<?php 
 					break;
-					
 					case "place":?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -251,15 +250,13 @@ pri.print();
 					</div>
 				<?php 
 					break;
-					
 					case "district" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">District<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<select name="district" class="form-control" <?php if($mandatory) echo "required"; ?>>
 						<option value="">--Select--</option>
-						<?php 
-//HERE WE ARE USING FOREACH STATEMENT AS WE CAN SELECT THE DISTRICT FROM DROPDOWN LIST 						
+						<?php  						
 						foreach($districts as $district){
 							echo "<option value='".$district->district_id."'";
 							if($patient) if($district->district_id==$patient->district_id) echo " selected ";
@@ -271,7 +268,6 @@ pri.print();
 					</div>
 				<?php 
 					break;
-//here we are using input type class to obtain a text box for fields like phone,father_name,mother_name,spouse_name
 					case "phone" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -281,7 +277,6 @@ pri.print();
 					</div>
 				<?php 
 					break;
-					
 					case "father_name": ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -301,7 +296,6 @@ pri.print();
 					</div>
 				<?php 
 					break;
-					
 					case "spouse_name" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -310,8 +304,7 @@ pri.print();
 						</div>
 					</div>
 				<?php 
-					break;
-//here we are using select class to obtain a drop down box for field :id_proof_type				
+					break;				
 					case "id_proof_type" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -330,7 +323,6 @@ pri.print();
 					</div>
 				<?php 
 					break;
-//here we are using input type class to obtain a text box for fields like id_proof_no					
 				    case "id_proof_no" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -339,8 +331,7 @@ pri.print();
 						</div>
 					</div>	
 				<?php 
-					break;
-//here we are using select class to obtain a drop down box for field :occupation					
+					break;		
 					case "occupation" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -355,8 +346,7 @@ pri.print();
 						</div>
 					</div>
 				<?php 
-					break;
-//here we are using select class to obtain a drop down box for field :gestation_type					
+					break;			
 					case "gestation_type" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -371,8 +361,7 @@ pri.print();
 						</div>
 					</div>
 				<?php 
-					break;
-//here we are using input type class to obtain a text box for field:education_level					
+					break;					
 					case "education_level" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -382,8 +371,7 @@ pri.print();
 					</div>	
 				
 				<?php 
-					break;
-//here we are using select class to obtain a drop down box for field :blood_group					
+					break;			
 					case "blood_group" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -406,8 +394,7 @@ pri.print();
 						</div>
 					</div>
 				<?php 
-					break;
-//here we are using select class to obtain a drop down box for field :education_qualification					
+					break;					
 					case "education_qualification" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -426,8 +413,7 @@ pri.print();
 						</div>
 					</div>
 				<?php 
-					break;
-//here we are using input type class to obtain a text box for fields like gestation,insurance_case,insurance_no					
+					break;			
 					case "gestation" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -455,8 +441,7 @@ pri.print();
 						</div>	
 					</div>
 				<?php 
-					break;
-//here we are using select class to obtain a drop down box for field :delivery_mode					
+					break;		
 					case "delivery_mode" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -471,8 +456,7 @@ pri.print();
 						</div>
 					</div>
 				<?php 
-					break;
-//here we are using input type class to obtain a text box for fields like delivery_place,delivery_location,delivery_type					
+					break;				
 					case "delivery_place" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -499,8 +483,7 @@ pri.print();
 						</div>
 					</div>
 				<?php 
-					break;
-//here we are using select class to obtain a drop down box for field :delivery_location_type					
+					break;				
 					case "delivery_location_type" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -516,7 +499,6 @@ pri.print();
 					</div>
 				<?php 
 					break;
-//here we are using input type class to obtain a text box for fields like delivery_plan,birth_weight,congenital_anomalies,presenting_complaints					
 					case "delivery_plan" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -554,9 +536,7 @@ pri.print();
 						</div>
 					</div>
 				<?php 
-					break;
-					break;
-//here we are using select class to obtain a drop down box for field :department					
+					break;					
 					case "department" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -574,8 +554,7 @@ pri.print();
 						</div>
 					</div>
 				<?php 
-					break;
-//here we are using select class to obtain a drop down box for field :hospital_type					
+					break;					
 				    case "hospital_type" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -590,8 +569,7 @@ pri.print();
 						</div>
 					</div>
 				<?php 
-					break;
-//here we are using input type class to obtain a text box for field:hospital					
+					break;					
 					case "hospital" :  ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -600,8 +578,7 @@ pri.print();
 						</div>
 					</div>
 					<?php
-					break;
-//here we are using select class to obtain a drop down box for field :unit					
+					break;				
 					case "unit" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -620,8 +597,7 @@ pri.print();
 						</div>
 					</div>
 				<?php 
-					break;
-//here we are using select class to obtain a drop down box for field :area					
+					break;					
 				    case "area" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -640,8 +616,7 @@ pri.print();
 						</div>
 					</div>
 				<?php 
-					break;
-//here we are using radio class to obtain a radio button for field :					
+					break;			
 					case "mlc" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="radio">
@@ -663,7 +638,6 @@ pri.print();
 					</div>
 				<?php 
 					break;
-//here we are using input type class to obtain a text box for fields like past_history,admit_weight,discharge_weight,pulse_rate,respiratory_rate,ps_name					
 					case "past_history" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -738,7 +712,6 @@ pri.print();
 					</div>
 				<?php 
 					break;
-//here we are using select class to obtain a drop down box for field :outbox					
 					case "outcome" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="radio">
@@ -752,7 +725,6 @@ pri.print();
 					</div>
 				<?php 
 					break;
-					
 					case "outcome_date" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -762,7 +734,6 @@ pri.print();
 					</div>
 				<?php 
 					break;
-					
 					case "outcome_time" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -772,7 +743,6 @@ pri.print();
 					</div>
 				<?php 
 					break;
-					
 					case "final_diagnosis" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -782,8 +752,7 @@ pri.print();
 					</div>
 				<?php 
 					break;
-					
-					case "provisional_diagnosis" : ?>
+				    case "provisional_diagnosis" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Provisional Diag.<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
@@ -885,8 +854,6 @@ pri.print();
 									<?php 
 										$i=1;
 										foreach($patients as $patient){ ?>
-										
-										
 										<tr onclick="$('#form_<?php echo $patient->visit_id;?>').submit()">
 											<td>
 												<?php echo form_open("register/custom_form/$form_id/$patient->visit_id",array("role"=>"form","id"=>"form_$patient->visit_id"));?>
@@ -907,7 +874,7 @@ pri.print();
 											</td>
 											<td><?php echo $patient->gender;?></td>
 											<td><?php echo $patient->department;?></td>
-								             <!--HERE THE DATE IS DISPLAYED IN ADMITDATE-MONTH-YEAR FORMAT -->
+<!--HERE THE DATE IS DISPLAYED IN ADMITDATE-MONTH-YEAR FORMAT -->
 											<td><?php echo date("d-M-Y",strtotime($patient->admit_date));?></td>
 											<td><?php echo $patient->phone;?></td>
 											<td><?php echo $patient->parent_spouse;?></td>
@@ -916,9 +883,8 @@ pri.print();
 									</tbody>
 								</table>	
 							<?php }  else echo "No patients matched your search.";?>
-							
+<!--if the given details of patient are existed in database then it displays the information of the particular patient orelse it it display not found message-->							
 						</div>
 					</div>
 				<?php } ?>
-				
-		</div>
+				</div>
