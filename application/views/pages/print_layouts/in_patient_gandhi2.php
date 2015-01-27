@@ -106,9 +106,20 @@
 			<div  class="column">
 				<b>Phone:</b> <?php echo $registered->phone; ?>
 			</div>
-			<div  class="column">
-				<?php if($registered->mlc==1) { echo "<b>MLC No:</b> ".$registered->mlc_number.", <b>PS Name:</b>".$registered->ps_name; }?>
+			<?php if($registered->mlc==1) { ?>
+			<div  class="column"><?php echo "<b>MLC No:</b>" .$registered->mlc_number; ?>
 			</div>
+			<div class="column">
+				<?php echo "<b>PS Name:</b>" .$registered->ps_name;?>
+			</div>
+			<div class="column">
+				<?php echo "";?>
+			</div>
+			<!-- To display the MLC Reason we use "presenting_complaints" field of "patient_visits" table-->
+			<div class="column">
+				<?php if($registered->presenting_complaints != NULL) {echo "<b>MLC Reason:</b> ".$registered->presenting_complaints;}?>			
+			</div>
+			<?php } ?>
 		</div>	
 		<div class="row">
 			<div class="column">
@@ -150,8 +161,19 @@
 			<div  class="column">
 				<b>Phone:</b> <?php echo $registered->phone; ?>
 			</div>
-			<div  class="column">
-				<?php if($registered->mlc==1) { echo "<b>MLC No:</b> ".$registered->mlc_number.", <b>PS Name:</b>".$registered->ps_name; }?>
+			<?php if($registered->mlc==1) { ?>
+			<div  class="column"><?php echo "<b>MLC No:</b>" .$registered->mlc_number; ?>
 			</div>
+			<div class="column">
+				<?php echo "<b>PS Name:</b>" .$registered->ps_name;?>
+			</div>
+			<div class="column">
+				<?php echo "";?>
+			</div>
+			<!-- To display the MLC Reason we use "presenting_complaints" field of "patient_visits" table-->
+			<div class="column">
+				<?php if($registered->presenting_complaints != NULL) {echo "<b>MLC Reason:</b> ".$registered->presenting_complaints;}?>			
+			</div>
+			<?php } ?>
 		</div>	
 		
