@@ -52,6 +52,7 @@ class Register extends CI_Controller {
 			if($form_id=="")
 				show_404();
 			else{
+			$this->data['id_proof_types']=$this->staff_model->get_id_proof_type();
 			$this->data['departments']=$this->staff_model->get_department();
 			$this->data['units']=$this->staff_model->get_unit();
 			$this->data['areas']=$this->staff_model->get_area();
@@ -59,7 +60,6 @@ class Register extends CI_Controller {
 			$this->data['userdata']=$this->session->userdata('logged_in');
 			$this->data['title']="Patient Registration";
 			$this->data['form_id']=$form_id;
-
 			$this->data['fields']=$this->staff_model->get_form_fields($form_id);
 			if(count($this->data['fields'])==0){
 				show_404();

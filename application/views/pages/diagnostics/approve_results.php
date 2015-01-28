@@ -152,10 +152,10 @@
 						<label class="label label-danger">Rejected</label>
 					<?php } else { ?>	
 						<label class="btn btn-success btn-sm">
-						<input type="radio" value="1" name='approve_test_<?php echo $test->test_id;?>' /> Approve
+						<input type="radio" value="1" name='approve_test_<?php echo $test->test_id;?>' required /> Approve
 						</label>
 						<label class="btn btn-danger btn-sm">
-						<input type="radio" value="0" name='approve_test_<?php echo $test->test_id;?>' /> Reject
+						<input type="radio" value="0" name='approve_test_<?php echo $test->test_id;?>' required /> Reject
 						</label>
 					<input type="text" value="<?php echo $test->test_id;?>" name="test[]" class="sr-only hidden" />
 					<?php } ?>
@@ -266,7 +266,7 @@ if(count($orders)>0){ ?>
 						</td>
 						<td><?php echo $order->staff_name;?></td>
 						<td><?php echo $order->sample_code;?></td>
-						<td><?php echo $order->specimen_type;?></td>
+						<td><?php echo $order->specimen_type; if($order->specimen_source!="") echo " - ".$order->specimen_source;?> </td><!--printing the specimen source in the update tests beside the specimen type if the specimen type is not null-->
 						<td><?php echo $order->hosp_file_no;?></td>
 						<td><?php echo $order->first_name." ".$order->last_name;?></td>
 						<td><?php echo $order->department;?></td>
