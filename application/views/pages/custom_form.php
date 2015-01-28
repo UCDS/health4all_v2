@@ -93,6 +93,7 @@ pri.print();
 		<div class="sr-only" id="print-div" style="width:100%;height:100%;"> 
 		<?php $this->load->view($print_layout);?>
 		</div>
+		
 		<div class="row">
 			<div class="panel panel-success col-md-6 col-md-offset-3" >
 				<div class="panel-heading">		<h5><?php echo $form_name; ?> - Inserted Successfully</div>

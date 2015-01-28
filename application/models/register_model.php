@@ -120,7 +120,7 @@ class Register_model extends CI_Model{
 		IF(father_name=NULL OR father_name="",spouse_name,father_name) parent_spouse,
 		department,unit_name,area_name,address,place,phone,district,op_room_no,presenting_complaints,mlc,mlc_number,ps_name',false)
 		->from('patient')->join('patient_visit','patient.patient_id=patient_visit.patient_id')
-		->join('department','patient_visit.department_id=department.department_id')
+		->join('department','patient_visit.department_id=department.department_id','left')
 		->join('unit','patient_visit.unit=unit.unit_id','left')
 		->join('area','patient_visit.area=area.area_id','left')
 		->join('district','patient.district_id=district.district_id','left')
