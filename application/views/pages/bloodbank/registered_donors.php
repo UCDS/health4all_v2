@@ -39,8 +39,8 @@
 			<td><?php if($donor['blood_group']!='' && $donor['blood_group']!='0'){  echo $donor['blood_group'];}?></td>
 			<td><?php echo $donor['phone'];?></td>
 			<td>
-				<input type="submit" value="Update" formaction="<?php echo base_url();?>register/medical_checkup/0/<?php echo $donor['donation_id'];?>" />
-				<input type="submit" value="X" formaction="<?php echo base_url();?>register/delete_donor/$donation_id"/></td>
+				<input type="submit" value="Update" formaction="<?php echo base_url();?>bloodbank/register/medical_checkup/0/<?php echo $donor['donation_id'];?>" />
+				<input type="submit" value="X" formaction="<?php echo base_url();?>bloodbank/register/delete_donor/$donation_id"/></td>
 		</form>
 		</tr>
 		<?php 

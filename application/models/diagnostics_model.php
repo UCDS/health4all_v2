@@ -155,7 +155,7 @@ class Diagnostics_model extends CI_Model{
 			$this->db->where('test_method.test_method_id',$this->input->post('test_method_search'));
 		}
 		//patient_type_search would search weather the patient is inpatient or outpatient
-		if($this->input->post('hosp_file_no_search') && this->input->post('patient_type_search')){
+		if($this->input->post('hosp_file_no_search') && $this->input->post('patient_type_search')){
 			$this->db->where('hosp_file_no',$this->input->post('hosp_file_no_search'));
 			$this->db->where('visit_type',$this->input->post('patient_type_search'));
 		}

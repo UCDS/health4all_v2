@@ -69,7 +69,7 @@
 				<select name="staff" required>
 					<option value="" disabled selected>Done By</option>
 					<?php foreach($staff as $s){
-						echo "<option value='$s->staff_id'>$s->name</option>";
+						echo "<option value='$s->staff_id'>$s->first_name $s->last_name</option>";
 					}
 					?>
 				</select>
