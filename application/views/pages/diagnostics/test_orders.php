@@ -2,6 +2,7 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <script>
 	$(function(){	
+		console.log('hello');
 		$(".date").Zebra_DatePicker();
 	})
 </script>
