@@ -76,7 +76,7 @@
 		<font size="2">fields marked with * are mandatory.</font>
 	<hr>
 	<div style="border:1px solid #ccc;padding:10px;">
-	<?php echo form_open("register"); ?>
+	<?php echo form_open("bloodbank/register"); ?>
 	<input type="text" placeholder="Full Name" size="20" id="name" name="name" required />*<br />
 	<input type="text" placeholder="Date of Birth" size="12" id="dob" name="dob" /><br />
 	<input type="text" placeholder="Age" size="8" id="age" name="age" required />*<br />
