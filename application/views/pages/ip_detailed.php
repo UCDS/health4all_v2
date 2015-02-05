@@ -23,38 +23,43 @@ $(function(){
 	if(isset($report) && count($report)>0){ ?>
 	<table class="table table-bordered table-striped">
 	<thead>
+		<th>Sno</th>
+		<th>Admit Date</th>
 		<th>IP No.</th>
 		<th>Gender</th>
 		<th>Name</th>
 		<th>Age</th>
 		<th>Parent / Spouse</th>
-		<th>Place</th>
+		<th>Address</th>
 		<th>Phone</th>
 		<th>Department</th>
+		<th>Unit</th>
+		<th>MLC Number</th>
 	</thead>
 	<tbody>
 	<?php 
 	$total_count=0;
+	$i=1;
 	foreach($report as $s){
 	?>
 	<tr>
+		<td><?php echo $i++;?></td>
+		<td><?php if($s->admit_date!=0) echo date("d-M-Y",strtotime($s->admit_date));?></td>
 		<td><?php echo $s->hosp_file_no;?></td>
 		<td><?php echo $s->gender;?></td>
 		<td><?php echo $s->name;?></td>
 		<td><?php echo $s->age_years;?></td>
 		<td><?php echo $s->parent_spouse;?></td>
-		<td><?php echo $s->place;?></td>
+		<td><?php if($s->address!="") echo $s->address.", "; if($s->place!="") echo $s->place;?></td>
 		<td><?php echo $s->phone;?></td>
 		<td><?php echo $s->department;?></td>
+		<td><?php echo $s->unit_name;?></td>
+		<td><?php echo $s->mlc_number;?></td>
 	</tr>
 	<?php
 	$total_count++;
 	}
 	?>
-	<tr>
-		<th>Total </th>
-		<th ><?php echo $total_count;?></th>
-	</tr>
 	</tbody>
 	</table>
 		

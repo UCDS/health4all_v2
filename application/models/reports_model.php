@@ -172,9 +172,11 @@ class Reports_model extends CI_Model{
 		if($from_age=='0' && $to_age!='0'){
 			$this->db->where('age_years>=',$to_age,false);
 		}
-		$this->db->select("hosp_file_no,visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,gender,IF(gender='F' AND father_name=NULL,spouse_name,father_name) parent_spouse,age_years,place,phone,department",false);
+		$this->db->select("hosp_file_no,patient_visit.visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,gender,IF(gender='F' AND father_name=NULL,spouse_name,father_name) parent_spouse,age_years,place,phone,address,admit_date, department,unit_name,mlc_number",false);
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
 		 ->join('department','patient_visit.department_id=department.department_id')
+		 ->join('unit','patient_visit.unit=unit.unit_id','left')
+		 ->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
 		 ->where('visit_type','IP')
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')");		  
 		$resource=$this->db->get();

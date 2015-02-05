@@ -71,6 +71,7 @@
 		echo "<br />";
 	}
 	?>
+
 	<div class="panel panel-default">
 	<div class="panel-heading">
 	<h4>Register Blood Donation</h4>
@@ -139,6 +140,38 @@
 		<input type="radio" name="donation_type" id="replacement" value="replacement" required /><label for="replacement">Replacement</label>&nbsp;&nbsp;
 		<input type="radio" name="donation_type" id="voluntary" value="voluntary" required />	<label for="voluntary">Voluntary</label>
 	</div><br />
+	<h1>Register Blood Donation</h1>
+	<hr>
+		<font size="2">fields marked with * are mandatory.</font>
+	<hr>
+	<div style="border:1px solid #ccc;padding:10px;">
+	<?php echo form_open("bloodbank/register"); ?>
+	<input type="text" placeholder="Full Name" size="20" id="name" name="name" required />*<br />
+	<input type="text" placeholder="Date of Birth" size="12" id="dob" name="dob" /><br />
+	<input type="text" placeholder="Age" size="8" id="age" name="age" required />*<br />
+	Gender : <input type="radio" name="gender" id="male" value="male" required /><label for="male">Male</label>
+	<input type="radio" name="gender" id="female" value="female" required /><label for="female">Female</label>*<br />
+	Maritial Status : <input type="radio" name="maritial_status" id="single" value="single" /><label for="single">Single</label>
+	<input type="radio" name="maritial_status" id="married" value="married" /><label for="married">Married</label><br />
+	<input type="text" placeholder="Parent or Spouse Name" size="20" name="parent_spouse" /><br />
+	<input type="text" name="occupation" placeholder="Occupation" size="20" id="occupation" /><br />
+	<textarea placeholder="Address" cols="40" id="address" name="address" rows="4"></textarea><br />
+	<select name="blood_group">
+	<option value="" disabled selected>Blood Group</option>
+	<option value="A+">A+</option>
+	<option value="B+">B+</option>
+	<option value="O+">O+</option>
+	<option value="AB+">AB+</option>
+	<option value="A-">A-</option>
+	<option value="B-">B-</option>
+	<option value="O-">O-</option>
+	<option value="AB-">AB-</option>
+	</select><br />
+	<input type="text" placeholder="Phone Number" size="16" id="phone" name="mobile" /><br />
+	<input type="email" placeholder="Email" size="24" id="email" name="email" /><br />
+	<input type="radio" name="donation_type" id="replacement" value="replacement" required /><label for="replacement">Replacement</label>
+	<input type="radio" name="donation_type" id="voluntary" value="voluntary" required /><label for="voluntary">Voluntary</label><br />
+
 	<div id="patient_details" hidden>
 		<div class="form-group"><input type="text" placeholder="Patient Name" class="form-control" name="patient_name" /></div><br /><br />
 		<div class="form-group"><input type="text" placeholder="IP Number" class="form-control" name="ip_no" /></div><br /><br />

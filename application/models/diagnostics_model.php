@@ -133,27 +133,33 @@ class Diagnostics_model extends CI_Model{
 
 		$this->input->post('test_area')?$test_area=$this->input->post('test_area'):$test_area="";
 		if(count($test_areas)==1){
-			$test_area = $test_areas[0]->test_area_id;
+			$test_area = $test_areas[0]->test_area_id;// test_area will be updated if condition is satisfied i.e. if the value is one
 		}
-		if($this->input->post('from_date') && $this->input->post('to_date')){
-			$from_date = date("Y-m-d",strtotime($this->input->post('from_date')));
-			$to_date = date("Y-m-d",strtotime($this->input->post('to_date')));
-		}
+		//if both the fields that is "from_date" & "to_date" are entered than if condition would be executed  
+		if($this->input->post('from_date') && $this->input->post('to_date')){ 
+			$from_date = date("Y-m-d",strtotime($this->input->post('from_date')));  
+			$to_date = date("Y-m-d",strtotime($this->input->post('to_date')));//
+			}
+		//if anyone of the fields either "from_date" or "to_date" are entered in this condition
 		else if($this->input->post('from_date') || $this->input->post('to_date')){
-			$this->input->post('from_date')?$from_date=date("Y-m-d",strtotime($this->input->post('from_date'))):$from_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+			$this->input->post('from_date')?$from_date=date("Y-m-d",strtotime( $this->input->post('from_date'))):$from_date=date("Y-m-d",strtotime($this->input->post('to_date')));
 			$to_date=$from_date;
 		}
+		//if both the fields (from_date and to_date) are not entered then default values would be assigned in this condition
 		else{
-			$from_date = date("Y-m-d");
+			$from_date = date("Y-m-d"); 
 			$to_date=date("Y-m-d");
 		}
+		//test_method_search searches out the test_method_id 
 		if($this->input->post('test_method_search') != ""){
 			$this->db->where('test_method.test_method_id',$this->input->post('test_method_search'));
 		}
+		//patient_type_search would search weather the patient is inpatient or outpatient
 		if($this->input->post('hosp_file_no_search') && $this->input->post('patient_type_search')){
 			$this->db->where('hosp_file_no',$this->input->post('hosp_file_no_search'));
 			$this->db->where('visit_type',$this->input->post('patient_type_search'));
 		}
+		//the above searches will get the details of the patient
 		$this->db->select('test_id,test_order.order_id,test_sample.sample_id,test_method,test_name,department,patient.first_name, patient.last_name,
 							staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,specimen_source,sample_container_type,test_status')//adding the specimen source in the update tests
 		->from('test_order')
@@ -168,9 +174,9 @@ class Diagnostics_model extends CI_Model{
 		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id')
 		
 		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')") 
-		->where('test_master.test_area_id',$test_area);
-
-		$query=$this->db->get();
+		->where('test_master.test_area_id',$test_area)
+        ->where('test.test_status',1);//the orders will be approve if their value is 1. So we verify the condition to display the outcome
+		$query=$this->db->get(); 
 		return $query->result();
 	}
 	
