@@ -7,24 +7,31 @@
 	});
 </script>
 
-<div class="col-md-10 col-sm-9">
-
+<div class="col-md-10 col-sm-9" style="padding:5px;">
+<div class="panel panel-default">
+	<div class="panel-heading">
 	<div>
-		<?php echo form_open('bloodbank/register/donation'); ?>
-		<div>
-			<input type="text" placeholder="Slot date" size="10" name="slot_date" id="slot_date" />
-			<input type="text" placeholder="Appointment ID" size="12" name="app_id" />
-			<input type="submit" value="Search" name="search" />
+		<?php echo form_open('bloodbank/register/donation',array('class'=>'form-custom')); ?>
+		<h5>Search for Appointments</h5> 
+		<div class="form-group">
+			<input type="text" placeholder="Slot date" class="form-control" name="slot_date" id="slot_date" />
 		</div>
-		</form>
+		<div class="form-group" style="text-indent:4cm;">
+			<input type="text" placeholder="Appointment ID" class="form-control" name="app_id" />
+		</div>
+		<div class="form-group">		
+			<input type="submit" value="Search" class="btn btn-primary btn-md" name="search" />
+		</div>
+		</form><br />
 		<?php
 		if(isset($msg)) {
 			echo $msg;
 			echo "<br />";
-			echo "<br />";
+			
 		}
 		?>
-		<h3>Registered donors : </h3>
+		<hr>
+		<h4>Registered donors : </h4>
 		<table class="table-2 table table-striped table-bordered">
 			<tr><th>S.No</th><th>Name</th><th>Age</th><th>Blood Group</th><th>Phone</th><th></th></tr>
 		<?php 
@@ -39,8 +46,8 @@
 			<td><?php if($donor['blood_group']!='' && $donor['blood_group']!='0'){  echo $donor['blood_group'];}?></td>
 			<td><?php echo $donor['phone'];?></td>
 			<td>
-				<input type="submit" value="Update" formaction="<?php echo base_url();?>register/medical_checkup/0/<?php echo $donor['donation_id'];?>" />
-				<input type="submit" value="X" formaction="<?php echo base_url();?>register/delete_donor/$donation_id"/></td>
+				<input type="submit" class="btn btn-primary btn-md" value="Update" formaction="<?php echo base_url();?>bloodbank/register/medical_checkup/0/<?php echo $donor['donation_id'];?>" />
+				<input type="submit" class="btn btn-primary btn-md" value="X" formaction="<?php echo base_url();?>bloodbank/register/delete_donor/$donation_id"/></td>
 		</form>
 		</tr>
 		<?php 
@@ -65,8 +72,12 @@
 			<td><?php if($donor['blood_group']!="" && $donor['blood_group']!='0'){ echo $donor['blood_group']; }?></td>
 			<td><?php echo $donor['phone'];?></td>
 			<td>
-				<input type="submit" value="Update" />
-				<input type="button" value="X" /></td>
+				<div class="form-group">
+					<input type="submit" class="btn btn-link" value="Update" name="update" />
+				</div>
+				<div class="form-group">
+					<input type="button" class="btn btn-primary" value="X"  name="x" /></div>
+			</td>
 		</form>
 		</tr>
 		<?php 
@@ -81,19 +92,26 @@
 		<tr>
 			<td>Search By: </td>
 			<td>
-				<select name="search_type">
+			<div class="form-group">
+				<select class="form-control" name="search_type">
 					<option value="appointment_id">Appointment ID</option>
 					<option value="phone">Donor mobile</option>
 					<option value="name">Name</option>
 				</select>
+			</div>
 			</td>
 		</tr>
 		<tr>
 			<td>Seach:</td>
-			<td><input type="text" name="search" /></td>
-		</tr>
+			<td>
+			
+			<div class="form-group">
+				<input type="text" name="search" /></td>
+		
+</tr>
 		</table>
 -->			
 	</div>
 </div>
-
+</div>
+</div>

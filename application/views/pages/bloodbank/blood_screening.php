@@ -25,12 +25,12 @@
 		}
 		else{
 		?>
-		<?php echo form_open('bloodbank/inventory/screening');?>
-		<input type="text" id="from_id" placeholder="From" size="7" name="from_id" />
-		<input type="text" id="to_id" placeholder="To" size="7" name="to_id" />
-		<input type="submit" value="Filter" name="filter" />
+		<?php echo form_open('bloodbank/inventory/screening',array('class'=>'form-custom'));?>
+		<div class="form-group"><input type="text" id="from_id" placeholder="From" class="form-control" name="from_id" /></div>
+		<div class="form-group"><input type="text" id="to_id" class="form-control" placeholder="To"  name="to_id" /></div>
+		<div class="form-group"><input type="submit" class="btn btn-primary" value="Filter" name="filter" /></div>
 		</form>
-		<h3>Available samples : </h3>
+		<h4>Available samples : </h4>
 
 		<table id="header-fixed" class="table-2 table table-striped table-bordered"></table>
 		<table class="table-2 table table-striped table-bordered" id="table-1">
@@ -66,19 +66,19 @@
 		?>
 		<tr>
 			<td colspan="3" align="right">
-				<select name="staff" required>
+				<div class="form-group col-lg-8"><select name="staff" class="form-control" required>
 					<option value="" disabled selected>Done By</option>
 					<?php foreach($staff as $s){
-						echo "<option value='$s->staff_id'>$s->name</option>";
+						echo "<option value='$s->staff_id'>$s->first_name $s->last_name</option>";
 					}
 					?>
-				</select>
+				</select></div>
 			</td>
 			<td colspan="3" align="right">
-				Screened Date <input type="text" name="screened_date" size="12" form='screening_form' id="screened_date" required />
+				<div class="form-group col-lg-7"><input type="text" name="screened_date" class="form-control" placeholder="Screened Date" form='screening_form' id="screened_date" required /></div>
 			</td>
 			<td colspan="3" align="right">
-				<input type="submit" value="Update"  />
+				<div class="form-group"><input type="submit"  class="btn btn-primary" value="Update"  /></div>
 			</td>
 		</tr>
 		</form>
