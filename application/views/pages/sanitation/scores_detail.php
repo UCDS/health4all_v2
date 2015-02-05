@@ -88,7 +88,7 @@ $(function(){
 	?>
 	<br />
 	<br />
-	<div class="panel">Sanitation scores for the period : <b><?php echo $this->input->post('from_date');?></b> to <b><?php echo $this->input->post('to_date');?></b></div>
+	<div class="panel">Sanitation scores for the period : <b><?php echo date("d-M-Y",strtotime($this->input->post('from_date')));?></b> to <b><?php echo date('d-M-Y',strtotime($this->input->post('to_date')));?></b></div>
 	<table class="table table-bordered table-striped">
 		<thead>
 			<tr>
@@ -161,7 +161,7 @@ $(function(){
 				}
 				
 				if($s->score==0 || $s->score == NULL) { $background_color = "#FFA3A3"; } else $background_color = "#99FF99"; ?>
-				<td class="text-center"  style="background-color : <?php echo $background_color;?> !important"><b><?php echo $week_total_score;?></b></td>
+				<td class="text-center"  style="background-color : <?php echo $background_color;?> !important"><b><?php echo number_format($week_total_score,1);?></b></td>
 				<td class="text-center"><?php echo $week_total_weightage;?></td>
 				<td class="text-center" style="background-color : <?php echo $background_color;?> !important"><?php echo number_format(($week_total_score/$week_total_weightage)*100,2);
 				$total_score+=$week_total_score*$days; $week_total_score=0;

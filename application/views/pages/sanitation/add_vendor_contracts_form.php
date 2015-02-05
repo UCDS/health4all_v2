@@ -32,12 +32,10 @@ $(function(){
 	<div class="form-group">
 		<label for="facility_name" class="col-md-4">Facility Name</label>
 		<div  class="col-md-8">
-<select name="facility_name" id="facility_name" class="form-control">
+        <select name="facility_name" id="facility_name" class="form-control">
 		<option value="">--SELECT--</option>
-
-		<?php foreach($facility_name as $d){
-
-			echo "<option value='$d->facility_id'>$d->facility_name</option>";
+        <?php foreach($facility_name as $d){
+        echo "<option value='$d->facility_id'>$d->facility_name</option>";
 		}
 		?>
 		</select>	
@@ -56,11 +54,14 @@ $(function(){
 		<input type="text" class="form-control" placeholder="To Date" id="to_date" name="to_date"/>
 		</div>
 	</div>
-	<div class="form_group">
-		<label for="status" class="col-md-4">Status</label>
+	<div class="form-group">
+	    <label for="status"	class="col-md-4"> Status </label>
 		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder="status" id="status" name="status" />
-		</div>
+	    <select class="form-control" name="status" id="status" required >
+	    <option value="select">Select</option>
+	    <option value="yes">Yes</option>
+	    <option value="no">No</option>
+        </select>
 	</div>
 	<div class="col-md-3 col-md-offset-4">
 	<button class="btn btn-lg btn-primary btn-block" type="submit">submit</button>

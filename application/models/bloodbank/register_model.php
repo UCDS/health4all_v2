@@ -201,7 +201,7 @@ class Register_model extends CI_Model{
 		$blood_group=array(
 		'blood_group'=>$this->input->post('blood_group')
 		);
-		$userdata=$this->session->userdata('hospital');
+		$userdata=$this->session->userdata('logged_in');
 		$result=$this->db->query("SELECT DATE_ADD((SELECT donation_date FROM bb_donation WHERE donation_id=$donation_id),INTERVAL 35 DAY) expiry_date");
 		$row=$result->row();
 		$blood=array(
@@ -237,7 +237,7 @@ class Register_model extends CI_Model{
 		}
 	}
 	function make_request(){
-		$userdata=$this->session->userdata('hospital');
+		$userdata=$this->session->userdata('logged_in');
 		$staff_id=$userdata['user_id'];
 		$request_type=$this->input->post('request_type');
 		$patient_name=$this->input->post('patient');

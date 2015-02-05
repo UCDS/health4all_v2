@@ -207,7 +207,7 @@ pri.print();
 					<?php if($test->text_result==1){ 
 
 						if($test->test_status == 2) { 
-							$result = $test->test_result_text;
+							$result = $test->test_result_text; 
 						} 
 						else{	
 							$result="Test not done.";
@@ -478,6 +478,20 @@ pri.print();
 								?>
 							<?php } ?>
 						</td>
+								<td>
+							<?php 
+							if($test->text_result==1){ 
+
+								if($test->test_status == 2) { 
+									$result = $test->test_result_text;
+								} 
+								else{	
+									$result="Test not done.";
+								}
+								echo $result;
+							 }
+								else echo "-"; ?>
+							</td>
 						</tr>
 					<?php } ?>
 					</table>

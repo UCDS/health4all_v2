@@ -157,7 +157,9 @@
 			<div class="col-md-12 test_method test_area_<?php echo $test_master->test_area_id;?>">
 				<div class="alert alert-info"><b><?php echo $test_method;?></b></div>
 		<?php
-			foreach($test_masters as $test_master){
+			$i=0;
+			$test_area_ids = array();
+			foreach($test_masters as $test_master){ 
 				if($test_master->test_method == $test_method) { ?>
 				<div class="col-md-4 panel">
 					<div class="checkbox">
@@ -165,8 +167,9 @@
 						<label for="<?php echo $test_master->test_name;?>"><?php echo $test_master->test_name;?></label>
 					</div>
 				</div>
-			<?php }
-				} ?>
+			<?php
+				}
+			} ?>
 
 		<?php foreach($test_groups as $test_group){
 				if($test_master->test_method == $test_method) { ?>
@@ -178,8 +181,7 @@
 			</div>
 		<?php }
 		} 		?>
-		
-			</div>
+		</div>		
 		<?php } ?>
 		</div>
 	</div>
