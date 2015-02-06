@@ -71,6 +71,16 @@ class Register_model extends CI_Model{
 		if($form_type=="IP"){
 			//If it's an IP form, get the hospital file number from the input field.
 			$hosp_file_no=$this->input->post('hosp_file_no');
+			$this->db->select('hosp_file_no,admit_date'); //Here we are selecting hosp_file_no and admit_date with year for match  from the database
+			$this->db->where('hosp_file_no',$hosp_file_no);
+			$this->db->where('YEAR(admit_date)',date("Y",strtotime($date)));
+			$this->db->from('patient_visit');
+			$query=$this->db->get();
+			if($query->num_rows()>0)
+			{
+				//If the given IP no is matched in same year then this function returns 2;
+				return 2; 
+			}		
 		}
 		else{
 			//else, select the counter from the database to check the last OP number, increment it and 

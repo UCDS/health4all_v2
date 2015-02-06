@@ -87,8 +87,11 @@ pri.focus();
 pri.print();
 }
 </script>
-
-		<?php if(isset($registered)){ ?>
+		<?php if(isset($duplicate)) { ?>
+		<!-- If duplicate IP no is found then it displays the error message -->
+			<div class="alert alert-danger">Entered IP Number already exists.</div>
+		<?php } 
+		else if(isset($registered)){ ?>
 		<iframe id="ifmcontentstoprint" style="height: 0px; width: 0px; position: absolute;display:none"></iframe>
 		<div class="sr-only" id="print-div" style="width:100%;height:100%;"> 
 		<?php $this->load->view($print_layout);?>
