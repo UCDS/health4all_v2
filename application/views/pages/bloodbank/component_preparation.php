@@ -23,19 +23,19 @@
 		}
 		else{
 		?>
-		<?php echo form_open('bloodbank/inventory/prepare_components');?>
-		<input type="text" id="from_id" placeholder="From" size="7" name="from_id" />
-		<input type="text" id="to_id" placeholder="To" size="7" name="to_id" />
-		<select name="bag_type" >
+		<?php echo form_open('bloodbank/inventory/prepare_components',array('class'=>'form-custom'));?>
+		<div class="form-group fields"><input type="text" id="from_id" placeholder="From" class="form-control" name="from_id" /></div>
+		<div class="form-group fields"><input type="text" id="to_id" placeholder="To" class="form-control" name="to_id" /></div>
+		<div class="form-group fields"><select class="form-control" name="bag_type" >
 			<option value="" disabled selected>Bag Type</option>
 			<option value="1">Single</option>
 			<option value="2">Double</option>
 			<option value="3">Triple</option>
 			<option value="4">Quadruple</option>
-		</select>
-		<input type="submit" value="Filter" name="filter" />
+		</select></div>
+		<div class="form-group fields"><input type="submit" class="btn btn-primary" value="Filter" name="filter" /></div>
 		</form>
-		<h3>Available bags : </h3>
+		<h4>Available bags : </h4>
 
 		<table id="header-fixed" class="table-2 table table-striped table-bordered"></table>
 		<table class="table-2 table table-striped table-bordered" id="table-1">
@@ -84,16 +84,16 @@
 		?>
 		<tr>
 		<td colspan="3" >	
-			<select name="staff" required>
+			<div class="form-group col-lg-8"><select name="staff" class="form-control" required>
 				<option value="" disabled selected>Done By</option>
 				<?php foreach($staff as $s){
 					echo "<option value='$s->staff_id'>$s->first_name $s->last_name</option>";
 				}
 				?>
-			</select>
+			</select></div>
 		</td>
-		<td colspan="3" >Date <input type="text" size="8" name="preparation_date" id="preparation_date" form="prepare_components" required /></td>
-		<td colspan="3" align="right" ><input type="submit" name="Update" value="Update" /></td></tr>
+		<td colspan="3" ><div class="form-group col-lg-7"> <input type="text" class="form-control" placeholder="Date" name="preparation_date" id="preparation_date" form="prepare_components" required /></div></td>
+		<td colspan="3" align="right" ><div class="form-group"><input type="submit" class="btn btn-primary" name="Update" value="Update" /></div></td></tr>
 		</form>
 		<?php
 		}
