@@ -171,11 +171,10 @@ class Register_model extends CI_Model{
 		'sbp'=>$this->input->post('sbp'),
 		'dbp'=>$this->input->post('dbp'),
 		'temperature'=>$this->input->post('temperature'),
-		'donation_date'=>$this->input->post('donation_date'),
+		'donation_date'=>date("Y-m-d",strtotime($this->input->post('donation_date'))),
 		'status_id'=>2
 		);
 		$this->db->trans_start();
-		
 		$this->db->where('donation_id',$donation_id);
 		$this->db->update('bb_donation',$data);
 		$this->db->trans_complete();
