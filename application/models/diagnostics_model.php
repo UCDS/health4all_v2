@@ -243,10 +243,10 @@ class Diagnostics_model extends CI_Model{
 		test_result,
 		test_result_text,hospital,hospital.logo,hospital.place,district,state,test_area,provisional_diagnosis,
 		IF(micro_organism_test.micro_organism_test_id!="",GROUP_CONCAT(DISTINCT CONCAT(micro_organism_test.micro_organism_test_id,",",micro_organism,",",antibiotic),",",antibiotic_result,"^"),0) micro_organism_test,
-		',false)
+		approved_by.first_name approved_first,approved_by.last_name approved_last,done_by.first_name done_first,done_by.last_name done_last',false)
 		->from('test_order')->join('test','test_order.order_id=test.order_id')->join('test_sample','test_order.order_id=test_sample.order_id')
 		->join('test_group','test.group_id=test_group.group_id','left')
-		->join('test_master as ts','test.test_master_id=ts.test_master_id','left')		
+		->join('test_master as ts','test.test_master_id=ts.test_master_id','left')	
 		->join('lab_unit lus','ts.numeric_result_unit=lus.lab_unit_id','left')
 		->join('lab_unit lug','test_group.numeric_result_unit=lug.lab_unit_id','left')
 		->join('test_method tms','ts.test_method_id=tms.test_method_id','left')
@@ -255,6 +255,8 @@ class Diagnostics_model extends CI_Model{
 		->join('antibiotic_test','micro_organism_test.micro_organism_test_id = antibiotic_test.micro_organism_test_id','left')
 		->join('antibiotic','antibiotic_test.antibiotic_id = antibiotic.antibiotic_id','left')
 		->join('micro_organism','micro_organism_test.micro_organism_id = micro_organism.micro_organism_id','left')
+		->join('staff approved_by','test.test_approved_by = approved_by.staff_id','left')
+		->join('staff done_by','test.test_done_by = done_by.staff_id','left')
 		->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
 		->join('patient','patient_visit.patient_id = patient.patient_id')
 		->join('department','patient_visit.department_id = department.department_id')
@@ -263,9 +265,9 @@ class Diagnostics_model extends CI_Model{
 		->join('staff u_staff','unit.lab_report_staff_id=u_staff.staff_id','left')
 		->join('area','patient_visit.area=area.area_id','left')
 		->join('staff a_staff','area.lab_report_staff_id=a_staff.staff_id','left')
-		->join('department test_dept','tas.department_id=test_dept.department_id')
-		->join('hospital','test_dept.hospital_id=hospital.hospital_id')
-		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id')
+		->join('department test_dept','tas.department_id=test_dept.department_id','left')
+		->join('hospital','test_dept.hospital_id=hospital.hospital_id','left')
+		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id','left')
 		->group_by('test_id');
 		$this->db->where('test_order.order_id',$order_id);
 		$query=$this->db->get();

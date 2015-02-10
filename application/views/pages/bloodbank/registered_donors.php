@@ -49,9 +49,6 @@
 				<input type="submit" class="btn btn-primary btn-md" value="Update" formaction="<?php echo base_url();?>bloodbank/register/medical_checkup/0/<?php echo $donor['donation_id'];?>" />
 				<input type="submit" class="btn btn-primary btn-md" value="X" formaction="<?php echo base_url();?>bloodbank/register/delete_donor/$donation_id"/></td>
 
-				<input type="submit" value="Update" formaction="<?php echo base_url();?>bloodbank/register/medical_checkup/0/<?php echo $donor['donation_id'];?>" />
-				<input type="submit" value="X" formaction="<?php echo base_url();?>bloodbank/register/delete_donor/$donation_id"/></td>
-
 		</form>
 		</tr>
 		<?php 

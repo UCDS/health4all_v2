@@ -102,7 +102,7 @@ function view_orders(){
 			else{
 				$this->data['msg']="Test results could not be saved";
 			}
-			$this->data['order']=$this->diagnostics_model->get_order();
+			$this->data['orders']=$this->diagnostics_model->get_tests_ordered($this->data['test_areas']);
 			$this->load->view($page,$this->data);
 		}	
 			

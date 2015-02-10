@@ -22,12 +22,10 @@
 		<tr>
 		<?php echo form_open("bloodbank/register/bleeding");?>
 
-			<td width="15%">
-=======
 			<td>
-
 				<input type="text" value="<?php echo $donor['donation_id'];?>" size="4" name="donation_id" hidden />
-				<?php echo $donor['name'];?></td>
+				<?php echo $donor['name'];?>
+			</td>
 			<td width="10%"><div class="form-group"><select name="blood_group" class="form-control" >
 			<option value="" selected disabled>----</option>
 			<option value="A+" <?php if($donor['blood_group']=="A+") echo "selected";?>>A+</option>
