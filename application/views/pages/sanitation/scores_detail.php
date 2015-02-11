@@ -4,11 +4,13 @@
 $(function(){
 	$("#from_date").Zebra_DatePicker({
 	  disabled_dates : ['* * * *'],
-	  enabled_dates: ['1,8,15,22,29 * * *']
+	  enabled_dates: ['1,8,15,22,29 * * *'],
+	  direction:false
 	});
 	$("#to_date").Zebra_DatePicker({
 	  disabled_dates : ['* * * *'],
-	  enabled_dates: ['7,14,21,28-31 * * *']
+	  enabled_dates: ['7,14,21,28-31 * * *'],
+	  direction:false
 	});
 });
 </script>
@@ -58,6 +60,7 @@ $(function(){
 	$date=$from_date;
 	$dates[]=$date;
 	while($i==0){
+		if(date('d',strtotime($date))<28)
 		$date=date("Y-m-d",strtotime($date."+7 days"));	
 		if($date>$to_date){
 			$i++;
@@ -85,7 +88,7 @@ $(function(){
 	?>
 	<br />
 	<br />
-	<div class="panel">Sanitation scores for the period : <b><?php echo $this->input->post('from_date');?></b> to <b><?php echo $this->input->post('to_date');?></b></div>
+	<div class="panel">Sanitation scores for the period : <b><?php echo date("d-M-Y",strtotime($this->input->post('from_date')));?></b> to <b><?php echo date('d-M-Y',strtotime($this->input->post('to_date')));?></b></div>
 	<table class="table table-bordered table-striped">
 		<thead>
 			<tr>
@@ -158,17 +161,16 @@ $(function(){
 				}
 				
 				if($s->score==0 || $s->score == NULL) { $background_color = "#FFA3A3"; } else $background_color = "#99FF99"; ?>
-				<td class="text-center"  style="background-color : <?php echo $background_color;?> !important"><b><?php echo $week_total_score;?></b></td>
+				<td class="text-center"  style="background-color : <?php echo $background_color;?> !important"><b><?php echo number_format($week_total_score,1);?></b></td>
 				<td class="text-center"><?php echo $week_total_weightage;?></td>
 				<td class="text-center" style="background-color : <?php echo $background_color;?> !important"><?php echo number_format(($week_total_score/$week_total_weightage)*100,2);
-				$total_score+=$week_total_score; $week_total_score=0;
-				$total_weightage+=$week_total_weightage; $week_total_weightage=0;?>%</td>
+				$total_score+=$week_total_score*$days; $week_total_score=0;
+				$total_weightage+=$week_total_weightage*$days; $week_total_weightage=0;?>%</td>
 			</tr>
 		<?php $total_days+=$days; } ?>
-			<tfoot><th colspan="2" class="text-center">Total No. of Days</th><th class="text-center"><?php echo $total_days;?></th><th colspan="<?php echo $j*2;?>" class="text-right">	Total</th><th class="text-center"><?php echo $total_score;?></th><th class="text-center"><?php echo $total_weightage;?></th><th class="text-center"><?php echo number_format(($total_score/$total_weightage)*100,2);?>%</th></tr>
+			<tfoot><th colspan="2" class="text-center">Total No. of Days</th><th class="text-center"><?php echo $total_days;?></th><th colspan="<?php echo ($j*2)+2;?>" class="text-right">	Total Weighted Score</th><th class="text-center"><?php echo number_format((($total_score/$total_days)/($total_weightage/$total_days))*100,2);?>%</th></tr>
 	</table>
-	<?php } ?>
-	
+	<?php if(count($months)>0){ ?>
 	<table class="table table-bordered table-striped">
 		<thead>
 			<tr>
@@ -200,5 +202,6 @@ $(function(){
 			?>
 		</tbody>
 	</table>
-		
+	<?php } ?>
+	<?php } ?>
 </div>

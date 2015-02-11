@@ -5,7 +5,8 @@
 $(function(){
 	$('.date').Zebra_DatePicker({
 	  disabled_dates : ['* * * *'],
-	  enabled_dates: ['7,14,21,28,29,30,31 * * *']
+	  enabled_dates: ['7,14,21,28,29,30,31 * * *'],
+	  direction:false
 	});
 	$(".time").timeEntry();
 	$("#select_form").on('submit',function(e){
@@ -18,21 +19,39 @@ $(function(){
 		}
 	});
 	$(".submit").on('click',function(e){
-		
+		if(!$('#evaluation_form')[0].checkValidity()){
+			$('.confirm').click();
+			return false;
+		}
 		var scores_table = '<table class="table table-bordered table-striped"><thead><th>Activity</th><th>Score</th><th>Comment</th></thead><tbody>';
 		$(".activity").each(function(){
-			scores_table+='<tr><td>'+$(this).find('.activity_name').text()+'</td><td>'+$(this).find('.score').val()+'</td><td>'+$(this).find('.comment').val()+'</td></tr>';
+			if($(this).find('.score').val()==0){ $color = 'background:#FFA3A3;';} else $color = "";
+			scores_table+='<tr><td>'+$(this).find('.activity_name').text()+'</td><td style="text-align:center;'+$color+'">'+$(this).find('.score').val()+'</td><td>'+$(this).find('.comment').val()+'</td></tr>';
 		});
 		scores_table+='</tbody></table>';
 		$('.modal-body').text('');
 		$('.modal-body').append(scores_table);
-		console.log(scores_table);
 		
 	});
-	$('.confirm').click(function(){
-		$('#myModal').modal('hide');
-		$('#evaluation_form').submit();
+	$('#evaluation_form').on('submit',function(e){
+		if(!$('#evaluation_form')[0].checkValidity()){
+			e.preventDefault();
+		}
+		else if(!$("#myModal").hasClass('in')){
+			e.preventDefault();
+			var scores_table = '<table class="table table-bordered table-striped"><thead><th>Activity</th><th>Score</th><th>Comment</th></thead><tbody>';
+			$(".activity").each(function(){
+				if($(this).find('.score').val()==0){ $color = 'background:#FFA3A3;';} else $color = "";
+				scores_table+='<tr><td>'+$(this).find('.activity_name').text()+'</td><td style="text-align:center;'+$color+'">'+$(this).find('.score').val()+'</td><td>'+$(this).find('.comment').val()+'</td></tr>';
+			});
+			scores_table+='</tbody></table>';
+			$('.modal-body').text('');
+			$('.modal-body').append(scores_table);
+			$("#myModal").modal('show');
+		}
+		
 	});
+	
 	$("#hospital").on('change',function(){
 		$(".area").show();
 		var hospital_id=$(this).val();
@@ -184,7 +203,7 @@ $(function(){
 						?>
 						<td>
 							<input type="checkbox" value="<?php echo $a->activity_id;?>" checked name="weekly_activity_id[]" hidden />
-							<input type="number" class="form-control score" placeholder="Score" min=0 max="<?php echo $a->weightage;?>" value="<?php echo $a->weekly_score;?>" name="activity_score_<?php echo $a->activity_id;?>" size="3" required <?php if($a->weekly_score) echo "disabled";?> />
+							<input type="number" step="any"  style="text-align:center" class="form-control score" placeholder="Score" min=0 max="<?php echo $a->weightage;?>" value="<?php if($a->weekly_score)echo $a->weekly_score; else echo 0;?>" name="activity_score_<?php echo $a->activity_id;?>" size="3" required <?php if($a->weekly_score) echo "disabled";?> />
 							  <textarea class="form-control comment" placeholder="Comments" name="comments_<?php echo $a->activity_id;?>" <?php if($a->weekly_score) echo "disabled";?>><?php echo $a->comments;?></textarea>
 							  <br />(Max score : <?php echo $a->weightage;?>)
 						</td>
@@ -257,7 +276,7 @@ $(function(){
 			<?php } ?>
 		</div>
 		<div class="panel-footer">
-			<button class="btn btn-primary btn-lg submit col-md-offset-5" data-toggle="modal" data-target="#myModal" form="evaluation_form" value="Submit">
+			<button class="btn btn-primary btn-lg submit col-md-offset-5" type="button" data-toggle="modal" data-target="#myModal" form="evaluation_form" value="Submit">
 			  Submit
 			</button>
 

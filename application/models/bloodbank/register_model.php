@@ -171,11 +171,10 @@ class Register_model extends CI_Model{
 		'sbp'=>$this->input->post('sbp'),
 		'dbp'=>$this->input->post('dbp'),
 		'temperature'=>$this->input->post('temperature'),
-		'donation_date'=>$this->input->post('donation_date'),
+		'donation_date'=>date("Y-m-d",strtotime($this->input->post('donation_date'))),
 		'status_id'=>2
 		);
 		$this->db->trans_start();
-		
 		$this->db->where('donation_id',$donation_id);
 		$this->db->update('bb_donation',$data);
 		$this->db->trans_complete();
@@ -201,7 +200,7 @@ class Register_model extends CI_Model{
 		$blood_group=array(
 		'blood_group'=>$this->input->post('blood_group')
 		);
-		$userdata=$this->session->userdata('hospital');
+		$userdata=$this->session->userdata('logged_in');
 		$result=$this->db->query("SELECT DATE_ADD((SELECT donation_date FROM bb_donation WHERE donation_id=$donation_id),INTERVAL 35 DAY) expiry_date");
 		$row=$result->row();
 		$blood=array(
@@ -237,7 +236,7 @@ class Register_model extends CI_Model{
 		}
 	}
 	function make_request(){
-		$userdata=$this->session->userdata('hospital');
+		$userdata=$this->session->userdata('logged_in');
 		$staff_id=$userdata['user_id'];
 		$request_type=$this->input->post('request_type');
 		$patient_name=$this->input->post('patient');

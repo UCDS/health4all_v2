@@ -1,3 +1,10 @@
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<script>
+	$(function(){	
+		$(".date").Zebra_DatePicker();
+	})
+</script>
 <div class="col-md-10 col-md-offset-2">
 <?php 	echo validation_errors(); ?>
 <?php if(isset($msg)){ ?> 
@@ -5,7 +12,12 @@
 	</div>
 	<?php  }?>
 <br>
-<?php if(isset($order)){ ?>
+<?php if(isset($order)){ 
+	$age="";
+	if($order[0]->age_years!=0) $age.=$order[0]->age_years."years ";
+	if($order[0]->age_months!=0) $age.=$order[0]->age_months."months ";
+	if($order[0]->age_days!=0) $age.=$order[0]->age_days."days ";
+	?>
 	<?php echo form_open('diagnostics/approve_results',array('role'=>'form','class'=>'form-custom'));?>
 	<div class="panel panel-default">
 		<div class="panel-heading">
@@ -19,12 +31,12 @@
 		<div class="panel-body">
 			<div class="row col-md-12">
 				<div class="col-md-4">
-					<b>Patient Name : </b>
-					<?php echo $order[0]->first_name;?>
+					<b>Patient : </b>
+					<?php echo $order[0]->first_name." ".$order[0]->last_name." | ".$age." | ".$order[0]->gender; ?>
 				</div>
 				<div class="col-md-4">
-					<b>Patient Type : </b>
-					<?php echo $order[0]->visit_type;?>
+					<b>Type : </b>
+					<?php echo $order[0]->visit_type; ?>
 				</div>
 				<div class="col-md-4">
 					<b><?php echo $order[0]->visit_type;?> Number : </b>
@@ -37,8 +49,8 @@
 					<?php echo $order[0]->department;?>
 				</div>
 				<div class="col-md-4">
-					<b>Order By : </b>
-					<?php echo $order[0]->staff_name;?>
+					<b>Unit/Area : </b>
+					<?php echo $order[0]->unit_name." / ".$order[0]->area_name;?>
 				</div>
 				<div class="col-md-4">
 					<b>Provisional Diagnosis : </b>
@@ -63,7 +75,7 @@
 					<td>
 					<?php if($test->numeric_result==1){ 
 
-							if($test->test_status == 1) { 
+							if($test->test_status == 0) { 
 								$result="Test not done";
 							} 
 							else{	
@@ -87,14 +99,42 @@
 						echo $result;
 						?>
 					<?php 
-					}
-						else echo "-";
+					}						
+					else echo "-";
 					?>
+					
+						<?php if($test->test_status == 1 && $test->test_result_binary==1 && preg_match("^Culture*^",$test->test_method)) { 
+						$micro_organism_test_ids = array();
+						$res = explode("^",trim($test->micro_organism_test,"^"));
+						$k=0;
+						foreach($res as $r) {
+							$temp=explode(",",trim($r," ,"));
+							$temp[3]==1?$temp[3]="<b>Sensitive</b>":$temp[3]="Resistant";
+							if(!in_array($temp[0],$micro_organism_test_ids)){
+								if(count($micro_organism_test_ids)>0) echo "</tr></tbody></table>"
+								?>
+								<table class='table table-bordered table-striped'><thead><th colspan="2" style="text-align:center"><?php echo $temp[1];?></th></thead>
+								<tbody>
+								<tr>
+									<td><?php echo $temp[2]." - ".$temp[3];?>	</td>
+							<?php 
+								foreach($temp as $t){?>
+							<?php 
+								}
+								$micro_organism_test_ids[]=$temp[0];
+							}
+							else echo "<td>$temp[2] - $temp[3]</td>";
+							if($k%2==1) echo "</tr>";
+							$k++;
+							if($k==count($res))
+								echo "</tr></tbody></table>";													
+							}
+						} ?>
 					 </td>
 					 <td>
 					<?php if($test->text_result==1){ 
 
-						if($test->test_status == 1) { 
+						if($test->test_status == 0) { 
 							$result="Test not done";
 						} 
 						else{	
@@ -112,10 +152,10 @@
 						<label class="label label-danger">Rejected</label>
 					<?php } else { ?>	
 						<label class="btn btn-success btn-sm">
-						<input type="radio" value="1" name='approve_test_<?php echo $test->test_id;?>' /> Approve
+						<input type="radio" value="1" name='approve_test_<?php echo $test->test_id;?>' required /> Approve
 						</label>
 						<label class="btn btn-danger btn-sm">
-						<input type="radio" value="0" name='approve_test_<?php echo $test->test_id;?>' /> Reject
+						<input type="radio" value="0" name='approve_test_<?php echo $test->test_id;?>' required /> Reject
 						</label>
 					<input type="text" value="<?php echo $test->test_id;?>" name="test[]" class="sr-only hidden" />
 					<?php } ?>
@@ -126,8 +166,23 @@
 		</table>
 		</div>
 		<div class="panel-footer">
-			<input type="text" value="<?php echo $test->order_id;?>" name="order_id" class="sr-only hidden" />
-			<input type="submit" value="Submit" class="btn btn-primary btn-md col-md-offset-5" name="approve_results" />
+		<input type="text" class="sr-only" value="<?php echo $this->input->post('test_area');?>"  name="test_area" readonly /> 
+		<input type="text" class="sr-only" value="<?php echo $this->input->post('patient_type_search');?>"  name="patient_type_search" readonly /> 
+		<input type="text" class="sr-only" value="<?php echo $this->input->post('hosp_file_no_search');?>"  name="hosp_file_no_search" readonly /> 
+		<input type="text" class="sr-only" value="<?php echo $this->input->post('test_method_search');?>"  name="test_method_search" readonly /> 
+		<input type="text" class="sr-only" value="<?php echo $this->input->post('from_date');?>"  name="from_date" readonly /> 
+		<input type="text" class="sr-only" value="<?php echo $this->input->post('to_date');?>"  name="to_date" readonly /> 			
+		<input type="text" value="<?php echo $test->order_id;?>" name="order_id" class="sr-only hidden" />
+			<div style="text-align:center">
+			<?php 
+			if($test->a_id != NULL && $test->a_id != "") { $email = $test->a_email; $first_name = $test->a_first_name; $phone = $test->a_phone; }
+			else if($test->u_id != NULL && $test->u_id != "") { $email = $test->u_email; $first_name = $test->u_first_name; $phone = $test->u_phone; }
+			else if($test->d_id != NULL && $test->d_id != "") { $email = $test->d_email; $first_name = $test->d_first_name; $phone = $test->d_phone; }
+			else {$email = ""; $first_name = ""; $phone = ""; } ?>
+				<div>Doctor Name  : <?php echo $first_name;?> |  Email : <?php echo $email;?> | Phone : <?php echo $phone;?></p>
+			<div class="well well-sm text-center"><label class="label label-warning"><input type="checkbox" name="send_email" value="1" /> Send Email to Doctor</label></div>
+			<input type="submit" value="Submit" class="btn btn-primary btn-md" name="approve_results" />
+			</div>
 		</div>
 	</div>
 	</form>
@@ -136,23 +191,43 @@
 	}
 	else{
 ?>
-<?php if(count($test_areas)>1){ ?>
-	<?php echo form_open('diagnostics/approve_results',array('role'=>'form'));?>
-		<div class="form-group">
-			<label for="test_area">Test Area<font color='red'>*</font></label>
-			<select name="test_area" class="form-control"  id="test_area">
-				<option value="" selected disabled>Select Test Area</option>
-				<?php
-					foreach($test_areas as $test_area){ ?>
-						<option value="<?php echo $test_area->test_area_id;?>"><?php echo $test_area->test_area;?></option>
-				<?php } ?>
-			</select>
+<?php echo form_open('diagnostics/approve_results',array('role'=>'form','class'=>'form-custom'));
+if(isset($orders)){ ?>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			Search
 		</div>
-		<input type="submit" value="Select" name="submit" class="btn btn-primary btn-md" /> 
+		<div class="panel-body">
+			<input type="text" class="sr-only" value="<?php echo $this->input->post('test_area');?>"  name="test_area" readonly /> 
+			<label>Order Dates</label> 
+			<input type="text" class="date form-control" placeholder="From Date" value="<?php if($this->input->post('from_date')) $from_date=$this->input->post('from_date'); else $from_date = date("d-M-Y"); echo $from_date;?>" name="from_date" /> 
+			<input type="text" class="date form-control" placeholder="To Date" value="<?php if($this->input->post('to_date')) $to_date=$this->input->post('to_date'); else $to_date = date("d-M-Y"); echo $to_date?>"  name="to_date" /> 
+			<br />
+			<br />
+			<label>Test Method</label>
+			<select name="test_method_search" class="form-control">
+			<option value="" selected>Select</option>
+			<?php foreach($test_methods as $test_method){ ?>
+				<option value="<?php echo $test_method->test_method_id;?>" <?php if($this->input->post('test_method_search')==$test_method->test_method_id) echo " selected ";?>><?php echo $test_method->test_method;?></option>
+			<?php } ?>
+			</select>
+			<label>Patient Type : </label>
+			<select name="patient_type_search" class="form-control">
+			<option value="" selected>Select</option>
+			<option value="OP" <?php if($this->input->post('patient_type_search')=="OP") echo " selected ";?>>OP</option>
+			<option value="IP" <?php if($this->input->post('patient_type_search')=="IP") echo " selected ";?>>IP</option>
+			</select>
+			<label>Patient #</label>
+			<input type="text" class="form-control" name="hosp_file_no_search" value="<?php echo $this->input->post('hosp_file_no_search');?>" />			
+		</div>
+		<div class="panel-footer">
+			<input type="submit" value="Search" name="submit" class="btn btn-primary btn-md" /> 
+		</div>
+	</div>
+	</form>
 <?php 
-}
-if(isset($orders) && count($orders)>0){ ?>
-	
+if(count($orders)>0){ ?>
+
 <div class="panel panel-default">
 	<div class="panel-heading">
 		<h4>Test Orders</h4>
@@ -191,7 +266,7 @@ if(isset($orders) && count($orders)>0){ ?>
 						</td>
 						<td><?php echo $order->staff_name;?></td>
 						<td><?php echo $order->sample_code;?></td>
-						<td><?php echo $order->specimen_type;?></td>
+						<td><?php echo $order->specimen_type; if($order->specimen_source!="") echo " - ".$order->specimen_source;?> </td><!--printing the specimen source in the update tests beside the specimen type if the specimen type is not null-->
 						<td><?php echo $order->hosp_file_no;?></td>
 						<td><?php echo $order->first_name." ".$order->last_name;?></td>
 						<td><?php echo $order->department;?></td>
@@ -202,12 +277,20 @@ if(isset($orders) && count($orders)>0){ ?>
 												$label="label-warning";
 											else if($order->test_status == 3){ $label = "label-danger";}
 											else if($order->test_status == 2){ $label = "label-success";}
+											else if($order->test_status == 0){ $label = "label-default";}
 											echo "<div class='label $label'>".$order->test_name."</div><br />";
 										}
 									} 
 							?>
 						</td>
-						<td><button class="btn btn-sm btn-primary" type="submit" value="submit" name="select_order">Select</button></form></td>
+						<td>
+							<input type="text" class="sr-only" value="<?php echo $this->input->post('test_area');?>"  name="test_area" readonly /> 
+							<input type="text" class="sr-only" value="<?php echo $this->input->post('patient_type_search');?>"  name="patient_type_search" readonly /> 
+							<input type="text" class="sr-only" value="<?php echo $this->input->post('hosp_file_no_search');?>"  name="hosp_file_no_search" readonly /> 
+							<input type="text" class="sr-only" value="<?php echo $this->input->post('test_method_search');?>"  name="test_method_search" readonly /> 
+							<input type="text" class="sr-only" value="<?php echo $this->input->post('from_date');?>"  name="from_date" readonly /> 
+							<input type="text" class="sr-only" value="<?php echo $this->input->post('to_date');?>"  name="to_date" readonly /> 
+							<button class="btn btn-sm btn-primary" type="submit" value="submit" name="select_order">Select</button></form></td>
 				<?php break;
 					}
 				} ?>
@@ -225,8 +308,25 @@ if(isset($orders) && count($orders)>0){ ?>
 </div>
 <?php 
 	}
-	else if(isset($orders) && count($orders)==0){
-		echo "No results pending to approve";
+	else if(count($orders)==0){
+		echo "No orders to update";
+	}
+}
+	else if(count($test_areas)>1){ ?> 
+	<?php echo form_open('diagnostics/approve_results',array('role'=>'form','class'=>'form-custom')); ?>
+		<div class="form-group">
+			<label for="test_area">Test Area<font color='red'>*</font></label>
+			<select name="test_area" class="form-control"  id="test_area">
+				<option value="" selected disabled>Select Test Area</option>
+				<?php
+					foreach($test_areas as $test_area){ ?>
+						<option value="<?php echo $test_area->test_area_id;?>" <?php if($this->input->post('test_area')==$test_area->test_area_id) echo " selected ";?>><?php echo $test_area->test_area;?></option>
+				<?php } ?>
+			</select>
+			<input type="submit" class="btn btn-primary btn-md" name="submit_test_area" value="Select" />
+		</div>
+	</form>
+<?php 
 	}
 } 
 ?>
