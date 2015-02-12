@@ -178,7 +178,8 @@ class Reports_model extends CI_Model{
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
 		 ->where('visit_type','IP')
-		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')");		  
+		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')")
+		 ->order_by('hosp_file_no','ASC');		  
 		$resource=$this->db->get();
 		return $resource->result();
 	}

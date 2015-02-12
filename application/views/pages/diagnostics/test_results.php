@@ -498,8 +498,8 @@ pri.print();
 					<?php } ?>
 				<tr></tr>
 				<tr>
-					<th colspan="3" align="left"> <br /> <br />Technician</th>
-					<th colspan="10"> <br /> <br />Doctor  </th>
+					<th colspan="3" align="left"> <br /> <?php echo $test->done_first." ".$test->done_last;?><br />Technician</th>
+					<th colspan="10"> <br /> <?php echo $test->approved_first." ".$test->approved_last;?> <br />Doctor  </th>
 				</tr>
 		</tbody>
 	</table>
