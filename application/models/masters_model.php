@@ -218,10 +218,16 @@ class Masters_model extends CI_Model{
 			if($this->input->post('search')){
 							
 				$contact_person_name=strtolower($this->input->post('contact_person_name'));
-				$this->db->like('LOWER(contact_person_first_name)',$contact_person_name,'after');
-				$this->db->like('LOWER(contact_person_last_name)',$contact_person_name,'after');
-				$this->db->like('LOWER(contact_person_first_name) || " " || LOWER(contact_person_last_name)',$contact_person_name,'after');
-				$this->db->like('LOWER(contact_person_last_name) || " " || LOWER(contact_person_first_name)',$contact_person_name,'after');
+				$contact_person_name_splitted = explode ( ' ', $contact_person_name);
+				if(!isset($contact_person_name_splitted[1]))
+				{
+					$contact_person_name_splitted[1] = '';
+				}
+				$this->db->like('LOWER(contact_person_first_name)',$contact_person_name_splitted[0],'both');
+				$this->db->or_like('LOWER(contact_person_last_name)',$contact_person_name_splitted[0],'both');
+				$this->db->or_like('LOWER(contact_person_first_name)',$contact_person_name_splitted[1],'both');
+				$this->db->or_like('LOWER(contact_person_last_name)',$contact_person_name_splitted[1],'both');
+				
 						
 			}
 			$this->db->select("*")->from("contact_person")->order_by("contact_person_first_name, contact_person_last_name");
@@ -481,7 +487,9 @@ class Masters_model extends CI_Model{
 			->join("(SELECT activity_id month_activity_done,date month_activity_date,time month_activity_time,score monthly_score,comments FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Monthly' AND MONTH(date)=MONTH('$week_start') AND YEAR(date)=YEAR('$week_start')) month_done",'facility_activity.activity_id=month_done.month_activity_done','left')
 			->where('area.area_id',$this->input->post('area'));
 		}
-		$query=$this->db->get();		
+		$query=$this->db->get();				
+		//echo $this->db->last_query();
+
 		return $query->result();
 	
 }
@@ -721,7 +729,7 @@ else if($type=="dosage"){
 		
 			$this->db->trans_start();
 			$this->db->update($table,$data);
-			$this->db->last_query();
+			
 		$this->db->trans_complete();
 		if($this->db->trans_status()===FALSE){
 			return false;
