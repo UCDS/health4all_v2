@@ -55,7 +55,7 @@ class Vendor extends CI_Controller {
 
 			
 		else{
-			show_404();
+			show_404(); //if user enters any parameter 404 error is shown.
 		}
 		$page="pages/inventory/add_".$type."_form";
 		$this->data['title']=$title;
@@ -94,25 +94,27 @@ function edit($type=""){
                   )
         
 			);
-			$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
-			$this->data['vendors']=$this->masters_model->get_data("vendor-all");
+			$this->data['contact_persons']=$this->masters_model->get_data("contact_person");// fetching data of Contact persons based on the state we are in. 
+			//before search fetch all the data, on search  based on condition given, 
+			//on selecting an item fetch selected contact person
+			$this->data['vendors']=$this->masters_model->get_data("vendor-all"); // vendor-all gets data for all of the vendors irrespective of state we are in.
 		}
 
-		else if($type=="equipment_type"){
-		 	$title="Edit Equipment Type";
+		else if($type=="vendor"){
+		 	$title="Edit Vendor";
 		
 			$config=array(
                array(
-                     'field'   => 'equipment_type',
-                     'label'   => 'Equipment Name',
-                     'rules'   => 'trim|xss_clean'
+                     'field'   => 'vendor_name',
+                     'label'   => 'Vendor Name',
+                     'rules'   => 'trim|xss_clean|required'
                   )
              
 			);
-      
-$this->data['equipment_types']=$this->masters_model->get_data("equipment_type");
-
-}
+			$this->data['vendors']=$this->masters_model->get_data("vendor"); // fetching data of vendors based on the state we are in. 
+			//before search fetch all the data, on search  based on condition given, 
+			//on selecting an item fetch selected vendor
+		}
 
 			
 		else{
