@@ -16,131 +16,95 @@ $(function(){
 	});
 });
 </script>
-		<div class="col-md-8 col-md-offset-2">
-		<center>
+<div class="col-md-8 col-md-offset-2">
+	
+	<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
-		<h3>Add Vendor Details</h3></center><br>
-	<center><?php echo validation_errors(); echo form_open('equipments/add/vendor',array('role'=>'form','id'=>'add_vendor')); ?></center>
+		<h3>Add Vendor Details</h3>
+	</center><br>
+	
+	<center>
+		<?php echo validation_errors(); ?>
+	</center>
+	<?php 
+	echo form_open('vendor/add/vendor',array('class'=>'form-horizontal','role'=>'form','id'=>'add_vendor')); 
+	?>
 	
 	<div class="form-group">
-		<label for="vendor_name" class="col-md-4"> Vendor</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Vendor" id="vendor_name" name="vendor" />
+		<label for="vendor_name" class="col-md-3"> Vendor name<font color='red'>*</font></label>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder=" Vendor" id="vendor_name" name="vendor_name" required />
 		</div>
 	</div>
+	
 	<div class="form-group">
-		<label for="vendor_address" class="col-md-4"> Address</label>
-		<div  class="col-md-8">
+		<label for="vendor_address" class="col-md-3"> Address</label>
+		<div  class="col-md-6">
 		<input type="text" class="form-control" placeholder=" Address" id="vendor_address" name="model" />
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_city" class="col-md-4"> City</label>
-		<div  class="col-md-8">
+		<label for="vendor_city" class="col-md-3"> City</label>
+		<div  class="col-md-6">
 		<input type="text" class="form-control" placeholder=" City" id="vendor_city" name="serial_number" />
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_state" class="col-md-4"> State</label>
-		<div  class="col-md-8">
+		<label for="vendor_state" class="col-md-3"> State</label>
+		<div  class="col-md-6">
 		<input type="text" class="form-control" placeholder=" State" id="description" name="vendor_state" />
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_country" class="col-md-4"> Country</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Procured By" id="vendor_country" name="procured_by" />
+		<label for="vendor_country" class="col-md-3"> Country</label>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder=" Country" id="vendor_country" name="vendor_country" />
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="description" class="col-md-4"> Bank Account Number</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Cost" id="description" name="cost" />
+		<label for="account_no" class="col-md-3"> Bank Account Number</label>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder=" Bank Account Number" id="account_no" name="account_no" />
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="description" class="col-md-4"> Supplier</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Supplier" id="description" name="supplier" />
+		<label for="branch" class="col-md-3"> Bank Branch</label>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder=" Bank Branch" id="branch" name="branch" />
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="supply_date" class="col-md-4"> Supply Date</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control date" placeholder="Supply Date" id="supply_date" form="add_equipment" name="supply_date" />
+		<div class="col-md-3">
+			<label for="vendor_email" > Email</label>
+		</div>
+		<div class="col-md-6">
+		<input type="text"  class="form-control" placeholder=" Email" id="vendor_email" name="vendor_email" />
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="description" class="col-md-4"> Warranty Period</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control date" placeholder="Start" form="add_equipment" id="warranty_start_date" name="warranty_start_date" />
-		<input type="text" class="form-control date" placeholder="End"  form="add_equipment" id="warranty_end_date" name="warranty_end_date" />
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="description" class="col-md-4"> Service Engineer</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Service Engineer" id="description" name="service_engineer" />
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="description" class="col-md-4">  Service Engineer Contact</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Service Engineer Contact" id="description" name="service_engineer_contact" />
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="agency_contact_name" class="col-md-4">Department</label>
-		<div  class="col-md-8">
-		<select name="department" id="department" class="form-control">
-		<option value="">Department</option>
-		<?php foreach($department as $d){
-			echo "<option value='$d->department_id'>$d->department</option>";
-		}
-		?>
-		</select>
+		<label for="vendor_phone" class="col-md-3"> Phone Number</label>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder="Phone number" form="vendor_phone" id="vendor_phone" name="vendor_phone" />
 		
 		</div>
-	</div>	
-		<div class="form-group">
-		<label for="area" class="col-md-4">Area</label>
-		<div  class="col-md-8">
-		<select name="area" id="area" class="form-control">
-		<option value="">Area</option>
-		<?php foreach($areas as $a){
-			echo "<option value='$a->area_id' class='$a->department_id'>$a->area_name</option>";
-		}
-		?>
-		</select>
-		
-		</div>
-	</div>	
+	</div>
 	<div class="form-group">
-		<label for="unit" class="col-md-4">Unit</label>
-		<div  class="col-md-8">
-		<select name="unit" id="unit" class="form-control">
-		<option value="">Unit</option>
-		<?php foreach($units as $u){
-			echo "<option value='$u->unit_id' class='$u->department_id'>$u->unit_name</option>";
-		}
-		?>
-		</select>
-		
+		<label for="vendor_pan" class="col-md-3"> PAN</label>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder=" PAN" id="vendor_pan" name="vendor_pan" />
 		</div>
+	</div>
+	<div class="form-group">
+		<label for="contact_person_id" class="col-md-3">  Service Engineer Contact</label>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder=" Service Engineer contact" id="contact_person_id" name="contact_person_id" />
+		</div>
+	</div>
 	</div>	
+	
 	<input type="hidden" class="form-control" value='1' placeholder=" Service Engineer Contact" id="description" name="user" />
 	
-	<div class="form_group">
-		<label for="agency_contact_no" class="col-md-4">  Equipment Status</label>
-		<div  class="col-md-8">
-<select name="equipment_status"  id="equipment_status" class="form-control">
-<option value="">Select Status</option>
-
-<option value="1">Working</option>
-<option value="0">Not Working</option>
-</select>
-	</div>
-	</div>
+	
    	<div class="col-md-3 col-md-offset-4">
 	<button class="btn btn-lg btn-primary btn-block" type="submit" value="submit">Submit</button>
 	</div>

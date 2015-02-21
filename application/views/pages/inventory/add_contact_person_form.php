@@ -16,40 +16,60 @@ $(function(){
 	});
 });
 </script>
-		<div class="col-md-8 col-md-offset-2">
-		<center>
-		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
-		<h3>Add Contact Person Details</h3></center><br>
-	<center><?php echo validation_errors(); echo form_open('equipments/add/contact_person',array('role'=>'form','id'=>'add_contact_person')); ?></center>
+
+<div class="col-md-8 col-md-offset-2">
 	
+	<center>
+		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
+		<h3>Add Contact Person Details</h3>
+	</center><br>
+	
+	<center>
+		<?php echo validation_errors(); ?>
+	</center>
+	<?php 
+	echo form_open('vendor/add/contact_person',array('class'=>'form-horizontal','role'=>'form','id'=>'add_contact_person')); 
+	?>
+
 	<div class="form-group">
-		<label for="contact_person_first_name" class="col-md-4"> First Name<font color='red'>*</font></label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" First Name" id="description" name="contact_person_first_name" required />
+		<div class="col-md-3">
+			<label for="contact_person_first_name" class="control-label">First Name</label>
+		</div>
+		<div class="col-md-6">
+			<input type="text" class="form-control" placeholder="First Name" id="contact_person_first_name" name="contact_person_first_name" required />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-md-3">
+			<label for="contact_person_last_name" class="control-label">Last Name</label>
+		</div>
+		<div class="col-md-6">
+			<input type="text" class="form-control" placeholder="Last Name" id="contact_person_last_name" name="contact_person_last_name" />
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="contact_person_last_name" class="col-md-4"> Last Name</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Last Name" id="description" name="contact_person_last_name" />
+		<div class="col-md-3">
+			<label for="contact_person_contact" > Contact Number<font color='red'>*</font></label>
+		</div>
+		<div class="col-md-6">
+		<input type="text" class="form-control" placeholder=" Contact Number" id="contact_person_contact" name="contact_person_contact" required />
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="contact_person_contact" class="col-md-4"> Contact Number<font color='red'>*</font></label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Contact Number" id="description" name="contact_person_contact" required />
+		<div class="col-md-3">
+			<label for="contact_person_email" > Email</label>
+		</div>
+		<div class="col-md-6">
+		<input type="text"  class="form-control" placeholder=" Contact Email" id="contact_person_email" name="contact_person_email" />
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="contact_person_email" class="col-md-4"> Contact Email</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Contact Email" id="description" name="contact_person_email" />
+		<div class="col-md-3">
+			<label for="vendor" >Vendor<font color='red'>*</font></label>
 		</div>
-	</div>
-	<div class="form-group">
-		<label for="vendor" class="col-md-4">Vendor<font color='red'>*</font></label>
-		<div  class="col-md-8">
-		<select name="vendor" id="vendor" class="form-control">
+		<div class="col-md-6">
+			<select name="vendor" id="vendor" class="form-control">
 		<option value="">--select--</option>
 		<?php foreach($vendors as $d){
 			echo "<option value='$d->vendor_id'>$d->vendor_name</option>";
@@ -60,15 +80,27 @@ $(function(){
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="description" class="col-md-4"> Gender</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Procured By" id="description" name="procured_by" />
+		<div class="col-md-3">
+			<label class="control-label">Gender</label>
 		</div>
-	</div>
+		<div class="col-md-6">
+			<label class="control-label">
+				<input type="radio" name="gender" value="M" checked />Male
+			</label>
+			<label class="control-label">
+				<input type="radio" name="gender" value="F" />Female
+			</label>
+			<label class="control-label">
+				<input type="radio" name="gender" value="O" />Other
+			</label>
+		</div>
+	</div>	
 	<div class="form-group">
-		<label for="designation" class="col-md-4"> Designation</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Designation" id="description" name="designation" />
+		<div class="col-md-3">
+			<label for="designation" > Designation</label>
+		</div>
+		<div class="col-md-6">
+		<input type="text" class="form-control" placeholder=" Designation" id="designation" name="designation" />
 		</div>
 	</div>
 	
