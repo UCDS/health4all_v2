@@ -102,18 +102,24 @@ function edit($type=""){
 
 		else if($type=="vendor"){
 		 	$title="Edit Vendor";
-		
+			
 			$config=array(
                array(
                      'field'   => 'vendor_name',
                      'label'   => 'Vendor Name',
-                     'rules'   => 'trim|xss_clean|required'
+                     'rules'   => 'trim|xss_clean'
                   )
              
 			);
+			if($this->input->post('select'))
+			{
+				$post_vendor_id=$this->input->post('vendor_id');
+				$this->data['contact_persons']=$this->masters_model->get_data("vendor_specific_contact_person",$vendor_id=$post_vendor_id); 
+			}
 			$this->data['vendors']=$this->masters_model->get_data("vendor"); // fetching data of vendors based on the state we are in. 
 			//before search fetch all the data, on search  based on condition given, 
 			//on selecting an item fetch selected vendor
+			//echo var_dump($this->data['vendors']);
 		}
 
 			
@@ -131,6 +137,7 @@ function edit($type=""){
 		if ($this->form_validation->run() === FALSE)
 		{
 			$this->load->view($page,$this->data);
+			echo 'false';
 		}
 		else{
 			if($this->input->post('update')){

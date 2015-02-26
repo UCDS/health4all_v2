@@ -95,9 +95,9 @@ $(function(){
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="contact_person_id" class="col-md-3">  Service Engineer Contact</label>
+		<label for="contact_person_id" class="col-md-3">  Primary Contact Person</label>
 		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" Service Engineer contact" id="contact_person_id" name="contact_person_id" />
+		<input type="text" class="form-control" placeholder=" Primary Contact Person" id="contact_person_id" name="contact_person_id" />
 		</div>
 	</div>
 	</div>	

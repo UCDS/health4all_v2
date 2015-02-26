@@ -2,7 +2,7 @@
 class Masters_model extends CI_Model{
 	
 	
-	function get_data($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status="",$hospitals=0){
+	function get_data($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status="",$hospitals=0,$vendor_id=0){
 		if($type=="equipment_types"){
 			$this->db->select("equipment_type_id,equipment_type")->from("equipment_type");
 		}
@@ -198,7 +198,7 @@ class Masters_model extends CI_Model{
 			}
 			if($this->input->post('search')){
 							
-				$vendor_name=strtolower($this->input->post('vendor_name'));
+				$vendor_name=strtolower($this->input->post('vendor_name_search'));
 				$this->db->like('LOWER(vendor_name)',$vendor_name,'after');
 						
 			}
@@ -210,6 +210,7 @@ class Masters_model extends CI_Model{
 			$this->db->select("*")->from("vendor")->order_by("vendor_id");
 					
 		}
+		
 		else if($type=="contact_person"){
 			if($this->input->post('select')){
 				$contact_person_id=$this->input->post('contact_person_id');
@@ -232,6 +233,11 @@ class Masters_model extends CI_Model{
 			}
 			$this->db->select("*")->from("contact_person")->order_by("contact_person_first_name, contact_person_last_name");
 					
+		}
+		else if($type=="vendor_specific_contact_person")
+		{
+			$this->db->where('vendor_id',$vendor_id);	
+			$this->db->select("*")->from("contact_person")->order_by("contact_person_first_name, contact_person_last_name");
 		}
 		else if($type=="drug_type"){
 			if($this->input->post('search')){

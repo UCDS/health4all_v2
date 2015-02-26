@@ -1,6 +1,4 @@
-
-	
-	<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 
 <div class="col-md-8 col-md-offset-2">
@@ -31,11 +29,11 @@
 	<?php 
 	//$staff = $staff[0]; 
 	//What is form_open ?
-	echo form_open('vendor/edit/vendor',array('class'=>'form-horizontal','role'=>'form','id'=>'edit_vendor')); 
+	echo form_open('vendor/edit/contact_person',array('class'=>'form-horizontal','role'=>'form','id'=>'edit_contact_person')); 
 	?>
 
 	<div class="form-group">
-		<input type='hidden' name='vendor_id' value='<?php echo $contact_persons[0]->vendor_id; ?>' />
+		<input type='hidden' name='vendor_id' value='<?php echo $vendors[0]->vendor_id; ?>' />
 		<div class="col-md-3">
 			<label for="vendor_name" class="control-label">Vendor Name</label>
 		</div>
@@ -44,101 +42,99 @@
 			value="<?php echo $vendors[0]->vendor_name; ?>"/>
 		</div>
 	</div>
-
 	<div class="form-group">
 		<div class="col-md-3">
-			<label for="contact_person_last_name" class="control-label">Last Name</label>
+			<label for="vendor_address" class="control-label">Address</label>
 		</div>
 		<div class="col-md-6">
-			<input type="text" class="form-control" placeholder=" Last Name" id="contact_person_last_name" name="contact_person_last_name" required 
-			value="<?php echo $contact_persons[0]->contact_person_last_name; ?>"/>
+			<input type="text" class="form-control" placeholder=" Address" id="vendor_address" name="vendor_address" required 
+			value="<?php echo $vendors[0]->vendor_address; ?>"/>
 		</div>
 	</div>
-
-	
 	<div class="form-group">
-		<div class="col-md-3">
-			<label class="control-label">Gender</label>
-		</div>
-		<?php $gender = $contact_persons[0]->gender; ?>
-		<div class="col-md-6">
-			<label class="control-label">
-				<input type="radio" name="gender" value="M" 
-				<?php 
-				if($gender == 'M')
-				{
-					echo 'checked';
-				} ?> 
-			/> Male
-			</label>
-			<label class="control-label">
-				<input type="radio" name="gender" value="F" 
-				<?php 
-				if($gender == 'F')
-				{
-					echo 'checked';
-				} ?> 
-				/> Female
-			</label>
-			<label class="control-label">
-				<input type="radio" name="gender" value="O" 
-				<?php 
-				if($gender == '')
-				{
-					echo 'checked';
-				} ?> 
-				/> Other
-			</label>
-		</div>
-	</div>	
-	
-	<div class="form-group">
-		<div class="col-md-3">
-			<label for="contact_person_email" class="control-label">Email</label>
-		</div>
-		<div class="col-md-6">
-			<input type="text" class="form-control" placeholder=" Email" id="contact_person_" name="contact_person_email" required 
-			value="<?php echo $contact_persons[0]->contact_person_email; ?>"/>
+		<label for="vendor_city" class="col-md-3"> City</label>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder=" City" id="vendor_city" name="vendor_city" 
+		value="<?php echo $vendors[0]->vendor_city; ?>" />
 		</div>
 	</div>
-
 	<div class="form-group">
-		<div class="col-md-3">
-			<label for="contact_person_contact" class="control-label">Phone Number</label>
+		<label for="vendor_state" class="col-md-3"> State</label>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder=" State" id="vendor_state" name="vendor_state" 
+		value="<?php echo $vendors[0]->vendor_state; ?>" />
 		</div>
-		<div class="col-md-6">
-			<input type="text" class="form-control" placeholder=" Email" id="contact_person_contact" name="contact_person_contact" required 
-			value="<?php echo $contact_persons[0]->contact_person_contact; ?>"/>
+	</div>
+	<div class="form-group">
+		<label for="vendor_country" class="col-md-3"> Country</label>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder=" Country" id="vendor_country" name="vendor_country" 
+		value="<?php echo $vendors[0]->vendor_country; ?>" />
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="account_no" class="col-md-3"> Bank Account Number</label>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder=" Bank Account Number" id="account_no" name="account_no" 
+		value="<?php echo $vendors[0]->account_no; ?>" />
 		</div>
 	</div>
 	
+	<div class="form-group">
+		<label for="bank_name" class="col-md-3"> Bank Account Number</label>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder=" Bank Name" id="bank_name" name="bank_name" 
+		value="<?php echo $vendors[0]->bank_name; ?>" />
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="branch" class="col-md-3"> Bank Branch</label>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder=" Bank Branch" id="branch" name="branch" 
+		value="<?php echo $vendors[0]->branch; ?>" />
+		</div>
+	</div>
 	
 	<div class="form-group">
-		<div class="col-md-3">
-			<label for="contact_person_designation" class="control-label">Designation</label>
+		<label for="vendor_email" class="col-md-3"> Email</label>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder=" Email" id="vendor_email" name="vendor_email" 
+		value="<?php echo $vendors[0]->vendor_email; ?>" />
 		</div>
-		<div class="col-md-6">
-			<input type="text" class="form-control" placeholder=" Email" id="contact_person_designation" name="contact_person_designation" required 
-			value="<?php echo $contact_persons[0]->designation; ?>"/>
+	</div>
+	
+	<div class="form-group">
+		<label for="vendor_phone" class="col-md-3"> Phone Number</label>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder=" Phone Number" id="vendor_phone" name="vendor_phone" 
+		value="<?php echo $vendors[0]->vendor_phone; ?>" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="vendor_pan" class="col-md-3"> PAN</label>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder=" PAN" id="vendor_pan" name="vendor_pan" 
+		value="<?php echo $vendors[0]->vendor_pan; ?>" />
 		</div>
 	</div>
 	
 	<div class="form-group">
 	<?php //echo var_dump($vendors); ?>
 		<div class="col-md-3">
-			<label for="vendor_id" >Vendor<font color='red'>*</font></label>
+			<label for="contact_person_id" >Primary Contact Person<font color='red'>*</font></label>
 		</div>
 	
 		<div class="col-md-6">
-			<select name="vendor_id" id="vendor_id" class="form-control">
+			<select name="contact_person_id" id="contact_person_id" class="form-control">
 		<option value="">--select--</option>
-		<?php foreach($vendors as $d){
-			echo " <option value=' $d->vendor_id'   ";
-			if($contact_persons[0]->vendor_id == $d->vendor_id)
+		<?php foreach($contact_persons as $d){
+			echo " <option value=' $d->contact_person_id'   ";
+			if($contact_persons[0]->contact_person_id == $d->contact_person_id)
 			{
 				echo "selected";
 			}
-			echo " >$d->vendor_name</option>";
+			echo ' > '. $d->contact_person_first_name .' '.  $d->contact_person_last_name .' </option>';
 		}
 		?>
 		</select>
@@ -146,7 +142,8 @@
 		</div>
 	</div>
 	
-		
+	
+	
    	<div class="col-md-3 col-md-offset-4">
 	<input class="btn btn-lg btn-primary btn-block" type="submit" value="Update" name="update">
 	</div>
@@ -158,11 +155,11 @@
 	<h3><?php if(isset($msg)) echo $msg;?></h3>	
 	<div class="col-md-12">
 	<?php echo form_open('vendor/edit/vendor',array('role'=>'form','id'=>'search_form','class'=>'form-inline','name'=>'search_vendor'));?>
-	<h3> Search Staff </h3>
+	<h3> Search Vendor</h3>
 	<table class="table-bordered col-md-12">
 	<tbody>
 	<tr>
-		<td><input type="text" class="form-control" placeholder="vendor_name" id="vendor_name" name="vendor_name"> 
+		<td><input type="text" class="form-control" placeholder=" Name " id="vendor_name" name="vendor_name"> 
 		
 		
 				<td><input class="btn btn-lg btn-primary btn-block" name="search" value="Search" type="submit" /></td></tr>
@@ -181,11 +178,11 @@
 	<tbody>
 	<?php 
 	$i=1;
-	foreach($contact_persons as $a){ ?>
-	<?php echo form_open('vendor/edit/vendor',array('id'=>'select_vendor_form_'.$a->vendor_id,'role'=>'form')); ?>
+	foreach($vendors as $a){ ?>
+	<?php echo form_open('vendor/edit/vendor',array('id'=>'select_vendor_form_'.$a->contact_person_id,'role'=>'form')); ?>
 	<tr onclick="$('#select_vendor_form_<?php echo $a->vendor_id;?>').submit();" >
 		<td><?php echo $i++; ?></td>
-		<td><?php echo $a->vendor_name. " ". $a->vendor_name; ?>
+		<td><?php echo $a->vendor_name; ?>
 		<input type="hidden" value="<?php echo $a->vendor_id; ?>" name="vendor_id" />
 		<input type="hidden" value="select" name="select" />
 		</td>
@@ -196,3 +193,17 @@
 	</table>
 	<?php } ?>
 	</div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

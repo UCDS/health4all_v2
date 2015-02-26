@@ -1,6 +1,4 @@
-
-	
-	<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 
 <div class="col-md-8 col-md-offset-2">
