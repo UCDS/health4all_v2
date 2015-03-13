@@ -2,7 +2,7 @@
 class Masters_model extends CI_Model{
 	
 	
-	function get_data($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status="",$hospitals=0){
+	function get_data($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status="",$hospitals=0,$vendor_id=0){
 		if($type=="equipment_types"){
 			$this->db->select("equipment_type_id,equipment_type")->from("equipment_type");
 		}
@@ -190,6 +190,54 @@ class Masters_model extends CI_Model{
 			}
 					$this->db->select("equipment_type_id,equipment_type")->from("equipment_type")->order_by("equipment_type");
 					
+		}
+		else if($type=="vendor"){
+			if($this->input->post('select')){
+				$vendor_id=$this->input->post('vendor_id');
+				$this->db->where('vendor_id',$vendor_id);	
+			}
+			if($this->input->post('search')){
+							
+				$vendor_name=strtolower($this->input->post('vendor_name_search'));
+				$this->db->like('LOWER(vendor_name)',$vendor_name,'after');
+						
+			}
+			$this->db->select("*")->from("vendor")->order_by("vendor_id");
+					
+		}
+		else if($type=="vendor-all"){
+			
+			$this->db->select("*")->from("vendor")->order_by("vendor_id");
+					
+		}
+		
+		else if($type=="contact_person"){
+			if($this->input->post('select')){
+				$contact_person_id=$this->input->post('contact_person_id');
+				$this->db->where('contact_person_id',$contact_person_id);	
+			}
+			if($this->input->post('search')){
+							
+				$contact_person_name=strtolower($this->input->post('contact_person_name'));
+				$contact_person_name_splitted = explode ( ' ', $contact_person_name);
+				if(!isset($contact_person_name_splitted[1]))
+				{
+					$contact_person_name_splitted[1] = '';
+				}
+				$this->db->like('LOWER(contact_person_first_name)',$contact_person_name_splitted[0],'both');
+				$this->db->or_like('LOWER(contact_person_last_name)',$contact_person_name_splitted[0],'both');
+				$this->db->or_like('LOWER(contact_person_first_name)',$contact_person_name_splitted[1],'both');
+				$this->db->or_like('LOWER(contact_person_last_name)',$contact_person_name_splitted[1],'both');
+				
+						
+			}
+			$this->db->select("*")->from("contact_person")->order_by("contact_person_first_name, contact_person_last_name");
+					
+		}
+		else if($type=="vendor_specific_contact_person")
+		{
+			$this->db->where('vendor_id',$vendor_id);	
+			$this->db->select("*")->from("contact_person")->order_by("contact_person_first_name, contact_person_last_name");
 		}
 		else if($type=="drug_type"){
 			if($this->input->post('search')){
@@ -445,7 +493,9 @@ class Masters_model extends CI_Model{
 			->join("(SELECT activity_id month_activity_done,date month_activity_date,time month_activity_time,score monthly_score,comments FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Monthly' AND MONTH(date)=MONTH('$week_start') AND YEAR(date)=YEAR('$week_start')) month_done",'facility_activity.activity_id=month_done.month_activity_done','left')
 			->where('area.area_id',$this->input->post('area'));
 		}
-		$query=$this->db->get();		
+		$query=$this->db->get();				
+		//echo $this->db->last_query();
+
 		return $query->result();
 	
 }
@@ -665,10 +715,27 @@ else if($type=="dosage"){
 			$table = 'staff_category';
 		}
 
+			else if($type=="contact_person"){
+				$data = array(
+					'contact_person_id'=>$this->input->post('contact_person_id'),
+					'contact_person_first_name'=>$this->input->post('contact_person_first_name'),
+					  'contact_person_last_name'=>$this->input->post('contact_person_last_name'),
+					  'contact_person_email'=>$this->input->post('contact_person_email'),
+					  'contact_person_contact'=>$this->input->post('contact_person_contact'),
+					  'vendor_id'=>$this->input->post('vendor_id'),
+					  'gender'=>$this->input->post('gender'),
+					  'designation'=>$this->input->post('designation'),
+					  
+				);
+				$this->db->where('contact_person_id',$data['contact_person_id']);
+				$table="contact_person";
+				
+		}
+		
 		
 			$this->db->trans_start();
 			$this->db->update($table,$data);
-	
+			
 		$this->db->trans_complete();
 		if($this->db->trans_status()===FALSE){
 			return false;
@@ -1050,13 +1117,34 @@ else if($type=="dosage"){
 		$data = array(
 					  'vendor_name'=>$this->input->post('vendor_name'),
 					   'vendor_address'=>$this->input->post('vendor_address'),
-					  'contact_name'=>$this->input->post('contact_name'),
-					  'contact_number'=>$this->input->post('contact_number'),
-					  'contact_email'=>$this->input->post('contact_email'),
+					   'vendor_city'=>$this->input->post('vendor_city'),
+					   'vendor_state'=>$this->input->post('vendor_state'),
+					   'vendor_country'=>$this->input->post('vendor_country'),
+					   'account_no'=>$this->input->post('account_no'),
+					   'branch'=>$this->input->post('branch'),
+					   'vendor_email'=>$this->input->post('vendor_email'),
+					   'vendor_phone'=>$this->input->post('vendor_phone'),
+					   'vendor_pan'=>$this->input->post('vendor_pan'),
+					   'contact_person_id'=>$this->input->post('contact_person_id')
 			);
 
 		$table="vendor";
 		}
+		elseif($type=="contact_person"){
+		$data = array(
+					  'contact_person_first_name'=>$this->input->post('contact_person_first_name'),
+					  'contact_person_last_name'=>$this->input->post('contact_person_last_name'),
+					  'contact_person_email'=>$this->input->post('contact_person_email'),
+					  'contact_person_contact'=>$this->input->post('contact_person_contact'),
+					  'vendor_id'=>$this->input->post('vendor_id'),
+					  'gender'=>$this->input->post('gender'),
+					  'designation'=>$this->input->post('designation'),
+					  
+			);
+
+		$table="contact_person";
+		}
+		
 		elseif($type=="vendor_contracts"){
 		$data = array(
 					  'vendor_name'=>$this->input->post('vendor_name'),

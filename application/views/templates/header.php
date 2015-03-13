@@ -121,7 +121,7 @@
 					} 
 				?> 
 			<?php foreach($functions as $f){
-					if($f->user_function=="Equipment" || $f->user_function=="Consumables" || $f->user_function=="HR"){ ?>
+					if($f->user_function=="Equipment" || $f->user_function=="Consumables" || $f->user_function=="HR" || $f->user_function=="vendor"){ ?>
 			<li class="dropdown  <?php if(preg_match("^".base_url()."inventory^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Resources <b class="caret"></b></a>
 						<ul class="dropdown-menu">
@@ -145,6 +145,14 @@
 						<?php foreach($functions as $f){
 								if($f->user_function=="Consumables"){ ?>
 						  <li><a href="<?php echo base_url()."consumables/add/dosages";?>">Consumables</a></li>
+						<?php
+									break;
+								}
+							}
+						?>
+						<?php foreach($functions as $f){
+								if($f->user_function=="vendor"){ ?>
+						  <li><a href="<?php echo base_url()."vendor/add/vendor";?>">Vendor</a></li>
 						<?php
 									break;
 								}
