@@ -76,7 +76,11 @@ class Register extends CI_Controller {
 					// if the register button has been clicked, invoke the register function in register_model.
 					// Get the inserted patient details from the function and store it in a variable to display
 					// in the views.
-					$this->data['registered']=$this->register_model->register();
+						$this->data['registered']=$this->register_model->register(); 
+					if(is_int($this->data['registered']) && $this->data['registered']==2){
+						//If register function returns value 2 then we are setting a duplicate ip no error.
+						$this->data['duplicate']=1;
+					}
 					
 					//Set the print layout page based on the form selected.
 					$this->data['print_layout']="pages/print_layouts/$print_layout_page";
