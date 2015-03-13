@@ -17,6 +17,23 @@
 	<ul>
 </div>
 <?php } ?>
+<?php if(preg_match("^vendor/*^",current_url())) { 
+	$userinfo=$this->session->userdata('logged_in'); // Store the session data in a variable, contains all the functions the user has access to.
+?>
+<div class="col-sm-3 col-md-2 sidebar-left">
+    <ul class="nav nav-sidebar">
+    			<li class="nav-header">Add</li>
+				<li><a href="<?php echo base_url();?>vendor/add/vendor">Vendor</a></li>
+				<li><a href="<?php echo base_url();?>vendor/add/contact_person">Contact Person</a></li>
+				
+				<li class="nav-header">Edit</li>
+				<li><a href="<?php echo base_url();?>vendor/edit/vendor">Vendor</a></li>
+				<li><a href="<?php echo base_url();?>vendor/edit/contact_person">Contact Person</a></li>
+				<li class="nav-header">View</li>
+				<li><a href="<?php echo base_url();?>vendor/view/equipments_summary">Equipments</a></li>
+	<ul>
+</div>
+<?php } ?>
 <?php if(preg_match("^consumables/*^",current_url())) { ?>
 
 <div class="col-sm-3 col-md-2 sidebar-left">
