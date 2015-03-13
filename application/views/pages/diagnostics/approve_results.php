@@ -178,9 +178,9 @@
 			if($test->a_id != NULL && $test->a_id != "") { $email = $test->a_email; $first_name = $test->a_first_name; $phone = $test->a_phone; }
 			else if($test->u_id != NULL && $test->u_id != "") { $email = $test->u_email; $first_name = $test->u_first_name; $phone = $test->u_phone; }
 			else if($test->d_id != NULL && $test->d_id != "") { $email = $test->d_email; $first_name = $test->d_first_name; $phone = $test->d_phone; }
-			else {$email = ""; $first_name = ""; $phone = ""; } ?>
-				<div>Doctor Name  : <?php echo $first_name;?> |  Email : <?php echo $email;?> | Phone : <?php echo $phone;?></p>
-			<div class="well well-sm text-center"><label class="label label-warning"><input type="checkbox" name="send_email" value="1" /> Send Email to Doctor</label></div>
+			$email = $test->department_email; $first_name = $test->department; $phone = "-";  ?>
+				<div>Department  : <?php echo $first_name;?> |  Email : <?php echo $email;?> | Phone : <?php echo $phone;?></p>
+			<div class="well well-sm text-center"><label class="label label-warning"><input type="checkbox" name="send_email" value="1" checked /> Send Email to Department</label></div>
 			<input type="submit" value="Submit" class="btn btn-primary btn-md" name="approve_results" />
 			</div>
 		</div>

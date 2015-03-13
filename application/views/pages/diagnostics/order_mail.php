@@ -6,13 +6,37 @@ if(filter_var($email, FILTER_VALIDATE_EMAIL) && $send_email==1){
 	if($order_mail[0]->age_years!=0) $age.=$order_mail[0]->age_years."Y ";
 	if($order_mail[0]->age_months!=0) $age.=$order_mail[0]->age_months."M ";
 	if($order_mail[0]->age_days!=0) $age.=$order_mail[0]->age_days."D ";
-	$body = "<table style='border:1px solid #ccc;border-collapse:collapse;'>
+	$body = "<table style='border:0px;border-collapse:collapse;width:100%'>
 		<thead>
-		<tr><th colspan='2' style='border:1px solid black;padding:5px;'>Patient: ".$order_mail[0]->first_name." ".$order_mail[0]->last_name."</th><th style='border:1px solid black;padding:5px;'>".$order_mail[0]->visit_type.", #".$order_mail[0]->hosp_file_no."</th></tr>
-		<tr><th colspan='2' style='border:1px solid black;padding:5px;'>Age : $age</th><th style='border:1px solid black;padding:5px;'>Gender : ".$order_mail[0]->gender."</th></tr>
-		<tr><th style='border:1px solid black;padding:5px;'>Test</th>
-		<th style='border:1px solid black;padding:5px;'>Value</th>
-		<th colspan='2' style='border:1px solid black;padding:5px;'>Report</th></tr></thead>";		
+		<tr style='border:0px solid black;padding:5px;'>
+			<th colspan='4' style='border:0px solid black;padding:5px;'>".$departments[0]->department."</td>
+		</tr>
+		<tr style='border:0px solid black;padding:5px;'>
+			<th colspan='4' style='border:0px solid black;padding:5px;'>".$order_mail[0]->hospital.", ".$order_mail[0]->place.", ".$order_mail[0]->district.", ".$order_mail[0]->state."</td>
+		</tr>
+		<tr style='border:0px solid black;padding:5px;'>
+			<th colspan='4' style='border:0px solid black;padding:5px;text-decoration:underline'>".$order_mail[0]->test_method." Results</td>
+		</tr>
+		<tr>
+			<td colspan='2' style='border:0px solid black;padding:5px;'>Order Date: ".date("d-M-Y g:ia",strtotime($order_mail[0]->order_date_time))."</td>
+			<td colspan='2' style='border:0px solid black;padding:5px;'>Reported Date: ".date("d-M-Y g:ia",strtotime($order_mail[0]->reported_date_time))."</td>
+		</tr>
+		<tr>
+			<td colspan='3' style='border:0px solid black;padding:5px;'><b>Patient: </b>".$order_mail[0]->first_name." ".$order_mail[0]->last_name." | $age | ".$order_mail[0]->gender."</td>
+			<td style='border:0px solid black;padding:5px;'><b>".$order_mail[0]->visit_type."</b> #".$order_mail[0]->hosp_file_no."</td>
+		</tr>
+		<tr>
+			<td colspan='2' style='border:0px solid black;padding:5px;'><b>Department : </b>".$order_mail[0]->department."</td>
+			<td colspan='2'style='border:0px solid black;padding:5px;'><b>Unit/Area : </b>".$order_mail[0]->unit_name." / ".$order_mail[0]->area_name."</td>
+		</tr>
+		</thead>
+		</table>
+		<table style='border:1px solid #ccc;border-collapse:collapse; width:100%'>
+		<tr>
+			<th style='border:1px solid black;padding:5px;'>Test</th>
+			<th style='border:1px solid black;padding:5px;'>Value</th>
+			<th colspan='2' style='border:1px solid black;padding:5px;'>Report</th>
+		</tr>";		
 	foreach($order_mail as $test){ 
 			$positive='';$negative='';
 		 if($test->test_status!=2){continue;}
@@ -27,7 +51,7 @@ if(filter_var($email, FILTER_VALIDATE_EMAIL) && $send_email==1){
 						$result=$test->test_result.' '.$test->lab_unit; 
 					} 
 					else{	
-						$result='Test not done.';
+						$result='';
 					}
 					$body.=  $result;
 				}
@@ -41,7 +65,7 @@ if(filter_var($email, FILTER_VALIDATE_EMAIL) && $send_email==1){
 						else $result=$test->binary_negative ; 
 					} 
 					else{	
-						$result='Test not done.';
+						$result='';
 					}
 				$body.= $result;
 			}
@@ -73,45 +97,39 @@ if(filter_var($email, FILTER_VALIDATE_EMAIL) && $send_email==1){
 			if($test->text_result==1){ 
 
 				if($test->test_status == 2) { 
-					$body.= " $test->test_result_text";
+					$result= " $test->test_result_text";
 				} 
 				else{	
-					$result='Test not done.';
+					$result='';
 				}
 				$body .= $result;
 			 }
 						else $body.='-'; 
 		$body.= "</td></tr>";
 		}
+			$from_name = $departments[0]->department;
 			$body.= "</table>";
 			$to=$email;
 			if($to!=''){
 			$subject="Test Order #$test->order_id for patient $test->visit_type#$test->hosp_file_no is complete!";
 			$mailbody="
 			<div style='width:90%;padding:5px;margin:5px;font-style:\"Trebuchet MS\";border:1px solid #eee;'>
-			<p>Dear $name,</p>
-			<p>Here is report of order #$test->order_id for patient $test->visit_type#$test->hosp_file_no <br /> <br />$body</p>
-			<p>
-			From,<br />
-			Microbiology Department,<br />
-			Gandhi Hospital, <br />
-			Secunderabad. <br />
-			</p>
+			<br />$body
 			</div>";
 			}
-			$this->email->from('lab_microbiology@gandhihospital.in', 'MicroBiology - Gandhi Hospital');
+			$from = $departments[0]->department_email;
+			if(!!$from){
+			$this->email->from("$from", "$from_name - Gandhi Hospital");
 			$this->email->to($to);
 			$this->email->bcc("contact@yousee.in");
-			$this->email->bcc("vivek.chintalapati@gmail.com");
 			$this->email->subject($subject);
 			$this->email->message($mailbody);
 			if ( ! $this->email->send()) {
-				echo "Mail Failed";
-				$this->data['msg'] =  $this->email->print_debugger();
+				$this->email->print_debugger();
 			}
 			else{
-				echo "Mail Sent";
 				$this->email->clear(TRUE);
+			}
 			}
 }
 ?>

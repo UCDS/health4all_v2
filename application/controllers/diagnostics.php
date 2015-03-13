@@ -51,6 +51,7 @@ function test_order(){
 }
 
 
+
 function view_orders(){
 	if(!$this->session->userdata('logged_in')){
 		show_404();
@@ -168,7 +169,7 @@ function approve_results(){
 	if(!$this->session->userdata('logged_in')){
 		show_404();
 	}
-					$this->load->library('email');
+	$this->load->library('email');
 	$this->load->helper('form');
 	$this->load->library('form_validation');
 	$user=$this->session->userdata('logged_in');
@@ -197,10 +198,11 @@ function approve_results(){
 						else if($result->u_id != NULL && $result->u_id != "") { $email = $result->u_email; $first_name = $result->u_first_name; $phone = $result->u_phone; }
 						else if($result->d_id != NULL && $result->d_id != "") { $email = $result->d_email; $first_name = $result->d_first_name; $phone = $result->d_phone; }
 						else {$email = ""; $first_name = ""; $phone = ""; }
-						$this->data['email']=$email;
-						$this->data['name']=$first_name;
+						$this->data['email']=$result->department_email;
+						$this->data['name']=$result->department;
 						$this->data['phone']=$phone;
 						$this->load->view('pages/diagnostics/order_mail',$this->data);
+						$this->data['msg']="Results Updated Successfully";
 					}
 				}
 				$this->data['orders']=$this->diagnostics_model->get_tests_completed($this->data['test_areas']);
@@ -219,23 +221,75 @@ function approve_results(){
 		}	
 		else if($this->input->post('approve_results')){
 			if($result=$this->diagnostics_model->approve_results()){
-					if($this->input->post('send_email')==1){
-						$this->data['order_mail'] = $this->diagnostics_model->get_order();
-						if($result->a_id != NULL && $result->a_id != "") { $email = $result->a_email; $first_name = $result->a_first_name; $phone = $result->a_phone; }
-						else if($result->u_id != NULL && $result->u_id != "") { $email = $result->u_email; $first_name = $result->u_first_name; $phone = $result->u_phone; }
-						else if($result->d_id != NULL && $result->d_id != "") { $email = $result->d_email; $first_name = $result->d_first_name; $phone = $result->d_phone; }
-						else {$email = ""; $first_name = ""; $phone = ""; }
-						$this->data['email']=$email;
-						$this->data['first_name']=$first_name;
-						$this->data['phone']=$phone;
-						$this->load->view('pages/diagnostics/order_mail',$this->data);
-					}
+				if($this->input->post('send_email')==1){
+					$this->data['order_mail'] = $this->diagnostics_model->get_order();
+					if($result->a_id != NULL && $result->a_id != "") { $email = $result->a_email; $first_name = $result->a_first_name; $phone = $result->a_phone; }
+					else if($result->u_id != NULL && $result->u_id != "") { $email = $result->u_email; $first_name = $result->u_first_name; $phone = $result->u_phone; }
+					else if($result->d_id != NULL && $result->d_id != "") { $email = $result->d_email; $first_name = $result->d_first_name; $phone = $result->d_phone; }
+					else {$email = ""; $first_name = ""; $phone = ""; }
+					$this->data['email']=$result->department_email;
+					$this->data['name']=$result->department;
+					$this->data['phone']=$phone;
+					$this->load->view('pages/diagnostics/order_mail',$this->data);
+					$this->data['msg']="Results Updated Successfully";
+				}
 			}
 			$this->data['orders']=$this->diagnostics_model->get_tests_completed($this->data['test_areas']);
 			$this->load->view($page,$this->data);
-		}	
+		}
 		else{
 			$this->data['orders']=$this->diagnostics_model->get_tests_completed($this->data['test_areas']);
+			$this->load->view($page,$this->data);
+		}
+	}
+	
+	$this->load->view('templates/footer');
+}
+
+
+function edit_order(){
+	if(!$this->session->userdata('logged_in')){
+		show_404();
+	}
+	$this->load->helper('form');
+	$this->load->library('form_validation');
+	$user=$this->session->userdata('logged_in');
+	$this->data['user_id']=$user['user_id'];	  
+	$this->data['title']="Edit Order";
+	$page="pages/diagnostics/edit_order";
+	$this->load->view('templates/header',$this->data);
+	$this->load->view('templates/leftnav');
+	$this->form_validation->set_rules('order_id','Order','trim|xss_clean');
+	$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
+	$this->data['test_methods']=$this->masters_model->get_data("test_method");
+	if(count($this->data['test_areas'])>1){
+		if ($this->form_validation->run() === FALSE){
+			$this->load->view($page,$this->data);
+		}
+		else{
+			if($this->input->post('select_order')){
+				if($this->diagnostics_model->cancel_order())
+					$this->data['msg']="Order edited successfully";
+				else $this->data['msg']="Order could not be edited";
+				$this->data['orders']=$this->diagnostics_model->get_tests($this->data['test_areas']);
+				$this->load->view($page,$this->data);
+			}	
+			else{
+				$this->data['orders']=$this->diagnostics_model->get_tests($this->data['test_areas']);
+				$this->load->view($page,$this->data);
+			}
+		}
+	}
+	else{
+		if($this->input->post('select_order')){
+			if($this->diagnostics_model->cancel_order())
+				$this->data['msg']="Order edited successfully";
+			else $this->data['msg']="Order could not be edited";
+			$this->data['orders']=$this->diagnostics_model->get_tests($this->data['test_areas']);
+			$this->load->view($page,$this->data);
+		}	
+		else{
+			$this->data['orders']=$this->diagnostics_model->get_tests($this->data['test_areas']);
 			$this->load->view($page,$this->data);
 		}
 	}

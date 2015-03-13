@@ -20,11 +20,16 @@ $(function(){
 	<?php } ?>
 	<?php echo validation_errors();?>	
 	<?php echo form_open('sanitation/view_scores',array('role'=>'form','class'=>'form-custom')); ?>		
-	<?php if(count($hospitals)==1){ ?>
+	<?php
+	if($this->input->post('hospital')) { ?>
+			<input name="hospital" class="sr-only" value="<?php echo $this->input->post('hospital');?>" hidden />
+			Hospital : <b><?php echo $scores[0]->hospital;?></b>&nbsp&nbsp&nbsp&nbsp&nbsp
+		<?php } 
+	else if(count($hospitals)==1){ ?>
 			<input name="hospital" class="sr-only" value="<?php echo $hospitals[0]->hospital_id;?>" hidden />
 			Hospital : <b><?php echo $hospitals[0]->hospital;?></b>&nbsp&nbsp&nbsp&nbsp&nbsp
 		<?php } 
-		else { 
+		else {
 		?>
 	    <label for="hospital">Hospital</label>
 		<select name="hospital" id="hospital" class="form-control" required >
@@ -43,11 +48,6 @@ $(function(){
 	<?php if(isset($scores) && count($scores)>0) { 
 	$activities=array();
 	$dates=array();
-	$week_total_score=0;
-	$total_score=0;
-	$week_total_weightage=0;
-	$total_weightage=0;
-	$total_days=0;
 	foreach($scores as $s){
 		if($s->frequency_type == "Weekly") 
 		$activities[]=$s->activity_name;
@@ -114,7 +114,14 @@ $(function(){
 			</tr>
 		</thead>
 	<?php $i=1;
-		foreach($dates as $d){ 
+	foreach($months as $month){
+	$week_total_score=0;
+	$total_score=0;
+	$week_total_weightage=0;
+	$total_weightage=0;
+	$total_days=0;
+		foreach($dates as $d){
+			if(date("M,Y",strtotime($d))==$month){
 			?>
 			<tr>
 				<td class="text-center"><?php $from_date=date("d-M-Y",strtotime($d)); echo $from_date ?></td>
@@ -167,8 +174,9 @@ $(function(){
 				$total_score+=$week_total_score*$days; $week_total_score=0;
 				$total_weightage+=$week_total_weightage*$days; $week_total_weightage=0;?>%</td>
 			</tr>
-		<?php $total_days+=$days; } ?>
-			<tfoot><th colspan="2" class="text-center">Total No. of Days</th><th class="text-center"><?php echo $total_days;?></th><th colspan="<?php echo ($j*2)+2;?>" class="text-right">	Total Weighted Score</th><th class="text-center"><?php echo number_format((($total_score/$total_days)/($total_weightage/$total_days))*100,2);?>%</th></tr>
+		<?php $total_days+=$days;  } } ?>
+			<tr><th colspan="2" class="text-center">Total No. of Days</th><th class="text-center"><?php echo $total_days;?></th><th colspan="<?php echo ($j*2)+2;?>" class="text-right">	Total Weighted Score</th><th class="text-center"><?php echo number_format((($total_score/$total_days)/($total_weightage/$total_days))*100,2);?>%</th></tr>
+		<?php }?>	
 	</table>
 	<?php if(count($months)>0){ ?>
 	<table class="table table-bordered table-striped">

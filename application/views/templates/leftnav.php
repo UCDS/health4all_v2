@@ -123,6 +123,11 @@
 	<?php } 
 	} 
 	foreach($functions as $f){
+		if($f->user_function=="Diagnostics"){ ?>
+			<li <?php if(preg_match("^edit_order^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/edit_order">Cancel Orders</a></li>
+	<?php } 
+	} 
+	foreach($functions as $f){
 		if($f->user_function=="Diagnostics - Approve"){ ?>
 		<li <?php if(preg_match("^approve_results^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/approve_results">Approve Tests</a></li>
 	<?php } 

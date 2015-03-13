@@ -123,8 +123,8 @@ class Diagnostics_model extends CI_Model{
 		->join('department','patient_visit.department_id=department.department_id')
 		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id')
 		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')") 
-		->where('order_status !=',2)
-		->where('ts.test_area_id',$test_area);
+		->where('order_status <',2)
+		->where('test_order.test_area_id',$test_area);
 		$query=$this->db->get();
 		return $query->result();
 	}
@@ -180,6 +180,56 @@ class Diagnostics_model extends CI_Model{
 		return $query->result();
 	}
 	
+	function get_tests($test_areas){
+
+		$this->input->post('test_area')?$test_area=$this->input->post('test_area'):$test_area="";
+		if(count($test_areas)==1){
+			$test_area = $test_areas[0]->test_area_id;// test_area will be updated if condition is satisfied i.e. if the value is one
+		}
+		//if both the fields that is "from_date" & "to_date" are entered than if condition would be executed  
+		if($this->input->post('from_date') && $this->input->post('to_date')){ 
+			$from_date = date("Y-m-d",strtotime($this->input->post('from_date')));  
+			$to_date = date("Y-m-d",strtotime($this->input->post('to_date')));//
+			}
+		//if anyone of the fields either "from_date" or "to_date" are entered in this condition
+		else if($this->input->post('from_date') || $this->input->post('to_date')){
+			$this->input->post('from_date')?$from_date=date("Y-m-d",strtotime( $this->input->post('from_date'))):$from_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+			$to_date=$from_date;
+		}
+		//if both the fields (from_date and to_date) are not entered then default values would be assigned in this condition
+		else{
+			$from_date = date("Y-m-d"); 
+			$to_date=date("Y-m-d");
+		}
+		//test_method_search searches out the test_method_id 
+		if($this->input->post('test_method_search') != ""){
+			$this->db->where('test_method.test_method_id',$this->input->post('test_method_search'));
+		}
+		//patient_type_search would search weather the patient is inpatient or outpatient
+		if($this->input->post('hosp_file_no_search') && $this->input->post('patient_type_search')){
+			$this->db->where('hosp_file_no',$this->input->post('hosp_file_no_search'));
+			$this->db->where('visit_type',$this->input->post('patient_type_search'));
+		}
+		//the above searches will get the details of the patient
+		$this->db->select('test_id,test_order.order_id,test_sample.sample_id,test_method,test_name,department,patient.first_name, patient.last_name,
+							staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,specimen_source,sample_container_type,test_status')//adding the specimen source in the update tests
+		->from('test_order')
+		->join('test','test_order.order_id=test.order_id')
+		->join('test_sample','test_order.order_id=test_sample.order_id')
+		->join('test_master','test.test_master_id=test_master.test_master_id')
+		->join('test_method','test_master.test_method_id=test_method.test_method_id')
+		->join('staff','test_order.doctor_id=staff.staff_id','left')
+		->join('patient_visit','test_order.visit_id=patient_visit.visit_id'	)
+		->join('patient','patient_visit.patient_id=patient.patient_id')
+		->join('department','patient_visit.department_id=department.department_id')
+		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id')
+		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')") 
+		->where('test_master.test_area_id',$test_area)
+        ->where_in('test.test_status',array(0,1));
+		$query=$this->db->get(); 
+		return $query->result();
+	}
+	
 	function get_tests_approved($test_areas){
 		$this->input->post('test_area')?$test_area=$this->input->post('test_area'):$test_area="";
 		if(count($test_areas)==1){
@@ -228,6 +278,7 @@ class Diagnostics_model extends CI_Model{
 		$this->db->select('test.test_id,test.test_master_id,test_group.group_id,test_order.order_id,test_order.order_date_time,test.reported_date_time,test_sample.sample_id,test_method,accredition_logo,
 		IFNULL(test_name,group_name)test_name,department.department,unit_name,area_name,age_years,age_months,age_days,patient.gender,patient.first_name, patient.last_name,visit_type,
 		order_date_time,hosp_file_no,sample_code,specimen_type,sample_container_type,
+		department.department_email,
 		a_staff.staff_id a_id,a_staff.email a_email,a_staff.first_name a_first_name,a_staff.phone a_phone,
 		u_staff.staff_id u_id,u_staff.email u_email,u_staff.first_name u_first_name,u_staff.phone u_phone,
 		d_staff.staff_id d_id,d_staff.email d_email,d_staff.first_name d_first_name,d_staff.phone d_phone,
@@ -352,7 +403,7 @@ class Diagnostics_model extends CI_Model{
 		}
 		$this->db->where('order_id',$this->input->post('order_id'));
 		$this->db->update('test_order',array('order_status'=>2));
-		$this->db->select('
+		$this->db->select('department,department_email,
 		a_staff.staff_id a_id,a_staff.email a_email,a_staff.first_name a_first_name,a_staff.phone a_phone,
 		u_staff.staff_id u_id,u_staff.email u_email,u_staff.first_name u_first_name,u_staff.phone u_phone,
 		d_staff.staff_id d_id,d_staff.email d_email,d_staff.first_name d_first_name,d_staff.phone d_phone',false)
@@ -372,6 +423,23 @@ class Diagnostics_model extends CI_Model{
 		}
 		else{
 			return $query->row();
+		}	
+	}
+	
+	function cancel_order(){
+		$this->db->trans_start();
+		$userdata = $this->session->userdata('logged_in');
+		$this->db->where('order_id',$this->input->post('order_id'));
+		$this->db->update('test_order',array('order_status'=>3));
+		$this->db->where('order_id',$this->input->post('order_id'));
+		$this->db->update('test',array('test_status'=>4));
+		$this->db->trans_complete();
+		if($this->db->trans_status() === FALSE){
+			$this->db->trans_rollback();
+			return false;
+		}
+		else{
+			return true;
 		}	
 	}
 	

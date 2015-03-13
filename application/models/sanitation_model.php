@@ -233,20 +233,26 @@ class Sanitation_model extends CI_Model{
 		}
 		
 		function get_scores_detail(){
-			$hospital=$this->input->post('hospital');
+			if($this->input->post('hospital')){
+				$hospital=$this->input->post('hospital');
+				$this->db->where('hospital.hospital_id',$hospital);
+			}
+			if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
-			$query=$this->db->query("SELECT hospital,SUM(score) score,SUM(weightage) weightage,date,DATE_ADD(date,INTERVAL 6 DAY),
-			activity_name,comments,frequency_type
-			FROM area_activity 
-			JOIN facility_activity USING (area_activity_id) 
-			JOIN area ON facility_activity.facility_area_id = area.area_id 
-			LEFT JOIN activity_done USING(activity_id)
-			JOIN department USING(department_id) 
-			JOIN hospital USING(hospital_id)
-			WHERE hospital_id = $hospital
-			AND (date BETWEEN '$from_date' AND '$to_date')
-			GROUP BY date,area_activity_id");
+			$this->db->where("(date BETWEEN '$from_date' AND '$to_date')");
+			}
+			$this->db->select('hospital,SUM(score) score,SUM(weightage) weightage,date,DATE_ADD(date,INTERVAL 6 DAY),
+			activity_name,comments,frequency_type',false)
+			->from('area_activity')
+			->join('facility_activity','area_activity.area_activity_id = facility_activity.area_activity_id')
+			->join('area','facility_activity.facility_area_id = area.area_id')
+			->join('activity_done','facility_activity.activity_id = activity_done.activity_id','left')
+			->join('department','area.department_id=department.department_id')
+			->join('hospital','department.hospital_id=hospital.hospital_id')
+			->group_by('date,area_activity.area_activity_id');
+			$query=$this->db->get();
+			echo $this->db->last_query();
 			return $query->result();
 		}
 

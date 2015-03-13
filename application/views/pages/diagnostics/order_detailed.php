@@ -1,15 +1,68 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme-default.css" >
 
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/table2CSV.js"></script>
-<script type="text/javascript">
-$(function(){
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
+
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
+	<script>
+		$(function(){ 
+		var options = {
+			widthFixed : true,
+			showProcessing: true,
+			headerTemplate : '{content} {icon}', // Add icon for jui theme; new in v2.7!
+
+			widgets: [ 'default', 'zebra', 'print', 'stickyHeaders'],
+
+			widgetOptions: {
+
+		  print_title      : 'table',          // this option > caption > table id > "table"
+		  print_dataAttrib : 'data-name', // header attrib containing modified header name
+		  print_rows       : 'f',         // (a)ll, (v)isible or (f)iltered
+		  print_columns    : 's',         // (a)ll, (v)isible or (s)elected (columnSelector widget)
+		  print_extraCSS   : '.table{border:1px solid #ccc;} tr,td{background:white}',          // add any extra css definitions for the popup window here
+		  print_styleSheet : '', // add the url of your print stylesheet
+		  // callback executed when processing completes - default setting is null
+		  print_callback   : function(config, $table, printStyle){
+			// do something to the $table (jQuery object of table wrapped in a div)
+			// or add to the printStyle string, then...
+			// print the table using the following code
+			$.tablesorter.printTable.printOutput( config, $table.html(), printStyle );
+			},
+			// extra class name added to the sticky header row
+			  stickyHeaders : '',
+			  // number or jquery selector targeting the position:fixed element
+			  stickyHeaders_offset : 0,
+			  // added to table ID, if it exists
+			  stickyHeaders_cloneId : '-sticky',
+			  // trigger "resize" event on headers
+			  stickyHeaders_addResizeEvent : true,
+			  // if false and a caption exist, it won't be included in the sticky header
+			  stickyHeaders_includeCaption : false,
+			  // The zIndex of the stickyHeaders, allows the user to adjust this to their needs
+			  stickyHeaders_zIndex : 2,
+			  // jQuery selector or object to attach sticky header to
+			  stickyHeaders_attachTo : null,
+			  // scroll table top into view after filtering
+			  stickyHeaders_filteredToTop: true,
+
+			  // adding zebra striping, using content and default styles - the ui css removes the background from default
+			  // even and odd class names included for this demo to allow switching themes
+			  zebra   : ["ui-widget-content even", "ui-state-default odd"],
+			  // use uitheme widget to apply defauly jquery ui (jui) class names
+			  // see the uitheme demo for more details on how to change the class names
+			  uitheme : 'jui'
+			}
+		  };
+			$("#table-1").tablesorter(options);
+		  $('.print').click(function(){
+			$('#table-1').trigger('printTable');
+		  });
 	$("#from_date,#to_date").Zebra_DatePicker();
-	$("#generate-csv").click(function(){
-		$(".table").table2CSV();
-	});
-});
-</script>
+		});
+	</script>
 	<div class="row">
 		<h4>Test Order Detailed report</h4>	
 		<?php echo form_open("reports/order_detail/$type",array('role'=>'form','class'=>'form-custom')); ?> 
@@ -26,17 +79,21 @@ $(function(){
 	
 	<?php 
 	if(isset($report) && count($report)>0){ ?>
-		<table class="table table-bordered table-striped">
+		<button type="button" class="btn btn-default btn-md print">
+		  <span class="glyphicon glyphicon-print"></span> Print
+		</button>
+		<table class="table table-bordered table-striped" id="table-1">
 		<thead>
 			<th>#</th>
-			<th>Order ID</th>
-			<th>Order By</th>
-			<th>Sample Code</th>
-			<th>Specimen</th>
+			<th>Order Date</th>
+			<th>Sample ID</th>
 			<th>Patient ID</th>
 			<th>Patient Name</th>
-			<th>Department</th>
+			<th>Age/Gender</th>
+			<th>Department/Unit/Area</th>
+			<th>Specimen</th>
 			<th>Tests</th>
+			<th>Received By</th>
 		</thead>
 		<tbody>
 			<?php 
@@ -54,24 +111,34 @@ $(function(){
 						<td><?php echo $i++;?></td>
 						<td>
 							<?php echo form_open("diagnostics/view_orders",array('role'=>'form','class'=>'form-custom')); ?>
-							<?php echo $order->order_id;?>
+							<?php echo date("d-M-Y",strtotime($order->order_id));?>
 							<input type="hidden" class="sr-only" name="order_id" value="<?php echo $order->order_id;?>" />
 						</td>
-						<td><?php echo $order->staff_name;?></td>
 						<td><?php echo $order->sample_code;?></td>
-						<td><?php echo $order->specimen_type;?></td>
 						<td><?php echo $order->hosp_file_no;?></td>
 						<td><?php echo $order->first_name." ".$order->last_name;?></td>
-						<td><?php echo $order->department;?></td>
 						<td>
-							<?php foreach($report as $order){
+							<?php
+								$age="";
+								if($order->age_years!=0) $age.=$order->age_years."Y ";
+								if($order->age_months!=0) $age.=$order->age_months."M ";
+								if($order->age_days!=0) $age.=$order->age_days."D ";
+								echo $age;
+							?>
+						</td>
+						<td><?php echo $order->department;?></td>
+						<td><?php echo $order->specimen_type;?></td>
+						<td>
+							<?php 
+							$x=0;
+							foreach($report as $order){
 										if($order->order_id == $ord) {
-											if($order->test_status==1) 
+											if($order->test_status==1)
 												$label="label-warning";
 											else if($order->test_status == 3){ $label = "label-danger";}
 											else if($order->test_status == 2){ $label = "label-success";}
 											else if($order->test_status == 0){ $label = "label-default";}
-											echo "<div class='label $label'>".$order->test_name."</div><br />";
+											echo $order->test_name."<br />";
 										}
 									} 
 							?>

@@ -43,7 +43,7 @@ class Staff_model extends CI_Model{
 	}
 	//user_department() takes user ID as parameter and returns a list of all the departments the user has access to.
 	function user_department($user_id){
-		$this->db->select('department.department_id,department')->from('user')
+		$this->db->select('department.department_id,department,department_email')->from('user')
 		->join('user_department_link','user.user_id=user_department_link.user_id')
 		->join('department','user_department_link.department_id=department.department_id')
 		->where('user_department_link.user_id',$user_id);
@@ -253,6 +253,39 @@ class Staff_model extends CI_Model{
 		}
 		else return false; //if the old password entered doesn't match the database password, return false.
 	}
+	function add_camp(){
+		$hospital = $this->session->userdata('hospital');
+		$data=array(
+			'camp_name'=>$this->input->post('camp'),
+			'location'=>$this->input->post('location'),
+			'hospital_id'=>$hospital['hospital_id']
+			);
+		$this->db->trans_start();
+			$this->db->insert('blood_donation_camp',$data);
+		$this->db->trans_complete();
+		if($this->db->trans_status() === FALSE){
+			return false;
+		}
+		else return true;
+	}
+	
+	function add_hospital(){
+		$hospital = $this->session->userdata('hospital');
+		$data=array(
+			'hospital'=>$this->input->post('hospital'),
+			'place'=>$this->input->post('location'),
+			'district'=>$this->input->post('district'),
+			'state'=>$this->input->post('state')
+			);
+		$this->db->trans_start();
+			$this->db->insert('hospital',$data);
+		$this->db->trans_complete();
+		if($this->db->trans_status() === FALSE){
+			return false;
+		}
+		else return true;
+	}
+	
 			
 }
 ?>

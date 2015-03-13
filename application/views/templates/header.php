@@ -162,6 +162,7 @@
 			foreach($functions as $f){
 					if($f->user_function=="OP Summary" || $f->user_function=="IP Summary" || 
 					$f->user_function=="OP Detail" || $f->user_function=="IP Detail" || 
+					$f->user_function=="Diagnostics - Detail" || $f->user_function=="Diagnostics - Summary" || 
 					($f->user_function == "Sanitation Evaluation" && $f->view==1) || 
 					$f->user_function == "Reports - Blood Bank"){ ?>
 					<li class="dropdown  <?php if(preg_match("^".base_url()."reports^",current_url())){ echo "active";}?>">

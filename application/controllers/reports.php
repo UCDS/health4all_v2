@@ -4,6 +4,7 @@ class Reports extends CI_Controller {
 	function __construct(){
 		parent::__construct();
 		$this->load->model('reports_model');
+		$this->load->model('masters_model');
 		$this->load->model('staff_model');
 		if($this->session->userdata('logged_in')){
 		$userdata=$this->session->userdata('logged_in');
@@ -197,6 +198,7 @@ class Reports extends CI_Controller {
 		$this->load->view('templates/header',$this->data);
 		$this->load->helper('form');
 		$this->load->library('form_validation');
+		$test_area=$this->masters_model->get_data('test_area',0,$this->data['departments']);
 		$this->data['report']=$this->reports_model->get_order_detail($test_master,$test_area,$test_method,$visit_type,$from_date,$to_date,$status,$type);
 		$this->form_validation->set_rules('from_date', 'From Date',
 		'trim|required|xss_clean');

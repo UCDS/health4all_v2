@@ -7,7 +7,7 @@
 	})
 </script>
 <div class="col-md-10 col-md-offset-2">
-<?php 	echo validation_errors(); ?>
+<?php echo validation_errors(); ?>
 <?php if(isset($msg)){ ?> 
 	<div class="alert alert-info"> <?php echo $msg;?>
 	</div>
@@ -19,7 +19,7 @@
 	if($order[0]->age_months!=0) $age.=$order[0]->age_months."M ";
 	if($order[0]->age_days!=0) $age.=$order[0]->age_days."D ";
 	?>
-	<?php echo form_open('diagnostics/view_orders',array('role'=>'form','class'=>'form-custom','id'=>'order_submit'));?>
+	<?php echo form_open('diagnostics/edit_order',array('role'=>'form','class'=>'form-custom','id'=>'order_submit'));?>
 		
 	<div class="panel panel-default">
 		<div class="panel-heading">
@@ -89,15 +89,14 @@
 				$i++;
 			}
 			foreach($groups as $group){
-				
 				foreach($group_tests as $test){
-					if($test['test_master_id']==0 && $test['group_id'] == $group){ ?>
+					if($test['test_master_id']==0){ ?>
 						<div class="panel panel-info">
 							<div class="panel-heading">
 								<span> 
 								<div class="row" style="padding-left:15px"><h4><?php echo $test['test_name'];?></h4></div>
 								<div class="row">
-			<?php 		
+			<?php 				
 				$positive="";$negative="";
 				if($test['test_status']==1){ $readonly = "disabled"; }else $readonly="";
 			?>
@@ -133,7 +132,7 @@
 				?>
 				<div class="panel panel-body">
 					<?php foreach($group_tests as $test) { 
-					if($test['test_master_id']!=0 && $test['group_id'] == $group){
+					if($test['test_master_id']!=0){
 					$positive="";$negative="";
 				 if($test['test_status']==1){ $readonly = "disabled"; }else $readonly="";
 			?>
@@ -354,7 +353,7 @@
 	}
 	else{
 ?>
-<?php echo form_open('diagnostics/view_orders',array('role'=>'form','class'=>'form-custom'));
+<?php echo form_open('diagnostics/edit_order',array('role'=>'form','class'=>'form-custom'));
 if(isset($orders)){ ?>
 	<div class="panel panel-default">
 		<div class="panel-heading">
@@ -423,7 +422,7 @@ if(count($orders)>0){ ?>
 					if($order->order_id==$ord){ ?>
 						<td><?php echo $i++;?></td>
 						<td>
-							<?php echo form_open('diagnostics/view_orders',array('role'=>'form','class'=>'form-custom')); ?>
+							<?php echo form_open('diagnostics/edit_order',array('role'=>'form','class'=>'form-custom')); ?>
 							<?php echo $order->order_id;?>
 							<input type="hidden" class="sr-only" name="order_id" value="<?php echo $order->order_id;?>" />
 						</td>
@@ -451,7 +450,7 @@ if(count($orders)>0){ ?>
 						<input type="text" class="sr-only" value="<?php echo $this->input->post('test_method_search');?>"  name="test_method_search" readonly /> 
 						<input type="text" class="sr-only" value="<?php echo $this->input->post('from_date');?>"  name="from_date" readonly /> 
 						<input type="text" class="sr-only" value="<?php echo $this->input->post('to_date');?>"  name="to_date" readonly /> 	
-						<button class="btn btn-sm btn-primary" type="submit" value="submit">Select</button></form></td>
+						<button class="btn btn-sm btn-danger" type="submit" name="select_order" value="submit">Cancel</button></form></td>
 				<?php break;
 					}
 				} ?>
@@ -474,7 +473,7 @@ if(count($orders)>0){ ?>
 	}
 }
 	else if(count($test_areas)>1){ ?> 
-	<?php echo form_open('diagnostics/view_orders',array('role'=>'form','class'=>'form-custom')); ?>
+	<?php echo form_open('diagnostics/edit_order',array('role'=>'form','class'=>'form-custom')); ?>
 		<div class="form-group">
 			<label for="test_area">Test Area<font color='red'>*</font></label>
 			<select name="test_area" class="form-control"  id="test_area">

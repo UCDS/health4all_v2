@@ -205,7 +205,11 @@ class Reports_model extends CI_Model{
 				$this->db->where('department.department_id',$test_area);
 			}
 			else{
-				$this->db->where('test_area.test_area_id',$test_area);
+				$areas=array();
+				foreach($test_area as $area){
+					$areas[]=$area->test_area_id;
+				}
+				$this->db->where_in('test_area.test_area_id',$areas);
 			}
 		}
 		if($test_method!='-1'){
@@ -217,10 +221,10 @@ class Reports_model extends CI_Model{
 		if($visit_type!='0'){
 			$this->db->where('patient_visit.visit_type',$visit_type);
 		}
-		if($status!='0'){
+		if($status!='-1'){
 			$this->db->where('test.test_status',$status);
 		}
-		$this->db->select('test_id,test_order.order_id,test_sample.sample_id,test_method,test_name,department,patient.first_name, patient.last_name,
+		$this->db->select('test_id,test_order.order_id,age_years,age_months,age_days,test_sample.sample_id,test_method,test_name,department,patient.first_name, patient.last_name,
 							staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,sample_container_type,test_status')
 		->from('test_order')
 		->join('test','test_order.order_id=test.order_id')
