@@ -3,10 +3,16 @@
 class Equipments extends CI_Controller {
 	function __construct(){
 		parent::__construct();
-		$this->load->model('projects_model');
 		$this->load->model('masters_model');
 		$this->load->model('staff_model');
 		$this->load->model('reports_model');
+		if($this->session->userdata('logged_in')){
+		$userdata=$this->session->userdata('logged_in');
+		$user_id=$userdata['user_id'];
+		$this->data['hospitals']=$this->staff_model->user_hospital($user_id);
+		$this->data['functions']=$this->staff_model->user_function($user_id);
+		$this->data['departments']=$this->staff_model->user_department($user_id);
+		}
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 	}
@@ -14,53 +20,21 @@ class Equipments extends CI_Controller {
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
 		$user=$this->session->userdata('logged_in');
-		$data['user_id']=$user[0]['user_id'];
-		if($type=="drug_type"){
-			$title="Add Drug";
-		
-			$config=array(
-               array(
-                     'field'   => 'drug_type',
-                     'label'   => 'Drug Name',
-                     'rules'   => 'required|trim|xss_clean'
-                  ),
-               array(
-                     'field'   => 'description',
-                     'label'   => 'Description',
-                     'rules'   => 'required|trim|xss_clean'
-                  )
-			);
-		}
-	else if($type=="dosages"){
-		 	$title="Add dosage";
-		
-			$config=array(
-               array(
-                     'field'   => 'dosage_unit',
-                     'label'   => 'Dosage Name',
-                     'rules'   => 'required|trim|xss_clean'
-                  ),
-               array(
-                     'field'   => 'dosage',
-                     'label'   => 'Dosage',
-                     'rules'   => 'required|trim|xss_clean'
-                  )
-			);
-}
-else if($type=="equipment_type"){
+		$this->data['user_id']=$user['user_id'];
+		if($type=="equipment_type"){
 		 	$title="Add Equipment Type";
 		
 			$config=array(
                array(
-                     'field'   => 'equipment_name',
-                     'label'   => 'Equipment Name',
+                     'field'   => 'equipment_type',
+                     'label'   => 'Equipment Type',
                      'rules'   => 'required|trim|xss_clean'
                   )
              
 			);
-}
+		}
 
-else if($type=="service"){
+		else if($type=="service"){
 		 	$title="Add Service Records";
 		
 			$config=array(
@@ -73,9 +47,9 @@ else if($type=="service"){
       
              
 			);
-$data['service']=$this->masters_model->get_data("service");
+		$this->data['service']=$this->masters_model->get_data("service");
      		
-}
+		}
 
 
 
@@ -92,7 +66,7 @@ else if($type=="service_records"){
              
              
 			);
-$data['user']=$this->masters_model->get_data("user");
+$this->data['user']=$this->masters_model->get_data("user");
 		
 }
 
@@ -113,65 +87,13 @@ $data['user']=$this->masters_model->get_data("user");
                   ),
 		);
 
-        $data['equipment_types']=$this->masters_model->get_data("equipment_types");
-		$data['department']=$this->masters_model->get_data("department");
-		$data['areas']=$this->masters_model->get_data("area");
-		$data['units']=$this->masters_model->get_data("unit");
+        $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
+		$this->data['department']=$this->masters_model->get_data("department");
+		$this->data['areas']=$this->masters_model->get_data("area");
+		$this->data['units']=$this->masters_model->get_data("unit");
 		
 
-}
-	
-		else if($type=="generic"){
-			$title="Add Generic Details";
-			$config=array(
-               array(
-                     'field'   => 'generic_name',
-                     'label'   => 'Generic Name',
-                     'rules'   => 'required|trim|xss_clean'
-                  ) 	
-		     
-			);
-			$data['item_type']=$this->masters_model->get_data("item_type");
-		$data['drug_type']=$this->masters_model->get_data("drug_type");
-		
-		}
-		else if($type=="division"){
-			$title="Add Division";
-			$config=array(
-               array(
-                     'field'   => 'division_name',
-                     'label'   => 'Division Name',
-                     'rules'   => 'required|trim|xss_clean'
-                  )
-			);	
-			$data['district']=$this->masters_model->get_data("districts");
-		}
-		else if($type=="grant"){
-			$title="Add Grant";
-			$config=array(
-               array(
-                     'field'   => 'grant_name',
-                     'label'   => 'Grant Name',
-                     'rules'   => 'required|trim|xss_clean'
-                  ),
-			  array(
-                     'field'   => 'phase_name[]',
-                     'label'   => 'Phase Name',
-                     'rules'   => 'required|trim|xss_clean'
-               )
-			);
-			$data['grant_sources']=$this->masters_model->get_data("grant_sources");
-		}
-		else if($type=="user"){
-			$title="Add User";
-			$config=array(
-               array(
-                     'field'   => 'user_name',
-                     'label'   => 'User Name',
-                     'rules'   => 'required|trim|xss_clean'
-                  )
-			);
-		}
+	}
 			
 		else{
 			show_404();
@@ -183,16 +105,16 @@ $data['user']=$this->masters_model->get_data("user");
 		$this->form_validation->set_rules($config);
  		if ($this->form_validation->run() === FALSE)
 		{
-			$this->load->view($page,$data);
+			$this->load->view($page,$this->data);
 		}
 		else{
 				if(($this->input->post('submit'))||($this->masters_model->insert_data($type))){
-					$data['msg']=" Inserted  Successfully";
-					$this->load->view($page,$data);
+					$this->data['msg']=" Inserted  Successfully";
+					$this->load->view($page,$this->data);
 				}
 				else{
-					$data['msg']="Failed";
-					$this->load->view($page,$data);
+					$this->data['msg']="Failed";
+					$this->load->view($page,$this->data);
 				}
 		}
 		$this->load->view('templates/footer');
@@ -201,40 +123,8 @@ function edit($type=""){
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
 		$user=$this->session->userdata('logged_in');
-		$data['user_id']=$user[0]['user_id'];
-	if($type=="drugs"){
-			$title="Edit Drugs";
-			$config=array(
-               array(
-                     'field'   => 'drug_type',
-                     'label'   => 'Drugs',
-                     'rules'   => 'trim|xss_clean'
-                  ),
-               array(
-                     'field'   => 'description',
-                     'label'   => 'Description',
-                     'rules'   => 'trim|xss_clean'
-                  )
-		
-			);
-$data['drug']=$this->masters_model->get_data("drugs");
-
-		/*	$data['facility_types']=$this->masters_model->get_data("facility_types");
-			$data['divisions']=$this->masters_model->get_data("divisions");	
-		*/}
-		else if($type=="agency"){
-			$title="Edit Agency";
-			$config=array(
-               array(
-                     'field'   => 'search_agency_name',
-                     'label'   => 'Agency',
-                     'rules'   => 'trim|xss_clean'
-                  )
-			);
-			$data['agency']=$this->masters_model->get_data("agency");
-
-		}
-		else if($type=="service"){
+		$this->data['user_id']=$user['user_id'];
+		if($type=="service"){
 		 	$title="Edit Service Records";
 		
 			$config=array(
@@ -247,7 +137,7 @@ $data['drug']=$this->masters_model->get_data("drugs");
              
              
 			);
-$data['equipments']=$this->masters_model->get_data("equipments");
+$this->data['equipments']=$this->masters_model->get_data("equipments");
 		
 }
 
@@ -256,14 +146,14 @@ $data['equipments']=$this->masters_model->get_data("equipments");
 		
 			$config=array(
                array(
-                     'field'   => 'equipment_name',
+                     'field'   => 'equipment_type',
                      'label'   => 'Equipment Name',
                      'rules'   => 'trim|xss_clean'
                   )
              
 			);
       
-$data['equipment_types']=$this->masters_model->get_data("equipment_type");
+$this->data['equipment_types']=$this->masters_model->get_data("equipment_type");
 
 }
 
@@ -272,89 +162,19 @@ else if($type=="equipments"){
 		
 			$config=array(
                array(
-                     'field'   => 'equipment_name',
+                     'field'   => 'equipment_type',
                      'label'   => 'Equipment Name ',
                      'rules'   => 'trim|xss_clean'
                   )
-             
 			);
-$data['equipments']=$this->masters_model->get_data("equipments");
+$this->data['equipments']=$this->masters_model->get_data("equipment");
 
-$data['equipment_type']=$this->masters_model->get_data("equipment_types");
-$data['hospital']=$this->masters_model->get_data("hospital");
-$data['department']=$this->masters_model->get_data("department");
-$data['user']=$this->masters_model->get_data("user");
+$this->data['equipment_type']=$this->masters_model->get_data("equipment_types");
+$this->data['hospital']=$this->masters_model->get_data("hospital");
+$this->data['department']=$this->masters_model->get_data("department");
+$this->data['user']=$this->masters_model->get_data("user");
  }
 
-		else if($type=="generics"){
-			$title="Edit Generic";
-			$config=array(
-               array(
-                     'field'   => 'generic_name',
-                     'label'   => 'Generic',
-                     'rules'   => 'trim|xss_clean'
-                  )
-			);
-		$data['generic']=$this->masters_model->get_data("generics");
-		$data['item_type']=$this->masters_model->get_data("item_type");
-		$data['drug_type']=$this->masters_model->get_data("drug_type");
-		
-		}
-		else if($type=="dosages"){
-			$title="Edit Dosage";
-			$config=array(
-               array(
-                     'field'   => 'dosage_unit',
-                     'label'   => 'Dosage Unit',
-                     'rules'   => 'trim|xss_clean'
-                  ),
-                array(
-                     'field'   => 'dosage',
-                     'label'   => 'Dosage',
-                     'rules'   => 'trim|xss_clean'
-                  )
-		
-			);
-			$data['dosage']=$this->masters_model->get_data("dosages");
-/*$data['generic']=$this->masters_model->get_data("generics");
-$data['item_type']=$this->masters_model->get_data("item_type");
-*/
-		}
-		
-		else if($type=="division"){
-			$title="Edit Division";
-			$config=array(
-               array(
-                     'field'   => 'search_division',
-                     'label'   => 'Division',
-                     'rules'   => 'required|trim|xss_clean'
-                  )
-			);	
-			$data['district']=$this->masters_model->get_data("districts");
-			$data['divisions']=$this->masters_model->get_data("division");	
-		}
-		else if($type=="grant"){
-			$title="Edit Grant";
-			$config=array(
-               array(
-                     'field'   => 'grant_phase_id',
-                     'label'   => 'Grant',
-                     'runles'   => 'required|trim|xss_clean'
-                  )
-			);
-			$data['grant_sources']=$this->masters_model->get_data("grant_sources");
-		}
-		else if($type=="user"){
-			$title="Edit User";
-			$config=array(
-               array(
-                     'field'   => 'user_id',
-                     'label'   => 'Username',
-                     'rules'   => 'required|trim|xss_clean'
-                  )
-			);
-				$data['users']=$this->masters_model->get_data("user");
-		}
 			
 		else{
 			show_404();
@@ -363,36 +183,36 @@ $data['item_type']=$this->masters_model->get_data("item_type");
 		$page="pages/inventory/edit_".$type."_form";
 		$this->data['title']=$title;
 		$this->load->view('templates/header',$this->data);
-      $this->load->view('templates/leftnav',$data);
+      $this->load->view('templates/leftnav',$this->data);
 		
 		$this->form_validation->set_rules($config);
 
 		if ($this->form_validation->run() === FALSE)
 		{
-			$this->load->view($page,$data);
+			$this->load->view($page,$this->data);
 		}
 		else{
 			if($this->input->post('update')){
 				if($this->masters_model->update_data($type)){
-					$data['msg']="Updated Successfully";
+					$this->data['msg']="Updated Successfully";
 		
-					$this->load->view($page,$data);
+					$this->load->view($page,$this->data);
 				}
 				else{
-					$data['msg']="Failed";
-					$this->load->view($page,$data);
+					$this->data['msg']="Failed";
+					$this->load->view($page,$this->data);
 				}
 			}
 			else if($this->input->post('select')){
-            $data['mode']="select";
-			   $data[$type]=$this->masters_model->get_data($type);
+            $this->data['mode']="select";
+			   $this->data[$type]=$this->masters_model->get_data($type);
          
-         	$this->load->view($page,$data);
+         	$this->load->view($page,$this->data);
 			}
 			else if($this->input->post('search')){
-				$data['mode']="search";
-				$data[$type]=$this->masters_model->get_data($type);
-				$this->load->view($page,$data);
+				$this->data['mode']="search";
+				$this->data[$type]=$this->masters_model->get_data($type);
+				$this->load->view($page,$this->data);
 			}
 		}
 		$this->load->view('templates/footer');
@@ -403,16 +223,16 @@ $data['item_type']=$this->masters_model->get_data("item_type");
 		switch($type){
 			case "equipments_detailed" : 
 				$this->data['title']="Equipments Detailed report";
-				$data['equipments']=$this->masters_model->get_data("equipments",$equipment_type,$department,$area,$unit,$status);
+				$this->data['equipments']=$this->masters_model->get_data("equipment",$equipment_type,$department,$area,$unit,$status);
 				break;
 			case "equipments_summary" :
 				$this->data['title']="Equipments Summary report";
-				$data['summary']=$this->reports_model->get_equipments_summary();
+				$this->data['summary']=$this->reports_model->get_equipment_summary();
 				break;
 		}				
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/leftnav',$this->data);
-		$this->load->view("pages/inventory/report_$type",$data);
+		$this->load->view("pages/inventory/report_$type",$this->data);
 		$this->load->view('templates/footer');
 	}
 	

@@ -1,84 +1,101 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
+// OP and IP registration forms.
 class Register extends CI_Controller {
 	function __construct(){
+		//Constructor loads the required models for this controller
+		//Based on the user_id we get the hospitals,functions and departments the user has access to.
 		parent::__construct();
 		$this->load->model('register_model');
 		$this->load->model('staff_model');
+		if($this->session->userdata('logged_in')){
+		$userdata=$this->session->userdata('logged_in');
+		$user_id=$userdata['user_id'];
+		$this->data['hospitals']=$this->staff_model->user_hospital($user_id);
+		$this->data['functions']=$this->staff_model->user_function($user_id);
+		$this->data['departments']=$this->staff_model->user_department($user_id);
+		}
+		//The OP and IP forms in the application are loaded into a data variable for the menu.
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 	}
-	public function op()
+	
+	//custom_form() accepts a form ID to display the selected form (OP or IP) 
+	//and also an optional visit_id when a patient is selected.
+	public function custom_form($form_id="",$visit_id=0)
 	{
+		//Loading the form helper
 		$this->load->helper('form');
-		if($this->session->userdata('hospital')){
 		
-			$data['departments']=$this->staff_model->get_departments();
-			$data['districts']=$this->staff_model->get_districts();
-			$data['userdata']=$this->session->userdata('logged_in');
-			$this->data['title']="Out-Patient Registration";
-			$this->load->view('templates/header',$this->data);
-			$this->load->library('form_validation');
-			
-			$this->form_validation->set_rules('first_name', 'Patient Name',
-			'trim|required|xss_clean');
-			$this->form_validation->set_rules('gender', 'Gender', 
-			'trim|required|xss_clean');
-			if ($this->form_validation->run() === FALSE)
-			{
-				$this->load->view('pages/op_registration');
-			}
-			else{
-				$data['registered']=$this->register_model->register_op();
-					$this->load->view('pages/op_registration',$data);
-
-			}
-			$this->load->view('templates/footer');
-			
-		}
-		else{
-			redirect('home','refresh');
-		}
-	}
-	public function custom_form($form_id="")
-	{
-		$this->load->helper('form');
-		if($this->session->userdata('hospital')){
-			if($form_id=="")
+		if($this->session->userdata('hospital')){ //If the user has selected a hospital after log-in.
+			if($form_id=="") //Form ID cannot be null, if so show a 404 error.
 				show_404();
 			else{
-			$data['departments']=$this->staff_model->get_departments();
-			$data['districts']=$this->staff_model->get_districts();
-			$data['userdata']=$this->session->userdata('logged_in');
-			$this->data['title']="Patient Registration";
-			$data['form_id']=$form_id;
-
-			$data['fields']=$this->staff_model->get_form_fields($form_id);
-			if(count($data['fields'])==0){
+			//Load data required for the select options in views.
+			$this->data['id_proof_types']=$this->staff_model->get_id_proof_type();
+			$this->data['departments']=$this->staff_model->get_department();
+			$this->data['units']=$this->staff_model->get_unit();
+			$this->data['areas']=$this->staff_model->get_area();
+			$this->data['districts']=$this->staff_model->get_district();
+			$this->data['userdata']=$this->session->userdata('logged_in');//Load the session data into a variable to use in headers and models.
+			$this->data['title']="Patient Registration"; //Set the page title to be used by the header.
+			$this->data['form_id']=$form_id; //Store the form_id in a variable to access in the views.
+			$this->data['fields']=$this->staff_model->get_form_fields($form_id); //Get the form fields based on the form_id
+			if(count($this->data['fields'])==0){ //if there are no form fields available in the selected form.
 				show_404();
 			}
-			$form=$this->staff_model->get_form($form_id);
-			$data['columns']=$form->num_columns;
-			$data['form_name']=$form->form_name;
-			$data['form_type']=$form->form_type;
+			$form=$this->staff_model->get_form($form_id); //Get the form details from database.
+			$this->data['columns']=$form->num_columns;
+			$this->data['form_name']=$form->form_name;
+			$this->data['form_type']=$form->form_type;
+			$this->data['patient']=array();
+			$this->data['update']=0;
+			$print_layout_page=$form->print_layout_page;
 			$this->load->view('templates/header',$this->data);
 			$this->load->library('form_validation');
-			$this->form_validation->set_rules('form_type','Form Type','trim|required');
+			//Set validation rules for the forms
+			$this->form_validation->set_rules('form_type','Form Type','trim|xss_clean');
 			if ($this->form_validation->run() === FALSE)
 			{
-				$this->load->view('pages/custom_form',$data);
+				//if the form validation fails, or the form has not been submitted yet
+				$this->load->view('pages/custom_form',$this->data); //Load the view custom_form
 			}
 			else{
-				if($this->input->post('form_type')){
-					$data['registered']=$this->register_model->register();
+				if($this->input->post('search_patients')){
+					//if the user searches for a patient, get the list of patients that matched the query.
+					$this->data['patients']=$this->register_model->search();
 				}
-				$this->load->view('pages/custom_form',$data);
+				else if($this->input->post('select_patient') && $visit_id!=0){
+					//else if the user has selected a patient after searching, get the patient details.
+					$this->data['patient']=$this->register_model->select($visit_id);
+					if($this->input->post('visit_type')=="IP"){
+						//If the selected visit type is IP, the form only updates the values, else it inserts by default.
+						$this->data['update']=1;
+					}
+				}
+				else if($this->input->post('register')){
+					// if the register button has been clicked, invoke the register function in register_model.
+					// Get the inserted patient details from the function and store it in a variable to display
+					// in the views.
+						$this->data['registered']=$this->register_model->register(); 
+					if(is_int($this->data['registered']) && $this->data['registered']==2){
+						//If register function returns value 2 then we are setting a duplicate ip no error.
+						$this->data['duplicate']=1;
+					}
+					
+					//Set the print layout page based on the form selected.
+					$this->data['print_layout']="pages/print_layouts/$print_layout_page";
+				}
+				//load the custom_form page with the data loaded.
+				$this->load->view('pages/custom_form',$this->data);
 
 			}
+
+			//Load the footer.
 			$this->load->view('templates/footer');
 			}
 		}
 		else{
+			//else if the user hasn't selected a hospital yet, redirect to home page for selection.
 			redirect('home','refresh');
 		}
 		

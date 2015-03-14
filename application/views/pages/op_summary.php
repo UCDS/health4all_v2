@@ -5,33 +5,37 @@
 <script type="text/javascript">
 $(function(){
 	$("#from_date,#to_date").Zebra_DatePicker();
-	$(".table-2").table2CSV();
+	$("#generate-csv").click(function(){
+		$(".table").table2CSV();
+	});
 });
 </script>
-	<section id="right">
-		<h1>Out-Patient Registration</h1>	
-		<div >
-		<?php echo form_open("reports/op_summary"); ?>
-					From Date : <input type="text" value="<?php echo date("d-M-Y"); ?>" name="from_date" id="from_date" size="15" />
-					To Date : <input type="text" value="<?php echo date("d-M-Y"); ?>" name="to_date" id="to_date" size="15" />
-					<input type="submit" value="Submit" />
+	<div class="row">
+		<h4>Out-Patient Summary Report</h4>	
+		<?php echo form_open("reports/op_summary",array('role'=>'form','class'=>'form-custom')); ?>
+					From Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y"); ?>" name="from_date" id="from_date" size="15" />
+					To Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y"); ?>" name="to_date" id="to_date" size="15" />
+					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
 		</form>
-	<table class="table-2">
-	<tr>
-		<th rowspan="2">Department</th>
-		<th colspan="3"><=14 Years</th>
-		<th colspan="3">14 to 30 Years</th>
-		<th colspan="3">30 to 50 Years</th>
-		<th colspan="3">>50 Years</th>
-		<th rowspan="1" colspan="3">Total OP Visits</th>
-	</tr>
-	<tr>
+	<br />
+	<?php if(isset($report) && count($report)>0){ ?>
+	<table class="table table-bordered table-striped">
+	<thead>
+		<th style="text-align:center" rowspan="2">Department</th>
+		<th style="text-align:center" colspan="3"><=14 Years</th>
+		<th style="text-align:center" colspan="3">14 to 30 Years</th>
+		<th style="text-align:center" colspan="3">30 to 50 Years</th>
+		<th style="text-align:center" colspan="3">>50 Years</th>
+		<th style="text-align:center" rowspan="1" colspan="3">Total OP Visits</th>
+	</thead>
+	<thead>
+		<th></th><th>Male</th><th>Female</th><th>Total</th>
 		<th>Male</th><th>Female</th><th>Total</th>
 		<th>Male</th><th>Female</th><th>Total</th>
 		<th>Male</th><th>Female</th><th>Total</th>
 		<th>Male</th><th>Female</th><th>Total</th>
-		<th>Male</th><th>Female</th><th>Total</th>
-	</tr>
+	</thead>
+	<tbody>
 	<?php 
 	$total_mchild=0;
 	$total_fchild=0;
@@ -86,7 +90,7 @@ $(function(){
 	$total_op+=$s->op;
 	}
 	?>
-	<tr>
+	<thead>
 		<th>Total </th>
 		<th ><?php echo $total_mchild;?></th>
 		<th ><?php echo $total_fchild;?></th>
@@ -103,7 +107,10 @@ $(function(){
 		<th ><?php echo $total_male;?></th>
 		<th ><?php echo $total_female;?></th>
 		<th ><?php echo $total_op;?></th>
-	</tr>
+	</thead>
+	</tbody>
 	</table>
-		
-	</section>
+	<?php } else { ?>
+	No patient registrations on the given date.
+	<?php } ?>
+	</div>

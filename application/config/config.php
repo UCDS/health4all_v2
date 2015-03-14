@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= '/health4all_v2/';
+$config['base_url']	= '/health4all/';
 
 /*
 |--------------------------------------------------------------------------
@@ -244,11 +244,11 @@ $config['encryption_key'] = 'health4all';
 | 'sess_time_to_update'		= how many seconds between CI refreshing Session Information
 |
 */
-$config['sess_cookie_name']		= 'ci_session';
-$config['sess_expiration']		= 7200;
+$config['sess_cookie_name']		= 'ci_h4a_session';
+$config['sess_expiration']		= 0;
 $config['sess_expire_on_close']	= FALSE;
-$config['sess_encrypt_cookie']	= FALSE;
-$config['sess_use_database']	= FALSE;
+$config['sess_encrypt_cookie']	= TRUE;
+$config['sess_use_database']	= TRUe;
 $config['sess_table_name']		= 'ci_sessions';
 $config['sess_match_ip']		= FALSE;
 $config['sess_match_useragent']	= TRUE;
@@ -294,8 +294,8 @@ $config['global_xss_filtering'] = FALSE;
 | 'csrf_expire' = The number in seconds the token should expire.
 */
 $config['csrf_protection'] = FALSE;
-$config['csrf_token_name'] = 'csrf_test_name';
-$config['csrf_cookie_name'] = 'csrf_cookie_name';
+$config['csrf_token_name'] = 'csrf_health4all';
+$config['csrf_cookie_name'] = 'csrf_health4all';
 $config['csrf_expire'] = 7200;
 
 /*
@@ -315,7 +315,7 @@ $config['csrf_expire'] = 7200;
 | by the output class.  Do not 'echo' any values with compression enabled.
 |
 */
-$config['compress_output'] = FALSE;
+$config['compress_output'] = 'Gzip';
 
 /*
 |--------------------------------------------------------------------------

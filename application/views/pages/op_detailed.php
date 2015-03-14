@@ -5,20 +5,23 @@
 <script type="text/javascript">
 $(function(){
 	$("#from_date,#to_date").Zebra_DatePicker();
-	$(".table-2").table2CSV();
+	$("#generate-csv").click(function(){
+		$(".table").table2CSV();
+	});
 });
 </script>
-	<section id="right">
-		<h1>Out-Patient Registration</h1>	
-		<div >
-		<?php echo form_open("reports/op_detail"); ?>
-					From Date : <input type="text" value="<?php echo date("d-M-Y"); ?>" name="from_date" id="from_date" size="15" />
-					To Date : <input type="text" value="<?php echo date("d-M-Y"); ?>" name="to_date" id="to_date" size="15" />
-					<input type="submit" value="Submit" />
+	<div class="row">
+		<h4>Out-Patient Detailed report</h4>	
+		<?php echo form_open("reports/op_detail",array('role'=>'form','class'=>'form-custom')); ?> 
+					From Date : <input type="text" class="form-control" value="<?php echo date("d-M-Y"); ?>" name="from_date" id="from_date" size="15" />
+					To Date : <input type="text" class="form-control" value="<?php echo date("d-M-Y"); ?>" name="to_date" id="to_date" size="15" />
+					<input type="submit" class="btn btn-primary btn-sm" value="Submit" />
 		</form>
-	<table class="table-2">
-	<tr>
-		<th>Visit ID</th>
+	<br />
+	<?php if(isset($report) && count($report)>0){ ?>
+	<table class="table table-bordered table-striped">
+	<thead>
+		<th>OP No.</th>
 		<th>Gender</th>
 		<th>Name</th>
 		<th>Age</th>
@@ -26,13 +29,14 @@ $(function(){
 		<th>Place</th>
 		<th>Phone</th>
 		<th>Department</th>
-	</tr>
+	</thead>
+	<tbody>
 	<?php 
 	$total_count=0;
 	foreach($report as $s){
 	?>
 	<tr>
-		<td><?php echo $s->visit_id;?></td>
+		<td><?php echo $s->hosp_file_no;?></td>
 		<td><?php echo $s->gender;?></td>
 		<td><?php echo $s->name;?></td>
 		<td><?php echo $s->age_years;?></td>
@@ -49,6 +53,10 @@ $(function(){
 		<th>Total </th>
 		<th ><?php echo $total_count;?></th>
 	</tr>
+	</tbody>
 	</table>
 		
-	</section>
+	<?php } else { ?>
+	No patient registrations on the given date.
+	<?php } ?>
+	</div>

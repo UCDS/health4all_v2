@@ -3,83 +3,236 @@
 class Staff extends CI_Controller {
 	function __construct(){
 		parent::__construct();
+		$this->load->model('masters_model');
 		$this->load->model('staff_model');
+		if($this->session->userdata('logged_in')){
+		$userdata=$this->session->userdata('logged_in');
+		$user_id=$userdata['user_id'];
+		$this->data['hospitals']=$this->staff_model->user_hospital($user_id);
+		$this->data['functions']=$this->staff_model->user_function($user_id);
+		$this->data['departments']=$this->staff_model->user_department($user_id);
+		}
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 	}
-	function index(){
-		$this->data['title']="Staff List";
-		$this->load->view('templates/header',$data);
-		$data['staff']=$this->staff_model->staff_list();
-		$this->load->view('pages/staff_list',$data);
-	}
-	function login()
-	{	
-		if(!$this->session->userdata('logged_in')){
-			
-		$this->data['title']="Staff Login";
-
-		$this->load->view('templates/header',$data);
-		$this->load->helper('form');
+	function add($type=""){
+	 	$this->load->helper('form');
 		$this->load->library('form_validation');
-		
-		$this->form_validation->set_rules('username', 'Username',
-		'trim|required|xss_clean');
-	    $this->form_validation->set_rules('password', 'Password', 
-	    'trim|required|xss_clean|callback_check_database');
-		if ($this->form_validation->run() === FALSE)
+		$user=$this->session->userdata('logged_in');
+		$this->data['user_id']=$user['user_id'];
+		switch($type){
+			case "staff":
+				$title="Add Staff Details";
+			
+				$config=array(
+						array(
+						 'field'   => 'first_name',
+						 'label'   => 'First Name',
+						 'rules'   => 'required|trim|xss_clean'
+						),
+						array(
+						 'field'   => 'gender',
+						 'label'   => 'Gender',
+						 'rules'   => 'required|trim|xss_clean'
+						)
+				);
+				$this->data['hospital']=$this->masters_model->get_data("hospital");
+				$this->data['department']=$this->masters_model->get_data("department");
+				$this->data['unit']=$this->masters_model->get_data("unit");
+				$this->data['area']=$this->masters_model->get_data("area");
+				$this->data['staff_category']=$this->masters_model->get_data("staff_category");
+				$this->data['staff_role']=$this->masters_model->get_data("staff_role");
+				break;
+			case "staff_role":
+				$title="Add Staff Role";
+			
+				$config=array(
+						array(
+						 'field'   => 'staff_role',
+						 'label'   => 'Staff Role',
+						 'rules'   => 'required|trim|xss_clean'
+						)
+				);
+				break;
+			case "staff_category":
+				$title="Add Staff Category";
+			
+				$config=array(
+						array(
+						 'field'   => 'staff_category',
+						 'label'   => 'Staff Category',
+						 'rules'   => 'required|trim|xss_clean'
+						)
+				);
+				break;
+			default: show_404();	
+		}
+		$page="pages/staff/add_".$type."_form";
+		$this->data['title']=$title;
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('templates/leftnav');
+		$this->form_validation->set_rules($config);
+ 		if ($this->form_validation->run() === FALSE)
 		{
-			$this->load->view('pages/login');
+			$this->load->view($page,$this->data);
 		}
 		else{
-			redirect('user_panel/donation_summary', 'refresh');
+				if(($this->input->post('submit'))||($this->masters_model->insert_data($type))){
+					$this->data['msg']=" Inserted  Successfully";
+					$this->load->view($page,$this->data);
+				}
+				else{
+					$this->data['msg']="Failed";
+					$this->load->view($page,$this->data);
+				}
+		}
+		$this->load->view('templates/footer');
+  	}	
+  	
+	function edit($type=""){
+	 	$this->load->helper('form');
+		$this->load->library('form_validation');
+		$user=$this->session->userdata('logged_in');
+		$this->data['user_id']=$user['user_id'];
+		$this->data['type']=$type;
+		
+		if($type=="staff"){
+			$title="Edit Staff";
+			$config=array(
+               array(
+                     'field'   => 'staff',
+                     'label'   => 'Staff',
+                     'rules'   => 'trim|xss_clean'
+                  ),
+               array(
+                     'field'   => 'description',
+                     'label'   => 'Description',
+                     'rules'   => 'trim|xss_clean'
+                  )
+		
+			);
+			$this->data['department']=$this->masters_model->get_data("department");
+			$this->data['unit']=$this->masters_model->get_data("unit");
+			$this->data['area']=$this->masters_model->get_data("area");
+			$this->data['staff_category']=$this->masters_model->get_data("staff_category",$mode='all');
+			$this->data['staff_role']=$this->masters_model->get_data("staff_role",$mode='all');
+		}
+		else if($type == 'staff_role')
+		{
+			$title = 'Edit Staff Role';
+			$config = array(
+				array(
+						 'field'   => 'staff_role',
+						 'label'   => 'Staff Role',
+						 'rules'   => 'trim|xss_clean'
+				)
+			);
+			$this->data['staff_role'] = $this->masters_model->get_data('staff_role');
+			
+		}
+		else if($type == 'staff_category')
+		{
+			$title = 'Edit Staff Category';
+			//form configuration for staff_category
+			$config = array(
+				array(
+						 'field'   => 'staff_category',
+						 'label'   => 'Staff Category',
+						 'rules'   => 'trim|xss_clean'
+						)
+			);
+			
+		}
+		// if none of the options is selected (i.e. any invalid url modifications) 404 error is shown
+		else
+		{
+			show_404();
+		}
+		
+		$page="pages/staff/edit_".$type."_form";
+		$this->data['title']=$title;
+		$this->load->view('templates/header',$this->data);
+      	$this->load->view('templates/leftnav',$this->data);
+		//form configuration is set based on the option selected from the menu
+		$this->form_validation->set_rules($config);
+
+		//if the form contains any invalid data same page along with error msg is shown.
+		if ($this->form_validation->run() === FALSE)
+		{
+			$this->data['mode'] = 'mode';
+			$this->load->view($page,$this->data);
+		}
+		//if form does not contain any errors
+		else
+		{
+			//there are 3 steps for updating
+			// 1. User searches for the record to be updated.
+			//    1.1 User can directly press search button without entering any data.
+			// 2. User selects the required record.
+			// 3. User enter some data and updates the record.
+			
+			// step 1. 
+			if($this->input->post('search'))
+			{
+				//search results are retrieved from the master_model class
+				$this->data['mode'] = 'search';
+				$this->data[$type]=$this->masters_model->get_data($type);
+				$this->load->view($page,$this->data);
+			}
+			// step 2.
+			else if($this->input->post('select'))
+			{
+				//selected record's id is taken from  input in master_model
+				//all the fields are retrieved and sent to the view
+				$this->data['mode'] = 'select';
+			   	$this->data[$type]=$this->masters_model->get_data($type);
+         		$this->load->view($page,$this->data);
+			}
+			
+			//step 3.
+			else if($this->input->post('update'))
+			{
+				//Data from the input fields are retrieved from view and updates into database
+				
+				if($this->masters_model->update_data($type))
+				{
+					$this->data['msg']="Updated Successfully";
+					$this->data['mode'] = 'update';
+					$this->load->view($page,$this->data);
+				}
+				//if any failures occurs Failed msg is shown
+				else
+				{
+					$this->data['msg']="Failed";
+					$this->load->view($page,$this->data);
+				}
+			}
 		}
 		
 		$this->load->view('templates/footer');
-		}
-		else {
-			redirect('user_panel/donation_summary','refresh');
-		}
+	}
+
+	function view($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=0){	
+		$this->load->helper('form_helper');
+		switch($type){
+			case "staff" : 
+				$this->data['title']="Staff Member Details";
+				$this->data['equipments']=$this->masters_model->get_data("staff");
+				break;
+			case "staff_role" :
+				$this->data['title']="Staff Role Details";
+				$this->data['summary']=$this->reports_model->get_equipments_summary();
+				break;
+			case "staff_category" :
+				$this->data['title']="Staff Category Details";
+				$this->data['summary']=$this->reports_model->get_equipments_summary();
+				break;
+		}				
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('templates/leftnav',$this->data);
+		$this->load->view("pages/inventory/report_$type",$this->data);
+		$this->load->view('templates/footer');
 	}
 	
-	
-	function check_database($password){
-	   //Field validation succeeded.  Validate against database
-	   $username = $this->input->post('username');
-	 
-	   //query the database
-	   $result = $this->staff_model->login($username, $password);
-	 
-	   if($result)
-	   {
-	     $sess_array = array();
-	     foreach($result as $row)
-	     {
-	       $sess_array = array(
-	         'user_id' => $row->user_id,
-	         'username' => $row->username,
-	         'hospital' => $row->hospital,
-	         'description' => $row->description,
-	         'place' => $row->place,
-	         'district' => $row->district,
-	         'state' => $row->state
-	       );
-	       $this->session->set_userdata('logged_in', $sess_array);
-	     }
-	     return TRUE;
-	   }
-	   else
-	   {
-	     $this->form_validation->set_message('check_database', 
-	     'Invalid username or password');
-	     return false;
-	   }
-	 }
-	 
-	 function logout()
-	 {
-	   $this->session->unset_userdata('logged_in');
-	   session_destroy();
-	   redirect('home', 'refresh');
-	 }
 }
+
