@@ -91,7 +91,8 @@ $this->data['user']=$this->masters_model->get_data("user");
 		$this->data['department']=$this->masters_model->get_data("department");
 		$this->data['areas']=$this->masters_model->get_data("area");
 		$this->data['units']=$this->masters_model->get_data("unit");
-		
+		$this->data['vendors']=$this->masters_model->get_data("vendor");
+		$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
 
 	}
 			

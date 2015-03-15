@@ -789,17 +789,18 @@ else if($type=="dosage"){
 				'asset_number'=>$this->input->post('asset_number'),
 				'procured_by'=>$this->input->post('procured_by'),
 				'cost'=>$this->input->post('cost'),
-				'supplier'=>$this->input->post('supplier'),
+				//'supplier'=>$this->input->post('supplier'),
+				'vendor_id'=>$this->input->post('vendor_id'),
 				'supply_date'=>date("Y-m-d",strtotime($this->input->post('supply_date'))),
 				'warranty_start_date'=>date("Y-m-d",strtotime($this->input->post('warranty_start_date'))),
 				'warranty_end_date'=>date("Y-m-d",strtotime($this->input->post('warranty_end_date'))),
-				'service_engineer'=>$this->input->post('service_engineer'),
-				'service_engineer_contact'=>$this->input->post('service_engineer_contact'),
+				'service_person_id'=>$this->input->post('contact_person_id'),
+				
 				'hospital_id'=>$hospital_id,
 				'department_id'=>$this->input->post('department'),
 				'area_id'=>$this->input->post('area'),
 				'unit_id'=>$this->input->post('unit'),
-				'user_id'=>$this->input->post('user'),
+				//'user_id'=>$this->input->post('user'),
 				'equipment_status'=>$this->input->post('equipment_status')
 				);
 

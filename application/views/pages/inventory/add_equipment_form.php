@@ -14,96 +14,143 @@ $(function(){
 		$("#unit option,#area option").hide();
 		$("#unit option[class="+department_id+"],#area option[class="+department_id+"]").show();
 	});
+	$("#vendor").on('change',function(){
+		var vendor_id=$(this).val();
+		$("#contact_person_id option").hide();
+		$("#contact_person_id option[class="+vendor_id+"]").show();
+	});
 });
 </script>
-		<div class="col-md-8 col-md-offset-2">
-		<center>
+
+<div class="col-md-8 col-md-offset-2">
+	
+	<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
-		<h3>Add Equipment Details</h3></center><br>
-	<center><?php echo validation_errors(); echo form_open('equipments/add/equipment',array('role'=>'form','id'=>'add_equipment')); ?></center>
+		<h3>Add Contact Person Details</h3>
+	</center><br>
+	
+	<center>
+		<?php echo validation_errors(); ?>
+	</center>
+	<?php 
+	echo form_open('equipments/add/equipment',array('class'=>'form-horizontal','role'=>'form','id'=>'add_equipment')); 
+	?>
+	
+	
+
 	<div class="form-group">
-		<label for="equpiment" class="col-md-4">Equiment Type<font color='red'>*</font></label>
-		<div  class="col-md-8">
-		<select name="equipment_type" id="division" class="form-control">
+		<div class="col-md-3">
+			<label for="equpiment" >Equiment Type<font color='red'>*</font></label>
+		</div>
+		<div class="col-md-6">
+			<select name="equipment_type" id="division" class="form-control">
 		<option value="">Equipment Type</option>
 		<?php foreach($equipment_types as $d){
 			echo "<option value='$d->equipment_type_id'>$d->equipment_type</option>";
 		}
 		?>
 		</select>
-		
+		</div>
+	</div>
+
+	<div class="form-group">
+		<div class="col-md-3">
+			<label for="description" > Make</label>
+		</div>
+		<div class="col-md-6">
+			<input type="text" class="form-control" placeholder=" Make" id="description" name="make" />
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="description" class="col-md-4"> Make</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Make" id="description" name="make" />
+		<div class="col-md-3">
+			<label for="description" > Model</label>
 		</div>
-	</div>
-	<div class="form-group">
-		<label for="description" class="col-md-4"> Model</label>
-		<div  class="col-md-8">
+		<div class="col-md-6">
 		<input type="text" class="form-control" placeholder=" Model" id="description" name="model" />
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="description" class="col-md-4"> Serial Number</label>
-		<div  class="col-md-8">
+		<div class="col-md-3">
+			<label for="description" > Serial Number</label>
+		</div>
+		<div class="col-md-6">
 		<input type="text" class="form-control" placeholder=" Serial Number" id="description" name="serial_number" />
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="description" class="col-md-4"> Asset Number</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Asset Number" id="description" name="asset_number" />
+		<div class="col-md-3">
+			<label for="description"> Procured By</label>
 		</div>
-	</div>
-	<div class="form-group">
-		<label for="description" class="col-md-4"> Procured By</label>
-		<div  class="col-md-8">
+		<div class="col-md-6">
 		<input type="text" class="form-control" placeholder=" Procured By" id="description" name="procured_by" />
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="description" class="col-md-4"> Cost</label>
-		<div  class="col-md-8">
+		<div class="col-md-3">
+			<label for="description" > Cost</label>
+		</div>
+		<div class="col-md-6">
 		<input type="text" class="form-control" placeholder=" Cost" id="description" name="cost" />
 		</div>
 	</div>
+	
 	<div class="form-group">
-		<label for="description" class="col-md-4"> Supplier</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Supplier" id="description" name="supplier" />
+		<div class="col-md-3">
+			<label for="vendor" >Vendor<font color='red'>*</font></label>
+		</div>
+		<div class="col-md-6">
+			<select name="vendor" id="vendor" class="form-control">
+		<option value="">--select--</option>
+		<?php foreach($vendors as $d){
+			echo "<option value='$d->vendor_id'>$d->vendor_name</option>";
+		}
+		?>
+		</select>
+		
 		</div>
 	</div>
+	
+		
+	
 	<div class="form-group">
-		<label for="supply_date" class="col-md-4"> Supply Date</label>
-		<div  class="col-md-8">
+		<div class="col-md-3">
+			<label for="contact_person_id" > Contact Person</label>
+		</div>
+		<div class="col-md-6">
+			<select name="contact_person" id="contact_person_id" class="form-control">
+		<option value="">--select--</option>
+		<?php foreach($contact_persons as $d){
+			echo "<option value='$d->contact_person_id' class='$d->vendor_id' >$d->contact_person_first_name  $d->contact_person_last_name</option>";
+		}
+		?>
+		</select>
+		</div>
+	</div>
+	
+	<div class="form-group">
+	<div class="col-md-3">
+		<label for="supply_date" > Supply Date</label>
+		</div>
+		<div  class="col-md-6">
 		<input type="text" class="form-control date" placeholder="Supply Date" id="supply_date" form="add_equipment" name="supply_date" />
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="description" class="col-md-4"> Warranty Period</label>
-		<div  class="col-md-8">
+	<div class="col-md-3">
+		<label for="description" > Warranty Period</label>
+		</div>
+		<div  class="col-md-6">
 		<input type="text" class="form-control date" placeholder="Start" form="add_equipment" id="warranty_start_date" name="warranty_start_date" />
 		<input type="text" class="form-control date" placeholder="End"  form="add_equipment" id="warranty_end_date" name="warranty_end_date" />
 		</div>
 	</div>
+	
+	
 	<div class="form-group">
-		<label for="description" class="col-md-4"> Service Engineer</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Service Engineer" id="description" name="service_engineer" />
+	<div class="col-md-3">
+		<label for="agency_contact_name" >Department</label>
 		</div>
-	</div>
-	<div class="form-group">
-		<label for="description" class="col-md-4">  Service Engineer Contact</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder=" Service Engineer Contact" id="description" name="service_engineer_contact" />
-		</div>
-	</div>
-	<div class="form-group">
-		<label for="agency_contact_name" class="col-md-4">Department</label>
-		<div  class="col-md-8">
+		<div  class="col-md-6">
 		<select name="department" id="department" class="form-control">
 		<option value="">Department</option>
 		<?php foreach($department as $d){
@@ -114,9 +161,12 @@ $(function(){
 		
 		</div>
 	</div>	
-		<div class="form-group">
-		<label for="area" class="col-md-4">Area</label>
-		<div  class="col-md-8">
+	
+	<div class="form-group">
+		<div class="col-md-3">
+		<label for="area" >Area</label>
+		</div>
+		<div  class="col-md-6">
 		<select name="area" id="area" class="form-control">
 		<option value="">Area</option>
 		<?php foreach($areas as $a){
@@ -127,9 +177,12 @@ $(function(){
 		
 		</div>
 	</div>	
+	
 	<div class="form-group">
-		<label for="unit" class="col-md-4">Unit</label>
-		<div  class="col-md-8">
+	<div class="col-md-3">
+		<label for="unit" >Unit</label>
+		</div>
+		<div  class="col-md-6">
 		<select name="unit" id="unit" class="form-control">
 		<option value="">Unit</option>
 		<?php foreach($units as $u){
@@ -139,20 +192,24 @@ $(function(){
 		</select>
 		
 		</div>
-	</div>	
+	</div>
+	
 	<input type="hidden" class="form-control" value='1' placeholder=" Service Engineer Contact" id="description" name="user" />
 	
-	<div class="form_group">
-		<label for="agency_contact_no" class="col-md-4">  Equipment Status</label>
-		<div  class="col-md-8">
-<select name="equipment_status"  id="equipment_status" class="form-control">
-<option value="">Select Status</option>
+	<div class="form-group">
+		<div class="col-md-3">
+			<label for="equipment_status" >  Equipment Status</label>
+		</div>
+		<div class="col-md-6">
+			<label class="control-label">
+				<input type="radio" name="equipment_status" value="1" checked /> Working      
+			</label>
+			<label class="control-label">
+				<input type="radio" name="equipment_status" value="0" /> Not Working
+			</label>
+		</div>
+	</div>	
 
-<option value="1">Working</option>
-<option value="0">Not Working</option>
-</select>
-	</div>
-	</div>
    	<div class="col-md-3 col-md-offset-4">
 	<button class="btn btn-lg btn-primary btn-block" type="submit" value="submit">Submit</button>
 	</div>
