@@ -66,7 +66,10 @@ else if($type=="service_records"){
              
              
 			);
-$this->data['user']=$this->masters_model->get_data("user");
+		$this->data['user']=$this->masters_model->get_data("user");
+		$this->data['vendors']=$this->masters_model->get_data("vendor");
+		$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
+
 		
 }
 

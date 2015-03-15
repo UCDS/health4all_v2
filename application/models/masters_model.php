@@ -794,7 +794,7 @@ else if($type=="dosage"){
 				'supply_date'=>date("Y-m-d",strtotime($this->input->post('supply_date'))),
 				'warranty_start_date'=>date("Y-m-d",strtotime($this->input->post('warranty_start_date'))),
 				'warranty_end_date'=>date("Y-m-d",strtotime($this->input->post('warranty_end_date'))),
-				'service_person_id'=>$this->input->post('contact_person_id'),
+				'service_person_id'=>$this->input->post('contact_person'),
 				
 				'hospital_id'=>$hospital_id,
 				'department_id'=>$this->input->post('department'),
@@ -835,12 +835,12 @@ else if($type=="dosage"){
 		$data = array(
 					  'call_date'=>date("Y-m-d",strtotime($this->input->post('call_date'))),
 					 'call_time'=>$this->input->post('call_time'),
-					 'user_id'=>$this->input->post('user'),
+					 //'user_id'=>$this->input->post('user'),
 					
 					 'call_information_type'=>$this->input->post('call_information_type'),
 					  'call_information'=>$this->input->post('call_information'),
-					   'service_provider'=>$this->input->post('service_provider'),
-					   'service_person'=>$this->input->post('service_person'),
+					   'vendor_id'=>$this->input->post('vendor_id'),
+					   'service_person_id'=>$this->input->post('contact_person'),
 					    'service_person_remarks'=>$this->input->post('service_person_remarks'),
 					     'service_date'=>date("Y-m-d",strtotime($this->input->post('service_date'))),
 					      'service_time'=>$this->input->post('service_time'),
@@ -848,7 +848,7 @@ else if($type=="dosage"){
 					        'working_status'=>$this->input->post('working_status')
 			);
 
-		$table="service_records";
+		$table="service_record";
 		}
 		
 		elseif($type=="equipment_type"){
