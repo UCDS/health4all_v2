@@ -142,11 +142,13 @@ class Masters_model extends CI_Model{
 			if($status!=""){
 				$this->db->where("equipment.equipment_status",$status);
 			}
-			$this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipment_type.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_start_date,warranty_end_date,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospital.hospital_id,department.department_id,user.user_id")->from("equipment")
+			$this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipment_type.equipment_type_id,model,procured_by,cost,vendor_name,supply_date,warranty_start_date,warranty_end_date,contact_person_first_name,contact_person_last_name,hospital,department,equipment_status,hospital.hospital_id,department.department_id")->from("equipment")
 				->join('equipment_type','equipment.equipment_type_id=equipment_type.equipment_type_id','left')
 				->join('hospital','equipment.hospital_id=hospital.hospital_id','left')
 				->join('department','equipment.department_id=department.department_id','left')
-				->join('user','equipment.user_id=user.user_id','left')
+				->join('vendor','vendor.vendor_id=equipment.vendor_id','left')
+				->join('contact_person','contact_person.contact_person_id=equipment.service_person_id','left')
+				//->join('user','equipment.user_id=user.user_id','left')
 				
 				->order_by('equipment_type');	
 			
