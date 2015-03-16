@@ -71,7 +71,7 @@ pri.print();
 					<?php echo $order[0]->unit_name." / ".$order[0]->area_name;?>
 				</div>
 				<div class="col-md-4">
-					<b>Reported On : </b>
+					<b>Reported Date : </b>
 					<?php echo date("g:ia, d-M-Y",strtotime($order[0]->reported_date_time));?>
 				</div>
 			</div>
@@ -80,23 +80,58 @@ pri.print();
 			<br />
 			<table class="table table-bordered">
 			<!-- patient test results-->
-				<th>Test</th
+				<th>#</th>
+				<th>Test</th>
 				<th>Value</th>
 				<th colspan="4">Report</th>
-				<!-- if the test_status value is not equal to 2 then no test is done i.e the test is not completed,else print the result-->
-			<?php foreach($order as $test){ 
+			<?php 
+			$groups=array();
+			$group_tests=array();
+			$i=0;
+			foreach($order as $test){
+				if($test->group_id!=0){
+					if(!in_array($test->group_id,$groups)){
+						$groups[]=$test->group_id;
+					}
+					$group_tests[]=array(
+						'group_id'=>$test->group_id,
+						'test_master_id'=>$test->test_master_id,
+						'test_id'=>$test->test_id,
+						'test_name'=>$test->test_name,
+						'test_status'=>$test->test_status,
+						'binary_result'=>$test->binary_result,
+						'numeric_result'=>$test->numeric_result,
+						'text_result'=>$test->text_result,
+						'test_result_binary'=>$test->test_result_binary,
+						'test_result'=>$test->test_result,
+						'test_result_text'=>$test->test_result_text,
+						'binary_positive'=>$test->binary_positive,
+						'binary_negative'=>$test->binary_negative,
+						'lab_unit'=>$test->lab_unit
+					);
+					array_splice($order,$i,1);
+					$i--;
+				}
+				$i++;
+			}
+			$sno=1;
+			foreach($groups as $group){
+				$sub_no=1;
+				foreach($group_tests as $test){
+				if($test['test_master_id']==0 && $test['group_id'] == $group){
 					$positive="";$negative="";
-				 if($test->test_status==2){ $readonly = "disabled"; }else $readonly="";
+				 if($test['test_status']==2){ $readonly = "disabled"; }else $readonly="";
 			?>
 			<tr>
+					<td><?php echo $sno;?></td>
 					<td>
-						<?php echo $test->test_name;?>
+						<?php echo $test['test_name'];?>
 					</td>
 					<td>
-					<?php if($test->numeric_result==1){ 
+					<?php if($test['numeric_result']==1){ 
 
-							if($test->test_status == 2) { 
-								$result=$test->test_result." ".$test->lab_unit; 
+							if($test['test_status'] == 2) { 
+								$result=$test['test_result']." ".$test['lab_unit']; 
 							} 
 							else{	
 								$result="Test not done.";
@@ -107,11 +142,68 @@ pri.print();
 					 ?>
 					</td>
 					<td>
-					<?php if($test->binary_result==1){ ?>
+					<?php if($test['binary_result']==1){ ?>
 						<?php 
-							if($test->test_status == 2) { 
-								if($test->test_result_binary == 1 ) $result=$test->binary_positive ; 
-								else $result=$test->binary_negative ; 
+							if($test['test_status'] == 2) { 
+								if($test['test_result_binary'] == 1 ) $result=$test['binary_positive'] ; 
+								else $result=$test['binary_negative'] ; 
+							} 
+							else{	
+								$result="Test not done.";
+							}
+						echo $result;
+						?>
+					<?php 
+					}
+						else echo "-";
+					?>
+					 </td>
+					 <td>
+					<?php if($test['text_result']==1){ 
+
+						if($test['test_status'] == 2) { 
+							$result = $test['test_result_text']; 
+						} 
+						else{	
+							$result="Test not done.";
+						}
+						echo $result;
+					 }
+								else echo "-"; ?>
+					 </td>
+				</tr>
+			<?php }
+			}
+			foreach($group_tests as $test){
+				if($test['test_master_id']!=0 && $test['group_id'] == $group){
+					$positive="";$negative="";
+				 if($test['test_status']==2){ $readonly = "disabled"; }else $readonly="";
+			?>
+			<tr>
+					<td><?php echo $sno.".".$sub_no;?></td>
+					<td>
+						<?php echo $test['test_name'];?>
+					</td>
+					<td>
+					<?php if($test['numeric_result']==1){ 
+
+							if($test['test_status'] == 2) { 
+								$result=$test['test_result']." ".$test['lab_unit']; 
+							} 
+							else{	
+								$result="Test not done.";
+							}
+							echo $result;
+						}
+								else echo "-";
+					 ?>
+					</td>
+					<td>
+					<?php if($test['binary_result']==1){ ?>
+						<?php 
+							if($test['test_status'] == 2) { 
+								if($test['test_result_binary'] == 1 ) $result=$test['binary_positive'] ; 
+								else $result=$test['binary_negative'] ; 
 							} 
 							else{	
 								$result="Test not done.";
@@ -123,9 +215,9 @@ pri.print();
 						else echo "-";
 					?>
 						
-						<?php if($test->test_result_binary==1 && preg_match("^Culture*^",$test->test_method)) {   //if the test has a binary result and the test method is Culture & Sensitivity 
+						<?php if($test['test_result_binary']==1 && preg_match("^Culture*^",$test['test_method'])) {   //if the test has a binary result and the test method is Culture & Sensitivity 
 						$micro_organism_test_ids = array();
-						$res = explode("^",trim($test->micro_organism_test,"^")); 
+						$res = explode("^",trim($test['micro_organism_test'],"^")); 
 						$k=0;
 						//to group all sensitive and resistive antibiotics separately
 						//creating arrays to store sensitive and resistant values separately
@@ -204,6 +296,68 @@ pri.print();
 						} ?>
 					 </td>
 					 <td>
+					<?php if($test['text_result']==1){ 
+
+						if($test['test_status'] == 2) { 
+							$result = $test['test_result_text']; 
+						} 
+						else{	
+							$result="Test not done.";
+						}
+						echo $result;
+					 }
+								else echo "-"; ?>
+					 </td>
+				</tr>
+			<?php $sub_no++;
+				}
+			}
+			$sno++;
+		}
+		?>	
+		<!-- if the test_status value is not equal to 2 then no test is done i.e the test is not completed,else print the result-->
+			<?php foreach($order as $test){ 
+					$positive="";$negative="";
+				 if($test->test_status==2){ $readonly = "disabled"; }else $readonly="";
+			?>
+			<tr>
+					<td><?php echo $sno++;?></td>
+					<td>
+						<?php echo $test->test_name;?>
+					</td>
+					<td>
+					<?php if($test->numeric_result==1){ 
+
+							if($test->test_status == 2) { 
+								$result=$test->test_result." ".$test->lab_unit; 
+							} 
+							else{	
+								$result="Test not done.";
+							}
+							echo $result;
+						}
+								else echo "-";
+					 ?>
+					</td>
+					<td>
+					<?php if($test->binary_result==1){ ?>
+						<?php 
+							if($test->test_status == 2) { 
+								if($test->test_result_binary == 1 ) $result=$test->binary_positive ; 
+								else $result=$test->binary_negative ; 
+							} 
+							else{	
+								$result="Test not done.";
+							}
+						echo $result;
+						?>
+					<?php 
+					}
+						else echo "-";
+					?>
+
+					 </td>
+					 <td>
 					<?php if($test->text_result==1){ 
 
 						if($test->test_status == 2) { 
@@ -262,7 +416,7 @@ pri.print();
 			<th style="text-align:center" colspan="10"><?php echo $order[0]->hospital;?>, <?php echo $order[0]->place;?>, <?php echo $order[0]->district;?>, <?php echo $order[0]->state;?><br /></th>
 			</tr>
 			<tr>
-			<th style="text-align:center" colspan="10"><u><?php echo $order[0]->test_method;?> Results</u><br /></th>
+			<th style="text-align:center" colspan="10"><u><?php echo $order[0]->specimen_type." Sample - ".$order[0]->test_method;?> Results</u><br /></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -286,11 +440,11 @@ pri.print();
 					<?php echo $order[0]->unit_name." / ".$order[0]->area_name;?>
 				</td>
 				<td>
-					<b>Ordered On : </b>
+					<b>Ordered Date : </b>
 					<?php echo date("g:ia, d-M-Y",strtotime($order[0]->order_date_time));?>
 				</td>
 				<td>
-					<b>Reported On : </b>
+					<b>Reported Date : </b>
 					<?php echo date("g:ia, d-M-Y",strtotime($order[0]->reported_date_time));?>
 				</td>
 				</tr>
@@ -300,8 +454,10 @@ pri.print();
 						
 					<table class="inner" style="boder:1px solid #ccc; border-collapse:collapse;">
 					<thead>
+						<th>#</th>
 						<th>Test</th>
 						<th colspan="2">Report</th>
+		
 					<?php foreach($order as $test){
 						$positive="";$negative="";
 						 if($test->test_status==2){ $readonly = "disabled"; }else $readonly="";
@@ -425,14 +581,138 @@ pri.print();
 					else { ?>
 					<table class="inner" style="boder:1px solid #ccc; border-collapse:collapse;">
 					<thead>
+						<th>#</th>
 						<th>Test</th>
 						<th>Value</th>
 						<th colspan="2">Report</th>
+			<?php
+			$sno=1;
+			foreach($groups as $group){
+				$sub_no=1;
+				foreach($group_tests as $test){
+				if($test['test_master_id']==0 && $test['group_id'] == $group){
+					$positive="";$negative="";
+				 if($test['test_status']==2){ $readonly = "disabled"; }else $readonly="";
+			?>
+			<tr>
+					<td><?php echo $sno;?></td>
+					<td>
+						<?php echo $test['test_name'];?>
+					</td>
+					<td>
+					<?php if($test['numeric_result']==1){ 
+
+							if($test['test_status'] == 2) { 
+								$result=$test['test_result']." ".$test['lab_unit']; 
+							} 
+							else{	
+								$result="Test not done.";
+							}
+							echo $result;
+						}
+								else echo "-";
+					 ?>
+					</td>
+					<td>
+					<?php if($test['binary_result']==1){ ?>
+						<?php 
+							if($test['test_status'] == 2) { 
+								if($test['test_result_binary'] == 1 ) $result=$test['binary_positive'] ; 
+								else $result=$test['binary_negative'] ; 
+							} 
+							else{	
+								$result="Test not done.";
+							}
+						echo $result;
+						?>
+					<?php 
+					}
+						else echo "-";
+					?>
+					 </td>
+					 <td>
+					<?php if($test['text_result']==1){ 
+
+						if($test['test_status'] == 2) { 
+							$result = $test['test_result_text']; 
+						} 
+						else{	
+							$result="Test not done.";
+						}
+						echo $result;
+					 }
+								else echo "-"; ?>
+					 </td>
+				</tr>
+			<?php }
+			}
+			foreach($group_tests as $test){
+				if($test['test_master_id']!=0 && $test['group_id'] == $group){
+					$positive="";$negative="";
+				 if($test['test_status']==2){ $readonly = "disabled"; }else $readonly="";
+			?>
+			<tr>
+					<td><?php echo $sno.".".$sub_no;?></td>
+					<td>
+						<?php echo $test['test_name'];?>
+					</td>
+					<td>
+					<?php if($test['numeric_result']==1){ 
+
+							if($test['test_status'] == 2) { 
+								$result=$test['test_result']." ".$test['lab_unit']; 
+							} 
+							else{	
+								$result="Test not done.";
+							}
+							echo $result;
+						}
+								else echo "-";
+					 ?>
+					</td>
+					<td>
+					<?php if($test['binary_result']==1){ ?>
+						<?php 
+							if($test['test_status'] == 2) { 
+								if($test['test_result_binary'] == 1 ) $result=$test['binary_positive'] ; 
+								else $result=$test['binary_negative'] ; 
+							} 
+							else{	
+								$result="Test not done.";
+							}
+						echo $result;
+						?>
+					<?php 
+					}
+						else echo "-";
+					?>
+					 </td>
+					 <td>
+					<?php if($test['text_result']==1){ 
+
+						if($test['test_status'] == 2) { 
+							$result = $test['test_result_text']; 
+						} 
+						else{	
+							$result="Test not done.";
+						}
+						echo $result;
+					 }
+								else echo "-"; ?>
+					 </td>
+				</tr>
+			<?php $sub_no++;
+				}
+			}
+			$sno++;
+		}
+		?>	
 					<?php foreach($order as $test){
 						$positive="";$negative="";
 						 if($test->test_status==2){ $readonly = "disabled"; }else $readonly="";
 					?>
 							<tr>
+								<td><?php echo $sno++;?></td>
 								<td>
 								<?php echo $test->test_name;?>
 								</td>
@@ -451,20 +731,6 @@ pri.print();
 							 ?>
 								</td>
 								<td>
-							<?php 
-							if($test->text_result==1){ 
-
-								if($test->test_status == 2) { 
-									$result = $test->test_result_text;
-								} 
-								else{	
-									$result="Test not done.";
-								}
-								echo $result;
-							 }
-								else echo "-"; ?>
-							</td>
-								<td>
 							<?php if($test->binary_result==1){ ?>
 								<?php 
 									if($test->test_status == 2) { 
@@ -478,7 +744,7 @@ pri.print();
 								?>
 							<?php } ?>
 						</td>
-								<td>
+							<td>
 							<?php 
 							if($test->text_result==1){ 
 
