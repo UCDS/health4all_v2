@@ -263,14 +263,14 @@
 				<?php
 				foreach($functions as $f){
 				if($f->user_function=="Masters - Application"){ ?>
-                  <li><a href="<?php echo base_url()."user_panel/settings";?>">Settings</a></li>
+                  <li><a href="<?php echo base_url()."user_panel/settings";?>"><i class="fa fa-gear"></i> Settings</a></li>
 				  <li class="divider"></li>
 				<?php break;
 					}
 				}
 				?>
-                  <li><a href="<?php echo base_url()."user_panel/change_password";?>">Change Password</a></li>
-				  <li><a href="<?php echo base_url();?>home/logout">Logout</a></li>
+                  <li><a href="<?php echo base_url()."user_panel/change_password";?>"><i class="fa fa-edit"></i> Change Password</a></li>
+				  <li><a href="<?php echo base_url();?>home/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
                 </ul>
 			</li>
           </ul>	
