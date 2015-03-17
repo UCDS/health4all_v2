@@ -142,7 +142,7 @@ class Masters_model extends CI_Model{
 			if($status!=""){
 				$this->db->where("equipment.equipment_status",$status);
 			}
-			$this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipment_type.equipment_type_id,model,procured_by,cost,vendor_name,supply_date,warranty_start_date,warranty_end_date,contact_person_first_name,contact_person_last_name,hospital,department,equipment_status,hospital.hospital_id,department.department_id")->from("equipment")
+			$this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipment_type.equipment_type_id,model,procured_by,cost,vendor_name,supply_date,warranty_start_date,warranty_end_date,contact_person_first_name,contact_person_last_name, contact_person_contact,hospital,department,equipment_status,hospital.hospital_id,department.department_id")->from("equipment")
 				->join('equipment_type','equipment.equipment_type_id=equipment_type.equipment_type_id','left')
 				->join('hospital','equipment.hospital_id=hospital.hospital_id','left')
 				->join('department','equipment.department_id=department.department_id','left')
@@ -783,6 +783,7 @@ else if($type=="dosage"){
 		$table="generic_item";
 		}
 		elseif($type=="equipment"){
+		
 		$data = array(
 				'equipment_type_id'=>$this->input->post('equipment_type'),
 				'make'=>$this->input->post('make'),
@@ -792,7 +793,7 @@ else if($type=="dosage"){
 				'procured_by'=>$this->input->post('procured_by'),
 				'cost'=>$this->input->post('cost'),
 				//'supplier'=>$this->input->post('supplier'),
-				'vendor_id'=>$this->input->post('vendor_id'),
+				'vendor_id'=>$this->input->post('vendor'),
 				'supply_date'=>date("Y-m-d",strtotime($this->input->post('supply_date'))),
 				'warranty_start_date'=>date("Y-m-d",strtotime($this->input->post('warranty_start_date'))),
 				'warranty_end_date'=>date("Y-m-d",strtotime($this->input->post('warranty_end_date'))),
