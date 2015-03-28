@@ -66,7 +66,10 @@ else if($type=="service_records"){
              
              
 			);
-$this->data['user']=$this->masters_model->get_data("user");
+		$this->data['user']=$this->masters_model->get_data("user");
+		$this->data['vendors']=$this->masters_model->get_data("vendor");
+		$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
+
 		
 }
 
@@ -91,7 +94,8 @@ $this->data['user']=$this->masters_model->get_data("user");
 		$this->data['department']=$this->masters_model->get_data("department");
 		$this->data['areas']=$this->masters_model->get_data("area");
 		$this->data['units']=$this->masters_model->get_data("unit");
-		
+		$this->data['vendors']=$this->masters_model->get_data("vendor");
+		$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
 
 	}
 			
@@ -224,6 +228,7 @@ $this->data['user']=$this->masters_model->get_data("user");
 			case "equipments_detailed" : 
 				$this->data['title']="Equipments Detailed report";
 				$this->data['equipments']=$this->masters_model->get_data("equipment",$equipment_type,$department,$area,$unit,$status);
+				
 				break;
 			case "equipments_summary" :
 				$this->data['title']="Equipments Summary report";

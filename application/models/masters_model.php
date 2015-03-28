@@ -142,11 +142,13 @@ class Masters_model extends CI_Model{
 			if($status!=""){
 				$this->db->where("equipment.equipment_status",$status);
 			}
-			$this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipment_type.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_start_date,warranty_end_date,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospital.hospital_id,department.department_id,user.user_id")->from("equipment")
+			$this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipment_type.equipment_type_id,model,procured_by,cost,vendor_name,supply_date,warranty_start_date,warranty_end_date,contact_person_first_name,contact_person_last_name, contact_person_contact,hospital,department,equipment_status,hospital.hospital_id,department.department_id")->from("equipment")
 				->join('equipment_type','equipment.equipment_type_id=equipment_type.equipment_type_id','left')
 				->join('hospital','equipment.hospital_id=hospital.hospital_id','left')
 				->join('department','equipment.department_id=department.department_id','left')
-				->join('user','equipment.user_id=user.user_id','left')
+				->join('vendor','vendor.vendor_id=equipment.vendor_id','left')
+				->join('contact_person','contact_person.contact_person_id=equipment.service_person_id','left')
+				//->join('user','equipment.user_id=user.user_id','left')
 				
 				->order_by('equipment_type');	
 			
@@ -781,6 +783,7 @@ else if($type=="dosage"){
 		$table="generic_item";
 		}
 		elseif($type=="equipment"){
+		
 		$data = array(
 				'equipment_type_id'=>$this->input->post('equipment_type'),
 				'make'=>$this->input->post('make'),
@@ -789,17 +792,18 @@ else if($type=="dosage"){
 				'asset_number'=>$this->input->post('asset_number'),
 				'procured_by'=>$this->input->post('procured_by'),
 				'cost'=>$this->input->post('cost'),
-				'supplier'=>$this->input->post('supplier'),
+				//'supplier'=>$this->input->post('supplier'),
+				'vendor_id'=>$this->input->post('vendor'),
 				'supply_date'=>date("Y-m-d",strtotime($this->input->post('supply_date'))),
 				'warranty_start_date'=>date("Y-m-d",strtotime($this->input->post('warranty_start_date'))),
 				'warranty_end_date'=>date("Y-m-d",strtotime($this->input->post('warranty_end_date'))),
-				'service_engineer'=>$this->input->post('service_engineer'),
-				'service_engineer_contact'=>$this->input->post('service_engineer_contact'),
+				'service_person_id'=>$this->input->post('contact_person'),
+				
 				'hospital_id'=>$hospital_id,
 				'department_id'=>$this->input->post('department'),
 				'area_id'=>$this->input->post('area'),
 				'unit_id'=>$this->input->post('unit'),
-				'user_id'=>$this->input->post('user'),
+				//'user_id'=>$this->input->post('user'),
 				'equipment_status'=>$this->input->post('equipment_status')
 				);
 
@@ -834,12 +838,12 @@ else if($type=="dosage"){
 		$data = array(
 					  'call_date'=>date("Y-m-d",strtotime($this->input->post('call_date'))),
 					 'call_time'=>$this->input->post('call_time'),
-					 'user_id'=>$this->input->post('user'),
+					 //'user_id'=>$this->input->post('user'),
 					
 					 'call_information_type'=>$this->input->post('call_information_type'),
 					  'call_information'=>$this->input->post('call_information'),
-					   'service_provider'=>$this->input->post('service_provider'),
-					   'service_person'=>$this->input->post('service_person'),
+					   'vendor_id'=>$this->input->post('vendor_id'),
+					   'service_person_id'=>$this->input->post('contact_person'),
 					    'service_person_remarks'=>$this->input->post('service_person_remarks'),
 					     'service_date'=>date("Y-m-d",strtotime($this->input->post('service_date'))),
 					      'service_time'=>$this->input->post('service_time'),
@@ -847,7 +851,7 @@ else if($type=="dosage"){
 					        'working_status'=>$this->input->post('working_status')
 			);
 
-		$table="service_records";
+		$table="service_record";
 		}
 		
 		elseif($type=="equipment_type"){
