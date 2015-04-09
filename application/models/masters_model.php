@@ -213,6 +213,13 @@ class Masters_model extends CI_Model{
 					
 		}
 		
+		else if($type=="vendor_type"){
+			
+			$this->db->select("vendor_type_id,vendor_type")->from("vendor_type")->order_by("vendor_type");
+
+		}	
+
+		
 		else if($type=="contact_person"){
 			if($this->input->post('select')){
 				$contact_person_id=$this->input->post('contact_person_id');
@@ -239,6 +246,11 @@ class Masters_model extends CI_Model{
 		else if($type=="vendor_specific_contact_person")
 		{
 			$this->db->where('vendor_id',$vendor_id);	
+			$this->db->select("*")->from("contact_person")->order_by("contact_person_first_name, contact_person_last_name");
+		}
+		else if($type=="unassigned_contact_person")
+		{
+			$this->db->where('vendor_id','0');	
 			$this->db->select("*")->from("contact_person")->order_by("contact_person_first_name, contact_person_last_name");
 		}
 		else if($type=="drug_type"){
@@ -1120,18 +1132,19 @@ else if($type=="dosage"){
 		elseif($type=="vendor"){
 		$data = array(
 					  'vendor_name'=>$this->input->post('vendor_name'),
+					  'vendor_type_id'=>$this->input->post('vendor_type_id'),
 					   'vendor_address'=>$this->input->post('vendor_address'),
 					   'vendor_city'=>$this->input->post('vendor_city'),
 					   'vendor_state'=>$this->input->post('vendor_state'),
 					   'vendor_country'=>$this->input->post('vendor_country'),
 					   'account_no'=>$this->input->post('account_no'),
+					   'bank_name'=>$this->input->post('bank_name'),
 					   'branch'=>$this->input->post('branch'),
 					   'vendor_email'=>$this->input->post('vendor_email'),
 					   'vendor_phone'=>$this->input->post('vendor_phone'),
 					   'vendor_pan'=>$this->input->post('vendor_pan'),
 					   'contact_person_id'=>$this->input->post('contact_person_id')
 			);
-
 		$table="vendor";
 		}
 		elseif($type=="contact_person"){
