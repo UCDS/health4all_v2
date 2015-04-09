@@ -72,7 +72,7 @@ $(function(){
 			<select name="vendor" id="vendor" class="form-control">
 		<option value="">--select--</option>
 		<?php foreach($vendors as $d){
-			echo "<option value='$d->vendor_id'>$d->vendor_name</option>";
+			echo "<option value='$d->vendor_id'>$d->vendor_name, $d->vendor_city, $d->vendor_phone</option>";
 		}
 		?>
 		</select>
