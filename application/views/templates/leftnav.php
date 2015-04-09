@@ -29,8 +29,7 @@
 				<li class="nav-header">Edit</li>
 				<li><a href="<?php echo base_url();?>vendor/edit/vendor">Vendor</a></li>
 				<li><a href="<?php echo base_url();?>vendor/edit/contact_person">Contact Person</a></li>
-				<li class="nav-header">View</li>
-				<li><a href="<?php echo base_url();?>vendor/view/equipments_summary">Equipments</a></li>
+				
 	<ul>
 </div>
 <?php } ?>
