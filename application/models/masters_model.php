@@ -5,6 +5,7 @@ class Masters_model extends CI_Model{
 	function get_data($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status="",$hospitals=0,$vendor_id=0){
 		if($type=="equipment_types"){
 			$this->db->select("equipment_type_id,equipment_type")->from("equipment_type");
+			$this->db->order_by("equipment_type");
 		}
 		else if($type=="hospital"){
 			$this->db->select("hospital_id,hospital")->from("hospital");
@@ -847,6 +848,7 @@ else if($type=="dosage"){
 		}
 		
 		elseif($type=="service_records"){
+			
 		$data = array(
 					  'call_date'=>date("Y-m-d",strtotime($this->input->post('call_date'))),
 					 'call_time'=>$this->input->post('call_time'),
