@@ -32,6 +32,8 @@ class Vendor extends CI_Controller {
                   )
              
 			);
+			$this->data['vendor_types']=$this->masters_model->get_data("vendor_type");
+			$this->data['contact_persons']=$this->masters_model->get_data("unassigned_contact_person");
 		}
 
 		else if($type=="contact_person"){
@@ -137,7 +139,7 @@ function edit($type=""){
 		if ($this->form_validation->run() === FALSE)
 		{
 			$this->load->view($page,$this->data);
-			echo 'false';
+			//echo 'false';
 		}
 		else{
 			if($this->input->post('update')){

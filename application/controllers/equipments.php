@@ -179,6 +179,24 @@ $this->data['department']=$this->masters_model->get_data("department");
 $this->data['user']=$this->masters_model->get_data("user");
  }
 
+	//controller for updating service issue
+	else if($type=="service_records"){
+		 	$title="Edit Service Issue";
+		
+			$config=array(
+               array(
+                     'field'   => 'equipment_type',
+                     'label'   => 'Equipment Name ',
+                     'rules'   => 'trim|xss_clean'
+                  )
+				);
+				$this->data['service_records']=$this->masters_model->get_data("service_record");
+		$this->data['user']=$this->masters_model->get_data("user");
+		$this->data['vendors']=$this->masters_model->get_data("vendor");
+		$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
+
+	}	
+
 			
 		else{
 			show_404();
