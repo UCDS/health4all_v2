@@ -61,15 +61,15 @@ $(function(){
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_city" class="col-md-3"> City</label>
+		<label for="vendor_city" class="col-md-3"> City<font color='red'>*</font></label>
 		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" City" id="vendor_city" name="vendor_city" />
+		<input type="text" class="form-control" placeholder=" City" id="vendor_city" name="vendor_city" required/>
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_state" class="col-md-3"> State</label>
+		<label for="vendor_state" class="col-md-3"> State<font color='red'>*</font></label>
 		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" State" id="description" name="vendor_state" />
+		<input type="text" class="form-control" placeholder=" State" id="description" name="vendor_state" required/>
 		</div>
 	</div>
 	<div class="form-group">
@@ -106,9 +106,9 @@ $(function(){
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_phone" class="col-md-3"> Phone Number</label>
+		<label for="vendor_phone" class="col-md-3"> Phone Number<font color='red'>*</font></label>
 		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder="Phone number" id="vendor_phone" name="vendor_phone" />
+		<input type="text" class="form-control" placeholder="Phone number" id="vendor_phone" name="vendor_phone" required />
 		
 		</div>
 	</div>
@@ -121,10 +121,10 @@ $(function(){
 	
 	<div class="form-group">
 		<div class="col-md-3">
-			<label for="contact_person_id">  Primary Contact Person</label>
+			<label for="contact_person_id">  Primary Contact Person<font color='red'>*</font></label>
 		</div>
 		<div class="col-md-6">
-			<select name="contact_person_id" id="vendor" class="form-control">
+			<select name="contact_person_id" id="vendor" class="form-control" required>
 		<option value="">--select--</option>
 		<?php foreach($contact_persons as $d){
 			echo "<option value='$d->contact_person_id'>$d->contact_person_first_name $d->contact_person_first_name </option>";

@@ -33,7 +33,7 @@ $(function(){
 
 	<div class="form-group">
 		<div class="col-md-3">
-			<label for="contact_person_first_name" class="control-label">First Name</label>
+			<label for="contact_person_first_name" class="control-label">First Name<font color='red'>*</font></label>
 		</div>
 		<div class="col-md-6">
 			<input type="text" class="form-control" placeholder="First Name" id="contact_person_first_name" name="contact_person_first_name" required />
