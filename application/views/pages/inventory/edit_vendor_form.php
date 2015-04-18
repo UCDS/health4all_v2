@@ -35,7 +35,7 @@
 	<div class="form-group">
 		<input type='hidden' name='vendor_id' value='<?php echo $vendors[0]->vendor_id; ?>' />
 		<div class="col-md-3">
-			<label for="vendor_name" class="control-label">Vendor Name</label>
+			<label for="vendor_name" class="control-label">Vendor Name<font color='red'>*</font></label>
 		</div>
 		<div class="col-md-6">
 			<input type="text" class="form-control" placeholder="Vendor Name" id="vendor_name" name="vendor_name" required 
@@ -44,7 +44,7 @@
 	</div>
 	<div class="form-group">
 		<div class="col-md-3">
-			<label for="vendor_address" class="control-label">Address</label>
+			<label for="vendor_address" class="control-label">Address<font color='red'>*</font></label>
 		</div>
 		<div class="col-md-6">
 			<input type="text" class="form-control" placeholder=" Address" id="vendor_address" name="vendor_address" required 
@@ -59,16 +59,16 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_state" class="col-md-3"> State</label>
+		<label for="vendor_state" class="col-md-3"> State<font color='red'>*</font></label>
 		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" State" id="vendor_state" name="vendor_state" 
+		<input type="text" class="form-control" placeholder=" State" id="vendor_state" name="vendor_state" required
 		value="<?php echo $vendors[0]->vendor_state; ?>" />
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_country" class="col-md-3"> Country</label>
+		<label for="vendor_country" class="col-md-3"> Country<font color='red'>*</font></label>
 		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" Country" id="vendor_country" name="vendor_country" 
+		<input type="text" class="form-control" placeholder=" Country" id="vendor_country" name="vendor_country" required
 		value="<?php echo $vendors[0]->vendor_country; ?>" />
 		</div>
 	</div>
@@ -104,9 +104,9 @@
 	</div>
 	
 	<div class="form-group">
-		<label for="vendor_phone" class="col-md-3"> Phone Number</label>
+		<label for="vendor_phone" class="col-md-3"> Phone Number<font color='red'>*</font></label>
 		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" Phone Number" id="vendor_phone" name="vendor_phone" 
+		<input type="text" class="form-control" placeholder=" Phone Number" id="vendor_phone" name="vendor_phone" required
 		value="<?php echo $vendors[0]->vendor_phone; ?>" />
 		</div>
 	</div>

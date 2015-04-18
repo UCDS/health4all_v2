@@ -66,7 +66,10 @@ else if($type=="service_records"){
              
              
 			);
-$this->data['user']=$this->masters_model->get_data("user");
+		$this->data['user']=$this->masters_model->get_data("user");
+		$this->data['vendors']=$this->masters_model->get_data("vendor");
+		$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
+
 		
 }
 
@@ -91,7 +94,8 @@ $this->data['user']=$this->masters_model->get_data("user");
 		$this->data['department']=$this->masters_model->get_data("department");
 		$this->data['areas']=$this->masters_model->get_data("area");
 		$this->data['units']=$this->masters_model->get_data("unit");
-		
+		$this->data['vendors']=$this->masters_model->get_data("vendor");
+		$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
 
 	}
 			
@@ -175,6 +179,24 @@ $this->data['department']=$this->masters_model->get_data("department");
 $this->data['user']=$this->masters_model->get_data("user");
  }
 
+	//controller for updating service issue
+	else if($type=="service_records"){
+		 	$title="Edit Service Issue";
+		
+			$config=array(
+               array(
+                     'field'   => 'equipment_type',
+                     'label'   => 'Equipment Name ',
+                     'rules'   => 'trim|xss_clean'
+                  )
+				);
+				$this->data['service_records']=$this->masters_model->get_data("service_record");
+		$this->data['user']=$this->masters_model->get_data("user");
+		$this->data['vendors']=$this->masters_model->get_data("vendor");
+		$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
+
+	}	
+
 			
 		else{
 			show_404();
@@ -224,6 +246,7 @@ $this->data['user']=$this->masters_model->get_data("user");
 			case "equipments_detailed" : 
 				$this->data['title']="Equipments Detailed report";
 				$this->data['equipments']=$this->masters_model->get_data("equipment",$equipment_type,$department,$area,$unit,$status);
+				
 				break;
 			case "equipments_summary" :
 				$this->data['title']="Equipments Summary report";

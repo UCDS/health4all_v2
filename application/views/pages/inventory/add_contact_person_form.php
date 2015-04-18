@@ -33,7 +33,7 @@ $(function(){
 
 	<div class="form-group">
 		<div class="col-md-3">
-			<label for="contact_person_first_name" class="control-label">First Name</label>
+			<label for="contact_person_first_name" class="control-label">First Name<font color='red'>*</font></label>
 		</div>
 		<div class="col-md-6">
 			<input type="text" class="form-control" placeholder="First Name" id="contact_person_first_name" name="contact_person_first_name" required />
@@ -72,7 +72,7 @@ $(function(){
 			<select name="vendor" id="vendor" class="form-control">
 		<option value="">--select--</option>
 		<?php foreach($vendors as $d){
-			echo "<option value='$d->vendor_id'>$d->vendor_name</option>";
+			echo "<option value='$d->vendor_id'>$d->vendor_name, $d->vendor_city, $d->vendor_phone</option>";
 		}
 		?>
 		</select>

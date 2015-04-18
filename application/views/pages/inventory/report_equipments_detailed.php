@@ -12,7 +12,7 @@
 		<th>Asset No.</th>
 		<th>Procured By</th>
 		<th>Cost</th>
-		<th>Supplier</th>
+		<th>Vendor (Supplier)</th>
 		<th>Supplied Date</th>
 		<th>Warranty Period</th>
 		<th>Serivce Engineer</th>
@@ -36,11 +36,11 @@
 		<td><?php echo $e->asset_number;?></td>
 		<td><?php echo $e->procured_by;?></td>
 		<td><?php echo number_format($e->cost);?></td>
-		<td><?php echo $e->supplier;?></td>
+		<td><?php echo $e->vendor_name;?></td>
 		<td><?php if($e->supply_date!=0) echo date("d-M-Y",strtotime($e->supply_date));?></td>
 		<td><?php if($e->warranty_start_date!=0 && $e->warranty_end_date!=0) echo date("d-M-y",strtotime($e->warranty_start_date))." to ".date("d-M-y",strtotime($e->warranty_end_date));?></td>
-		<td><?php echo $e->service_engineer;?></td>
-		<td><?php echo $e->service_engineer_contact;?></td>
+		<td><?php echo $e->contact_person_first_name. " " .$e->contact_person_last_name;?></td>
+		<td><?php echo $e->contact_person_contact;?></td>
 		<td><?php echo $e->department;?></td>
 		<td><?php if($e->equipment_status==1) echo "Working"; else echo "Not Working";?></td>
 	</tr>
