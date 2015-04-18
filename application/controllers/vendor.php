@@ -139,7 +139,7 @@ function edit($type=""){
 		if ($this->form_validation->run() === FALSE)
 		{
 			$this->load->view($page,$this->data);
-			echo 'false';
+			//echo 'false';
 		}
 		else{
 			if($this->input->post('update')){
