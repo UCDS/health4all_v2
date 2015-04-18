@@ -17,9 +17,11 @@
 			$(".select_component").each(function(){
 				if($(this).is(":checked")){
 					blood_unit.push($(this).parent().parent().find("td:eq(0)").text()+" - "+$(this).parent().parent().find("td:eq(1)").text());
-					console.log(blood_unit[0]);
 				}
-				$(".selected_components").text(blood_unit.join());
+				$(".selected_components").text("");
+				for($i=0;$i<blood_unit.length;$i++){
+					$(".selected_components").append("<div class='well well-sm col-md-3'><b>"+blood_unit[$i]+"</b></div>");
+				}
 			});			
 		});
 	});
@@ -34,13 +36,14 @@
 	}
 	?>
 	<div>
-		
+	<div class="panel panel-default">
+		<div class="panel-heading">
 		<?php
 		echo form_open('bloodbank/inventory/issue',array('id'=>'issue_form'));
 		foreach($request as $request){
 				echo "<input type='text' value='$request[request_id]' hidden name='request_id' />";
-				echo "<b>Request ID: ".$request['request_id']."<br />Requested for: ";
-				echo "| Blood Group: $request[blood_group] ";
+				echo "Request ID: ".$request['request_id']."<br />Requested for ";
+				echo "Blood Group: <b>$request[blood_group] ";
 				if($request['whole_blood_units']!=0){
 					echo "| WB: ".$request['whole_blood_units'];
 					echo "<input type='text' value='WB' hidden name='components[]' /> | ";
@@ -72,13 +75,13 @@
 				echo "</b><br />";
 		}
 		?>
-	</div>
-	
+		</div>
+	<div class="panel-body">
 	<?php
 	if(count($inv)>0){
 	?>
 	
-	<table class='table-2'>
+	<table class='table table-bordered table-striped'>
 		<tr><th colspan="10">Inventory</th></tr>
 	<tr><th>Blood Unit No.</th><th>Component</th><th>Blood Group</th><th>Expiry Date</th></tr>
 	<?php
@@ -96,33 +99,50 @@
 	?>
 	<tr>
 		<td colspan="10">
-			Selected : <div class="selected_components" style="max-width:300px;background:white;border:1px solid #000;">
+		<br />
+		<br />
+		<br />
+		<br />
+			<div class="panel panel-success">
+				<div class="panel-heading">
+				Selected : 
+				<div class="row">
+					<div class="selected_components col-md-12">
+					</div>
+				</div>
+				</div>
+				<div class="panel-body">
+					<table class="table table-bordered table-striped">
+					<tr>
+						<td>
+								<select name="staff" class="form-control" required >
+									<option value="" disabled selected>Issued By</option>
+									<?php foreach($staff as $s){
+										echo "<option value='$s->staff_id'>$s->first_name $s->last_name</option>";
+									}
+									?>
+								</select><br />
+								<select name="cross_matched_by" class="form-control" required>
+									<option value="" disabled selected>Cross Matched By</option>
+									<?php foreach($staff as $s){
+										echo "<option value='$s->staff_id'>$s->first_name $s->last_name</option>";
+									}
+									?>
+								</select>
+						</td>
+						<td colspan="2">
+						<input type="text" size="12" name="issue_date" class="form-control" placeholder="Date" id="issue_date" form="issue_form" required /><br />
+						<input type="text" size="12" name="issue_time" class="form-control" placeholder="Time" id="issue_time" form="issue_form" required />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3" align="middle">
+						<input type="submit" class="btn btn-primary btn-md" value="Issue" name="issue_request" />
+						</td>
+					</tr>
+					</table>
+				</div>
 			</div>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" align="middle">
-				<select name="staff" required >
-					<option value="" disabled selected>Issued By</option>
-					<?php foreach($staff as $s){
-						echo "<option value='$s->staff_id'>$s->name</option>";
-					}
-					?>
-				</select><br />
-				<select name="cross_matched_by" required>
-					<option value="" disabled selected>Cross Matched By</option>
-					<?php foreach($staff as $s){
-						echo "<option value='$s->staff_id'>$s->name</option>";
-					}
-					?>
-				</select>
-		</td>
-		<td colspan="2">
-		<input type="text" size="12" name="issue_date" placeholder="Date" id="issue_date" form="issue_form" required /><br />
-		<input type="text" size="12" name="issue_time" placeholder="Time" id="issue_time" form="issue_form" required />
-		</td>
-		<td colspan="3" align="middle">
-		<input type="submit" value="Issue" name="issue_request" />
 		</td>
 	</tr>
 	</table>
@@ -133,6 +153,7 @@
 		echo "Required components are not available in inventory!";
 	}
 	?>
-
+	</div>
+	</div>
 </div>
 

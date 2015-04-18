@@ -159,86 +159,58 @@
 		<button type="button" class="btn btn-default btn-md print">
 		  <span class="glyphicon glyphicon-print"></span> Print
 		</button>
-		<?php 
-			$url_string = current_url();
-			$url_string = str_replace(base_url()."reports/order_detail/","",$url_string);
-		?>
-		<a href="<?php echo base_url();?>reports/text_result/<?php echo $url_string;?>" class="btn btn-default btn-md">
+		<a href="" class="btn btn-default btn-md">
 		  <span class="glyphicon glyphicon-text"></span> View Report Text
 		</a>
 		<table class="table table-bordered table-striped table-hover" id="table-sort">
 		<thead>
 			<th>#</th>
-			<th>Order ID</th>
 			<th>Order Date</th>
-			<th>Sample ID</th>
-			<th>IP/OP Number</th>
-			<th>Patient Name</th>
-			<th>Age/Gender</th>
-			<th>Department/Unit/Area</th>
-			<th>Specimen</th>
-			<th>Test(s)</th>
-			<th>Received By</th>
+			<th>Patient</th>
+			<th>Test</th>
+			<th>Report</th>
 		</thead>
 		<tbody>
-			<?php 
-			$o=array();
-			foreach($report as $order){
-				$o[]=$order->order_id;
-			}
-			$o=array_unique($o);
-			$i=1;
-			foreach($o as $ord){	?>
-				<tr onclick="$('#order_<?php echo $ord;?>').submit()">
 				<?php
-				foreach($report as $order) { 
-					if($order->order_id==$ord){ ?>
-						<td><?php echo $i++;?></td>
+				$i=1;
+				foreach($report as $order) {
+				if($order->binary_result == 0 && $order->numeric_result == 0 && $order->text_result==1) {
+				?>
+				<tr onclick="$('#order_<?php echo $order->test_id;?>').submit()">
 						<td>
-							<?php echo form_open("diagnostics/view_results",array('role'=>'form','class'=>'form-custom','id'=>'order_'.$order->order_id)); ?>
-							<?php echo $order->order_id;?>
-							<input type="hidden" class="sr-only" name="order_id" value="<?php echo $order->order_id;?>" />
+							<?php echo form_open("register/update_patients",array('role'=>'form','class'=>'form-custom','id'=>'order_'.$order->test_id)); ?>
+							<?php echo $i++; ?>
+							<input type="hidden" class="sr-only" name="visit_id" value="<?php echo $order->visit_id;?>" />
 							</form>
 						</td>
 						<td>
 							<?php echo date("d-M-Y",strtotime($order->order_date_time));?>
 						</td>
-						<td><?php echo $order->sample_code;?></td>
-						<td><?php echo $order->visit_type." #".$order->hosp_file_no;?></td>
-						<td><?php echo $order->first_name." ".$order->last_name;?></td>
-						<td>
-							<?php
-								$age="";
-								if($order->age_years!=0) $age.=$order->age_years."Y ";
-								if($order->age_months!=0) $age.=$order->age_months."M ";
-								if($order->age_days!=0) $age.=$order->age_days."D ";
-								echo $age;
-							?>
+						<td><?php echo $order->visit_type." #".$order->hosp_file_no;?>, 
+						<?php echo $order->first_name." ".$order->last_name;?>,						
+						<?php
+							$age="";
+							if($order->age_years!=0) $age.=$order->age_years."Y ";
+							if($order->age_months!=0) $age.=$order->age_months."M ";
+							if($order->age_days!=0) $age.=$order->age_days."D ";
+							echo $age;
+						?>
 						</td>
-						<td><?php echo $order->department;?></td>
-						<td><?php echo $order->specimen_type;?></td>
 						<td>
 							<?php 
-							$x=0;
-							foreach($report as $order){
-										if($order->order_id == $ord) {
 											if($order->test_status==1)
 												$label="label-warning";
 											else if($order->test_status == 3){ $label = "label-danger";}
 											else if($order->test_status == 2){ $label = "label-success";}
 											else if($order->test_status == 0){ $label = "label-default";}
 											echo $order->test_name."<br />";
-										}
-									} 
 							?>
 						</td>
 						<td>
+							<?php echo $order->test_result_text;?>
 						</td>
-				<?php break;
-					}
-				} ?>
 				</tr>
-			<?php } ?>
+			<?php }} ?>
 		</tbody>
 		</table>
 		

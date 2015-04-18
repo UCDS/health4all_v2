@@ -4,7 +4,7 @@
 	}
 </style>
 <div class="col-md-10 col-sm-9">
-	<h1 align="center" style="font-size:20px;">FAQ</h1>
+	<h1 align="center" style="font-size:20px;">FAQ</h4>
 	<div style="margin-left:15px;padding:10px;">
 		<h2>Why donate blood?</h2>
 		<p>There is tremendous demand for blood in hospitals.

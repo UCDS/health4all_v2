@@ -285,7 +285,6 @@ if(filter_var($email, FILTER_VALIDATE_EMAIL) && $send_email==1){
 			if(!!$from){
 			$this->email->from("$from", "$from_name - Gandhi Hospital");
 			$this->email->to($to);
-			$this->email->bcc("contact@yousee.in");
 			$this->email->subject($subject);
 			$this->email->message($mailbody);
 			if ( ! $this->email->send()) {

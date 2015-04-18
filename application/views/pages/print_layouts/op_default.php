@@ -29,7 +29,7 @@
 						<td>Phone : <?php echo $registered->phone; ?></td>
 				</tr>
 				<tr width="95%">
-						<td  style="padding:5px;">OP number : <?php echo $registered->visit_id; ?></td>
+						<td  style="padding:5px;">OP number : <?php echo $registered->hosp_file_no; ?></td>
 						<td>Department : <?php echo $registered->department; ?> </td>
 						<td></td>
 				</tr>

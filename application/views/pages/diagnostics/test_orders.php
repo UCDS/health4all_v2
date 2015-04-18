@@ -1,11 +1,59 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/theme.default.css">
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
+<style>
+	.panel-warning{
+		margin:5px 10px;
+		padding:2px 0px;
+	}
+</style>
 <script>
 	$(function(){	
 		console.log('hello');
 		$(".date").Zebra_DatePicker();
 	})
 </script>
+	<script>
+		$(function(){ 
+		var options = {
+			widthFixed : true,
+			showProcessing: true,
+			headerTemplate : '{content} {icon}', // Add icon for jui theme; new in v2.7!
+
+			widgets: [ 'default', 'zebra', 'stickyHeaders' ],
+
+			widgetOptions: {
+
+			// extra class name added to the sticky header row
+			  stickyHeaders : '',
+			  // number or jquery selector targeting the position:fixed element
+			  stickyHeaders_offset : 0,
+			  // added to table ID, if it exists
+			  stickyHeaders_cloneId : '-sticky',
+			  // trigger "resize" event on headers
+			  stickyHeaders_addResizeEvent : true,
+			  // if false and a caption exist, it won't be included in the sticky header
+			  stickyHeaders_includeCaption : false,
+			  // The zIndex of the stickyHeaders, allows the user to adjust this to their needs
+			  stickyHeaders_zIndex : 2,
+			  // jQuery selector or object to attach sticky header to
+			  stickyHeaders_attachTo : null,
+			  // scroll table top into view after filtering
+			  stickyHeaders_filteredToTop: true,
+
+			  // adding zebra striping, using content and default styles - the ui css removes the background from default
+			  // even and odd class names included for this demo to allow switching themes
+			  zebra   : ["ui-widget-content even", "ui-state-default odd"],
+			  // use uitheme widget to apply defauly jquery ui (jui) class names
+			  // see the uitheme demo for more details on how to change the class names
+			  uitheme : 'jui'
+			}
+		  };
+			$("#table-sort").tablesorter(options);
+		});
+	</script>
 <div class="col-md-10 col-md-offset-2">
 <?php 	echo validation_errors(); ?>
 <?php if(isset($msg)){ ?> 
@@ -95,7 +143,7 @@
 						<div class="panel panel-info">
 							<div class="panel-heading">
 								<span> 
-								<div class="row" style="padding-left:15px"><h4><?php echo $test['test_name'];?></h4></div>
+								<div class="row" style="padding-left:15px"><h6><?php echo $test['test_name'];?></h6></div>
 								<div class="row">
 			<?php 		
 				$positive="";$negative="";
@@ -126,7 +174,6 @@
 			</div>
 			</span>
 			</div>
-			
 					<?php 	
 					}
 				}
@@ -138,11 +185,11 @@
 				 if($test['test_status']==1){ $readonly = "disabled"; }else $readonly="";
 			?>
 				<div class="panel panel-warning col-md-12">
-					<h4>
+					<div class="col-md-3">
 						<?php echo $test['test_name'];?>
-					</h4>
+					</div>
 					<?php if($test['binary_result']==1){ ?>
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<?php if($test['test_status'] == 1) { if($test['test_result_binary'] == 1 ) $positive="checked" ; else $negative = "checked" ; } ?>
 							<label>
 							<input type="radio" value="1" id="binary_result_pos" form='order_submit' name="binary_result_<?php echo $test['test_id'];?>" <?php echo $readonly." ".$positive;?> />
@@ -155,14 +202,14 @@
 					</div>
 					<?php } ?>
 					<?php if($test['numeric_result']==1){ ?>
-					<div class="col-md-4" class="form-group">
+					<div class="col-md-3" class="form-group">
 							<input type="number" class="form-control" placeholder="Numeric" style="width:100px" form='order_submit' name="numeric_result_<?php echo $test['test_id'];?>" step="any" value="<?php echo $test['test_result'];?>" <?php echo $readonly;?> />
 							<label class="control-label"><?php echo $test['lab_unit'];?></label>
 					</div>
 					<?php } ?>
 					<?php if($test['text_result']==1){ ?>
-					<div class="col-md-4">
-							<textarea name="text_result_<?php echo $test['test_id'];?>" class="form-control" form='order_submit' placeholder="Descriptive result" value="<?php echo $test['test_result_text'];?>"  <?php echo $readonly;?>></textarea>
+					<div class="col-md-3">
+							<textarea rows="1" name="text_result_<?php echo $test['test_id'];?>" class="form-control" form='order_submit' placeholder="Descriptive result" value="<?php echo $test['test_result_text'];?>"  <?php echo $readonly;?>></textarea>
 					</div>
 					<?php } ?>
 			<input type="text" value="<?php echo $test['test_id'];?>" name="test[]" class="sr-only hidden" />
@@ -178,11 +225,11 @@
 				 if($test->test_status==1){ $readonly = "disabled"; }else $readonly="";
 			?>
 				<div class="panel panel-warning col-md-12">
-					<h4>
+					<div class="col-md-3">
 						<?php echo $test->test_name;?>
-					</h4>
+					</div>
 					<?php if($test->binary_result==1){ ?>
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<?php if($test->test_status == 1) { if($test->test_result_binary == 1 ) $positive="checked" ; else $negative = "checked" ; } ?>
 							<label>
 							<input type="radio" value="1" id="binary_positive_<?php echo $test->test_id;?>" form='order_submit' name="binary_result_<?php echo $test->test_id;?>" <?php echo $readonly." ".$positive;?> />
@@ -323,14 +370,14 @@
 						<?php } ?>
 					<?php } ?>
 					<?php if($test->numeric_result==1){ ?>
-					<div class="col-md-4" class="form-group">
+					<div class="col-md-3" class="form-group">
 							<input type="number" class="form-control" placeholder="Numeric" style="width:100px" form='order_submit' name="numeric_result_<?php echo $test->test_id;?>" step="any" value="<?php echo $test->test_result;?>" <?php echo $readonly;?> />
 							<label class="control-label"><?php echo $test->lab_unit;?></label>
 					</div>
 					<?php } ?>
 					<?php if($test->text_result==1){ ?>
-					<div class="col-md-4">
-							<textarea name="text_result_<?php echo $test->test_id;?>" class="form-control" form='order_submit' placeholder="Descriptive result" value="<?php echo $test->test_result_text;?>"  <?php echo $readonly;?>></textarea>
+					<div class="col-md-3">
+							<textarea rows="1" name="text_result_<?php echo $test->test_id;?>" class="form-control" form='order_submit' placeholder="Descriptive result" value="<?php echo $test->test_result_text;?>"  <?php echo $readonly;?>></textarea>
 					</div>
 					<?php } ?>
 			<input type="text" value="<?php echo $test->test_id;?>" name="test[]" class="sr-only hidden" />
@@ -396,14 +443,13 @@ if(count($orders)>0){ ?>
 		<h4>Test Orders</h4>
 	</div>
 	<div class="panel-body">
-		<table class="table table-bordered table-striped">
+		<table class="table table-bordered table-striped" id="table-sort">
 		<thead>
 			<th>#</th>
 			<th>Order ID</th>
-			<th>Order By</th>
 			<th>Sample Code</th>
 			<th>Specimen</th>
-			<th>Patient ID</th>
+			<th>IP/OP #</th>
 			<th>Patient Name</th>
 			<th>Department</th>
 			<th>Tests</th>
@@ -427,10 +473,9 @@ if(count($orders)>0){ ?>
 							<?php echo $order->order_id;?>
 							<input type="hidden" class="sr-only" name="order_id" value="<?php echo $order->order_id;?>" />
 						</td>
-						<td><?php echo $order->staff_name;?></td>
 						<td><?php echo $order->sample_code;?></td>
 						<td><?php echo $order->specimen_type; if($order->specimen_source!="") echo " - ".$order->specimen_source;?> </td><!--mentioning the specimen source beside the specimen type if the specimen type is not null-->
-						<td><?php echo $order->hosp_file_no;?></td>
+						<td><?php echo $order->visit_type." #".$order->hosp_file_no;?></td>
 						<td><?php echo $order->first_name." ".$order->last_name;?></td>
 						<td><?php echo $order->department;?></td>
 						<td>

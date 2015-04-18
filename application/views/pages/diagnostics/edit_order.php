@@ -1,11 +1,52 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/theme.default.css">
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
 <script>
 	$(function(){	
-		console.log('hello');
 		$(".date").Zebra_DatePicker();
 	})
 </script>
+	<script>
+		$(function(){ 
+		var options = {
+			widthFixed : true,
+			showProcessing: true,
+			headerTemplate : '{content} {icon}', // Add icon for jui theme; new in v2.7!
+
+			widgets: [ 'default', 'zebra', 'stickyHeaders' ],
+
+			widgetOptions: {
+
+			// extra class name added to the sticky header row
+			  stickyHeaders : '',
+			  // number or jquery selector targeting the position:fixed element
+			  stickyHeaders_offset : 0,
+			  // added to table ID, if it exists
+			  stickyHeaders_cloneId : '-sticky',
+			  // trigger "resize" event on headers
+			  stickyHeaders_addResizeEvent : true,
+			  // if false and a caption exist, it won't be included in the sticky header
+			  stickyHeaders_includeCaption : false,
+			  // The zIndex of the stickyHeaders, allows the user to adjust this to their needs
+			  stickyHeaders_zIndex : 2,
+			  // jQuery selector or object to attach sticky header to
+			  stickyHeaders_attachTo : null,
+			  // scroll table top into view after filtering
+			  stickyHeaders_filteredToTop: true,
+
+			  // adding zebra striping, using content and default styles - the ui css removes the background from default
+			  // even and odd class names included for this demo to allow switching themes
+			  zebra   : ["ui-widget-content even", "ui-state-default odd"],
+			  // use uitheme widget to apply defauly jquery ui (jui) class names
+			  // see the uitheme demo for more details on how to change the class names
+			  uitheme : 'jui'
+			}
+		  };
+			$("#table-sort").tablesorter(options);
+		});
+	</script>
 <div class="col-md-10 col-md-offset-2">
 <?php echo validation_errors(); ?>
 <?php if(isset($msg)){ ?> 
@@ -395,11 +436,10 @@ if(count($orders)>0){ ?>
 		<h4>Test Orders</h4>
 	</div>
 	<div class="panel-body">
-		<table class="table table-bordered table-striped">
+		<table class="table table-bordered table-striped" id="table-sort">
 		<thead>
 			<th>#</th>
 			<th>Order ID</th>
-			<th>Order By</th>
 			<th>Sample Code</th>
 			<th>Specimen</th>
 			<th>Patient ID</th>
@@ -426,10 +466,9 @@ if(count($orders)>0){ ?>
 							<?php echo $order->order_id;?>
 							<input type="hidden" class="sr-only" name="order_id" value="<?php echo $order->order_id;?>" />
 						</td>
-						<td><?php echo $order->staff_name;?></td>
 						<td><?php echo $order->sample_code;?></td>
 						<td><?php echo $order->specimen_type; if($order->specimen_source!="") echo " - ".$order->specimen_source;?> </td><!--mentioning the specimen source beside the specimen type if the specimen type is not null-->
-						<td><?php echo $order->hosp_file_no;?></td>
+						<td><?php echo $order->visit_type." #".$order->hosp_file_no;?></td>
 						<td><?php echo $order->first_name." ".$order->last_name;?></td>
 						<td><?php echo $order->department;?></td>
 						<td>

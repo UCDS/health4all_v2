@@ -1,4 +1,4 @@
-w<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <script type="text/javascript"
  src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <script>

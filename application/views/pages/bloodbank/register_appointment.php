@@ -36,7 +36,7 @@
 	}
 	?>
 	<br /><br />
-	<h1>Donor Registration</h1>
+	<h4>Donor Registration</h4>
 	<?php echo form_open("appointment/register/slot".$slot[0]->slot_id); ?>
 	<font size="2">fields marked with * are mandatory.</font><br />
 	<hr>

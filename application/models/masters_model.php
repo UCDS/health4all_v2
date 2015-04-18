@@ -25,6 +25,18 @@ class Masters_model extends CI_Model{
 		else if($type=="unit"){
 			$this->db->select("unit_id,unit_name,department_id")->from("unit");
 		}
+		else if($type=="icd_chapters"){
+			$this->db->select("chapter_id,chapter_title")->from("icd_chapter")->order_by('chapter_title');
+		}
+		else if($type=="icd_blocks"){
+			$this->db->select("*")->from("icd_block")->order_by('block_title');
+		}
+		else if($type=="icd_codes"){
+			$this->db->select("*")->from("icd_code")->order_by('code_title');
+		}
+		else if($type=="unit"){
+			$this->db->select("unit_id,unit_name,department_id")->from("unit");
+		}
 		else if($type=="user"){
 			$this->db->select("user_id,username")->from("user");
 		}
@@ -79,6 +91,9 @@ class Masters_model extends CI_Model{
 		}
 		else if($type=="drug_type"){
 			$this->db->select("drug_type_id,drug_type,description")->from("drug_type");
+		}
+		else if($type=="drugs"){
+			$this->db->select("item_id,item_name")->from("item")->order_by('item_name');
 		}
 		
 		else if($type=="dosage"){
@@ -293,9 +308,19 @@ class Masters_model extends CI_Model{
 						$search_method=strtolower($this->input->post('group_name'));
 						$this->db->like('LOWER(group_name)',$search_method,'after');
 				}
-				$this->db->select("group_id,group_name")->from("test_group")->order_by('group_name');
-
-
+				if($department!=0 && count($department)>0){
+					$deps = array();
+					foreach($department as $d){
+						$deps[]=$d->department_id;
+					}
+					$this->db->where_in('department_id',$deps);
+				}
+				$this->db->select("test_group.group_id,group_name,test_name")->from("test_group")
+				->join('test_group_link','test_group.group_id = test_group_link.group_id')
+				->join('test_master','test_group_link.test_master_id = test_master.test_master_id')
+				->join('test_method','test_master.test_method_id=test_method.test_method_id')
+				->join('test_area','test_master.test_area_id=test_area.test_area_id')
+				->order_by('group_name');
 			}
 		elseif ($type=="test_status_type") {
 			if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
@@ -330,7 +355,11 @@ class Masters_model extends CI_Model{
 				}
 				$this->db->where_in('department_id',$deps);
 			}
-			$this->db->select("test_master_id,test_name,test_master.test_method_id,test_master.test_area_id,test_method")->from("test_master")->join('test_method','test_master.test_method_id=test_method.test_method_id')->join('test_area','test_master.test_area_id=test_area.test_area_id')->order_by('test_name');
+			$this->db->select("test_master_id,test_name,test_master.test_method_id,test_master.test_area_id,test_method")
+			->from("test_master")
+			->join('test_method','test_master.test_method_id=test_method.test_method_id')
+			->join('test_area','test_master.test_area_id=test_area.test_area_id')
+			->order_by('test_name');
 
 
 		}

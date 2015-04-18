@@ -52,8 +52,8 @@ class Staff_model extends CI_Model{
 	}
 	
 	//get_department() selects the clinical departments from the database and returns the result
-	function get_department(){
-		$this->db->select("department_id,department")->from("department")->where('clinical','1');
+	function get_department($clinical=1){
+		$this->db->select("department_id,department")->from("department")->where('clinical',$clinical)->order_by('department');
 		$query=$this->db->get();
 		return $query->result();
 	}

@@ -32,7 +32,7 @@ function test_order(){
 	$this->form_validation->set_rules('visit_id','Patient','required|trim|xss_clean');
 	$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
 	$this->data['test_masters']=$this->masters_model->get_data('test_name',0,$this->data['departments']);
-	$this->data['test_groups']=$this->masters_model->get_data('test_group');
+	$this->data['test_groups']=$this->masters_model->get_data('test_group',0,$this->data['departments']);
 	$this->data['specimen_types']=$this->masters_model->get_data('specimen_type');
 	if ($this->form_validation->run() === FALSE){
 		$this->load->view($page,$this->data);

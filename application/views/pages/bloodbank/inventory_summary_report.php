@@ -10,7 +10,7 @@
 </script>
 
 <div class="col-md-10 col-sm-9">
-	<h1>Screened Inventory at Gandhi Hospital</h1>
+	<h4>Screened Inventory at Gandhi Hospital</h4>
 	<?php echo form_open('bloodbank/user_panel/inventory_summary'); ?>
 	<div>
 		<input type="text" class="date" size="12" name="from_date" />
