@@ -34,6 +34,9 @@ class Vendor extends CI_Controller {
 			);
 			$this->data['vendor_types']=$this->masters_model->get_data("vendor_type");
 			$this->data['contact_persons']=$this->masters_model->get_data("unassigned_contact_person");
+			$this->data['countries']=$this->masters_model->get_data("countries");
+			$this->data['village_towns']=$this->masters_model->get_data("village_town");
+			$this->data['states']=$this->masters_model->get_data("states");
 		}
 
 		else if($type=="contact_person"){
@@ -117,6 +120,9 @@ function edit($type=""){
 			{
 				$post_vendor_id=$this->input->post('vendor_id');
 				$this->data['contact_persons']=$this->masters_model->get_data("vendor_specific_contact_person",$vendor_id=$post_vendor_id); 
+				$this->data['countries']=$this->masters_model->get_data("countries");
+				$this->data['village_towns']=$this->masters_model->get_data("village_town");
+				$this->data['states']=$this->masters_model->get_data("states");
 			}
 			$this->data['vendors']=$this->masters_model->get_data("vendor"); // fetching data of vendors based on the state we are in. 
 			//before search fetch all the data, on search  based on condition given, 

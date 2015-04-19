@@ -449,6 +449,10 @@ class Masters_model extends CI_Model{
 		else if($type=="states"){
 			$this->db->select("state_id,state")->from("states");
 		}
+		else if($type=="countries"){
+			$this->db->select("*")->from("countries")->order_by('country_name');;
+			//$this->db-order_by("country_name");
+		}
 		else if($type=="area_types"){
 			$this->db->select("area_type_id,area_type")->from("area_types");
 		}
@@ -765,7 +769,7 @@ else if($type=="dosage"){
 		$hospital=$this->session->userdata('hospital');
 		$hospital_id=$hospital['hospital_id'];
 		if($type=="drug_type"){
-		$data = array(
+		$data = array(	
 					  'drug_type'=>$this->input->post('drug_type'),
 					 'description'=>$this->input->post('description')
 		);
@@ -1132,13 +1136,16 @@ else if($type=="dosage"){
 		$table="states";
 		}
 		elseif($type=="vendor"){
+		echo "type = ".$this->input->post('vendor_type_id');
+		echo "contry - ".$this->input->post('vendor_country_id');
 		$data = array(
 					  'vendor_name'=>$this->input->post('vendor_name'),
 					  'vendor_type_id'=>$this->input->post('vendor_type_id'),
 					   'vendor_address'=>$this->input->post('vendor_address'),
-					   'vendor_city'=>$this->input->post('vendor_city'),
-					   'vendor_state'=>$this->input->post('vendor_state'),
-					   'vendor_country'=>$this->input->post('vendor_country'),
+					   'village_town_id'=>$this->input->post('village_town_id'),
+					   'vendor_state_id'=>$this->input->post('vendor_state_id'),
+					   'district_id'=>$this->input->post('vendor_state_id'),
+					   'vendor_country_id'=>$this->input->post('vendor_country_id'),
 					   'account_no'=>$this->input->post('account_no'),
 					   'bank_name'=>$this->input->post('bank_name'),
 					   'branch'=>$this->input->post('branch'),
