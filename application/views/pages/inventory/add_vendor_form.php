@@ -153,9 +153,15 @@ $(function(){
 		</div>
 		<div class="col-md-6">
 			<select name="contact_person_id" id="vendor" class="form-control" required>
-		<option value="">--select--</option>
-		<?php foreach($contact_persons as $d){
-			echo "<option value='$d->contact_person_id'>$d->contact_person_first_name $d->contact_person_first_name </option>";
+		<?php 
+		if(sizeof($contact_persons) <= 0)
+			echo "<option value=''>Add atleast one contact person without vendor to add new vendor</option>";
+		else
+		{
+			echo "<option value=''>--select--</option>";
+			foreach($contact_persons as $d){
+				echo "<option value='$d->contact_person_id'>$d->contact_person_first_name $d->contact_person_first_name </option>";
+			}
 		}
 		?>
 		</select>

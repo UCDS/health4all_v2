@@ -29,7 +29,7 @@
 	<?php 
 	//$staff = $staff[0]; 
 	//What is form_open ?
-	echo form_open('vendor/edit/contact_person',array('class'=>'form-horizontal','role'=>'form','id'=>'edit_contact_person')); 
+	echo form_open('vendor/edit/vendor',array('class'=>'form-horizontal','role'=>'form','id'=>'edit_vendor')); 
 	?>
 
 	<div class="form-group">
@@ -89,11 +89,14 @@
 	<div class="form-group">
 		<label for="vendor_country_id" class="col-md-3"> Country</label>
 		<div class="col-md-6">
+
 			<select name="vendor_country_id" id="vendor_country_id" class="form-control">
 			<option value="">--select--</option>
-			<?php foreach($countries as $d){
+			<?php 
+			foreach($countries as $d){
 				echo "<option value='$d->id'";
-				if($d->country_code == $vendor[0]->vendor_country_id)
+
+				if($d->id == $vendor[0]->vendor_country_id)
 				{
 					echo " selected ";
 				}
@@ -159,14 +162,22 @@
 	
 		<div class="col-md-6">
 			<select name="contact_person_id" id="contact_person_id" class="form-control">
-		<option value="">--select--</option>
-		<?php foreach($contact_persons as $d){
-			echo " <option value=' $d->contact_person_id'   ";
-			if($contact_persons[0]->contact_person_id == $d->contact_person_id)
-			{
-				echo "selected";
+
+		<?php
+		$size = sizeof($contact_persons);
+		if( $size <= 0 )
+			echo "<option value='0'>Please add atleast one contact person for this vendor</option>";
+		else
+		{
+			echo "<option value=''>--select--</option>";
+			foreach($contact_persons as $d){
+				echo " <option value=' $d->contact_person_id'   ";
+				if($contact_persons[0]->contact_person_id == $d->contact_person_id)
+				{
+					echo "selected";
+				}
+				echo ' > '. $d->contact_person_first_name .' '.  $d->contact_person_last_name .' </option>';
 			}
-			echo ' > '. $d->contact_person_first_name .' '.  $d->contact_person_last_name .' </option>';
 		}
 		?>
 		</select>
@@ -191,7 +202,7 @@
 	<table class="table-bordered col-md-12">
 	<tbody>
 	<tr>
-		<td><input type="text" class="form-control" placeholder=" Name " id="vendor_name" name="vendor_name"> 
+		<td><input type="text" class="form-control" placeholder=" Name " id="vendor_name" name="vendor_name_search"> 
 		
 		
 				<td><input class="btn btn-lg btn-primary btn-block" name="search" value="Search" type="submit" /></td></tr>
