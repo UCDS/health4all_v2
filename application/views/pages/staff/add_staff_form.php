@@ -17,7 +17,7 @@
 		});
 	});
 </script>
-
+<div class="row">
 <div class="col-md-8 col-md-offset-2">
 	
 	<center>
@@ -226,4 +226,5 @@
 		<button class="btn btn-lg btn-primary btn-block" type="submit" value="submit">Submit</button>
 	</div>
 </form>
+</div>
 </div>

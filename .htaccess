@@ -8,11 +8,11 @@ RewriteEngine On
 # then use
 # RewriteBase /mypage/test1/
 
-RewriteBase /health4all_v2/
+RewriteBase /health4all/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond $1 !^(index\.php|assets|images|robots\.txt)
-RewriteRule ^(.*)$ /health4all_v2/index.php/$1 [L]
+RewriteRule ^(.*)$ /health4all/index.php/$1 [L]
 </IfModule>
  
 <IfModule !mod_rewrite.c>
@@ -20,5 +20,5 @@ RewriteRule ^(.*)$ /health4all_v2/index.php/$1 [L]
 # can be sent to index.php, and everything works as normal.
 # Submitted by: ElliotHaughin
  
-ErrorDocument 404 /health4all_v2/index.php
+ErrorDocument 404 /health4all/index.php
 </IfModule>

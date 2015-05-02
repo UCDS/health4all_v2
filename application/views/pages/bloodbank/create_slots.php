@@ -33,7 +33,7 @@
 		echo "<br />";
 	}
 	?>
-	<h1>Create Slots for Blood Donation</h1>
+	<h4>Create Slots for Blood Donation</h4>
 	<?php echo validation_errors(); ?>
 	<?php echo form_open("create_slots"); ?>
 	<hr>

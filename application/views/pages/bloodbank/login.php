@@ -1,6 +1,6 @@
 
 	<div class="col-md-10 col-sm-9" style="text-align:center;">
-		<h1>Staff Login - Blood Bank</h1>
+		<h4>Staff Login - Blood Bank</h4>
 		<?php echo validation_errors(); ?>
 
 		<?php echo form_open('bloodbank/staff/login') ?>

@@ -56,6 +56,7 @@
 	<th><?php echo $pc_total;?></th>
 	<th><?php echo $total;?></th>
 	</table>
+	<br />
 	<table class="table-2 table table-striped table-bordered">
 	<tr><th colspan="10">Components</th></tr>
 	<tr><th>Blood Group</th><th>PRP</th><th>Platelet Concentrate</th><th>FFP</th><th>FP</th><th>Cryo</th><th>Total</th></tr>

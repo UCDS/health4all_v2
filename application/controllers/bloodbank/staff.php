@@ -77,7 +77,7 @@ class Staff extends CI_Controller {
 					$this->load->view('pages/bloodbank/place',$this->data);
 				}
 			}
-			if($this->input->post('add_hospital')){
+			else if($this->input->post('add_hospital')){
 				if($this->staff_model->add_hospital($hospital_id)){
 					$this->data['camps']=$this->register_model->get_camps();
 					$this->data['msg']="Hospital added successfully";
@@ -86,7 +86,7 @@ class Staff extends CI_Controller {
 				else{
 				}
 			}
-			else{
+			else{	
 			$this->session->unset_userdata('place');
 			$sess_array=array(
 				'camp_id'=>$this->input->post('camp'),

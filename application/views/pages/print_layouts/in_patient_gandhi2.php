@@ -40,9 +40,11 @@
 			<div  class="column">
 				<b>Gender/Age:</b> 
 				<?php echo $registered->gender."/";
-				if($registered->age_years!=0) echo $registered->age_years."y "; 
-				if($registered->age_months!=0) echo $registered->age_months."m "; 
-				if($registered->age_days!=0) echo $registered->age_years."d "; ?>
+				if($registered->age_years!=0) echo $registered->age_years."Y "; 
+				if($registered->age_months!=0) echo $registered->age_months."M "; 
+				if($registered->age_days!=0) echo $registered->age_years."D "; 
+				if($registered->age_years==0 && $registered->age_months == 0 && $registered->age_days==0) echo "0 Days";
+				?>
 			</div>
 			<div   class="column">
 				<b>Department:</b> <?php echo $registered->department; ?>			
@@ -94,9 +96,11 @@
 			<div  class="column">
 				<b>Gender/Age:</b> 
 				<?php echo $registered->gender."/";
-				if($registered->age_years!=0) echo $registered->age_years."y "; 
-				if($registered->age_months!=0) echo $registered->age_months."m "; 
-				if($registered->age_days!=0) echo $registered->age_years."d "; ?>
+				if($registered->age_years!=0) echo $registered->age_years."Y "; 
+				if($registered->age_months!=0) echo $registered->age_months."M "; 
+				if($registered->age_days!=0) echo $registered->age_days."D "; 
+				if($registered->age_years==0 && $registered->age_months == 0 && $registered->age_days==0) echo "0 Days";
+				?>
 			</div>
 			<div  class="column">
 				<b>Department:</b> <?php echo $registered->department; ?>			

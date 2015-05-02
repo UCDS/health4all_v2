@@ -26,7 +26,7 @@ $(function(){
 	
 	<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
-		<h3>Add Contact Person Details</h3>
+		<h3>Add Equipment Details</h3>
 	</center><br>
 	
 	<center>

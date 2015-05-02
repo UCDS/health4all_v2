@@ -9,7 +9,7 @@
 	}
 </style>
 	<div class="col-md-10 col-sm-9">
-		<h1>Welcome to  Blood Bank!</h1>
+		<h4>Welcome to  Blood Bank!</h4>
 		
 		<p>Why donate blood? Watch a video here:</p>
 		<div align="center">
@@ -17,7 +17,7 @@
 		</div>
 		<p>If you would like to donate blood, <a href="<?php echo base_url();?>appointment">click here</a></p>
 		<br />
-		<h1>Our inventory as on <?php echo date("d-M-Y");?> </h1>
+		<h4>Our inventory as on <?php echo date("d-M-Y");?> </h4>
 		<table class="table-2 table table-striped table-bordered" style="position:relative;float:left">
 			<tr><th colspan="4">Whole Blood & Packed Cells</th></tr>
 			<tr><th>Blood Group</th><th>Whole Blood</th><th>PC</th><th>Total</th></tr>

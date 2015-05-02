@@ -7,12 +7,12 @@
 				<li <?php if(preg_match("^add/equipment$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/add/equipment">Equipment</a></li>
 				<li <?php if(preg_match("^add/equipment_type^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>equipments/add/equipment_type">Equipment Type</a></li>
 				<li <?php if(preg_match("^add/service_records^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/add/service_records">Service Issue</a></li>
-				<li <?php if(preg_match("^add/#^",current_url())) echo 'class="active"';?> ><a href="#">AMC/CMC</a></li>
+				<li ><a href="#">AMC/CMC</a></li>
 				<li class="nav-header">Edit</li>
 				<li <?php if(preg_match("^edit/equipment_type^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/edit/equipment_type">Equipment Type</a></li>
 				<li <?php if(preg_match("^edit/equipments$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/edit/equipments">Equipment Details</a></li>
 				<li <?php if(preg_match("^edit/service_records^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/edit/service_records">Service Issue</a></li>
-				<li <?php if(preg_match("^edit/#^",current_url())) echo 'class="active"';?> ><a href="#">AMC/CMC</a></li>
+				<li><a href="#">AMC/CMC</a></li>
 				<li class="nav-header">View</li>
 				<li <?php if(preg_match("^view/equipments_summary^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/view/equipments_summary">Equipments</a></li>
 	<ul>
@@ -137,6 +137,11 @@
 	foreach($functions as $f){
 		if($f->user_function=="Diagnostics"){ ?>
 			<li <?php if(preg_match("^view_orders^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/view_orders">Update Tests</a></li>
+	<?php } 
+	} 
+	foreach($functions as $f){
+		if($f->user_function=="Diagnostics"){ ?>
+			<li <?php if(preg_match("^edit_order^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/edit_order">Cancel Orders</a></li>
 	<?php } 
 	} 
 	foreach($functions as $f){

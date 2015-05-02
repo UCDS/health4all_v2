@@ -82,7 +82,7 @@ function get_slots(slot_id){
 }
 </script>
 <div class="col-md-10 col-sm-9">
-	<h1>Book an appointment to donate blood</h1>
+	<h4>Book an appointment to donate blood</h4>
 	<p>You can book an appointment to donate blood at Indian Red Cross Blood Bank, Vidyanagar.
 	Although you can walk in directly to the blood bank and donate,
 	 we encourage you to book an appointment before you come. 

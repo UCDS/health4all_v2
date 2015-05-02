@@ -63,6 +63,7 @@ class Home extends CI_Controller {
 							 'logo' => $row->logo
 							);
 							$this->session->set_userdata('hospital',$sess_array);
+							$this->session->set_userdata('place',array('camp_id'=>0,'name'=>'Blood Bank'));
 							break;
 				}
 				$this->load->view('pages/home',$this->data);

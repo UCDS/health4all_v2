@@ -17,7 +17,7 @@
 
 <div class="col-md-10 col-sm-9">
 	
-	<h1>Report of Blood Donations at <?php echo $userdata['hospital'];?></h1>
+	<h4>Report of Blood Donations at <?php echo $hospitaldata['hospital'];?></h4>
 	<?php echo form_open('bloodbank/user_panel/donation_summary'); ?>
 	<div>
 		<input type="text" class="date" size="12" id="from_date" name="from_date" />
@@ -130,7 +130,7 @@
 		<td align="right"><a href="<?php echo base_url()."user_panel/report_donations/c/Oneg/0/0/$from_date/$to_date";?>"><?php echo $Oneg-$walk_in_Oneg;?></td>
 	</tr>
 	<tr>
-		<td colspan="2"><b>Collected at <?php echo $userdata['hospital'];?> </b></td>
+		<td colspan="2"><b>Collected at <?php echo $hospitaldata['hospital'];?> </b></td>
 		<td align="right"><a href="<?php echo base_url()."user_panel/report_donations/0/0/m/0/$from_date/$to_date";?>"><?php echo $walk_in_male;?></a></td>
 		<td align="right"><a href="<?php echo base_url()."user_panel/report_donations/0/0/f/0/$from_date/$to_date";?>"><?php echo $walk_in_female;?></td>
 		<th align="right"><a href="<?php echo base_url()."user_panel/report_donations/0/0/0/0/$from_date/$to_date";?>"><?php echo $walk_in_total;?></th>

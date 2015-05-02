@@ -69,6 +69,7 @@ class Sanitation extends CI_Controller {
 		if($access==0) show_404();		
 		$this->load->model('sanitation_model');
 		$this->data['title']="Evaluate Sanitation Works";
+		$this->data['all_hospitals']=$this->staff_model->get_hospital();
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');		
 		$this->load->view('templates/header',$this->data);
@@ -92,6 +93,7 @@ class Sanitation extends CI_Controller {
 		if($access==0) show_404();		
 		$this->load->model('sanitation_model');
 		$this->data['title']="Evaluate Sanitation Works";
+		$this->data['all_hospitals']=$this->staff_model->get_hospital();
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');		
 		$this->load->view('templates/header',$this->data);
