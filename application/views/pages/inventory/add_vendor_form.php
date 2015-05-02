@@ -61,21 +61,49 @@ $(function(){
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_city" class="col-md-3"> City<font color='red'>*</font></label>
-		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" City" id="vendor_city" name="vendor_city" required/>
+		<label for="village_town_id" class="col-md-3"> City<font color='red'>*</font></label>
+
+		<div class="col-md-6">
+			<select name="village_town_id" id="village_town_id" class="form-control">
+			<option value="">--select--</option>
+			<?php foreach($village_towns as $d){
+				echo "<option value='$d->village_town_id'";
+				echo ">$d->village_town</option>";
+			}
+			?>
+			</select>		
+
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_state" class="col-md-3"> State<font color='red'>*</font></label>
-		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" State" id="description" name="vendor_state" required/>
+		<label for="vendor_state_id" class="col-md-3"> State<font color='red'>*</font></label>
+		<div class="col-md-6">
+			<select name="vendor_state_id" id="vendor_state_id" class="form-control">
+			<option value="">--select--</option>
+			<?php foreach($states as $d){
+				echo "<option value='$d->state_id'";
+				echo ">$d->state</option>";
+			}
+			?>
+			</select>		
+
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_country" class="col-md-3"> Country</label>
-		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" Country" id="vendor_country" name="vendor_country" />
+		<label for="vendor_country_id" class="col-md-3"> Country</label>
+		<div class="col-md-6">
+			<select name="vendor_country_id" id="vendor_country_id" class="form-control">
+			<option value="">--select--</option>
+			<?php foreach($countries as $d){
+				echo "<option value='$d->id'";
+				if($d->country_code == "IN")
+				{
+					echo " selected ";
+				}
+				echo ">$d->country_name</option>";
+			}
+			?>
+			</select>		
 		</div>
 	</div>
 	<div class="form-group">
@@ -125,9 +153,15 @@ $(function(){
 		</div>
 		<div class="col-md-6">
 			<select name="contact_person_id" id="vendor" class="form-control" required>
-		<option value="">--select--</option>
-		<?php foreach($contact_persons as $d){
-			echo "<option value='$d->contact_person_id'>$d->contact_person_first_name $d->contact_person_first_name </option>";
+		<?php 
+		if(sizeof($contact_persons) <= 0)
+			echo "<option value=''>Add atleast one contact person without vendor to add new vendor</option>";
+		else
+		{
+			echo "<option value=''>--select--</option>";
+			foreach($contact_persons as $d){
+				echo "<option value='$d->contact_person_id'>$d->contact_person_first_name $d->contact_person_first_name </option>";
+			}
 		}
 		?>
 		</select>

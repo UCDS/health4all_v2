@@ -66,7 +66,7 @@ $(function(){
 	</div>
 	<div class="form-group">
 		<div class="col-md-3">
-			<label for="vendor" >Vendor<font color='red'>*</font></label>
+			<label for="vendor" ></label>
 		</div>
 		<div class="col-md-6">
 			<select name="vendor" id="vendor" class="form-control">
