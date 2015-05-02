@@ -160,7 +160,7 @@
 	<table class="table-bordered col-md-12">
 	<tbody>
 	<tr>
-		<td><input type="text" class="form-control" placeholder=" Name " id="contact_person_name" name="contact_person_name"> 
+		<td><input type="text" class="form-control" placeholder=" Name " id="contact_person_name" name="contact_person_name_search"> 
 		
 		
 				<td><input class="btn btn-lg btn-primary btn-block" name="search" value="Search" type="submit" /></td></tr>

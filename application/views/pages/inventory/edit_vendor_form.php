@@ -29,7 +29,7 @@
 	<?php 
 	//$staff = $staff[0]; 
 	//What is form_open ?
-	echo form_open('vendor/edit/contact_person',array('class'=>'form-horizontal','role'=>'form','id'=>'edit_contact_person')); 
+	echo form_open('vendor/edit/vendor',array('class'=>'form-horizontal','role'=>'form','id'=>'edit_vendor')); 
 	?>
 
 	<div class="form-group">
@@ -52,26 +52,61 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_city" class="col-md-3"> City</label>
-		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" City" id="vendor_city" name="vendor_city" 
-		value="<?php echo $vendors[0]->vendor_city; ?>" />
+		<label for="village_town_id" class="col-md-3"> City<font color='red'>*</font></label>
+
+		<div class="col-md-6">
+			<select name="village_town_id" id="village_town_id" class="form-control">
+			<option value="">--select--</option>
+			<?php foreach($village_towns as $d){
+				echo "<option value='$d->village_town_id'";
+				if($vendors[0]->village_town_id == $d->village_town_id) {
+					echo " selected ";
+				}				
+				echo ">$d->village_town</option>";
+			}
+			?>
+			</select>		
+
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_state" class="col-md-3"> State<font color='red'>*</font></label>
-		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" State" id="vendor_state" name="vendor_state" required
-		value="<?php echo $vendors[0]->vendor_state; ?>" />
+		<label for="vendor_state_id" class="col-md-3"> State<font color='red'>*</font></label>
+		<div class="col-md-6">
+			<select name="vendor_state_id" id="vendor_state_id" class="form-control">
+			<option value="">--select--</option>
+			<?php foreach($states as $d){
+				echo "<option value='$d->state_id'";
+				if($vendors[0]->vendor_state_id == $d->state_id) {
+					echo " selected ";
+				}			
+				echo ">$d->state</option>";
+			}
+			?>
+			</select>		
+
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_country" class="col-md-3"> Country<font color='red'>*</font></label>
-		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" Country" id="vendor_country" name="vendor_country" required
-		value="<?php echo $vendors[0]->vendor_country; ?>" />
+		<label for="vendor_country_id" class="col-md-3"> Country</label>
+		<div class="col-md-6">
+
+			<select name="vendor_country_id" id="vendor_country_id" class="form-control">
+			<option value="">--select--</option>
+			<?php 
+			foreach($countries as $d){
+				echo "<option value='$d->id'";
+
+				if($d->id == $vendor[0]->vendor_country_id)
+				{
+					echo " selected ";
+				}
+				echo ">$d->country_name</option>";
+			}
+			?>
+			</select>		
 		</div>
 	</div>
+
 	<div class="form-group">
 		<label for="account_no" class="col-md-3"> Bank Account Number</label>
 		<div  class="col-md-6">
@@ -127,14 +162,22 @@
 	
 		<div class="col-md-6">
 			<select name="contact_person_id" id="contact_person_id" class="form-control">
-		<option value="">--select--</option>
-		<?php foreach($contact_persons as $d){
-			echo " <option value=' $d->contact_person_id'   ";
-			if($contact_persons[0]->contact_person_id == $d->contact_person_id)
-			{
-				echo "selected";
+
+		<?php
+		$size = sizeof($contact_persons);
+		if( $size <= 0 )
+			echo "<option value='0'>Please add atleast one contact person for this vendor</option>";
+		else
+		{
+			echo "<option value=''>--select--</option>";
+			foreach($contact_persons as $d){
+				echo " <option value=' $d->contact_person_id'   ";
+				if($contact_persons[0]->contact_person_id == $d->contact_person_id)
+				{
+					echo "selected";
+				}
+				echo ' > '. $d->contact_person_first_name .' '.  $d->contact_person_last_name .' </option>';
 			}
-			echo ' > '. $d->contact_person_first_name .' '.  $d->contact_person_last_name .' </option>';
 		}
 		?>
 		</select>
@@ -159,7 +202,7 @@
 	<table class="table-bordered col-md-12">
 	<tbody>
 	<tr>
-		<td><input type="text" class="form-control" placeholder=" Name " id="vendor_name" name="vendor_name"> 
+		<td><input type="text" class="form-control" placeholder=" Name " id="vendor_name" name="vendor_name_search"> 
 		
 		
 				<td><input class="btn btn-lg btn-primary btn-block" name="search" value="Search" type="submit" /></td></tr>
@@ -179,7 +222,7 @@
 	<?php 
 	$i=1;
 	foreach($vendors as $a){ ?>
-	<?php echo form_open('vendor/edit/vendor',array('id'=>'select_vendor_form_'.$a->contact_person_id,'role'=>'form')); ?>
+	<?php echo form_open('vendor/edit/vendor',array('id'=>'select_vendor_form_'.$a->vendor_id,'role'=>'form')); ?>
 	<tr onclick="$('#select_vendor_form_<?php echo $a->vendor_id;?>').submit();" >
 		<td><?php echo $i++; ?></td>
 		<td><?php echo $a->vendor_name; ?>
@@ -192,7 +235,8 @@
 	</tbody>
 	</table>
 	<?php } ?>
-	</div></div>
+	</div>
+</div>
 
 
 

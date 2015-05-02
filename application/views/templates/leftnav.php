@@ -10,7 +10,7 @@
 				<li ><a href="#">AMC/CMC</a></li>
 				<li class="nav-header">Edit</li>
 				<li <?php if(preg_match("^edit/equipment_type^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/edit/equipment_type">Equipment Type</a></li>
-				<li <?php if(preg_match("^edit/equipments^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/edit/equipments">Equipment Details</a></li>
+				<li <?php if(preg_match("^edit/equipments$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/edit/equipments">Equipment Details</a></li>
 				<li <?php if(preg_match("^edit/service_records^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/edit/service_records">Service Issue</a></li>
 				<li><a href="#">AMC/CMC</a></li>
 				<li class="nav-header">View</li>
