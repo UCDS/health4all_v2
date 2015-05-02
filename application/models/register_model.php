@@ -67,7 +67,6 @@ class Register_model extends CI_Model{
 		if($this->input->post('outcome_time')) $outcome_time=date("h:i:s",strtotime($this->input->post('outcome_time'))); else $outcome_time = 0;
 		if($this->input->post('final_diagnosis')) $final_diagnosis=$this->input->post('final_diagnosis'); else $final_diagnosis="";
 		if($this->input->post('congenital_anomalies')) $congenital_anomalies=$this->input->post('congenital_anomalies'); else $congenital_anomalies="";
-
 		if($form_type=="IP"){
 			$hosp_file_no=$this->input->post('hosp_file_no');
 			if(!$this->input->post('visit_id')){
@@ -144,6 +143,12 @@ class Register_model extends CI_Model{
 			$patient_id=$this->db->insert_id();
 		}
 		
+		$encoded_data = $this->input->post('patient_picture');
+		$binary_data = base64_decode( $encoded_data );
+
+		// save to server (beware of permissions)
+		$result = file_put_contents( "C://wamp/www/health4all/assets/images/patients/$patient_id.jpg", $binary_data );
+		if (!$result) die("Could not save image!  Check file permissions.");
 		
 		//Creating an array with the database column names as keys and the post values as values. 
 		$visit_data=array( 
@@ -222,7 +227,7 @@ class Register_model extends CI_Model{
 		patient.patient_id,patient_visit.visit_id,
 		CONCAT(IF(first_name=NULL,"",first_name)," ",IF(last_name=NULL,"",last_name)) name,
 		IF(father_name=NULL OR father_name="",spouse_name,father_name) parent_spouse,
-		department,unit_name,area_name,op_room_no,mlc_number,ps_name',false)
+		department,unit_name,area_name,district,op_room_no,mlc_number,ps_name',false)
 		->from('patient')->join('patient_visit','patient.patient_id=patient_visit.patient_id')
 		->join('department','patient_visit.department_id=department.department_id','left')
 		->join('unit','patient_visit.unit=unit.unit_id','left')
@@ -531,6 +536,15 @@ class Register_model extends CI_Model{
 		$this->db->select('icd_code, CONCAT(icd_code," ",code_title) as code_title',false)->from('icd_code')->order_by('code_title')->like('code_title',$this->input->post('query'),'both');
 		$query=$this->db->get();
 		return $query->result_array();
+	}
+	
+	function get_prescription($visit_id){
+		$this->db->select('prescription.*,item_name,lab_unit')->from('prescription')
+		->join('lab_unit','prescription.unit_id = lab_unit.lab_unit_id')
+		->join('item','prescription.item_id = item.item_id')
+		->where('visit_id',$visit_id)->where('status',1);
+		$query=$this->db->get();
+		return $query->result();
 	}
 }
 ?>

@@ -1,4 +1,5 @@
 		<link rel="stylesheet" href="<?php echo base_url();?>assets/css/main.css" media="print" >
+		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/font-awesome.min.css" media="print">
 		<?php $patient=$patients[0];?>
 		<table style="width:98%;padding:5px">
 				<tr>
@@ -20,6 +21,7 @@
 							if($patient->age_years!=0){ echo $patient->age_years." Yrs "; } 
 							if($patient->age_months!=0){ echo $patient->age_months." Mths "; }
 							if($patient->age_days!=0){ echo $patient->age_days." Days "; }
+							if($registered->age_years==0 && $registered->age_months == 0 && $registered->age_days==0) echo "0 Days";
 							?>
 						</td>
 				</tr>
@@ -229,48 +231,58 @@
 				</tr>
 				<tr>
 				<td colspan="3">
-				<table id="table-prescription">
-						<tr align="center" >
-							<td rowspan="2" width="30px">S.no</td>
-							<td rowspan="2" width="45%;">
+				
+				<?php if(isset($prescription) && !!$prescription){ ?>
+					<table id="table-prescription">
+					<thead>
+						<tr>
+							<th rowspan="2" width="30px">S.no</th>
+							<th rowspan="2" width="20%;">
 							<img src="<?php echo base_url();?>assets/images/medicines.jpg" width="30px" alt="" />
 							Medicine
-							<img src="<?php echo base_url();?>assets/images/syrup.jpg" width="30px" alt="" />
-							<br />(CAPITAL LETTERS PLEASE)</td>
-							<td rowspan="2" width="50px">Strength</td>
-							<td rowspan="2" width="50px"><img src="<?php echo base_url();?>assets/images/calendar.jpg" width="30px" alt="Days" /><br />Days</td>
-							<td colspan="10" align="center" width="300px"><img src="<?php echo base_url();?>assets/images/timings.jpg" width="50px" height="40px" alt="Timings" />
-							<span style="top:-10px;position:relative;">Timings</span></td>
+							<img src="<?php echo base_url();?>assets/images/syrup.jpg" width="30px" alt="" /></th>
+							<th rowspan="2" width="50px">Strength/ Quantity</th>
+							<th rowspan="2" width="50px">Frequency</th>
+							<th rowspan="2" width="50px"><img src="<?php echo base_url();?>assets/images/calendar.jpg" width="30px" alt="Days" /><br />Days</th>
+							<th colspan="6" align="center" width="300px"><img src="<?php echo base_url();?>assets/images/timings.jpg" width="50px" height="40px" alt="Timings" />
+							<span style="top:-10px;position:relative;">Timings</span></th>
 						</tr>
 						<tr align="center">
-							<td colspan="2" width="30px"><img src="<?php echo base_url();?>assets/images/morning.jpg" width="30px" height="30px" />
+							<th colspan="2" width="30px"><img src="<?php echo base_url();?>assets/images/morning.jpg" width="30px" height="30px" />
 							<span style="top:-10px;position:relative;">Morning</span>
 							<br />
-							<-<img src="<?php echo base_url();?>assets/images/food.jpg" alt="Food" width="30px" height="30px" />-></td>
-							<td colspan="2" width="30px"><img src="<?php echo base_url();?>assets/images/afternoon.jpg" width="30px" height="30px" />
+							<-<img src="<?php echo base_url();?>assets/images/food.jpg" alt="Food" width="30px" height="30px" />-></th>
+							<th colspan="2" width="30px"><img src="<?php echo base_url();?>assets/images/afternoon.jpg" width="30px" height="30px" />
 							<span style="top:-10px;position:relative;">Afternoon</span>
 							<br />
-							<-<img src="<?php echo base_url();?>assets/images/food.jpg" alt="Food" width="30px" height="30px" />-></td>
-							<td colspan="2" width="30px"><img src="<?php echo base_url();?>assets/images/night.jpg" width="30px" height="30px" />
+							<-<img src="<?php echo base_url();?>assets/images/food.jpg" alt="Food" width="30px" height="30px" />-></th>
+							<th colspan="2" width="30px"><img src="<?php echo base_url();?>assets/images/night.jpg" width="30px" height="30px" />
 							<span style="top:-10px;position:relative;">Evening</span>
 							<br />
-							<-<img src="<?php echo base_url();?>assets/images/food.jpg" alt="Food" width="30px" height="30px" />-></td>
+							<-<img src="<?php echo base_url();?>assets/images/food.jpg" alt="Food" width="30px" height="30px" />-></th>
 						</tr>
-						<?php for($i=0;$i<5;$i++){ ?>
-						<tr height="50px" align="center" valign="center">
-							<td><?= $i+1 ?></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						<?php } ?>
-						</table>
+					</thead>
+					<tbody>
+					<?php 
+					$i=1;
+					foreach($prescription as $pres){ ?>
+					<tr>
+						<td><?php echo $i++;?></td>
+						<td><?php echo $pres->item_name;?></td>
+						<td><?php echo $pres->quantity;?> <?php echo $pres->lab_unit;?></td>
+						<td><?php echo $pres->frequency;?></td>
+						<td><?php echo $pres->duration;?></td>
+						<td><?php if($pres->morning == 1 || $pres->morning == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td><?php if($pres->morning == 2 || $pres->morning == 3) echo " <i class='fa fa-check'></i>";?></td>
+						<td><?php if($pres->afternoon == 1 || $pres->afternoon == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td><?php if($pres->afternoon == 2 || $pres->afternoon == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td><?php if($pres->evening == 1 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td><?php if($pres->evening == 2 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
+					</tr>
+					<?php } ?>
+					</tbody>
+				</table>
+				<?php } ?>
 				</td>
 				</tr>
 		</table>

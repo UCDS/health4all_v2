@@ -391,7 +391,7 @@
 						<input type="text" name="visit_information" style="width: 170px" class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
-						</div>
+					</div>
 						<div class="layout-div col-md-4 hospital">
 						<div class="form-group">
 						<label class="control-label">   Hospital   </label>

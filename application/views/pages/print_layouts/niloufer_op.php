@@ -1,15 +1,19 @@
 		<link rel="stylesheet" href="<?php echo base_url();?>assets/css/main.css" media="print" >
 		<table style="width:98%;padding:5px">
 				<tr>
-				<td colspan="3" align="center">
-				<img align="left" src="<?php echo base_url();?>assets/images/<?php $hospital=$this->session->userdata('hospital');echo $hospital['logo'];?>" width="70px" />
-				<font size="3"><?php echo $hospital['hospital'];?></font><br />
+				<td colspan="3">
+				<img style="float:right" style="margin-top:-20px" src="<?php echo base_url();?>assets/images/telangana-logo.jpg" width="60px" />
+				<img style="float:left" src="<?php echo base_url();?>assets/images/<?php $hospital=$this->session->userdata('hospital');echo $hospital['logo'];?>" width="60px" />
+				<div style="float:middle;text-align:center">
+				<b>Government of Telangana</b><br />
+				<font size="4"><?php echo $hospital['hospital'];?></font><br />
 					<?php echo $hospital['description'];?> 
 					@ 
 					<?php echo $hospital['place'];?>, 
 					<?php echo $hospital['district'];?>,
 					<?php echo date("d-M-Y",strtotime($registered->admit_date)); ?>,
 					<?php echo date("g:iA",strtotime($registered->admit_time)); ?>
+				</div>
 				</td>
 				</tr>
 				<tbody height="10%" style="border:1px solid black;">
@@ -36,32 +40,29 @@
 						<td> 
 						<?php 
 						if(!!$registered->unit_name) echo "Unit";
-						if(!!$registered->unit_name && !!$registered->area_name) echo "/ ";
-						if(!!$registered->area_name) echo "Area";
-						if(!!$registered->unit_name && !!$registered->area_name) echo ": "; 
+						if(!!$registered->unit_name) echo ": "; 
 						if(!!$registered->unit_name) echo $registered->unit_name;
-						if(!!$registered->unit_name && !!$registered->area_name) echo "/ ";
-						if(!!$registered->area_name) echo $registered->area_name;
 						?>
 						</td>
 				</tr>
 				</tbody>
-				<tr style="border:1px solid black" >
-						<td style="padding:5px;">Weight : </td>
-						<td>Pulse : </td>
-						<td> BP : ______ / ______</td>
-				</tr>
-				<tr class="print-element" width="95%" height="120px">
-					<td>
+				<tr class="print-element" width="95%" height="100px">
+					<td colspan="2">
 						Chief Complaint:
 					</td>
+					<td style="padding:5px;">Weight : </td>
 				</tr>
 				<tr class="print-element" width="95%" height="120px">
 					<td>
-						Diagnosis:
+						Examination:
 					</td>
 				</tr>
-				<tr class="print-element" width="95%" height="120px">
+				<tr class="print-element" width="95%" height="70px">
+					<td>
+						Provisional Diagnosis:
+					</td>
+				</tr>
+				<tr class="print-element" width="95%" height="70px">
 					<td>
 						Investigations:
 					</td>
@@ -87,25 +88,16 @@
 							<span style="top:-10px;position:relative;">Timings</span></td>
 						</tr>
 						<tr align="center">
-							<td colspan="2" width="30px"><img src="<?php echo base_url();?>assets/images/morning.jpg" width="30px" height="20px" />
-							<span style="top:-10px;position:relative;">Morning</span>
-							<br />
-							<-<img src="<?php echo base_url();?>assets/images/food.jpg" alt="Food" width="30px" height="20px" />-></td>
-							<td colspan="2" width="30px"><img src="<?php echo base_url();?>assets/images/afternoon.jpg" width="30px" height="20px" />
-							<span style="top:-10px;position:relative;">Afternoon</span>
-							<br />
-							<-<img src="<?php echo base_url();?>assets/images/food.jpg" alt="Food" width="30px" height="20px" />-></td>
-							<td colspan="2" width="30px"><img src="<?php echo base_url();?>assets/images/night.jpg" width="30px" height="20px" />
-							<span style="top:-10px;position:relative;">Evening</span>
-							<br />
-							<-<img src="<?php echo base_url();?>assets/images/food.jpg" alt="Food" width="30px" height="20px" />-></td>
+							<td width="30px"><img src="<?php echo base_url();?>assets/images/morning.jpg" width="30px" height="20px" />
+							<span style="top:-10px;position:relative;">Morning</span></td>
+							<td width="30px"><img src="<?php echo base_url();?>assets/images/afternoon.jpg" width="30px" height="20px" />
+							<span style="top:-10px;position:relative;">Afternoon</span></td>
+							<td width="30px"><img src="<?php echo base_url();?>assets/images/night.jpg" width="30px" height="20px" />
+							<span style="top:-10px;position:relative;">Evening</span></td>
 						</tr>
 						<?php for($i=0;$i<5;$i++){ ?>
-						<tr height="25px" align="center" valign="center">
+						<tr height="40px" align="center" valign="center">
 							<td><?= $i+1 ?></td>
-							<td></td>
-							<td></td>
-							<td></td>
 							<td></td>
 							<td></td>
 							<td></td>

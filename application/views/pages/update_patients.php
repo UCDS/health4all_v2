@@ -638,6 +638,7 @@ pri.print();
 					</tbody>
 				</table>
 			</div>
+			</div>
 			<div class="row alt">
 				<?php if(isset($prescription) && !!$prescription){ ?>
 					<table class="table table-bordered table-striped">
@@ -648,7 +649,7 @@ pri.print();
 						<th rowspan="3" class="text-center">Frequency</th>
 						<th colspan="6" class="text-center">Timings</th>
 						<th rowspan="3" class="text-center">Quantity</th>
-						<th rowspan="3" class="text-center">Unit</th>
+						<th rowspan="3" class="text-center"></th>
 						</tr>
 						<tr>
 							<th colspan="2" class="text-center">Morning</th>
@@ -667,20 +668,20 @@ pri.print();
 					<tbody>
 					<?php foreach($prescription as $pres){ ?>
 					<tr>
-						<td><?php echo $pres->drug_name;?></td>
+						<td><?php echo $pres->item_name;?></td>
 						<td><?php echo $pres->duration;?></td>
 						<td><?php echo $pres->frequency;?></td>
-						<td><input type="checkbox" readonly <?php if($pres->morning == 1 || $pres->morning == 3) echo " checked ";?> /></td>
-						<td><input type="checkbox" readonly <?php if($pres->morning == 2 || $pres->morning == 3) echo " checked ";?> /></td>
-						<td><input type="checkbox" readonly <?php if($pres->afternoon == 1 || $pres->afternoon == 3) echo " checked ";?> /></td>
-						<td><input type="checkbox" readonly <?php if($pres->afternoon == 2 || $pres->afternoon == 3) echo " checked ";?> /></td>
-						<td><input type="checkbox" readonly <?php if($pres->evening == 1 || $pres->evening == 3) echo " checked ";?> /></td>
-						<td><input type="checkbox" readonly <?php if($pres->evening == 2 || $pres->evening == 3) echo " checked ";?> /></td>
-						<td><?php echo $pres->quantity;?> <?php echo $pres->unit;?></td>
+						<td><?php if($pres->morning == 1 || $pres->morning == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td><?php if($pres->morning == 2 || $pres->morning == 3) echo " <i class='fa fa-check'></i>";?></td>
+						<td><?php if($pres->afternoon == 1 || $pres->afternoon == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td><?php if($pres->afternoon == 2 || $pres->afternoon == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td><?php if($pres->evening == 1 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td><?php if($pres->evening == 2 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td><?php echo $pres->quantity;?> <?php echo $pres->lab_unit;?></td>
 						<td>
 							<?php echo form_open('register/update_patients',array('class'=>'form-custom'));?>
-							<input type="text" value="<?php echo $pres->prescription_id;?>" name="prescription_id" />
-							<input type="text" value="<?php echo $pres->visit_id;?>" name="visit_id" />
+							<input type="text" class="sr-only" value="<?php echo $pres->prescription_id;?>" name="prescription_id" hidden />
+							<input type="text" class="sr-only" value="<?php echo $pres->visit_id;?>" name="visit_id" hidden />
 							<button type="submit" id="remove_prescription" class="btn btn-danger btn-sm">X</button>
 							</form>
 						</td>
@@ -689,7 +690,6 @@ pri.print();
 					</tbody>
 				</table>
 			<?php } ?>
-			</div>
 			</div>
 		</div>
 		<div role="tabpanel" class="tab-pane" id="discharge">

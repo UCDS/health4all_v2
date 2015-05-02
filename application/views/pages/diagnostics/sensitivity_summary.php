@@ -261,11 +261,21 @@ $(function(){
 				$i=0;
 					foreach($micro_organisms as $m){
 						foreach($report as $r){
-							if( $r->antibiotic == $a && $r->micro_organism == $m){
-								echo "<td>$r->sensitive</td><td>$r->total_antibiotic</td><td>".number_format(($r->sensitive/$r->total_antibiotic)*100)."%</td>";
+							if( $r->antibiotic == $a && $r->micro_organism == $m){ ?>
+								<td>
+									<a href="<?php echo base_url()."reports/order_detail/-1/$r->department_id/$r->unit/$r->area/-1/$r->specimen_type_id/-1/$visit_type/$from_date/$to_date/2/department/0/$r->antibiotic_id/$r->micro_organism_id/1";?>">
+									<?php echo $r->sensitive;?>
+									</a>
+								</td>
+								<td>
+									<a href="<?php echo base_url()."reports/order_detail/-1/$r->department_id/$r->unit/$r->area/-1/$r->specimen_type_id/-1/$visit_type/$from_date/$to_date/2/department/0/$r->antibiotic_id/$r->micro_organism_id/0";?>">
+									<?php echo $r->total_antibiotic;?>
+									</a>
+								</td>
+								<td><?php echo number_format(($r->sensitive/$r->total_antibiotic)*100);?>%</td>
+								<?php 
 								$mo[]=$m;
 							}
-							//else {var_dump($mo); break;}
 						}
 						
 							if(!in_array($m,$mo)){

@@ -40,6 +40,9 @@ class Reports extends CI_Controller {
 		}
 		if($access==1){
 		$this->data['title']="Out-Patient Summary Report";
+		$this->data['all_departments']=$this->staff_model->get_department();
+		$this->data['units']=$this->staff_model->get_unit();
+		$this->data['areas']=$this->staff_model->get_area();
 		$this->load->view('templates/header',$this->data);
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -77,6 +80,9 @@ class Reports extends CI_Controller {
 		}
 		if($access==1){
 		$this->data['title']="In-Patient Summary Report";
+		$this->data['all_departments']=$this->staff_model->get_department();
+		$this->data['units']=$this->staff_model->get_unit();
+		$this->data['areas']=$this->staff_model->get_area();
 		$this->load->view('templates/header',$this->data);
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -103,7 +109,7 @@ class Reports extends CI_Controller {
 		}
 	}
 	
-	public function op_detail($department=0,$gender=0,$from_age=0,$to_age=0,$from_date=0,$to_date=0)
+	public function op_detail($department=0,$unit=0,$area=0,$gender=0,$from_age=0,$to_age=0,$from_date=0,$to_date=0)
 	{
 		if($this->session->userdata('logged_in')){
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -116,10 +122,13 @@ class Reports extends CI_Controller {
 		if($access==1){
 		if($from_date == 0 && $to_date==0) {$from_date=date("Y-m-d");$to_date=$from_date;}
 		$this->data['title']="Out-Patient Detailed Report";
+		$this->data['all_departments']=$this->staff_model->get_department();
+		$this->data['units']=$this->staff_model->get_unit();
+		$this->data['areas']=$this->staff_model->get_area();
 		$this->load->view('templates/header',$this->data);
 		$this->load->helper('form');
 		$this->load->library('form_validation');
-		$this->data['report']=$this->reports_model->get_op_detail($department,$from_age,$to_age,$from_date,$to_date);
+		$this->data['report']=$this->reports_model->get_op_detail($department,$unit,$area,$from_age,$to_age,$from_date,$to_date);
 		$this->form_validation->set_rules('from_date', 'From Date',
 		'trim|required|xss_clean');
 	    $this->form_validation->set_rules('to_date', 'To Date', 
@@ -142,7 +151,7 @@ class Reports extends CI_Controller {
 		}
 		
 	}
-	public function ip_detail($department=-1,$gender=0,$from_age=0,$to_age=0,$from_date=0,$to_date=0)
+	public function ip_detail($department=-1,$unit=0,$area=0,$gender=0,$from_age=0,$to_age=0,$from_date=0,$to_date=0)
 	{
 		if($this->session->userdata('logged_in')){
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -155,10 +164,13 @@ class Reports extends CI_Controller {
 		if($access==1){
 		if($from_date == 0 && $to_date==0) {$from_date=date("Y-m-d");$to_date=$from_date;}
 		$this->data['title']="In-Patient Detailed Report";
+		$this->data['all_departments']=$this->staff_model->get_department();
+		$this->data['units']=$this->staff_model->get_unit();
+		$this->data['areas']=$this->staff_model->get_area();
 		$this->load->view('templates/header',$this->data);
 		$this->load->helper('form');
 		$this->load->library('form_validation');
-		$this->data['report']=$this->reports_model->get_ip_detail($department,$gender,$from_age,$to_age,$from_date,$to_date);
+		$this->data['report']=$this->reports_model->get_ip_detail($department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date);
 		$this->form_validation->set_rules('from_date', 'From Date',
 		'trim|required|xss_clean');
 	    $this->form_validation->set_rules('to_date', 'To Date', 
@@ -181,7 +193,7 @@ class Reports extends CI_Controller {
 		}
 	}
 
-	public function order_detail($test_master=-1,$department=-1,$unit=-1,$area=-1,$test_area=-1,$specimen_type=-1,$test_method=-1,$visit_type=0,$from_date=0,$to_date=0,$status=-1,$type="",$number=0)
+	public function order_detail($test_master=-1,$department=-1,$unit=-1,$area=-1,$test_area=-1,$specimen_type=-1,$test_method=-1,$visit_type=0,$from_date=0,$to_date=0,$status=-1,$type="",$number=0,$antibiotic_id=0,$micro_organism_id=0,$sensitive=0)
 	{
 		if($this->session->userdata('logged_in')){
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -217,7 +229,7 @@ class Reports extends CI_Controller {
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 		$test_areas=$this->masters_model->get_data('test_area',0,$this->data['departments']);
-		$this->data['report']=$this->reports_model->get_order_detail($test_master,$department,$unit,$area,$test_area,$specimen_type,$test_method,$visit_type,$from_date,$to_date,$status,$type,$number);
+		$this->data['report']=$this->reports_model->get_order_detail($test_master,$department,$unit,$area,$test_area,$specimen_type,$test_method,$visit_type,$from_date,$to_date,$status,$type,$number,$antibiotic_id,$micro_organism_id,$sensitive);
 		$this->form_validation->set_rules('from_date', 'From Date',
 		'trim|required|xss_clean');
 	    $this->form_validation->set_rules('to_date', 'To Date', 

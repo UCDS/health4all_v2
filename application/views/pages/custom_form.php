@@ -24,9 +24,10 @@ $(function(){
 				getAge(date);
 		}
 	});
-	
+	<?php if($patient && $patient->gender != 'F') { ?>
 	$("#spouse_name").prop('disabled',true);
-	$(".gender").change(function(){
+	<?php } ?>
+	$(".gender").on('change',function(){
 		if($(this).val()=="M"){
 			$("#spouse_name").prop('disabled',true);
 		}
@@ -115,9 +116,10 @@ pri.print();
 							<th>Age</th>
 							<td>
 								<?php
-									if($registered->age_years!=0) echo $registered->age_years."y ";
-									if($registered->age_months) echo $registered->age_months."m "; 
-									if($registered->age_days) echo $registered->age_days."d "; 
+									if($registered->age_years!=0) echo $registered->age_years."Y ";
+									if($registered->age_months) echo $registered->age_months."M "; 
+									if($registered->age_days) echo $registered->age_days."D "; 
+									if($registered->age_years==0 && $registered->age_months == 0 && $registered->age_days==0) echo "0 Days";
 								?>
 							</td>
 						</tr>
@@ -131,7 +133,7 @@ pri.print();
 				</div>
 <!--here in the panel-footer print button is displayed -->				
 				<div class="panel-footer">
-					<button type="submit" class="btn btn-primary col-md-offset-5" onclick="printDiv('print-div')"> Print</button>
+					<button type="submit" class="btn btn-primary col-md-offset-5" onclick="printDiv('print-div')" autofocus>Print</button>
 				</div>
 			</div>
 			</div>
@@ -161,7 +163,7 @@ pri.print();
 				<?php if($update){ ?>
 				<input type="text" name="visit_id" class="form-control sr-only" size="3" value="<?php echo $patient->visit_id;?>" readonly />
 				<?php } ?>
-				<input type="text" name="hosp_file_no" <?php if($update){?> value="<?php echo $patient->hosp_file_no;?>" <?php } ?> class="form-control" size="5" />
+				<input type="text" name="hosp_file_no" <?php if($update){?> value="<?php echo $patient->hosp_file_no;?>" <?php } ?> class="form-control" size="5" required />
 				<?php } ?>
 				<label class="control-label">Date</label>
 				<?php 
@@ -354,8 +356,8 @@ pri.print();
 						<label class="control-label">Occupation<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<select name="occupation" class="form-control" <?php if($mandatory) echo "required"; ?>>
 						<option value="">--Select--</option>
-							<option value="private" <?php if(isset($patient) && $patient->occupation=="private") echo " selected ";?> >Non government</option>
-							<option value="government" <?php if(isset($patient) && $patient->occupation=="government") echo " selected ";?> >Government</option>
+							<option value="private" <?php if($patient && $patient->occupation=="private") echo " selected ";?> >Non government</option>
+							<option value="government" <?php if($patient && $patient->occupation=="government") echo " selected ";?> >Government</option>
 						</select>
 						</div>
 					</div>
@@ -781,6 +783,71 @@ pri.print();
 					</div>
 				<?php 
 					break;
+                case "patient_picture" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group well well-sm">
+							<div class="col-md-12">
+								<p class="col-md-6" id="results-text">Captured image will appear here..</p>
+								<p class="col-md-6">Camera View</p>
+							</div>
+							<div id="results" class="col-md-6 results"></div>
+							
+							<div id="my_camera" class="col-md-6"></div>
+							<div class="col-md-offset-6" style="position:relative;top:5px">
+							
+							<!-- A button for taking snaps -->
+								<div id="button">
+									<input id="patient_picture" type="hidden" class="sr-only" name="patient_picture" value=""/>
+									<button class="btn btn-default btn-sm" type="button" onclick="save_photo()"><i class="fa fa-camera"></i> Take Picture</button>
+								</div>
+							</div>
+							<!-- First, include the Webcam.js JavaScript Library -->
+							<script type="text/javascript" src="<?php echo base_url();?>assets/js/webcam.min.js"></script>
+							
+							<!-- Configure a few settings and attach camera -->
+							<script language="JavaScript">
+								Webcam.set({
+									width: 320,
+									height: 240,
+									// device capture size
+									dest_width: 320,
+									dest_height: 240,
+									// final cropped size
+									crop_width: 200,
+									crop_height: 240,											
+									image_format: 'jpeg',
+									jpeg_quality: 90
+								});
+								Webcam.attach( '#my_camera' );
+							</script>
+							
+							<!-- Code to handle taking the snapshot and displaying it locally -->
+							<script language="JavaScript">
+								
+								function save_photo() {
+									// actually snap photo (from preview freeze) and display it
+									Webcam.snap( function(data_uri) {
+										// display results in page
+										document.getElementById('results').innerHTML = 
+											'<img src="'+data_uri+'"/>';
+										document.getElementById('results-text').innerHTML = 
+											'Captured Image';
+										//Store image data in input field.
+										var raw_image_data = data_uri.replace(/^data\:image\/\w+\;base64\,/, '');
+										
+										document.getElementById('patient_picture').value = raw_image_data;
+										
+										// swap buttons back
+										document.getElementById('pre_take_buttons').style.display = '';
+										document.getElementById('post_take_buttons').style.display = 'none';
+									} );
+								}
+							</script>
+							
+						</div>
+					</div>
+				<?php 
+					break;
 					}
 			}
 			?>
@@ -892,9 +959,10 @@ pri.print();
 											<td><?php echo $patient->name; ?></td>
 											<td>
 												<?php 
-													if($patient->age_years!=0) echo $patient->age_years."y ";
-													if($patient->age_months) echo $patient->age_months."m "; 
-													if($patient->age_days) echo $patient->age_days."d "; 
+													if($patient->age_years!=0) echo $patient->age_years."Y ";
+													if($patient->age_months) echo $patient->age_months."M "; 
+													if($patient->age_days) echo $patient->age_days."D "; 
+													if($patient->age_years==0 && $patient->age_months == 0 && $patient->age_days==0) echo "0 Days";
 												?>
 											</td>
 											<td><?php echo $patient->gender;?></td>

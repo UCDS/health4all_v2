@@ -11,9 +11,11 @@
 			<?php echo date("g:ia",strtotime($registered->admit_time)); ?>
 		</div>
 		<div style="position:absolute;top:4.9%;left:34%">
-			<?php if($registered->age_years!=0) echo $registered->age_years."y "; ?>
-			<?php if($registered->age_months!=0) echo $registered->age_months."m "; ?>
-			<?php if($registered->age_days!=0) echo $registered->age_days."d "; ?>
+			<?php if($registered->age_years!=0) echo $registered->age_years."Y "; ?>
+			<?php if($registered->age_months!=0) echo $registered->age_months."M "; ?>
+			<?php if($registered->age_days!=0) echo $registered->age_days."D "; 
+				if($registered->age_years==0 && $registered->age_months == 0 && $registered->age_days==0) echo "0 Days";
+			?>
 		</div>
 		<div style="position:absolute;top:4.9%;left:58.4%">
 			<?php echo $registered->gender; ?>
