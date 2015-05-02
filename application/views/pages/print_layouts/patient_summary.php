@@ -21,7 +21,7 @@
 							if($patient->age_years!=0){ echo $patient->age_years." Yrs "; } 
 							if($patient->age_months!=0){ echo $patient->age_months." Mths "; }
 							if($patient->age_days!=0){ echo $patient->age_days." Days "; }
-							if($registered->age_years==0 && $registered->age_months == 0 && $registered->age_days==0) echo "0 Days";
+							if($patient->age_years==0 && $patient->age_months == 0 && $patient->age_days==0) echo "0 Days";
 							?>
 						</td>
 				</tr>

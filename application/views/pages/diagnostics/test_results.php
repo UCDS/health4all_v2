@@ -281,7 +281,8 @@ pri.print();
 						else echo "-";
 					?>
 						
-						<?php if($test['test_result_binary']==1 && preg_match("^Culture*^",$test['test_method'])) {   //if the test has a binary result and the test method is Culture & Sensitivity 
+						<?php 
+						if($test['test_result_binary']==1 && preg_match("^Culture*^",$test['test_method'])) {   //if the test has a binary result and the test method is Culture & Sensitivity 
 						$micro_organism_test_ids = array();
 						$res = explode("^",trim($test['micro_organism_test'],"^")); 
 						$k=0;
@@ -423,6 +424,86 @@ pri.print();
 						else echo "-";
 					?>
 
+						<?php 
+						if($test->test_result_binary==1 && preg_match("^Culture*^",$test->test_method)) {   //if the test has a binary result and the test method is Culture & Sensitivity 
+						$micro_organism_test_ids = array();
+						$res = explode("^",trim($test->micro_organism_test,"^")); 
+						$k=0;
+						//to group all sensitive and resistive antibiotics separately
+						//creating arrays to store sensitive and resistant values separately
+							$sensitive=array();
+							$resistive=array();
+					
+						foreach($res as $r) {
+							// Break the strings contaning the micro organism test details 
+							//and store them into an array: using explode() function
+							$temp=explode(",",trim($r," ,")); 
+								if($temp[3]==1){
+								//Storing all the antibiotics that are sensitive into the $sensitive variable.
+								$sensitive[]=array(
+									'micro_organism_test_id'=>$temp[0], 
+									'antibiotic'=>$temp[2]
+								);
+								}
+							if($temp[3]==0){
+								//Storing all the antibiotics that are resistant into the $resistant variable.
+								$resistive[]=array(
+								'micro_organism_test_id'=>$temp[0],//storing resistives in same variables as in sensitive array
+								'antibiotic'=>$temp[2]
+							);}
+							}	
+							
+						foreach($res as $r) {
+							$temp=explode(",",trim($r," ,"));//Break tne strings and store them into an array: using explode() function, to get an array of test results.
+							$temp[3]==1?$temp[3]="Sensitive":$temp[3]="Resistant"; //$temp[3] contains the antibiotic result.
+						
+							if(!in_array($temp[0],$micro_organism_test_ids)){ //in_array Searches for the currrent micro organism test ID in the array of all micro_organism_test_ids encountered so far.
+								
+								if(count($micro_organism_test_ids)>0) echo "</table></div></div>"; //except for the first time, close the div tags and table tag that are opened in the previous iteration.
+								?>
+							
+								
+								<div class="well well-sm" style="background:white;font-size:0.5em;">
+								
+								
+									<div style="font-size:1.5em;">
+										<h5><b><?php echo $temp[1]; //prnit the micro organism name.?></b></h5>
+								<!--displaying the antibiotic results in a table-->	
+								<table class="table">
+								<tr><th style="width:400px;">Sensitive</th><th>Resistant</th></tr>	
+								<div class="col-md-2">
+							<?php 
+								$micro_organism_test_ids[]=$temp[0]; //add the current micro organism test to the array.
+							?>
+										
+									<tr>
+										<td>
+											 <!--display all the sensitive antibiotics in series if they belong to their corresponding test-->
+										<ol type=1> <?php foreach($sensitive as $se){      
+											if($se['micro_organism_test_id']==$temp[0]){
+												echo "<li>$se[antibiotic]</li>";
+											}
+										}
+										?></ol>
+										</td>
+		
+										<td>
+											<!--display all the resistive antibiotics in series if they belong to their crresponding test-->
+										 <ol type=1> <?php foreach($resistive as $re){		
+											if($re['micro_organism_test_id']==$temp[0]){       
+											echo "<li>$re[antibiotic]</li>";
+											}
+										}
+										?> </ol>
+										</td>
+									</tr>
+							<?php }
+							$k++;
+							if($k==count($res))
+								echo "</table></div></div>"; //in the last iteration, close the table tags and div tags.
+							}
+							
+						} ?>
 					 </td>
 					 <td>
 					<?php if($test->text_result==1){ 
