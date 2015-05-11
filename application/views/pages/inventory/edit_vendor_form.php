@@ -43,6 +43,24 @@
 		</div>
 	</div>
 	<div class="form-group">
+		<label for="equipment_type_id" class="col-md-3"> City<font color='red'>*</font></label>
+
+		<div class="col-md-6">
+			<select name="equipment_type_id" id="equipment_type_id" class="form-control">
+			<option value="">--select--</option>
+			<?php foreach($equipment_types as $d){
+				echo "<option value='$d->equipment_type_id'";
+				if($vendors[0]->equipment_type_id == $d->equipment_type_id) {
+					echo " selected ";
+				}				
+				echo ">$d->equipment_type</option>";
+			}
+			?>
+			</select>		
+
+		</div>
+	</div>
+	<div class="form-group">
 		<div class="col-md-3">
 			<label for="vendor_address" class="control-label">Address<font color='red'>*</font></label>
 		</div>

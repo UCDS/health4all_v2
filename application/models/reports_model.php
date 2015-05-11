@@ -390,10 +390,8 @@ class Reports_model extends CI_Model{
 	}
 	
 	function get_equipment_summary(){
-		$this->db->select("equipment.equipment_type_id,equipment_type,equipment.department_id,department,equipment.area_id,area_name,equipment.unit_id,unit_name,
-		SUM(CASE WHEN equipment_status=1 THEN 1 ELSE 0 END) 'working',
-		SUM(CASE WHEN equipment_status=0 THEN 1 ELSE 0 END) 'not_working',
-		SUM(CASE WHEN 1 THEN 1 ELSE 0 END) 'total',
+		$this->db->select("equipment.equipment_type_id,equipment_type,equipment.department_id,department,equipment.area_id,area_name,equipment.unit_id,unit_name,equipment_status,		
+		SUM(CASE WHEN 1 THEN 1 ELSE 0 END) 'total'
 		")
 		->from("equipment")
 		->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id")
