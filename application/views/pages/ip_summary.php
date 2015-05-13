@@ -101,6 +101,16 @@ $(function(){
 					}
 					?>
 					</select>
+					<select name="visit_name" id="visit_name" class="form-control" >
+					<option value="">All</option>
+					<?php 
+					foreach($visit_names as $v){
+						echo "<option value='".$v->visit_name_id."'";
+						if($this->input->post('visit_name') && $this->input->post('visit_name') == $v->visit_name_id) echo " selected ";
+						echo ">".$v->visit_name."</option>";
+					}
+					?>
+					</select>
 					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
 		</form>
 	<br />
@@ -148,21 +158,21 @@ $(function(){
 	?>
 	<tr>
 		<td><?php echo $s->department;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/M/14/0/$from_date/$to_date";?>"><?php echo $s->ip_mchild;?></a></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/F/14/0/$from_date/$to_date";?>"><?php echo $s->ip_fchild;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/0/14/0/$from_date/$to_date";?>"><?php echo $s->ip_child;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/M/14/30/$from_date/$to_date";?>"><?php echo $s->ip_m14to30;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/F/14/30/$from_date/$to_date";?>"><?php echo $s->ip_f14to30;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/0/14/30/$from_date/$to_date";?>"><?php echo $s->ip_14to30;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/M/30/50/$from_date/$to_date";?>"><?php echo $s->ip_m30to50;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/F/30/50/$from_date/$to_date";?>"><?php echo $s->ip_f30to50;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/0/30/50/$from_date/$to_date";?>"><?php echo $s->ip_30to50;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/M/0/50/$from_date/$to_date";?>"><?php echo $s->ip_m50plus;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/F/0/50/$from_date/$to_date";?>"><?php echo $s->ip_f50plus;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/0/0/50/$from_date/$to_date";?>"><?php echo $s->ip_50plus;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/M/0/0/$from_date/$to_date";?>"><?php echo $s->ip_male;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/F/0/0/$from_date/$to_date";?>"><?php echo $s->ip_female;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date";?>"><?php echo $s->ip;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/M/14/0/$from_date/$to_date/$s->visit_name_id";?>"><?php echo $s->ip_mchild;?></a></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/F/14/0/$from_date/$to_date/$s->visit_name_id";?>"><?php echo $s->ip_fchild;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/0/14/0/$from_date/$to_date/$s->visit_name_id";?>"><?php echo $s->ip_child;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/M/14/30/$from_date/$to_date/$s->visit_name_id";?>"><?php echo $s->ip_m14to30;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/F/14/30/$from_date/$to_date/$s->visit_name_id";?>"><?php echo $s->ip_f14to30;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/0/14/30/$from_date/$to_date/$s->visit_name_id";?>"><?php echo $s->ip_14to30;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/M/30/50/$from_date/$to_date/$s->visit_name_id";?>"><?php echo $s->ip_m30to50;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/F/30/50/$from_date/$to_date/$s->visit_name_id";?>"><?php echo $s->ip_f30to50;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/0/30/50/$from_date/$to_date/$s->visit_name_id";?>"><?php echo $s->ip_30to50;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/M/0/50/$from_date/$to_date/$s->visit_name_id";?>"><?php echo $s->ip_m50plus;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/F/0/50/$from_date/$to_date/$s->visit_name_id";?>"><?php echo $s->ip_f50plus;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/0/0/50/$from_date/$to_date/$s->visit_name_id";?>"><?php echo $s->ip_50plus;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/M/0/0/$from_date/$to_date/$s->visit_name_id";?>"><?php echo $s->ip_male;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/F/0/0/$from_date/$to_date/$s->visit_name_id";?>"><?php echo $s->ip_female;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$s->visit_name_id";?>"><?php echo $s->ip;?></td>
 	</tr>
 	<?php
 	$total_mchild+=$s->ip_mchild;

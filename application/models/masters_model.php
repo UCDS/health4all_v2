@@ -514,6 +514,9 @@ class Masters_model extends CI_Model{
 		else if($type=="village_town"){
 			$this->db->select("village_town_id,village_town")->from("village_town");
 		}
+		else if($type=="procedure"){
+			$this->db->select("procedure_id,procedure_name")->from("procedure");
+		}
 		else if($type=="sanitation_activity"){
 			$date=date("Y-m-d",strtotime($this->input->post('date')));
 			$day = date('w',strtotime($this->input->post('date')));

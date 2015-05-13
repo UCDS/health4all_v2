@@ -128,6 +128,9 @@ $(function(){
 			}
 		  };
 			$("#table-sort").tablesorter(options);
+		  $('.print').click(function(){
+			$('#table-sort').trigger('printTable');
+		  });
 		$('#micro_organism').selectize({maxItems:20});
 		$('#antibiotic').selectize({maxItems:20});
 });
@@ -235,6 +238,9 @@ $(function(){
 	sort($micro_organisms);
 	$antibiotics = array_unique($antibiotics);
 	?>
+		<button type="button" class="btn btn-default btn-md print">
+		  <span class="glyphicon glyphicon-print"></span> Print
+		</button>
 	<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
 		<tr>
@@ -255,6 +261,10 @@ $(function(){
 	</thead>
 	<tbody>
 		<?php
+		if($this->input->post('department')) $department_id = $this->input->post('department'); else $department_id = -1;
+		if($this->input->post('unit')) $unit_id = $this->input->post('unit'); else $unit_id = -1;
+		if($this->input->post('area')) $area_id = $this->input->post('area'); else $area_id = -1;
+		if($this->input->post('specimen_type')) $specimen_type_id = $this->input->post('specimen_type'); else $specimen_type_id = -1;
 		foreach($antibiotics as $a){
 					$mo = array();
 			echo "<tr><td>$a</td>";
@@ -263,12 +273,12 @@ $(function(){
 						foreach($report as $r){
 							if( $r->antibiotic == $a && $r->micro_organism == $m){ ?>
 								<td>
-									<a href="<?php echo base_url()."reports/order_detail/-1/$r->department_id/$r->unit/$r->area/-1/$r->specimen_type_id/-1/$visit_type/$from_date/$to_date/2/department/0/$r->antibiotic_id/$r->micro_organism_id/1";?>">
+									<a href="<?php echo base_url()."reports/order_detail/-1/$department_id/$unit_id/$area_id/-1/$specimen_type_id/-1/$visit_type/$from_date/$to_date/2/department/0/$r->antibiotic_id/$r->micro_organism_id/1";?>">
 									<?php echo $r->sensitive;?>
 									</a>
 								</td>
 								<td>
-									<a href="<?php echo base_url()."reports/order_detail/-1/$r->department_id/$r->unit/$r->area/-1/$r->specimen_type_id/-1/$visit_type/$from_date/$to_date/2/department/0/$r->antibiotic_id/$r->micro_organism_id/0";?>">
+									<a href="<?php echo base_url()."reports/order_detail/-1/$department_id/$unit_id/$area_id/-1/$specimen_type_id/-1/$visit_type/$from_date/$to_date/2/department/0/$r->antibiotic_id/$r->micro_organism_id/0";?>">
 									<?php echo $r->total_antibiotic;?>
 									</a>
 								</td>
@@ -280,7 +290,7 @@ $(function(){
 						
 							if(!in_array($m,$mo)){
 								$mo[]=$m;
-								echo "<td>0</td><td>0</td><td>0%</td>";
+								echo "<td>0</td><td>0</td><td>NA</td>";
 							}
 				$i++;
 					}

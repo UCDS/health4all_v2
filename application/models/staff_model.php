@@ -133,6 +133,12 @@ class Staff_model extends CI_Model{
 		}
 		else return true;
 	}
+	//get_visit_name() selects the visit names from the database and returns the result
+	function get_visit_name(){
+		$this->db->select("visit_name_id,visit_name")->from("visit_name");
+		$query=$this->db->get();
+		return $query->result();
+	}
 	//get_print_layouts() selects the print layouts from the database and returns the result
 	function get_print_layouts(){
 		$this->db->select("print_layout_id,print_layout_name")->from("print_layout");

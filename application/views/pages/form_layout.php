@@ -258,7 +258,8 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-						<div class="layout-div col-md-4 occupation">
+					<div class="layout-div col-md-4 occupation">
+						<div class="form-group">
 						<label class="control-label"> Occupation: </label>
 						<select class="form-control" name="occupation" id="occupation" >
 							<option value="">Select</option>
@@ -392,16 +393,27 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-						<div class="layout-div col-md-4 hospital">
+					<div class="layout-div col-md-4 hospital">
 						<div class="form-group">
 						<label class="control-label">   Hospital   </label>
-						<input type="text" name="hospital" style="width: 170px" class="form-control" />
+						<select name="hospital" style="width: 170px" class="form-control" readonly>
+						<option value="">Hospital</option>
+						</select>
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>	
+					<div class="layout-div col-md-4 visit_name">
+						<div class="form-group">
+						<label class="control-label">   Visit Name   </label>
+						<select name="visit_name" style="width: 170px" class="form-control" readonly>
+						<option value="">Visit Name</option>
+						</select>
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>				
 					<div class="layout-div col-md-4 department">
 						<div class="form-group">
-						<label class="control-label">  Department   </label>
+						<label class="control-label">Department</label>
 						<select name="department" style="width: 170px" class="form-control">
 						<option value="">--Select--</option>
 						<?php 
@@ -758,6 +770,11 @@
 			  </ul>
 			<strong>Visit Information</strong>
 			  <ul class="nav nav-sidebar">
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="visit_name" class="checklist" />Visit Name</label>
+					</div>
+				</li>
 				<li>  
 					<div class="checkbox">
 						<label><input type="checkbox" value="1" id="hospital" class="checklist" />Hospital</label>

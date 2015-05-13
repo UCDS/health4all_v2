@@ -103,6 +103,16 @@ $(function(){
 					}
 					?>
 					</select>
+					<select name="visit_name" id="visit_name" class="form-control" >
+					<option value="">All</option>
+					<?php 
+					foreach($visit_names as $v){
+						echo "<option value='".$v->visit_name_id."'";
+						if($this->input->post('visit_name') && $this->input->post('visit_name') == $v->visit_name_id) echo " selected ";
+						echo ">".$v->visit_name."</option>";
+					}
+					?>
+					</select>
 					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
 		</form>
 	<br />
@@ -128,9 +138,9 @@ $(function(){
 	$total_count=0;
 	foreach($report as $s){
 		$age="";
-		if($s->age_years!=0) $age.=$s->age_years."Y ";
-		if($s->age_months!=0) $age.=$s->age_months."M ";
-		if($s->age_days!=0) $age.=$s->age_days."D ";
+		if(!!$s->age_years) $age.=$s->age_years."Y ";
+		if(!!$s->age_months) $age.=$s->age_months."M ";
+		if(!!$s->age_days) $age.=$s->age_days."D ";
 		if($s->age_days==0 && $s->age_months==0 && $s->age_years==0) $age.="0D";
 	?>
 	<tr>

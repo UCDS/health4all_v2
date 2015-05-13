@@ -37,6 +37,7 @@ class Register extends CI_Controller {
 			//Load data required for the select options in views.
 			$this->data['id_proof_types']=$this->staff_model->get_id_proof_type();
 			$this->data['departments']=$this->staff_model->get_department();
+			$this->data['visit_names']=$this->staff_model->get_visit_name();
 			$this->data['units']=$this->staff_model->get_unit();
 			$this->data['areas']=$this->staff_model->get_area();
 			$this->data['districts']=$this->staff_model->get_district();
@@ -174,6 +175,7 @@ class Register extends CI_Controller {
 		$this->data['id_proof_types']=$this->staff_model->get_id_proof_type();
 		$this->data['lab_units'] = $this->masters_model->get_data("lab_unit");
 		$this->data['drugs'] = $this->masters_model->get_data("drugs");
+		$this->data['procedures'] = $this->masters_model->get_data("procedure");
 		$this->form_validation->set_rules('patient_number', 'IP/OP Number',
 		'trim|xss_clean');
 		if ($this->form_validation->run() === FALSE)

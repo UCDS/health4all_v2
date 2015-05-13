@@ -16,6 +16,9 @@ class Reports_model extends CI_Model{
 			$from_date=date("Y-m-d");
 			$to_date=$from_date;
 		}
+		if($this->input->post('visit_name')){
+			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
+		}
 		if($this->input->post('department')){
 			$this->db->where('patient_visit.department_id',$this->input->post('department'));
 		}
@@ -73,6 +76,9 @@ class Reports_model extends CI_Model{
 			$from_date=date("Y-m-d");
 			$to_date=$from_date;
 		}
+		if($this->input->post('visit_name')){
+			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
+		}
 		if($this->input->post('department')){
 			$this->db->where('patient_visit.department_id',$this->input->post('department'));
 		}
@@ -90,7 +96,7 @@ class Reports_model extends CI_Model{
 		else{
 			$this->db->select('"0" as area',false);
 		}
-		$this->db->select("department.department_id, department 'department',
+		$this->db->select("department.department_id,visit_name_id, department 'department',
           SUM(CASE WHEN 1  THEN 1 ELSE 0 END) 'ip',
 		SUM(CASE WHEN gender = 'F'  THEN 1 ELSE 0 END) 'ip_female',
 		SUM(CASE WHEN gender = 'M'  THEN 1 ELSE 0 END) 'ip_male',	
@@ -209,6 +215,9 @@ class Reports_model extends CI_Model{
 			$from_date=date("Y-m-d");
 			$to_date=$from_date;
 		}
+		if($this->input->post('visit_name')){
+			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
+		}
 		if($this->input->post('department')){
 			$this->db->where('patient_visit.department_id',$this->input->post('department'));
 		}
@@ -228,7 +237,7 @@ class Reports_model extends CI_Model{
 		}
 
 		$this->db->select("hosp_file_no,visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,
-		gender,IF(gender='F' AND father_name=NULL,spouse_name,father_name) parent_spouse,unit_name,area_name
+		gender,IF(gender='F' AND father_name=NULL,spouse_name,father_name) parent_spouse,unit_name,area_name,
 		age_years,age_months,age_days,place,phone,department,unit_name,area_name",false);
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
 		 ->join('department','patient_visit.department_id=department.department_id')
@@ -239,7 +248,7 @@ class Reports_model extends CI_Model{
 		$resource=$this->db->get();
 		return $resource->result();
 	}
-	function get_ip_detail($department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date){
+	function get_ip_detail($department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date,$visit_name){
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -251,6 +260,9 @@ class Reports_model extends CI_Model{
 		else if($from_date=='0' && $to_date=='0'){
 			$from_date=date("Y-m-d");
 			$to_date=$from_date;
+		}
+		if($visit_name!='-1'){
+			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
 		}
 		if($department!='-1'){
 			$this->db->where('department.department_id',$department);
@@ -283,8 +295,8 @@ class Reports_model extends CI_Model{
 			$this->db->where('age_years>=',$to_age,false);
 		}
 		$this->db->select("hosp_file_no,patient_visit.visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,
-		gender,IF(gender='F' AND father_name=NULL,spouse_name,father_name) parent_spouse,
-		age_years,age_months,age_days,place,phone,address,admit_date, department,unit_name,area_name,mlc_number",false);
+		gender,IF(gender='F' AND father_name ='',spouse_name,father_name) parent_spouse,
+		age_years,age_months,age_days,place,phone,address,admit_date,admit_time, department,unit_name,area_name,mlc_number",false);
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
 		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
@@ -360,7 +372,8 @@ class Reports_model extends CI_Model{
 			else  
 			$this->db->where('test.test_status',$status);
 		}
-		$this->db->select('test.*,test.test_id,test_order.order_id,order_date_time,age_years,age_months,age_days,test_sample.sample_id,test_method,test_name,department,patient.first_name, patient.last_name,
+		$this->db->select('test.*,test.test_id,test_order.order_id,order_date_time,age_years,age_months,age_days,
+		test_sample.sample_id,test_method,test_name,department,patient.first_name, patient.last_name, unit_name, area_name,
 							binary_result,numeric_result,text_result,patient_visit.visit_id,,staff.first_name staff_name,hosp_file_no,visit_type,sample_code,specimen_type,sample_container_type,test_status')
 		->from('test_order')
 		->join('test','test_order.order_id=test.order_id')
@@ -372,8 +385,11 @@ class Reports_model extends CI_Model{
 		->join('patient_visit','test_order.visit_id=patient_visit.visit_id')
 		->join('patient','patient_visit.patient_id=patient.patient_id')
 		->join('department','patient_visit.department_id=department.department_id')
+		->join('unit','patient_visit.unit=unit.unit_id','left')
+		->join('area','patient_visit.area=area.area_id','left')
 		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id')
-		 ->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')");		  
+		 ->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')")
+		 ->group_by('test.test_id');		  
 		
 		if(!!$antibiotic_id){
 			$this->db
@@ -382,8 +398,12 @@ class Reports_model extends CI_Model{
 			->join('antibiotic_test','micro_organism_test.micro_organism_test_id = antibiotic_test.micro_organism_test_id')
 			->join('antibiotic','antibiotic_test.antibiotic_id = antibiotic.antibiotic_id');
 			$this->db->where('antibiotic.antibiotic_id',$antibiotic_id);
-			if(!!$micro_organism_id) {}
+			if(!!$micro_organism_id) {
 			$this->db->where('micro_organism.micro_organism_id',$micro_organism_id);
+			}
+			if(!!$sensitive){
+				$this->db->where('antibiotic_test.antibiotic_result',1);
+			}
 		}
 		$query=$this->db->get();
 		return $query->result();
@@ -453,8 +473,11 @@ class Reports_model extends CI_Model{
 			->join('test','micro_organism_test.test_id=test.test_id')
 			->join('test_order','test.order_id = test_order.order_id')
 			->join('test_sample','test_order.order_id = test_sample.order_id')
+			->join('specimen_type','test_sample.specimen_type_id = specimen_type.specimen_type_id')
 			->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
+			->join('patient','patient_visit.patient_id = patient.patient_id')
 			->where("(DATE(test_date_time) BETWEEN '$from_date' AND '$to_date')")
+			->where('test.test_status',2)
 			->group_by('antibiotic.antibiotic_id,micro_organism.micro_organism_id')
 			->order_by('antibiotic,micro_organism');
 		$query=$this->db->get();

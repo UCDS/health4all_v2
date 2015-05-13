@@ -783,6 +783,21 @@ pri.print();
 					</div>
 				<?php 
 					break;
+                case "visit_name" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Visit Name<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<select name="visit_name" class="form-control" <?php if($mandatory) echo "required"; ?>>
+						<?php foreach($visit_names as $visit_name){ ?>
+						<option value="<?php echo $visit_name->visit_name_id;?>"
+						<?php if($update && $patient->visit_name_id == $visit_name->visit_name_id) echo " selected ";?>>
+						<?php echo $visit_name->visit_name;?></option>
+						<?php } ?>
+						</select>
+						</div>
+					</div>
+				<?php 
+					break;
                 case "patient_picture" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group well well-sm">

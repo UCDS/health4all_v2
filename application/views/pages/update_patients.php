@@ -166,6 +166,7 @@ pri.print();
 		if($p->age_years!=0) $age.=$p->age_years."Y ";
 		if($p->age_months!=0) $age.=$p->age_months."M ";
 		if($p->age_days!=0) $age.=$p->age_days."D ";
+		if($p->age_days==0 && $p->age_months == 0 && $p->age_years == 0) $age.="0D ";
 	?>
 	<tr onclick="$('#select_patient_<?php echo $p->visit_id;?>').submit()" style="cursor:pointer">
 		<td>
@@ -197,8 +198,9 @@ pri.print();
 	  <!-- Nav tabs -->
 	  <ul class="nav nav-tabs" role="tablist">
 		<li role="presentation" class="active"><a href="#patient" aria-controls="patient" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Patient Info</a></li>
-		<li role="presentation"><a href="#clinical" aria-controls="clinical" role="tab" data-toggle="tab"><i class="fa fa-medical"></i> Clinical</a></li>
+		<li role="presentation"><a href="#clinical" aria-controls="clinical" role="tab" data-toggle="tab"><i class="fa fa-stethoscope"></i> Clinical</a></li>
 		<li role="presentation"><a href="#diagnostics" aria-controls="diagnostics" role="tab" data-toggle="tab"><i class="glyph-icon flaticon-chemistry20"></i> Diagnostics</a></li>
+		<li role="presentation"><a href="#procedures" aria-controls="procedures" role="tab" data-toggle="tab"><i class="fa fa-scissors"></i> Procedures</a></li>
 		<li role="presentation"><a href="#prescription" aria-controls="prescription" role="tab" data-toggle="tab"><i class="glyph-icon flaticon-drugs5"></i> Prescription</a></li>
 		<li role="presentation"><a href="#discharge" aria-controls="discharge" role="tab" data-toggle="tab"><i class="fa fa-sign-out"></i> Discharge</a></li>
 	  </ul>
@@ -211,6 +213,7 @@ pri.print();
 				if($patient->age_years!=0) $age.=$patient->age_years."Y ";
 				if($patient->age_months!=0) $age.=$patient->age_months."M ";
 				if($patient->age_days!=0) $age.=$patient->age_days."D ";
+				if($patient->age_days==0 && $patient->age_months ==0 && $patient->age_years==0) $age.="0D ";
 			?>
 			
 
@@ -548,6 +551,126 @@ pri.print();
 				
 			<?php } else { ?>
 			No tests on the given date.
+			<?php } ?>
+		</div>
+		<div role="tabpanel" class="tab-pane" id="procedures">
+			<div class="row alt">
+				<div class="col-md-4">
+					<label class="control-label">Procedure</label>
+				</div>
+				<div class="col-md-8">
+					<select name="procedure" class="form-control">
+					<option value="" selected>--SELECT--</option>
+					<?php foreach($procedures as $procedure){ ?>
+						<option value="<?php echo $procedure->procedure_id;?>"><?php echo $procedure->procedure_name;?></option>
+					<?php } ?>
+					</select>
+				</div>
+			</div>
+			<div class="row alt">
+				<div class="col-md-4">
+					<label class="control-label">Date, Time</label>
+				</div>
+				<div class="col-md-8">
+					<input type="text" class="form-control date" name="procedure_date" />
+					<input type="text" class="form-control time" name="procedure_time" />
+				</div>
+			</div>
+			<div class="row alt">
+				<div class="col-md-4">
+					<label class="control-label">Duration</label>
+				</div>
+				<div class="col-md-8">
+					<input type="text" class="form-control" name="procedure_duration" />
+				</div>
+			</div>
+			<div class="row alt">
+				<div class="col-md-4">
+					<label class="control-label">Notes</label>
+				</div>
+				<div class="col-md-8">
+					<textarea type="text" class="form-control" name="procedure_note"></textarea>
+				</div>
+			</div>
+			<div class="row alt">
+				<div class="col-md-4">
+					<label class="control-label">Findings</label>
+				</div>
+				<div class="col-md-8">
+					<textarea type="text" class="form-control" name="procedure_findings"></textarea>
+				</div>
+			</div>
+			<div class="row alt">
+				<div class="col-md-4">
+					<label class="control-label">Post Procedure Notes</label>
+				</div>
+				<div class="col-md-8">
+					<textarea type="text" class="form-control" name="post_procedure_notes"></textarea>
+				</div>
+			</div>
+			<?php 
+			if(isset($tests) && count($tests)>0){ ?>
+				<table class="table table-bordered table-striped table-hover" id="table-sort">
+				<thead>
+					<th style="width:3em">#</th>
+					<th style="width:10em">Order ID</th>
+					<th style="width:10em">Order Date</th>
+					<th style="width:10em">Specimen</th>
+					<th style="width:12em">Test</th>
+					<th style="width:10em">Value</th>
+					<th style="width:5em">Report - Binary</th>
+					<th style="width:10em">Report</th>
+				</thead>
+				<tbody>
+					<?php 
+					$o=array();
+					foreach($tests as $order){
+						$o[]=$order->order_id;
+					}
+					$o=array_unique($o);
+					$i=1;
+					foreach($o as $ord){	?>
+						<?php
+						foreach($tests as $order) { 
+							if($order->order_id == $ord) { ?>
+						<tr <?php if($order->test_status == 2) { ?> onclick="$('#order_<?php echo $ord;?>').submit()" <?php } ?>>
+								<td><?php echo $i++;?></td>
+								<td>
+									<?php echo form_open("diagnostics/view_results",array('role'=>'form','class'=>'form-custom','id'=>'order_'.$order->order_id)); ?>
+									<?php echo $order->order_id;?>
+									<input type="hidden" class="sr-only" name="order_id" value="<?php echo $order->order_id;?>" />
+									</form>
+								</td>
+								<td>
+									<?php echo date("d-M-Y",strtotime($order->order_date_time));?>
+								</td>
+								<td><?php echo $order->specimen_type;?></td>
+								<td>
+								<?php
+													if($order->test_status==1){
+													$label="label-warning"; $status="Completed"; }
+													else if($order->test_status == 2){ $label = "label-success"; $status = "Approved"; }
+													else if($order->test_status == 0){ $label = "label-default"; $status = "Ordered"; }
+													echo '<label class="label '.$label.'" title="'.$status.'">'.$order->test_name."</label><br />";									
+								?>
+								</td>
+								<td>
+									<?php if($order->test_status==2 && $order->numeric_result == 1) echo $order->test_result." ".$order->lab_unit; else echo "NA";?>
+								</td>
+								<td>
+									<?php if($order->test_status==2 && $order->binary_result == 1) echo $order->test_result_binary; else echo "NA";?>
+								</td>
+								<td>
+									<?php if($order->test_status==2 && $order->text_result == 1) echo $order->test_result_text; else echo "NA";?>
+								</td>
+						</tr>
+						<?php
+						}
+						} ?>
+					<?php } ?>
+				</tbody>
+				</table>
+				
 			<?php } ?>
 		</div>
 		<div role="tabpanel" class="tab-pane" id="prescription">
