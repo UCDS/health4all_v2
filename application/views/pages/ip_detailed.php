@@ -102,6 +102,16 @@ $(function(){
 					}
 					?>
 					</select>
+					<select name="visit_name" id="visit_name" class="form-control" >
+					<option value="">All</option>
+					<?php 
+					foreach($visit_names as $v){
+						echo "<option value='".$v->visit_name_id."'";
+						if($this->input->post('visit_name') && $this->input->post('visit_name') == $v->visit_name_id) echo " selected ";
+						echo ">".$v->visit_name."</option>";
+					}
+					?>
+					</select>
 					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
 		</form>
 	<br />
@@ -115,6 +125,7 @@ $(function(){
 	<thead>
 		<th>Sno</th>
 		<th>Admit Date</th>
+		<th>Admit Time</th>
 		<th>IP No.</th>
 		<th>Gender</th>
 		<th>Name</th>
@@ -140,6 +151,7 @@ $(function(){
 	<tr>
 		<td><?php echo $i++;?></td>
 		<td><?php if($s->admit_date!=0) echo date("d-M-Y",strtotime($s->admit_date));?></td>
+		<td><?php if($s->admit_time!=0) echo date("g:iA",strtotime($s->admit_time));?></td>
 		<td><?php echo $s->hosp_file_no;?></td>
 		<td><?php echo $s->gender;?></td>
 		<td><?php echo $s->name;?></td>

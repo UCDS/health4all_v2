@@ -1,9 +1,14 @@
 		<link rel="stylesheet" href="<?php echo base_url();?>assets/css/main.css" media="print" >
 		<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-barcode.min.js"></script>  
+		<script>
+			$(function(){
+			$("#bcTarget").barcode("<?php echo $registered->patient_id;?>",'int25');
+			});
+		</script>
 		<table style="width:98%;padding:5px">
 			<tr>
 			<td align="center">
-			<img align="left" src="<?php echo base_url();?>assets/images/hospital_logo.png" alt="<?php echo $registered->patient_id;?>" width="140px" />
+			<img align="left" src="<?php echo base_url();?>assets/images/hospital_logo.png" alt="<?php echo $registered->patient_id;?>" width="50px" />
 			<img align="left" src="<?php echo base_url();?>assets/images/patients/<?php echo $registered->patient_id;?>.jpg" alt="<?php echo $registered->patient_id;?>" />
 			</td>
 			<td>

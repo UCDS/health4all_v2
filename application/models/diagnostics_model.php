@@ -357,12 +357,16 @@ class Diagnostics_model extends CI_Model{
 						if(count($this->input->post('antibiotics_'.$test."_".$mo))>0){
 							$antibiotics=$this->input->post('antibiotics_'.$test.'_'.$mo);
 							$i=0;
+							$antibiotic_array=array();
 							foreach($antibiotics as $ab){
+								if(!in_array($this->input->post('antibiotics_'.$test.'_'.$mo.'_'.$i),$antibiotic_array)){
 								$antibiotics_data[] = array(
 									'antibiotic_id'=>$this->input->post('antibiotics_'.$test.'_'.$mo.'_'.$i),
 									'micro_organism_test_id'=>$micro_organism_test_id,
 									'antibiotic_result'=>$this->input->post('antibiotic_results_'.$test.'_'.$mo.'_'.$i),
 								);
+								$antibiotic_array[]=$this->input->post('antibiotics_'.$test.'_'.$mo.'_'.$i);
+								}
 							$i++;
 							}
 						}

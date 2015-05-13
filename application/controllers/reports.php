@@ -43,6 +43,7 @@ class Reports extends CI_Controller {
 		$this->data['all_departments']=$this->staff_model->get_department();
 		$this->data['units']=$this->staff_model->get_unit();
 		$this->data['areas']=$this->staff_model->get_area();
+		$this->data['visit_names']=$this->staff_model->get_visit_name();
 		$this->load->view('templates/header',$this->data);
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -83,6 +84,7 @@ class Reports extends CI_Controller {
 		$this->data['all_departments']=$this->staff_model->get_department();
 		$this->data['units']=$this->staff_model->get_unit();
 		$this->data['areas']=$this->staff_model->get_area();
+		$this->data['visit_names']=$this->staff_model->get_visit_name();
 		$this->load->view('templates/header',$this->data);
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -125,6 +127,7 @@ class Reports extends CI_Controller {
 		$this->data['all_departments']=$this->staff_model->get_department();
 		$this->data['units']=$this->staff_model->get_unit();
 		$this->data['areas']=$this->staff_model->get_area();
+		$this->data['visit_names']=$this->staff_model->get_visit_name();
 		$this->load->view('templates/header',$this->data);
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -151,7 +154,7 @@ class Reports extends CI_Controller {
 		}
 		
 	}
-	public function ip_detail($department=-1,$unit=0,$area=0,$gender=0,$from_age=0,$to_age=0,$from_date=0,$to_date=0)
+	public function ip_detail($department=-1,$unit=0,$area=0,$gender=0,$from_age=0,$to_age=0,$from_date=0,$to_date=0,$visit_name=-1)
 	{
 		if($this->session->userdata('logged_in')){
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -167,10 +170,11 @@ class Reports extends CI_Controller {
 		$this->data['all_departments']=$this->staff_model->get_department();
 		$this->data['units']=$this->staff_model->get_unit();
 		$this->data['areas']=$this->staff_model->get_area();
+		$this->data['visit_names']=$this->staff_model->get_visit_name();
 		$this->load->view('templates/header',$this->data);
 		$this->load->helper('form');
 		$this->load->library('form_validation');
-		$this->data['report']=$this->reports_model->get_ip_detail($department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date);
+		$this->data['report']=$this->reports_model->get_ip_detail($department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date,$visit_name);
 		$this->form_validation->set_rules('from_date', 'From Date',
 		'trim|required|xss_clean');
 	    $this->form_validation->set_rules('to_date', 'To Date', 

@@ -212,10 +212,15 @@
 								if($order->age_years!=0) $age.=$order->age_years."Y ";
 								if($order->age_months!=0) $age.=$order->age_months."M ";
 								if($order->age_days!=0) $age.=$order->age_days."D ";
+								if($order->age_days == 0 && $order->age_months == 0 && $order->age_years == 0) $age.="0D";
 								echo $age;
 							?>
 						</td>
-						<td><?php echo $order->department;?></td>
+						<td>
+							<?php echo $order->department;?>
+							<?php if(!!$order->unit_name) echo "/ ".$order->unit_name;?>
+							<?php if(!!$order->area_name) echo "/ ".$order->area_name;?>
+						</td>
 						<td><?php echo $order->specimen_type;?></td>
 						<td>
 							<?php 
