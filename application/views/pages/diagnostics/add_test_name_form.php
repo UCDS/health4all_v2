@@ -30,9 +30,17 @@
 		}
 		else {
 			$(".numeric_output_units").hide();
+                        $(".numeric_output_range").hide();          
 			$(".numeric_output_units").find("select").attr('required',false);
 		}
 	});
+    $(".output_format input[type=checkbox]").click(function(){
+        $(".output_check").attr('required',true);
+        $(".output_format input[type=checkbox]").each(function(){
+            if($(this).is(':checked'))
+                $(".output_check").attr('required',false);
+        });
+    });
 });
 </script>
 <div class="col-md-8 col-md-offset-2">
@@ -78,12 +86,13 @@
 
 		<label for="output_format" class="col-md-4">Output Format<font color='red'>*</font></label>
 		<div  class="col-md-8 output_format" id="add_output_format" >
-			<input type="checkbox" id="binary_output" form="add_test_name" value="1" name="output_format[]" />
+			<input type="checkbox" id="binary_output" form="add_test_name" value="1" name="output_format[]"  />
 			<label for="binary_output">Binary</label>
 			<input type="checkbox" id="numeric_output" form="add_test_name" value="2" name="output_format[]" />
 			<label for="numeric_output">Numeric</label>
 			<input type="checkbox" id="text_output" form="add_test_name" value="3" name="output_format[]" />
 			<label for="text_output">Text</label>
+                        <input type="checkbox" class="output_check sr-only" required /> 
 		</div>
 		<br />
 		<br />
