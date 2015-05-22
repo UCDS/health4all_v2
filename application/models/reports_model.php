@@ -124,6 +124,8 @@ class Reports_model extends CI_Model{
 		$resource=$this->db->get();
 		return $resource->result();
 	}
+        // This function is used to build a query, and retrive data accordingly.
+        //  Then this table is used to count the number of times a condition is met and return the result.
 	function get_order_summary($type){
 		if($type == "department"){
 			$this->db->select('department.department,department.department_id as department_id');

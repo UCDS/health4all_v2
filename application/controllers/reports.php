@@ -408,19 +408,19 @@ class Reports extends CI_Controller {
         
         
         // This function is used to get number of OP/IP patients during a specified period.
+        
         public function ip_op_trends(){ 
-            //echo "In method";
-            if($this->session->userdata('logged_in')){ 
-                //echo "Logged in";
+            
+            if($this->session->userdata('logged_in')){                          //Checking for user login
                 $this->data['userdata']=$this->session->userdata('logged_in');
                 $access=0;
-                foreach($this->data['functions'] as $function){
+                foreach($this->data['functions'] as $function){               //Checking if the user has acess to this functionality
                     if($function->user_function=="IP Summary"){
                         $access=1;
                     }
                 }
                 if($access==1){
-                    $this->data['title']="IP/OP Trends";
+                    $this->data['title']="IP/OP Trends";                       //Getting values to populate the selection fields in the query form.
                     $this->data['all_departments']=$this->staff_model->get_department();
                     $this->data['units']=$this->staff_model->get_unit();
                     $this->data['areas']=$this->staff_model->get_area();
@@ -433,7 +433,7 @@ class Reports extends CI_Controller {
                     'trim|required|xss_clean');
                     $this->form_validation->set_rules('to_date', 'To Date', 
                     'trim|required|xss_clean');
-               //     $this->form_validation->set_rules('ip_op_selector', 'IP/OP Selector', 'required');
+              
                     if ($this->form_validation->run() === FALSE)
                     {
                         $this->load->view('pages/ip_op_trend',$this->data);
