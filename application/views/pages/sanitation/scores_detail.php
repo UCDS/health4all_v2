@@ -104,7 +104,7 @@ $(function(){
 			cursor:pointer;
 		}
 		.weighted_score:hover{
-			background:white; !important
+			background:white; /*!important*/
 		}
 		</style>
 <div class="col-md-10 col-md-offset-2">

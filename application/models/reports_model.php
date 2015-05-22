@@ -61,6 +61,7 @@ class Reports_model extends CI_Model{
 		 ->group_by('department');
 		  
 		$resource=$this->db->get();
+	//	echo $this->db->last_query();
 		return $resource->result();
 	}
 	function get_ip_summary(){
@@ -123,6 +124,7 @@ class Reports_model extends CI_Model{
 		$resource=$this->db->get();
 		return $resource->result();
 	}
+        
 	function get_order_summary($type){
 		if($type == "department"){
 			$this->db->select('department.department,department.department_id as department_id');
@@ -483,5 +485,87 @@ class Reports_model extends CI_Model{
 		$query=$this->db->get();
 		return $query->result();
 	}
+        
+        // This function is used to build a query from the form sent by ip_op_trend page, and retrive data accordingly.
+        // This function is used to get number of OP/IP patients during a specified period, in days, months and years.
+        // This function returns an array of objects containing the records from the database.
+        function get_ip_op_trends(){
+            //First time ip_op_trends page is opened all records for today will be opened.
+            /*Query is being built from the data input from the user*/
+            
+            //Selection of the date field.
+            if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+		}
+		else if($this->input->post('from_date') || $this->input->post('to_date')){
+			$this->input->post('from_date')?$from_date=$this->input->post('from_date'):$from_date=$this->input->post('to_date');
+			$to_date=$from_date;
+		}
+		else{
+			$from_date=date("Y-m-d");
+			$to_date=$from_date;
+		} 
+                //Selection of the visit name.
+		if($this->input->post('visit_name')){
+			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
+		}
+                //Selection of visit type OP/IP
+		if($this->input->post('visit_type')){
+			$this->db->where('patient_visit.visit_type',$this->input->post('visit_type'));
+		}
+                //Report for day or month or year.
+		if($this->input->post('trend_type')){
+                        $trend = $this->input->post('trend_type');
+                        if($trend=="Month"){
+                            $this->db->select('patient_visit.admit_date date',false);  
+                            $this->db->group_by('MONTH(patient_visit.admit_date),YEAR(patient_visit.admit_date)');
+                        }
+                        else if($trend=="Year"){
+                            $this->db->select('YEAR(patient_visit.admit_date) date');  
+                            $this->db->group_by('YEAR(patient_visit.admit_date)');
+                        }
+                        else{
+                            $this->db->select('patient_visit.admit_date date');  
+                            $this->db->group_by('patient_visit.admit_date');
+                        }                        
+		}
+                        else{
+                            $this->db->select('patient_visit.admit_date date');  
+                            $this->db->group_by('patient_visit.admit_date');
+                        } 
+                 //Setting the selected department in the query. First time all the departments are selected.
+		if($this->input->post('department')){
+			$this->db->where('patient_visit.department_id',$this->input->post('department'));
+		}
+		if($this->input->post('unit')){
+			$this->db->select('IF(unit!="",unit,0) unit',false);
+			$this->db->where('patient_visit.unit',$this->input->post('unit'));
+		}
+		else{
+			$this->db->select('"0" as unit',false);
+		}
+		if($this->input->post('area')){
+			$this->db->select('IF(area!="",area,0) area',false);
+			$this->db->where('patient_visit.area',$this->input->post('area'));
+		}
+		else{
+			$this->db->select('"0" as area',false);
+		}
+                //Counting the number of patients gender wise.
+		$this->db->select("
+          SUM(CASE WHEN 1  THEN 1 ELSE 0 END) 'total',
+		SUM(CASE WHEN gender = 'F'  THEN 1 ELSE 0 END) 'female',
+		SUM(CASE WHEN gender = 'M'  THEN 1 ELSE 0 END) 'male'	
+		");
+		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
+		 ->join('department','patient_visit.department_id=department.department_id')
+		 ->join('unit','patient_visit.unit=unit.unit_id','left')
+		 ->join('area','patient_visit.area=area.area_id','left')
+		 ->where('visit_type','OP')
+		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')");		  
+		$resource=$this->db->get();
+		return $resource->result();
+        }
 }
 ?>

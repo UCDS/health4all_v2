@@ -7,68 +7,68 @@ class Reports extends CI_Controller {
 		$this->load->model('masters_model');
 		$this->load->model('staff_model');
 		if($this->session->userdata('logged_in')){
-		$userdata=$this->session->userdata('logged_in');
-		$user_id=$userdata['user_id'];
-		$this->data['hospitals']=$this->staff_model->user_hospital($user_id);
-		$this->data['functions']=$this->staff_model->user_function($user_id);
-		$this->data['departments']=$this->staff_model->user_department($user_id);
+                    $userdata=$this->session->userdata('logged_in');        
+                    $user_id=$userdata['user_id'];                          
+                    $this->data['hospitals']=$this->staff_model->user_hospital($user_id);
+                    $this->data['functions']=$this->staff_model->user_function($user_id);
+                    $this->data['departments']=$this->staff_model->user_department($user_id);
 		}
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 	}
 	public function index(){
 		if($this->session->userdata('logged_in')){
-		$this->data['userdata']=$this->session->userdata('logged_in');
-		$this->data['title']="Reports";
-		$this->load->view('templates/header',$this->data);
-		$this->load->view('pages/reports');
-		$this->load->view('templates/footer');
+                    $this->data['userdata']=$this->session->userdata('logged_in');
+                    $this->data['title']="Reports";
+                    $this->load->view('templates/header',$this->data);
+                    $this->load->view('pages/reports');
+                    $this->load->view('templates/footer');
 		}
 		else{
-		show_404();
+                    show_404();
 		}
 	}
 	public function op_summary()
 	{
-		if($this->session->userdata('logged_in')){
-		$this->data['userdata']=$this->session->userdata('logged_in');
-		$access=0;
-		foreach($this->data['functions'] as $function){
-			if($function->user_function=="OP Summary"){
-				$access=1;
-			}
-		}
-		if($access==1){
-		$this->data['title']="Out-Patient Summary Report";
-		$this->data['all_departments']=$this->staff_model->get_department();
-		$this->data['units']=$this->staff_model->get_unit();
-		$this->data['areas']=$this->staff_model->get_area();
-		$this->data['visit_names']=$this->staff_model->get_visit_name();
-		$this->load->view('templates/header',$this->data);
-		$this->load->helper('form');
-		$this->load->library('form_validation');
-		$this->data['report']=$this->reports_model->get_op_summary();
-		$this->form_validation->set_rules('from_date', 'From Date',
-		'trim|required|xss_clean');
-	    $this->form_validation->set_rules('to_date', 'To Date', 
-	    'trim|required|xss_clean');
-		if ($this->form_validation->run() === FALSE)
-		{
-			$this->load->view('pages/op_summary',$this->data);
-		}
-		else{
-			$this->load->view('pages/op_summary',$this->data);
-		}
-		$this->load->view('templates/footer');
-		}
-		else{
-			show_404();
-		}
-		}
-		else{
-		show_404();
-		}
-	}
+            if($this->session->userdata('logged_in')){
+                $this->data['userdata']=$this->session->userdata('logged_in');
+                $access=0;
+                foreach($this->data['functions'] as $function){
+                    if($function->user_function=="OP Summary"){
+                            $access=1;
+                    }
+                }
+                if($access==1){
+                    $this->data['title']="Out-Patient Summary Report";
+                    $this->data['all_departments']=$this->staff_model->get_department();
+                    $this->data['units']=$this->staff_model->get_unit();
+                    $this->data['areas']=$this->staff_model->get_area();
+                    $this->data['visit_names']=$this->staff_model->get_visit_name();
+                    $this->load->view('templates/header',$this->data);
+                    $this->load->helper('form');
+                    $this->load->library('form_validation');
+                    $this->data['report']=$this->reports_model->get_op_summary();
+                    $this->form_validation->set_rules('from_date', 'From Date',
+                    'trim|required|xss_clean');
+                    $this->form_validation->set_rules('to_date', 'To Date', 
+                    'trim|required|xss_clean');
+                    if ($this->form_validation->run() === FALSE)
+                    {
+                        $this->load->view('pages/op_summary',$this->data);
+                    }
+                    else{
+                        $this->load->view('pages/op_summary',$this->data);
+                    }
+                    $this->load->view('templates/footer');
+                }
+                else{
+                    show_404();
+                }
+            }
+        else{
+            show_404();
+        }
+    }
 	public function ip_summary()
 	{
 		if($this->session->userdata('logged_in')){
@@ -405,6 +405,42 @@ class Reports extends CI_Controller {
 		show_404();
 		}
 	}
+        
+        
+        // This function is used to get number of OP/IP patients during a specified period.
+        
+        public function ip_op_trends(){ 
+            
+            if($this->session->userdata('logged_in')){                          //Checking for user login
+                $this->data['userdata']=$this->session->userdata('logged_in');
+                $access=0;
+                foreach($this->data['functions'] as $function){               //Checking if the user has acess to this functionality
+                    if($function->user_function=="IP Summary"){
+                        $access=1;
+                    }
+                }
+                if($access==1){                                      
+                    $this->data['title']="IP/OP Trends";                       //Getting values to populate the selection fields in the query form.
+                    $this->data['all_departments']=$this->staff_model->get_department();
+                    $this->data['units']=$this->staff_model->get_unit();
+                    $this->data['areas']=$this->staff_model->get_area();
+                    $this->data['visit_names']=$this->staff_model->get_visit_name(); 
+                    $this->load->view('templates/header',$this->data);
+                    $this->load->helper('form');
+                    $this->load->library('form_validation');
+                    $this->data['report']=$this->reports_model->get_ip_op_trends(); //This method gets data from the Database, and puts the data in report variable.
+                    //Report variable stores all the data returned by reports_model which is passed to the view.
+                    $this->load->view('pages/ip_op_trend',$this->data);
+                    $this->load->view('templates/footer');
+                }
+                else{
+                    show_404();
+                }
+            }
+        else{
+            show_404();
+            
+        }
 	
 }
-
+}
