@@ -419,7 +419,7 @@ class Reports extends CI_Controller {
                         $access=1;
                     }
                 }
-                if($access==1){
+                if($access==1){                                      
                     $this->data['title']="IP/OP Trends";                       //Getting values to populate the selection fields in the query form.
                     $this->data['all_departments']=$this->staff_model->get_department();
                     $this->data['units']=$this->staff_model->get_unit();
@@ -428,19 +428,9 @@ class Reports extends CI_Controller {
                     $this->load->view('templates/header',$this->data);
                     $this->load->helper('form');
                     $this->load->library('form_validation');
-                    $this->data['report']=$this->reports_model->get_ip_op_trends();
-                    $this->form_validation->set_rules('from_date', 'From Date',
-                    'trim|required|xss_clean');
-                    $this->form_validation->set_rules('to_date', 'To Date', 
-                    'trim|required|xss_clean');
-              
-                    if ($this->form_validation->run() === FALSE)
-                    {
-                        $this->load->view('pages/ip_op_trend',$this->data);
-                    }
-                    else{
-                        $this->load->view('pages/ip_op_trend',$this->data);
-                    }
+                    $this->data['report']=$this->reports_model->get_ip_op_trends(); //This method gets data from the Database, and puts the data in report variable.
+                    //Report variable stores all the data returned by reports_model which is passed to the view.
+                    $this->load->view('pages/ip_op_trend',$this->data);
                     $this->load->view('templates/footer');
                 }
                 else{

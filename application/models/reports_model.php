@@ -124,8 +124,7 @@ class Reports_model extends CI_Model{
 		$resource=$this->db->get();
 		return $resource->result();
 	}
-        // This function is used to build a query, and retrive data accordingly.
-        //  Then this table is used to count the number of times a condition is met and return the result.
+        
 	function get_order_summary($type){
 		if($type == "department"){
 			$this->db->select('department.department,department.department_id as department_id');
@@ -486,8 +485,15 @@ class Reports_model extends CI_Model{
 		$query=$this->db->get();
 		return $query->result();
 	}
-        // This function is used to get number of OP/IP patients during a specified period.
+        
+        // This function is used to build a query from the form sent by ip_op_trend page, and retrive data accordingly.
+        // This function is used to get number of OP/IP patients during a specified period, in days, months and years.
+        // This function returns an array of objects containing the records from the database.
         function get_ip_op_trends(){
+            //First time ip_op_trends page is opened all records for today will be opened.
+            /*Query is being built from the data input from the user*/
+            
+            //Selection of the date field.
             if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -499,13 +505,16 @@ class Reports_model extends CI_Model{
 		else{
 			$from_date=date("Y-m-d");
 			$to_date=$from_date;
-		}
+		} 
+                //Selection of the visit name.
 		if($this->input->post('visit_name')){
 			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
 		}
+                //Selection of visit type OP/IP
 		if($this->input->post('visit_type')){
 			$this->db->where('patient_visit.visit_type',$this->input->post('visit_type'));
 		}
+                //Report for day or month or year.
 		if($this->input->post('trend_type')){
                         $trend = $this->input->post('trend_type');
                         if($trend=="Month"){
@@ -525,6 +534,7 @@ class Reports_model extends CI_Model{
                             $this->db->select('patient_visit.admit_date date');  
                             $this->db->group_by('patient_visit.admit_date');
                         } 
+                 //Setting the selected department in the query. First time all the departments are selected.
 		if($this->input->post('department')){
 			$this->db->where('patient_visit.department_id',$this->input->post('department'));
 		}
@@ -542,6 +552,7 @@ class Reports_model extends CI_Model{
 		else{
 			$this->db->select('"0" as area',false);
 		}
+                //Counting the number of patients gender wise.
 		$this->db->select("
           SUM(CASE WHEN 1  THEN 1 ELSE 0 END) 'total',
 		SUM(CASE WHEN gender = 'F'  THEN 1 ELSE 0 END) 'female',
