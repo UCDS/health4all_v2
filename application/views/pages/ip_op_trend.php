@@ -214,7 +214,7 @@ $(function(){
                      return 0;
                     }
                     elseif(sizeof($list)== 1){
-                        return $list[1];
+                        return $list[0];
                     }
                     elseif(sizeof($list)%2 == 0){
                         $middle = sizeof($list)/2;
@@ -224,7 +224,7 @@ $(function(){
                     else{
                         $middle = (sizeof($list) - 1)/2 + 1;
                         
-                        return $list[$middle];
+                        return $list[$middle-1];
                     }
                 }
             ?>
