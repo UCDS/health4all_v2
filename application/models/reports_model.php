@@ -562,8 +562,7 @@ class Reports_model extends CI_Model{
 		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
-		 ->where('visit_type','OP')
-		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')");		  
+		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')");
 		$resource=$this->db->get();
 		return $resource->result();
         }
