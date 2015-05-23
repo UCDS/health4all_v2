@@ -513,7 +513,10 @@ class Reports_model extends CI_Model{
                 //Selection of visit type OP/IP
 		if($this->input->post('visit_type')){
 			$this->db->where('patient_visit.visit_type',$this->input->post('visit_type'));
-		}
+                }
+                else{
+                    $this->db->where('patient_visit.visit_type', 'OP');
+                }
                 //Report for day or month or year.
 		if($this->input->post('trend_type')){
                         $trend = $this->input->post('trend_type');
@@ -562,7 +565,6 @@ class Reports_model extends CI_Model{
 		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
-		 ->where('visit_type','OP')
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')");		  
 		$resource=$this->db->get();
 		return $resource->result();
