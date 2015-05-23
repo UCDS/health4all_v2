@@ -513,7 +513,10 @@ class Reports_model extends CI_Model{
                 //Selection of visit type OP/IP
 		if($this->input->post('visit_type')){
 			$this->db->where('patient_visit.visit_type',$this->input->post('visit_type'));
-		}
+                }
+                else{
+                    $this->db->where('patient_visit.visit_type', 'OP');
+                }
                 //Report for day or month or year.
 		if($this->input->post('trend_type')){
                         $trend = $this->input->post('trend_type');

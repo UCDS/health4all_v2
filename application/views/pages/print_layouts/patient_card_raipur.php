@@ -2,17 +2,22 @@
 		<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-barcode.min.js"></script>  
 		<script>
 			$(function(){
-			$("#bcTarget").barcode("<?php echo $registered->patient_id;?>",'int25');
+			$("#bcTarget").barcode("<?php echo $registered->patient_id;?>",'int25',{barWidth:2, barHeight:30,showHRI:false});
 			});
 		</script>
-		<table style="width:98%;padding:5px">
-			<tr>
-			<td align="center">
-			<img align="left" src="<?php echo base_url();?>assets/images/hospital_logo.png" alt="<?php echo $registered->patient_id;?>" width="50px" />
-			<img align="left" src="<?php echo base_url();?>assets/images/patients/<?php echo $registered->patient_id;?>.jpg" alt="<?php echo $registered->patient_id;?>" />
-			</td>
-			<td>
-				<b><?php echo $registered->patient_id;?></b><br />
+		<br />
+		<br />
+		<br />
+		<br />
+		<div style="width:100%;padding:5px">
+			<div style="float:left;margin-right:10px;">
+			<?php
+			$encoded_data = $this->input->post('patient_picture');
+			?>
+			<img src="data:image/gif;base64,<?php echo $encoded_data;?>" alt="<?php echo $registered->patient_id;?>" width="100px" />
+			</div>
+			<div style="width:50%;font-size:12px;">
+				<b><?php echo "# ".$registered->patient_id;?></b><br />
 				<b><?php echo $registered->first_name." ".$registered->last_name;?></b><br />
 				<b>
 				Age:
@@ -24,9 +29,13 @@
 					?>
 				Sex: <?php echo $registered->gender;?>
 				</b><br />
-				<b>Address: <?php echo $registered->place; ?></b>
+				<b>Address:
+				<?php if(!!$registered->address) echo $registered->address;
+				if($registered->place && !!$registered->address) echo ", ";
+				if($registered->place) echo $registered->place;
+				?></b><br />
+				<b>Date: <?php echo date("d-M-Y",strtotime($registered->admit_date)); ?></b><br />
 				<div id="bcTarget"></div>   
 				
-			</td>
-			</tr>
-		</table>
+			</div>
+		</div>

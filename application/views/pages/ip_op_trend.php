@@ -17,7 +17,7 @@ $(function(){
 			widthFixed : true,
 			showProcessing: true,
 			headerTemplate : '{content} {icon}', // Add icon for jui theme; new in v2.7!
-
+                        cssInfoBlock : "tablesorter-no-sort",
 			widgets: [ 'default', 'zebra', 'print', 'stickyHeaders','filter'],
 
 			widgetOptions: {
@@ -67,6 +67,7 @@ $(function(){
 });
 </script>
 	<?php 
+        
 	$from_date=0;$to_date=0;
 	if($this->input->post('from_date')) $from_date=date("Y-m-d",strtotime($this->input->post('from_date'))); else $from_date = date("Y-m-d");
 	if($this->input->post('to_date')) $to_date=date("Y-m-d",strtotime($this->input->post('to_date'))); else $to_date = date("Y-m-d");
@@ -138,14 +139,28 @@ $(function(){
 		<th style="text-align:center" rowspan="1" colspan="3">Total Visits</th>
 	</tr>
 	<tr>
-		<th>Male</th><th>Female</th><th>Total</th>
+		<th style="text-align:center">Male</th><th style="text-align: center">Female</th><th style="text-align: center">Total</th>
 	</tr>
 	</thead>
 	<tbody>
 	<?php 
+        // Simple total
 	$total_male=0;
 	$total_female=0;
 	$total=0;
+        
+        // To calculate average of visits made by patients in the given date range.
+        $number_of_records = 0;
+        $average = 0;
+        
+        // To calculate median of visits made by patients in the given date range.
+        $male_count_per_day = array();
+        $female_count_per_day = array();
+        $total_count_per_day= array();
+        $median_male = 0;
+        $median_female = 0;
+        $median_total = 0;
+        
 	foreach($report as $s){
 		if($this->input->post('trend_type')){
 			$trend_type=$this->input->post('trend_type');
@@ -170,18 +185,61 @@ $(function(){
 		<td class="text-right"><?php echo $s->total;?></td>
 	</tr>
 	<?php
+        
 	$total_male+=$s->male;
 	$total_female+=$s->female;
-	$total+=$s->total;
+	$total+=$s->total; 
+        // Preparing an array of number of visits per day to sort and find the median.
+        $male_count_per_day[$number_of_records] = $s->male;
+        $female_count_per_day[$number_of_records] = $s->female;
+        $total_count_per_day[$number_of_records] = $s->total;
+        $number_of_records++;        
 	}
 	?>
-	<tfoot>
-		<th>Total </th>
-		<th class="text-right" ><?php echo $total_male;?></th>
-		<th class="text-right" ><?php echo $total_female;?></th>
-		<th class="text-right" ><?php echo $total;?></th>
-	</tfoot>
 	</tbody>
+        <tbody class="tablesorter-no-sort">
+	<tr>
+		<th>Total </th>
+		<th class="text-right" ><?php echo number_format($total_male);?></th>
+		<th class="text-right" ><?php echo number_format($total_female);?></th>
+		<th class="text-right" ><?php echo number_format($total);?></th>
+	</tr>
+        <tr>
+            <?php
+            //This function is used to calculate the median of a given array.
+            //It first sorts the array and then finds the element midway in the sorted array.
+                function median($list){
+                    sort($list);
+                    if(sizeof($list) == 0){
+                     return 0;
+                    }
+                    elseif(sizeof($list)== 1){
+                        return $list[0];
+                    }
+                    elseif(sizeof($list)%2 == 0){
+                        $middle = sizeof($list)/2;
+                        
+                        return ($list[$middle-1] + $list[$middle])/2;
+                    }
+                    else{
+                        $middle = (sizeof($list) - 1)/2 + 1;
+                        
+                        return $list[$middle-1];
+                    }
+                }
+            ?>
+                <th>Median</th>
+                <th class="text-right"><?php echo round(median($male_count_per_day)); ?></th>
+                <th class="text-right"><?php echo round(median($female_count_per_day)); ?></th>
+                <th class="text-right"><?php echo round(median($total_count_per_day)); ?></th>
+        </tr>
+        <tr>
+                <th>Average</th>
+                <th class="text-right"><?php echo round(($total_male/$number_of_records)); ?></th>
+                <th class="text-right"><?php echo round(($total_female/$number_of_records));?></th>
+                <th class="text-right"><?php echo round(($total/$number_of_records));?></th>
+        </tr>
+        </tbody>
 	</table>
 	<?php } else { ?>
 	No patient registrations on the given date.

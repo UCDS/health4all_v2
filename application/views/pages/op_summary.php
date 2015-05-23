@@ -193,6 +193,7 @@ $(function(){
 	$total_op+=$s->op;
 	}
 	?>
+	</tbody>
 	<tfoot>
 		<th>Total </th>
 		<th class="text-right" ><?php echo $total_mchild;?></th>
@@ -211,7 +212,6 @@ $(function(){
 		<th class="text-right" ><?php echo $total_female;?></th>
 		<th class="text-right" ><?php echo $total_op;?></th>
 	</tfoot>
-	</tbody>
 	</table>
 	<?php } else { ?>
 	No patient registrations on the given date.
