@@ -97,7 +97,7 @@ class Reports_model extends CI_Model{
 		else{
 			$this->db->select('"0" as area',false);
 		}
-		$this->db->select("department.department_id,visit_name_id, department 'department',
+		$this->db->select("department.department_id,patient_visit.visit_name_id, department 'department',
           SUM(CASE WHEN 1  THEN 1 ELSE 0 END) 'ip',
 		SUM(CASE WHEN gender = 'F'  THEN 1 ELSE 0 END) 'ip_female',
 		SUM(CASE WHEN gender = 'M'  THEN 1 ELSE 0 END) 'ip_male',	
@@ -117,6 +117,7 @@ class Reports_model extends CI_Model{
 		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
+		 ->join('visit_name','patient_visit.visit_name_id=visit_name.visit_name_id','left')
 		 ->where('visit_type','IP')
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')")
 		 ->group_by('department');
@@ -266,10 +267,12 @@ class Reports_model extends CI_Model{
 		if($visit_name!='-1'){
 			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
 		}
-		if($department!='-1'){
+		if($department!='-1' || $this->input->post('department')){
+			if($this->input->post('department')) $department=$this->input->post('department');
 			$this->db->where('department.department_id',$department);
 		}
 		if(!!$unit){
+			if($this->input->post('unit')) $unit=$this->input->post('unit');
 			$this->db->select('IF(unit!="",unit,0) unit',false);
 			$this->db->where('patient_visit.unit',$unit);
 		}
@@ -277,6 +280,7 @@ class Reports_model extends CI_Model{
 			$this->db->select('"0" as unit_id',false);
 		}
 		if(!!$area){
+			if($this->input->post('area')) $area=$this->input->post('area');
 			$this->db->select('IF(area!="",area,0) area',false);
 			$this->db->where('patient_visit.area',$area);
 		}

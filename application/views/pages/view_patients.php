@@ -79,6 +79,18 @@ $(function(){
 			$('#table-sort').trigger('printTable');
 		  });
 });
+
+<!-- Scripts for printing output table -->
+function printDiv(i)
+{
+var content = document.getElementById(i);
+var pri = document.getElementById("ifmcontentstoprint").contentWindow;
+pri.document.open();
+pri.document.write(content.innerHTML);
+pri.document.close();
+pri.focus();
+pri.print();
+}
 </script>
 	<div class="row">
 		<div class="panel panel-default">
@@ -133,7 +145,7 @@ $(function(){
 	</div>
 	<br />
 	<?php if(isset($patients) && count($patients)>1){ ?>
-		<table class="table table-bordered table-hover table-striped" id="table-sort">
+	<table class="table table-bordered table-hover table-striped" id="table-sort">
 	<thead>
 		<th style="text-align:center">#</th>
 		<th style="text-align:center">IP/OP No.</th>
@@ -178,7 +190,11 @@ $(function(){
 	  <!-- Nav tabs -->
 	  <ul class="nav nav-tabs" role="tablist">
 		<li role="presentation" class="active"><a href="#patient" aria-controls="patient" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Patient Info</a></li>
+		<li role="presentation"><a href="#clinical" aria-controls="clinical" role="tab" data-toggle="tab"><i class="fa fa-stethoscope"></i> Clinical</a></li>
 		<li role="presentation"><a href="#diagnostics" aria-controls="diagnostics" role="tab" data-toggle="tab"><i class="glyph-icon flaticon-chemistry20"></i> Diagnostics</a></li>
+		<li role="presentation"><a href="#procedures" aria-controls="procedures" role="tab" data-toggle="tab"><i class="fa fa-scissors"></i> Procedures</a></li>
+		<li role="presentation"><a href="#prescription" aria-controls="prescription" role="tab" data-toggle="tab"><i class="glyph-icon flaticon-drugs5"></i> Prescription</a></li>
+		<li role="presentation"><a href="#discharge" aria-controls="discharge" role="tab" data-toggle="tab"><i class="fa fa-sign-out"></i> Discharge</a></li>
 	  </ul>
 	  <!-- Tab panes -->
 	  <div class="tab-content">
@@ -190,6 +206,11 @@ $(function(){
 				if($patient->age_months!=0) $age.=$patient->age_months."M ";
 				if($patient->age_days!=0) $age.=$patient->age_days."D ";
 			?>
+			
+		<iframe id="ifmcontentstoprint" style="height: 0px; width: 0px; position: absolute;display:none"></iframe>
+		<div class="sr-only" id="print-div" style="width:100%;height:100%;"> 
+		<?php $this->load->view('pages/print_layouts/patient_summary');?>
+		</div>
 			<div class="row alt">
 			<div class="col-md-4 col-xs-6">
 				<b><?php echo $patient->visit_type; ?> Number: </b><?php echo $patient->hosp_file_no;?>
@@ -218,7 +239,10 @@ $(function(){
 				<b>Parent/ Spouse: </b><?php echo $patient->parent_spouse;?>
 			</div>
 			<div class="col-md-4 col-xs-6">
-				<b>Address: </b><?php echo $patient->address;?>
+				<b>Address: </b><?php 
+				if(!!$patient->address) echo $patient->address;
+				if(!!$patient->address && !!$patient->place) echo ", ";
+				if(!!$patient->place) echo $patient->place;;?>
 			</div>
 			<div class="col-md-4 col-xs-6">
 				<b>District: </b><?php echo $patient->district;?>
@@ -226,7 +250,7 @@ $(function(){
 			</div>
 			<div class="row alt">
 			<div class="col-md-4 col-xs-6">
-				<b>Phone: </b><?php echo $patient->phone;?>
+				<b>Phone: </b><?php if(!!$patient->phone) echo $patient->phone;?>
 			</div>
 			<div class="col-md-4 col-xs-6">
 				<b>MLC: </b><?php if($patient->mlc) echo "Yes"; else echo "No";?>
@@ -236,9 +260,116 @@ $(function(){
 					<b>PS Name: </b><?php echo $patient->ps_name;?>
 				</div>
 			<?php } ?>	
+			</div>
+			<div class="row alt">
 			<div class="col-md-4 col-xs-6">
 				<b>Presenting Complaint: </b><?php echo $patient->presenting_complaints;?>
 			</div>
+			<div class="col-md-4 col-xs-6">
+				<b>ID Proof: </b>
+				<?php 
+					echo $patient->id_proof_type; if(!!$patient->id_proof_no) $patient->id_proof_no;
+				?>
+			</div>
+			<div class="col-md-4 col-xs-6">
+				<b>Occupation: </b><?php echo $patient->occupation;?>
+			</div>
+			</div>
+		</div>
+		<div role="tabpanel" class="tab-pane" id="clinical">
+			<div class="row alt">
+				<div class="col-md-4 col-xs-6">
+					<label class="control-label">Admit Weight</label>
+					<?php if(!!$patient->admit_weight) echo $patient->admit_weight;?>
+				</div>
+				<div class="col-md-4 col-xs-6">
+					<label class="control-label">Pulse Rate</label>
+					<?php if(!!$patient->pulse_rate)  echo $patient->pulse_rate;?>
+				</div>
+				<div class="col-md-4 col-xs-6">
+					<label class="control-label">Temperature</label>
+					<?php if(!!$patient->temperature)  echo $patient->temperature;?>
+				</div>
+			</div>
+			<div class="row alt">
+				<div class="col-md-4 col-xs-6">
+					<label class="control-label">Blood Group</label>					
+					<?php if(!!$patient->blood_group)  echo $patient->blood_group;?>
+
+				</div>
+				<div class="col-md-4 col-xs-6">
+					<label class="control-label">Blood Pressure</label>
+					<?php if(!!$patient->sbp) echo $patient->sbp;?>/
+					<?php if(!!$patient->dbp) echo $patient->dbp;?>
+				</div>
+				<div class="col-md-4 col-xs-6">
+					<label class="control-label">Respiratory Rate</label>
+					<?php if(!!$patient->respiratory_rate) echo $patient->respiratory_rate;?>
+				</div>
+			</div>
+			<div class="row alt">
+				<div class="col-md-12 col-xs-12">
+					<label class="control-label">
+						Symptoms
+					</label>
+					<?php echo $patient->presenting_complaints;?>
+				</div>
+			</div>
+			<div class="row alt">
+				<div class="col-md-12 col-xs-12">
+					<label class="control-label">
+						Past History
+					</label>
+					<?php echo $patient->past_history;?>
+				</div>
+			</div>
+			<div class="row alt">
+				<div class="col-md-12 col-xs-12">
+					<label class="control-label">
+						Family History
+					</label>
+					<?php echo $patient->family_history;?>
+				</div>
+			</div>
+			<div class="row alt">
+				<div class="col-md-12 col-xs-12">
+					<label class="control-label">
+						Clinical Findings
+					</label>
+					<?php echo $patient->clinical_findings;?>
+				</div>
+			</div>
+			<div class="row alt">
+				<div class="col-md-12 col-xs-12">
+					<label class="control-label">
+						CVS
+					</label>
+					<?php echo $patient->cvs;?>
+				</div>
+			</div>
+			<div class="row alt">
+				<div class="col-md-12 col-xs-12">
+					<label class="control-label">
+						RS
+					</label>
+					<?php echo $patient->rs;?>
+				</div>
+			</div>
+			<div class="row alt">
+				<div class="col-md-12 col-xs-12">
+					<label class="control-label">
+						PA
+					</label>
+					<?php echo $patient->pa;?>
+				</div>
+			</div>
+			<div class="row alt">
+				<div class="col-md-12 col-xs-12">
+					<label class="control-label">
+						CNS
+					</label>
+					<?php echo $patient->cns;?>
+				</div>
 			</div>
 		</div>
 		<div role="tabpanel" class="tab-pane" id="diagnostics">
@@ -310,8 +441,126 @@ $(function(){
 			No tests on the given date.
 			<?php } ?>
 		</div>
+		<div role="tabpanel" class="tab-pane" id="prescription">
+			<div class="row alt">
+				<?php if(isset($prescription) && !!$prescription){ ?>
+					<table class="table table-bordered table-striped">
+					<thead>
+						<tr>
+						<th rowspan="3" class="text-center">Drug</th>
+						<th rowspan="3" class="text-center">Duration</th>
+						<th rowspan="3" class="text-center">Frequency</th>
+						<th colspan="6" class="text-center">Timings</th>
+						<th rowspan="3" class="text-center">Quantity</th>
+						<th rowspan="3" class="text-center"></th>
+						</tr>
+						<tr>
+							<th colspan="2" class="text-center">Morning</th>
+							<th colspan="2" class="text-center">Afternoon</th>
+							<th colspan="2" class="text-center">Evening</th>
+						</tr>
+						<tr>
+							<th>BB</th>
+							<th>AB</th>
+							<th>BL</th>
+							<th>AL</th>
+							<th>BD</th>
+							<th>AD</th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php foreach($prescription as $pres){ ?>
+					<tr>
+						<td><?php echo $pres->item_name;?></td>
+						<td><?php echo $pres->duration;?></td>
+						<td><?php echo $pres->frequency;?></td>
+						<td><?php if($pres->morning == 1 || $pres->morning == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td><?php if($pres->morning == 2 || $pres->morning == 3) echo " <i class='fa fa-check'></i>";?></td>
+						<td><?php if($pres->afternoon == 1 || $pres->afternoon == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td><?php if($pres->afternoon == 2 || $pres->afternoon == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td><?php if($pres->evening == 1 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td><?php if($pres->evening == 2 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td><?php echo $pres->quantity;?> <?php echo $pres->lab_unit;?></td>
+						<td>
+							<?php echo form_open('register/update_patients',array('class'=>'form-custom'));?>
+							<input type="text" class="sr-only" value="<?php echo $pres->prescription_id;?>" name="prescription_id" hidden />
+							<input type="text" class="sr-only" value="<?php echo $pres->visit_id;?>" name="visit_id" hidden />
+							<button type="submit" id="remove_prescription" class="btn btn-danger btn-sm">X</button>
+							</form>
+						</td>
+					</tr>
+					<?php } ?>
+					</tbody>
+				</table>
+			<?php }
+			else echo "No Prescriptions";?>
+			</div>
+		</div>
+		<div role="tabpanel" class="tab-pane" id="discharge">
+			<div class="row">
+			<div class="col-md-12 alt">
+				<div class="col-md-2">
+				<label class="control-label">Outcome</label>
+				</div>
+				<div class="col-md-8">
+					<?php if(!!$patient->outcome) echo $patient->outcome;?>
+				</div>
+			</div>
+			<div class="col-md-12 alt">
+				<div class="col-md-2">
+				<label>Outcome Date</label>
+				</div>
+				<div class="col-md-8">
+				<?php if($patient->outcome_date!=0) echo date("d-M-Y",strtotime($patient->outcome_date));?>
+				</div>
+			</div>
+			<div class="col-md-12 alt">
+				<div class="col-md-2">
+				<label class="control-label">Outcome Time</label>
+				</div>
+				<div class="col-md-8">
+				<?php if($patient->outcome_time != 0) echo date("g:ia",strtotime($patient->outcome_time));?>
+				</div>
+			</div>
+			<div class="col-md-12 alt ">
+				<div class="col-md-2">
+				<label class="control-label">Final Diag.</label>
+				</div>
+				<div class="col-md-8">
+				<?php if(!!$patient->final_diagnosis) echo $patient->final_diagnosis;?>
+				</div>
+			</div>
+			<div class="col-md-12 alt ">
+				<div class="col-md-2">
+				<label class="control-label">Decision</label>
+				</div>
+				<div class="col-md-8">
+				<?php if(!!$patient->decision) echo $patient->decision;?>
+				</div>
+			</div>
+			<div class="col-md-12 alt ">
+				<div class="col-md-2">
+				<label class="control-label">Advise</label>
+				</div>
+				<div class="col-md-8">
+				<?php if(!!$patient->advise) echo $patient->advise;?>
+				</div>
+			</div>
+			<div class="col-md-12 alt">	
+				<div class="col-md-2">
+					<label>ICD Code</label>
+				</div>
+				<div class="col-md-8">
+					<?php echo $patient->icd_10;?>
+				</div>
+				</div>
+			</div>
+		</div>
 	  </div>
-	</div>
+			<div class="col-md-12 text-center">
+				<button class="btn btn-md btn-warning" value="Print" type="button" onclick="printDiv('print-div')">Print Summary</button>
+			</div>
+		</div>
 	</div>
 	<?php }
 	else if(isset($patients)){

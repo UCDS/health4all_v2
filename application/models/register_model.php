@@ -148,7 +148,7 @@ class Register_model extends CI_Model{
 			$binary_data = base64_decode( $encoded_data );
 
 			// save to server (beware of permissions)
-			$result = file_put_contents("C:/wamp/www/health4all/assets/images/patients/$patient_id.jpg", $binary_data );
+			$result = file_put_contents("assets/images/patients/$patient_id.jpg", $binary_data );
 			if (!$result) die("Could not save image!  Check file permissions.");
 		}
 		//Creating an array with the database column names as keys and the post values as values. 
