@@ -218,6 +218,7 @@
 					if($f->user_function=="IP Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/ip_summary";?>">IP Summary</a></li>
 						  <li><a href="<?php echo base_url()."reports/ip_op_trends";?>">IP/OP Trends</a></li>
+						  <li><a href="<?php echo base_url()."reports/icd_summary";?>">ICD Code Summary</a></li>
 				<?php	} 
                                 }
 				foreach($functions as $f){
@@ -249,6 +250,7 @@
 			<?php	}
 			if($f->user_function=="IP Detail"){ ?>
 						<li><a href="<?php echo base_url()."reports/ip_detail";?>">IP Detail</a></li>
+						<li><a href="<?php echo base_url()."reports/icd_detail";?>">ICD Code Detail</a></li>
 			<?php }
 			if($f->user_function=="Sanitation Evaluation"){ ?>
 								<li><a href="<?php echo base_url()."sanitation/view_scores";?>">Sanitation Evaluation</a></li>

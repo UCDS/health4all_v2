@@ -551,7 +551,7 @@ pri.print();
 					<label>ICD Code</label>
 				</div>
 				<div class="col-md-8">
-					<?php echo $patient->icd_10;?>
+					<?php if(!!$patient->icd_10) echo $patient->icd_10." - ".$patient->code_title;?>
 				</div>
 				</div>
 			</div>

@@ -830,10 +830,17 @@ pri.print();
 			</div>
 			<div class="col-md-12 alt">
 				<div class="col-md-2">
+				<script>
+				$(function(){
+					$(".outcome_date").Zebra_DatePicker({
+						direction:[false,'<?php echo date("d-M-Y",strtotime($patient->admit_date));?>']
+					});
+				});
+				</script>
 				<label>Outcome Date</label>
 				</div>
 				<div class="col-md-8">
-				<input type="text" name="outcome_date" class="form-control date" value="<?php if($patient->outcome_date!=0) echo $patient->outcome_date;?>" />
+				<input type="text" name="outcome_date" class="form-control outcome_date" value="<?php if($patient->outcome_date!=0) echo $patient->outcome_date;?>" />
 				</div>
 			</div>
 			<div class="col-md-12 alt">
