@@ -67,7 +67,7 @@
 	if($order[0]->age_months!=0) $age.=$order[0]->age_months."M ";
 	if($order[0]->age_days!=0) $age.=$order[0]->age_days."D ";
 	?>
-	<?php echo form_open('diagnostics/view_orders',array('role'=>'form','class'=>'form-custom','id'=>'order_submit'));?>
+	<?php echo form_open("diagnostics/view_orders/$update",array('role'=>'form','class'=>'form-custom','id'=>'order_submit'));?>
 		
 	<div class="panel panel-default">
 		<div class="panel-heading">
@@ -167,7 +167,7 @@
 					<?php } ?>
 					<?php if($test['text_result']==1){ ?>
 					<div class="col-md-4">
-							<textarea name="text_result_<?php echo $test['test_id'];?>" class="form-control" form='order_submit' placeholder="Descriptive result" value="<?php echo $test['test_result_text'];?>"  <?php echo $readonly;?>></textarea>
+							<textarea name="text_result_<?php echo $test['test_id'];?>" class="form-control" form='order_submit' placeholder="Descriptive result" <?php echo $readonly;?>><?php echo $test['test_result_text'];?></textarea>
 					</div>
 					<?php } ?>
 			<input type="text" value="<?php echo $test['test_id'];?>" name="test[]" class="sr-only hidden" />
@@ -209,7 +209,7 @@
 					<?php } ?>
 					<?php if($test['text_result']==1){ ?>
 					<div class="col-md-3">
-							<textarea rows="1" name="text_result_<?php echo $test['test_id'];?>" class="form-control" form='order_submit' placeholder="Descriptive result" value="<?php echo $test['test_result_text'];?>"  <?php echo $readonly;?>></textarea>
+							<textarea rows="1" name="text_result_<?php echo $test['test_id'];?>" class="form-control" form='order_submit' placeholder="Descriptive result"  <?php echo $readonly;?>><?php echo $test['test_result_text'];?></textarea>
 					</div>
 					<?php } ?>
 			<input type="text" value="<?php echo $test['test_id'];?>" name="test[]" class="sr-only hidden" />
@@ -377,7 +377,7 @@
 					<?php } ?>
 					<?php if($test->text_result==1){ ?>
 					<div class="col-md-3">
-							<textarea rows="1" name="text_result_<?php echo $test->test_id;?>" class="form-control" form='order_submit' placeholder="Descriptive result" value="<?php echo $test->test_result_text;?>"  <?php echo $readonly;?>></textarea>
+							<textarea rows="1" name="text_result_<?php echo $test->test_id;?>" class="form-control" form='order_submit' placeholder="Descriptive result"   <?php echo $readonly;?>><?php echo $test->test_result_text;?></textarea>
 					</div>
 					<?php } ?>
 			<input type="text" value="<?php echo $test->test_id;?>" name="test[]" class="sr-only hidden" />
@@ -401,7 +401,7 @@
 	}
 	else{
 ?>
-<?php echo form_open('diagnostics/view_orders',array('role'=>'form','class'=>'form-custom'));
+<?php echo form_open("diagnostics/view_orders/$update",array('role'=>'form','class'=>'form-custom'));
 if(isset($orders)){ ?>
 	<div class="panel panel-default">
 		<div class="panel-heading">
@@ -469,7 +469,7 @@ if(count($orders)>0){ ?>
 					if($order->order_id==$ord){ ?>
 						<td><?php echo $i++;?></td>
 						<td>
-							<?php echo form_open('diagnostics/view_orders',array('role'=>'form','class'=>'form-custom')); ?>
+							<?php echo form_open("diagnostics/view_orders/$update",array('role'=>'form','class'=>'form-custom')); ?>
 							<?php echo $order->order_id;?>
 							<input type="hidden" class="sr-only" name="order_id" value="<?php echo $order->order_id;?>" />
 						</td>
@@ -482,7 +482,7 @@ if(count($orders)>0){ ?>
 							<?php foreach($orders as $order){
 										if($order->order_id == $ord) {
 											if($order->test_status==1) 
-												$label="label-success";
+												$label="label-warning";
 											else $label = "label-danger";
 											echo "<div class='label $label'>".$order->test_name."</div><br />";
 										}
@@ -496,7 +496,11 @@ if(count($orders)>0){ ?>
 						<input type="text" class="sr-only" value="<?php echo $this->input->post('test_method_search');?>"  name="test_method_search" readonly /> 
 						<input type="text" class="sr-only" value="<?php echo $this->input->post('from_date');?>"  name="from_date" readonly /> 
 						<input type="text" class="sr-only" value="<?php echo $this->input->post('to_date');?>"  name="to_date" readonly /> 	
-						<button class="btn btn-sm btn-primary" type="submit" value="submit">Select</button></form></td>
+						<?php if($update) { ?>
+							<button class="btn btn-sm btn-primary" type="submit" value="submit">Select</button>
+						<?php } ?>
+						</form></td>
+							
 				<?php break;
 					}
 				} ?>
@@ -519,7 +523,7 @@ if(count($orders)>0){ ?>
 	}
 }
 	else if(count($test_areas)>1){ ?> 
-	<?php echo form_open('diagnostics/view_orders',array('role'=>'form','class'=>'form-custom')); ?>
+	<?php echo form_open("diagnostics/view_orders/$update",array('role'=>'form','class'=>'form-custom')); ?>
 		<div class="form-group">
 			<label for="test_area">Test Area<font color='red'>*</font></label>
 			<select name="test_area" class="form-control"  id="test_area">

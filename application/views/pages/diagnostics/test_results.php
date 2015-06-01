@@ -93,7 +93,9 @@ pri.print();
 		$order_date_time = $order[0]->order_date_time;
 		$reported_date_time = $order[0]->reported_date_time;
 		$done_by = $order[0]->done_first." ".$order[0]->done_last;
+		$done_by_designation = $order[0]->done_designation;
 		$approved_by = $order[0]->approved_first." ".$order[0]->approved_last;
+		$approved_by_designation = $order[0]->approved_designation;
 		$age="";
 		if($order[0]->age_years!=0) $age.=$order[0]->age_years."Y ";
 		if($order[0]->age_months!=0) $age.=$order[0]->age_months."M ";
@@ -913,8 +915,8 @@ pri.print();
 					<?php } ?>
 				<tr></tr>
 				<tr>
-					<th colspan="3" align="left"> <br /> <?php echo $done_by;?><br />Technician</th>
-					<th colspan="10"> <br /> <?php echo $approved_by;?> <br />Doctor  </th>
+					<th colspan="3" align="left"> <br /> <?php echo $done_by;?><br /><?php echo $done_by_designation;?></th>
+					<th colspan="10"> <br /> <?php echo $approved_by;?> <br /><?php echo $approved_by_designation;?></th>
 				</tr>
 		</tbody>
 	</table>

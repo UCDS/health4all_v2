@@ -294,7 +294,8 @@ class Diagnostics_model extends CI_Model{
 		test_result,
 		test_result_text,hospital,hospital.logo,hospital.place,district,state,test_area,provisional_diagnosis,
 		IF(micro_organism_test.micro_organism_test_id!="",GROUP_CONCAT(DISTINCT CONCAT(micro_organism_test.micro_organism_test_id,",",micro_organism,",",antibiotic),",",antibiotic_result,"^"),0) micro_organism_test,
-		approved_by.first_name approved_first,approved_by.last_name approved_last,done_by.first_name done_first,done_by.last_name done_last',false)
+		approved_by.first_name approved_first,approved_by.last_name approved_last,approved_by.designation approved_by_designation
+		done_by.first_name done_first,done_by.last_name done_last,done_by.designation done_by_designation',false)
 		->from('test_order')->join('test','test_order.order_id=test.order_id')->join('test_sample','test_order.order_id=test_sample.order_id')
 		->join('test_group','test.group_id=test_group.group_id','left')
 		->join('test_master as ts','test.test_master_id=ts.test_master_id','left')
@@ -333,6 +334,7 @@ class Diagnostics_model extends CI_Model{
 		$data=array();
 		$antibiotics_data=array();
 		$this->db->trans_start();
+		if(!!$tests){
 		foreach($tests as $test){
 			if($this->input->post('binary_result_'.$test)!=NULL || $this->input->post('numeric_result_'.$test)!=NULL || $this->input->post('text_result_'.$test)!=NULL){
 				$binary_result=$this->input->post('binary_result_'.$test);
@@ -379,15 +381,16 @@ class Diagnostics_model extends CI_Model{
 				}
 			}
 		}
+		}
 		if(!!$antibiotics_data)
 		$this->db->insert_batch('antibiotic_test',$antibiotics_data);
 		$this->db->update_batch('test',$data,'test_id');
-		$this->db->select('test_status')->from('test')->join('test_order','test.order_id=test_order.order_id')->where('test_order.order_id',$this->input->post('order_id'));
+		$this->db->select('test_status,test_master_id')->from('test')->join('test_order','test.order_id=test_order.order_id')->where('test_order.order_id',$this->input->post('order_id'));
 		$query=$this->db->get();
 		$result=$query->result();
 		$order_status=2;
 		foreach($result as $row){
-			if($row->test_status == 0) $order_status = 1;
+			if($row->test_status == 0 && $row->test_master_id != 0) $order_status = 1;
 		}
 		if($order_status==2){
 			$this->db->where('order_id',$this->input->post('order_id'));

@@ -96,17 +96,37 @@
 					} 
 				?> 
 			<?php foreach($functions as $f){
-					if($f->user_function=="Diagnostics" || $f->user_function=="Bloodbank" || $f->user_function == "Sanitation Evaluation"){ ?>
+					if($f->user_function=="Diagnostics" ||$f->user_function=="Diagnostics - Order All" || $f->user_function=="Bloodbank" || $f->user_function == "Sanitation Evaluation"){ ?>
 					<li class="dropdown  <?php if(preg_match("^".base_url()."services^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Services <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-						<?php foreach($functions as $f){
-								if($f->user_function=="Diagnostics"){ ?>
-									<li><a href="<?php echo base_url()."diagnostics/test_order";?>"><i class="glyph-icon flaticon-chemistry20"></i> Diagnostics</a></li>
 						<?php
+						$diagnostics=0;
+						foreach($functions as $f){
+								if($f->user_function=="Diagnostics - Order All"){ ?>
+									<li><a href="<?php echo base_url()."diagnostics/test_order/1";?>"><i class="glyph-icon flaticon-chemistry20"></i> Diagnostics</a></li>
+						<?php		$diagnostics=1;
 									break;
 								}
 							}
+						if($diagnostics==0){
+						foreach($functions as $f){
+								if($f->user_function=="Diagnostics - Order"){ ?>
+									<li><a href="<?php echo base_url()."diagnostics/test_order";?>"><i class="glyph-icon flaticon-chemistry20"></i> Diagnostics</a></li>
+						<?php		$diagnostics=1;
+									break;
+								}
+							}
+						}
+						if($diagnostics==0){
+						foreach($functions as $f){
+								if($f->user_function=="Diagnostics"){ ?>
+									<li><a href="<?php echo base_url()."diagnostics/view_orders";?>"><i class="glyph-icon flaticon-chemistry20"></i> Diagnostics</a></li>
+						<?php		$diagnostics=1;
+									break;
+								}
+							}
+						}
 						?>	
 
 						<?php foreach($functions as $f){

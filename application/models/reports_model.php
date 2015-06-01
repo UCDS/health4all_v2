@@ -547,8 +547,27 @@ class Reports_model extends CI_Model{
 	}
 	
 	function get_equipment_summary(){
+	
+	
+		if($this->input->post('department')){
+			$this->db->where('equipment.department_id',$this->input->post('department'));
+		}
+		if($this->input->post('unit')){
+			$this->db->where('equipment.unit_id',$this->input->post('unit'));
+		}
+		if($this->input->post('area')){
+			$this->db->where('equipment.area_id',$this->input->post('area'));
+		}
+		if($this->input->post('equipment_status')){
+			$this->db->where('equipment.equipment_status',$this->input->post('equipment_status'));
+		}
+		if($this->input->post('equipment_type')){
+			$this->db->where('equipment.equipment_type_id',$this->input->post('equipment_type'));
+		}
 		$this->db->select("equipment.equipment_type_id,equipment_type,equipment.department_id,department,equipment.area_id,area_name,equipment.unit_id,unit_name,equipment_status,		
-		SUM(CASE WHEN 1 THEN 1 ELSE 0 END) 'total'
+		SUM(CASE WHEN 1 THEN 1 ELSE 0 END) 'total',
+		SUM(CASE WHEN equipment_status=1 THEN 1 ELSE 0 END) 'total_working',
+		SUM(CASE WHEN equipment_status=0 THEN 1 ELSE 0 END) 'total_not_working'
 		")
 		->from("equipment")
 		->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id")

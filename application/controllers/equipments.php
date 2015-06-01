@@ -161,7 +161,7 @@ $this->data['equipment_types']=$this->masters_model->get_data("equipment_type");
 
 }
 
-else if($type=="equipments"){
+else if($type=="equipment"){
 		 	$title="Edit Equipment Details";
 		
 			$config=array(
@@ -172,7 +172,6 @@ else if($type=="equipments"){
                   )
 			);
 $this->data['equipments']=$this->masters_model->get_data("equipment");
-
 $this->data['equipment_type']=$this->masters_model->get_data("equipment_types");
 $this->data['hospital']=$this->masters_model->get_data("hospital");
 $this->data['department']=$this->masters_model->get_data("department");
@@ -240,7 +239,7 @@ $this->data['user']=$this->masters_model->get_data("user");
 		$this->load->view('templates/footer');
 	}
 
-	function view($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=0){	
+	function view($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=-1){	
 		$this->load->helper('form_helper');
 		switch($type){
 			case "equipments_detailed" : 

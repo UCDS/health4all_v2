@@ -70,7 +70,7 @@ $(function(){
 					<?php 
 					foreach($equipment_types as $e){
 						echo "<option value='".$e->equipment_type_id."'";
-						if($this->input->post('equipment_type') && $this->input->post('equipment_type') == $dept->equipment_type_id) echo " selected ";
+						if($this->input->post('equipment_type') && $this->input->post('equipment_type') == $e->equipment_type_id) echo " selected ";
 						echo ">".$e->equipment_type."</option>";
 					}
 					?>
@@ -106,7 +106,7 @@ $(function(){
 					?>
 					</select>
 					<select name="equipment_status" id="equipment" class="form-control" >
-					<option value="">Working Status</option>	
+					<option value="">All</option>	
 					<option value="0" <?php if($this->input->post('equipment_status') == '1') echo "selected";?>>Working</option>
 					<option value="1" <?php if($this->input->post('equipment_status') == '0') echo "selected";?>>Not Working</option>
 					</select>
@@ -127,6 +127,7 @@ $(function(){
 		<td style="text-align:center" >Unit</th>
 		<td style="text-align:center" >Area</th>
 		<td style="text-align:center" >Working</th>
+		<td style="text-align:center" >Not Working</th>
 		<td style="text-align:center" >Total</th>
 	</tr>
 
@@ -134,52 +135,41 @@ $(function(){
 	<tbody>
 	<?php 
 
-	$total_mchild=0;
-	$total_fchild=0;
-	$total_child=0;
-	$total_m14to30=0;
-	$total_f14to30=0;
-	$total_14to30=0;
-	$total_m30to50=0;
-	$total_f30to50=0;
-	$total_30to50=0;
-	$total_m50plus=0;
-	$total_f50plus=0;
-	$total_50plus=0;
-	$total_male=0;
-	$total_female=0;
-	$total_ip=0;
+	$total_working=0;
+	$total_not_working=0;
+	$total_=0;
 	$serial_number =1;
 
 	foreach($summary as $s){
 	?>
 	<tr>
 		<td><?php echo $serial_number++;
-			$sub_url="equipments/view/equipments_summary/";			?></td>
-		<td class="text-right"><a href="<?php echo base_url().$sub_url."$s->equipment_type_id/$s->department_id/$s->area_id/$s->unit_id";?>"><?php echo $s->equipment_type;?></a></td>
+			$sub_url="equipments/view/equipments_detailed/";			?></td>
+		<td><a href="<?php echo base_url().$sub_url."$s->equipment_type_id/$s->department_id/$s->area_id/$s->unit_id/-1";?>"><?php echo $s->equipment_type;?></a></td>
 
-		<td class="text-right"><a href="<?php echo base_url().$sub_url."$s->equipment_type_id/$s->department_id/$s->area_id/$s->unit_id/M/14/0";?>"><?php echo $s->department;?></a></td>
-		<td class="text-right"><a href="<?php echo base_url().$sub_url."$s->equipment_type_id/$s->department_id/$s->area_id/$s->unit_id/M/14/0";?>"><?php echo $s->unit_name;?></td>
-		<td class="text-right"><a href="<?php echo base_url().$sub_url."$s->equipment_type_id/$s->department_id/$s->area_id/$s->unit_id/M/14/0";?>"><?php echo $s->area_name;?></td>
-		<td class="text-right"><a href="<?php echo base_url().$sub_url."$s->equipment_type_id/$s->department_id/$s->area_id/$s->unit_id/M/14/0";?>"><?php   if($s->equipment_status == 0) echo "Not working"; else echo "Working"; ?></td>
+		<td><a href="<?php echo base_url().$sub_url."$s->equipment_type_id/$s->department_id/$s->area_id/$s->unit_id/-1";?>"><?php echo $s->department;?></a></td>
+		<td><a href="<?php echo base_url().$sub_url."$s->equipment_type_id/$s->department_id/$s->area_id/$s->unit_id/-1";?>"><?php echo $s->unit_name;?></td>
+		<td><a href="<?php echo base_url().$sub_url."$s->equipment_type_id/$s->department_id/$s->area_id/$s->unit_id/-1";?>"><?php echo $s->area_name;?></td>
+		<td class="text-right"><a href="<?php echo base_url().$sub_url."$s->equipment_type_id/$s->department_id/$s->area_id/$s->unit_id/1";?>"><?php echo $s->total_working;?></td>
+		<td class="text-right"><a href="<?php echo base_url().$sub_url."$s->equipment_type_id/$s->department_id/$s->area_id/$s->unit_id/0";?>"><?php echo $s->total_not_working;?></td>
+		<td class="text-right"><a href="<?php echo base_url().$sub_url."$s->equipment_type_id/$s->department_id/$s->area_id/$s->unit_id/-1";?>"><?php echo $s->total;?></td>
 
 	</tr>
 	<?php
-	$total_mchild+=$s->equipment_type;
-	$total_fchild+=$s->department;
-	$total_child+=$s->unit_name;
-	$total_m14to30+=$s->area_name;
-	$total_f14to30+=$s->equipment_status;
+	$total_working+=$s->total_working;
+	$total_not_working+=$s->total_not_working;
+	$total+=$s->total;
 	}
 	?>
 	<tfoot>
 		<th>Total </th>
-		<th class="text-right" ><?php echo $total_mchild;?></th>
-		<th class="text-right"><?php echo $total_fchild;?></th>
-		<th class="text-right" ><?php echo $total_child;?></th>
-		<th class="text-right" ><?php echo $total_m14to30;?></th>
-		<th class="text-right" ><?php echo $total_f14to30;?></th>
-		<th class="text-right" ><?php echo $total_14to30;?></th>
+		<th></th>
+		<th></th>
+		<th></th>
+		<th></th>
+		<th class="text-right" ><?php echo $total_working;?></th>
+		<th class="text-right" ><?php echo $total_not_working;?></th>
+		<th class="text-right" ><?php echo $total;?></th>
 	</tfoot>
 	</tbody>
 	</table>
