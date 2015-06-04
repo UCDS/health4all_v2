@@ -92,58 +92,6 @@ pri.focus();
 pri.print();
 }
 </script>
-	<div class="row">
-		<div class="panel panel-default">
-		<div class="panel-heading">
-		<h4>Search Patients</h4>	
-		</div>
-		<div class="panel-body">
-		<?php echo form_open("register/view_patients",array('role'=>'form','class'=>'form-custom')); ?>
-					<div class="row">
-					<div class="col-md-12 col-xs-12">
-						<div class="form-group">
-						<label class="control-label">Year</label>
-						<select class="form-control" name="search_year">
-							<?php 
-								$i=2013;
-								$year = date("Y");
-								while($year>=$i){ ?>
-								<option value="<?php echo $year;?>"><?php echo $year--;?></option>
-							<?php
-								}
-							?>
-						</select>
-						</div>
-						<div class="form-group">
-							<label class="control-label">Visit Type</label>
-							<select class="form-control" name="search_visit_type">
-								<option value=''>All</option>
-								<option value='IP'>IP</option>
-								<option value='OP'>OP</option>
-							</select>
-						<label class="control-label">IP/OP Number</label>
-						<input type="text" name="search_patient_number" size="5" class="form-control" />
-						</div>
-						<div class="form-group">
-						<label class="control-label">Patient Name</label>
-						<input type="text" name="search_patient_name" class="form-control" />
-						</div>
-						<div class="form-group">
-						<label class="control-label">Phone Number</label>
-						<input type="text" name="search_phone" class="form-control" />
-						</div>
-					</div>
-				</div>
-		</div>
-		<div class="panel-footer">
-			<div class="text-center">
-			<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
-			</div>
-			</form>
-		</div>
-		</div>
-	</div>
-	<br />
 	<?php if(isset($patients) && count($patients)>1){ ?>
 	<table class="table table-bordered table-hover table-striped" id="table-sort">
 	<thead>
@@ -211,68 +159,77 @@ pri.print();
 		<div class="sr-only" id="print-div" style="width:100%;height:100%;"> 
 		<?php $this->load->view('pages/print_layouts/patient_summary');?>
 		</div>
-			<div class="row alt">
-			<div class="col-md-4 col-xs-6">
-				<b><?php echo $patient->visit_type; ?> Number: </b><?php echo $patient->hosp_file_no;?>
+			<div class="col-md-4 col-lg-3">
+				<div class="well well-sm text-center">
+				<img src="<?php echo base_url()."assets/images/patients/".$patient->patient_id;?>.jpg" alt="Image" style="width:50%;height:50%" onError="this.onerror=null;this.src='<?php echo base_url()."assets/images/patients/default.png";?>';" />
+				</div>
 			</div>
-			<div class="col-md-4 col-xs-6">
+			<div class="col-md-8">
+			<div class="row alt">
+			<div class="col-md-4 col-xs-12 col-lg-3">
+				<b><?php echo $patient->visit_type;?> Number: </b><?php echo $patient->hosp_file_no;?>
+			</div>
+			<div class="col-md-4 col-xs-12 col-lg-3">
 				<b>Patient Name: </b><?php echo $patient->first_name." ".$patient->last_name;?>
 			</div>
-			<div class="col-md-4 col-xs-6">
+			<div class="col-md-4 col-xs-12 col-lg-3">
 				<b>Age/ Gender: </b><?php echo $age."/ ".$patient->gender;?>
 			</div>
 			</div>
 			<div class="row alt">
-			<div class="col-md-4 col-xs-6">
+			<div class="col-md-4 col-xs-12 col-lg-3">
 				<b><?php if( $patient->visit_type == "IP") echo "Admit Date:"; else echo "Visit Date:";?></b>
 				<?php echo date("d-M-Y", strtotime($patient->admit_date)).", ".date("g:ia", strtotime($patient->admit_time));?>
 			</div>
-			<div class="col-md-4 col-xs-6">
+			<div class="col-md-4 col-xs-12 col-lg-3">
 				<b>Department: </b><?php echo $patient->department;?>
 			</div>
-			<div class="col-md-4 col-xs-6">
+			<div class="col-md-4 col-xs-12 col-lg-3">
 				<b>Unit/Area: </b><?php echo $patient->unit_name."/".$patient->area_name;?>
 			</div>
 			</div>
 			<div class="row alt">
-			<div class="col-md-4 col-xs-6">
+			<div class="col-md-4 col-xs-12 col-lg-3">
 				<b>Parent/ Spouse: </b><?php echo $patient->parent_spouse;?>
 			</div>
-			<div class="col-md-4 col-xs-6">
+			<div class="col-md-4 col-xs-12 col-lg-3">
 				<b>Address: </b><?php 
 				if(!!$patient->address) echo $patient->address;
 				if(!!$patient->address && !!$patient->place) echo ", ";
 				if(!!$patient->place) echo $patient->place;;?>
 			</div>
-			<div class="col-md-4 col-xs-6">
-				<b>District: </b><?php echo $patient->district;?>
+			<div class="col-md-4 col-xs-12 col-lg-3">
+				<b>District<?php if(!!$patient->state) echo ", State"?>: </b><?php echo $patient->district; if(!!$patient->state) echo ", ".$patient->state;?>
 			</div>
 			</div>
+			</div>
+			<div class="col-md-12">
 			<div class="row alt">
-			<div class="col-md-4 col-xs-6">
+			<div class="col-md-4 col-xs-12 col-lg-3">
 				<b>Phone: </b><?php if(!!$patient->phone) echo $patient->phone;?>
 			</div>
-			<div class="col-md-4 col-xs-6">
+			<div class="col-md-4 col-xs-12 col-lg-3">
 				<b>MLC: </b><?php if($patient->mlc) echo "Yes"; else echo "No";?>
 			</div>
 			<?php if($patient->mlc){ ?>
-				<div class="col-md-4 col-xs-6">
-					<b>PS Name: </b><?php echo $patient->ps_name;?>
+				<div class="col-md-4 col-xs-12 col-lg-3">
+					<b>PS Name: </b><?php if(!!$patient->ps_name) echo $patient->ps_name;?>
 				</div>
 			<?php } ?>	
 			</div>
 			<div class="row alt">
-			<div class="col-md-4 col-xs-6">
+			<div class="col-md-4 col-xs-12 col-lg-3">
 				<b>Presenting Complaint: </b><?php echo $patient->presenting_complaints;?>
 			</div>
-			<div class="col-md-4 col-xs-6">
+			<div class="col-md-4 col-xs-12 col-lg-3">
 				<b>ID Proof: </b>
 				<?php 
 					echo $patient->id_proof_type; if(!!$patient->id_proof_no) $patient->id_proof_no;
 				?>
 			</div>
-			<div class="col-md-4 col-xs-6">
+			<div class="col-md-4 col-xs-12 col-lg-3">
 				<b>Occupation: </b><?php echo $patient->occupation;?>
+			</div>
 			</div>
 			</div>
 		</div>
@@ -567,4 +524,56 @@ pri.print();
 		echo "No patients found with the given search terms";
 	}
 	?>
+	
+	<div class="row">
+		<div class="panel panel-default">
+		<div class="panel-heading">
+		<h4>Search Patients</h4>	
+		</div>
+		<div class="panel-body">
+		<?php echo form_open("register/view_patients",array('role'=>'form','class'=>'form-custom')); ?>
+					<div class="row">
+					<div class="col-md-12 col-xs-12">
+						<div class="form-group">
+						<label class="control-label">Year</label>
+						<select class="form-control" name="search_year">
+							<?php 
+								$i=2013;
+								$year = date("Y");
+								while($year>=$i){ ?>
+								<option value="<?php echo $year;?>"><?php echo $year--;?></option>
+							<?php
+								}
+							?>
+						</select>
+						</div>
+						<div class="form-group">
+							<label class="control-label">Visit Type</label>
+							<select class="form-control" name="search_visit_type">
+								<option value=''>All</option>
+								<option value='IP'>IP</option>
+								<option value='OP'>OP</option>
+							</select>
+						<label class="control-label">IP/OP Number</label>
+						<input type="text" name="search_patient_number" size="5" class="form-control" />
+						</div>
+						<div class="form-group">
+						<label class="control-label">Patient Name</label>
+						<input type="text" name="search_patient_name" class="form-control" />
+						</div>
+						<div class="form-group">
+						<label class="control-label">Phone Number</label>
+						<input type="text" name="search_phone" class="form-control" />
+						</div>
+					</div>
+				</div>
+		</div>
+		<div class="panel-footer">
+			<div class="text-center">
+			<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
+			</div>
+			</form>
+		</div>
+		</div>
 	</div>
+	<br />

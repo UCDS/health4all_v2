@@ -294,7 +294,7 @@ class Diagnostics_model extends CI_Model{
 		test_result,
 		test_result_text,hospital,hospital.logo,hospital.place,district,state,test_area,provisional_diagnosis,
 		IF(micro_organism_test.micro_organism_test_id!="",GROUP_CONCAT(DISTINCT CONCAT(micro_organism_test.micro_organism_test_id,",",micro_organism,",",antibiotic),",",antibiotic_result,"^"),0) micro_organism_test,
-		approved_by.first_name approved_first,approved_by.last_name approved_last,approved_by.designation approved_by_designation
+		approved_by.first_name approved_first,approved_by.last_name approved_last,approved_by.designation approved_by_designation,
 		done_by.first_name done_first,done_by.last_name done_last,done_by.designation done_by_designation',false)
 		->from('test_order')->join('test','test_order.order_id=test.order_id')->join('test_sample','test_order.order_id=test_sample.order_id')
 		->join('test_group','test.group_id=test_group.group_id','left')

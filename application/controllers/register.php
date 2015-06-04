@@ -41,6 +41,7 @@ class Register extends CI_Controller {
 			$this->data['units']=$this->staff_model->get_unit();
 			$this->data['areas']=$this->staff_model->get_area();
 			$this->data['districts']=$this->staff_model->get_district();
+			$this->data['states']=$this->masters_model->get_data('states');
 			$this->data['userdata']=$this->session->userdata('logged_in');//Load the session data into a variable to use in headers and models.
 			$this->data['title']="Patient Registration"; //Set the page title to be used by the header.
 			$this->data['form_id']=$form_id; //Store the form_id in a variable to access in the views.
