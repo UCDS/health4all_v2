@@ -3,340 +3,340 @@ class Masters_model extends CI_Model{
 	
 	
 	function get_data($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status="",$hospitals=0,$vendor_id=0){
-		if($type=="equipment_types"){
-			$this->db->select("equipment_type_id,equipment_type")->from("equipment_type");
-			$this->db->order_by("equipment_type");
-		}
-		else if($type=="hospital"){
-			$this->db->select("hospital_id,hospital")->from("hospital");
-		}
-		else if($type=="department"){
-			$this->db->select("department_id,hospital_id,department")->from("department")->order_by('department');
-		}
-		else if($type=="area"){
-			if($hospitals!=0){
-				$hosp_id=array();
-				foreach($hospitals as $hospital){
-					$hosp_id[]=$hospital->hospital_id;
-				}
-				$this->db->where_in('hospital_id',$hosp_id);
-			}
-			$this->db->select("area_id,area_name,area.department_id,hospital_id")->from("area")->join('department','area.department_id=department.department_id','left');
-		}
-		else if($type=="unit"){
-			$this->db->select("unit_id,unit_name,department_id")->from("unit");
-		}
-		else if($type=="icd_chapters"){
-			$this->db->select("chapter_id,chapter_title")->from("icd_chapter")->order_by('chapter_title');
-		}
-		else if($type=="icd_blocks"){
-			$this->db->select("*")->from("icd_block")->order_by('block_title');
-		}
-		else if($type=="icd_codes"){
-			$this->db->select("*")->from("icd_code")->order_by('code_title');
-		}
-		else if($type=="unit"){
-			$this->db->select("unit_id,unit_name,department_id")->from("unit");
-		}
-		else if($type=="user"){
-			$this->db->select("user_id,username")->from("user");
-		}
-		else if($type=='staff')
-		{
-			if($this->input->post('search'))
-			{
-				$staff = strtolower($this->input->post('staff'));
-				$this->db->like('LOWER(first_name)',$staff,'after');
-			}
-			if($this->input->post('select'))
-			{
-				$staff_id = $this->input->post('staff_id');
-				$this->db->where('staff_id',$staff_id);
-			}
-			$this->db->select("staff_id,first_name,last_name,gender,date_of_birth,department_id,unit_id,area_id,staff_role_id,staff_category_id,designation,email,phone,specialisation,research,research_area")->from("staff");
-			
-		}
-		else if($type=="staff_category")
-		{	
-			if($this->input->post('search'))
-			{
-				$staff_category = strtolower($this->input->post('staff_category'));
-				$this->db->like('LOWER(staff_category)',$staff_category,'after');
-			}
-			if($this->input->post('staff_category_id'))
-			{
-				
-				$staff_category_id = $this->input->post('staff_category_id');
-				$this->db->where('staff_category_id',$staff_category_id);
-			}
-			
-			$this->db->select("staff_category_id,staff_category")->from("staff_category");
-		}
-		else if($type=="staff_role")
-		{
-		if($this->input->post('search'))
-			{
-				$staff_role = strtolower($this->input->post('staff_role'));
-				$this->db->like('LOWER(staff_role)',$staff_role,'after');
-			}
-			if($this->input->post('staff_role_id'))
-			{
-				$staff_role_id = $this->input->post('staff_role_id');
-				$this->db->where('staff_role_id',$staff_role_id);
-			}
-			
-			$this->db->select("staff_role_id,staff_role")->from("staff_role");
-		}
-		else if($type=="item_type"){
-			$this->db->select("item_type_id,item_type")->from("item_type");
-		}
-		else if($type=="drug_type"){
-			$this->db->select("drug_type_id,drug_type,description")->from("drug_type");
-		}
-		else if($type=="drugs"){
-			$this->db->select("item_id,item_name")->from("item")->order_by('item_name');
-		}
-		
-		else if($type=="dosage"){
+            if($type=="equipment_types"){
+                    $this->db->select("equipment_type_id,equipment_type")->from("equipment_type");
+                    $this->db->order_by("equipment_type");
+            }
+            else if($type=="hospital"){
+                    $this->db->select("hospital_id,hospital")->from("hospital");
+            }
+            else if($type=="department"){
+                    $this->db->select("department_id,hospital_id,department")->from("department")->order_by('department');
+            }
+            else if($type=="area"){
+                    if($hospitals!=0){
+                            $hosp_id=array();
+                            foreach($hospitals as $hospital){
+                                    $hosp_id[]=$hospital->hospital_id;
+                            }
+                            $this->db->where_in('hospital_id',$hosp_id);
+                    }
+                    $this->db->select("area_id,area_name,area.department_id,hospital_id")->from("area")->join('department','area.department_id=department.department_id','left');
+            }
+            else if($type=="unit"){
+                    $this->db->select("unit_id,unit_name,department_id")->from("unit");
+            }
+            else if($type=="icd_chapters"){
+                    $this->db->select("chapter_id,chapter_title")->from("icd_chapter")->order_by('chapter_title');
+            }
+            else if($type=="icd_blocks"){
+                    $this->db->select("*")->from("icd_block")->order_by('block_title');
+            }
+            else if($type=="icd_codes"){
+                    $this->db->select("*")->from("icd_code")->order_by('code_title');
+            }
+            else if($type=="unit"){
+                    $this->db->select("unit_id,unit_name,department_id")->from("unit");
+            }
+            else if($type=="user"){
+                    $this->db->select("user_id,username")->from("user");
+            }
+            else if($type=='staff')
+            {
+                    if($this->input->post('search'))
+                    {
+                            $staff = strtolower($this->input->post('staff'));
+                            $this->db->like('LOWER(first_name)',$staff,'after');
+                    }
+                    if($this->input->post('select'))
+                    {
+                            $staff_id = $this->input->post('staff_id');
+                            $this->db->where('staff_id',$staff_id);
+                    }
+                    $this->db->select("staff_id,first_name,last_name,gender,date_of_birth,department_id,unit_id,area_id,staff_role_id,staff_category_id,designation,email,phone,specialisation,research,research_area")->from("staff");
 
-			if($this->input->post('search')){
-					
-			$dosage_type=strtolower($this->input->post('dosage_name'));
-				$this->db->like('LOWER(dosage)',$dosage_type,'after');
-				}
-			if($this->input->post('select')){
-					$dosage_id=$this->input->post('dosage_id');
+            }
+            else if($type=="staff_category")
+            {	
+                    if($this->input->post('search'))
+                    {
+                            $staff_category = strtolower($this->input->post('staff_category'));
+                            $this->db->like('LOWER(staff_category)',$staff_category,'after');
+                    }
+                    if($this->input->post('staff_category_id'))
+                    {
 
-					$this->db->where('dosage_id',$dosage_id);
-			}
-			$this->db->select("dosage,dosage_id,dosage_unit")->from("dosage");
-						
-		}
-		else if($type=="generics"){
-		
-			if($this->input->post('select')){
-					$generic_id=$this->input->post('generic_item_id');
+                            $staff_category_id = $this->input->post('staff_category_id');
+                            $this->db->where('staff_category_id',$staff_category_id);
+                    }
 
-					$this->db->where('generic_item_id',$generic_id);
-					
-			}
-			if($this->input->post('search')){
-				$generic_type=strtolower($this->input->post('generic_name'));
-				$this->db->like('LOWER(generic_name)',$generic_type,'after');
-				}
-				$this->db->select("generic_item_id,generic_name,drug_type,item_type,drug_type.drug_type_id,item_type.item_type_id")->from("generic_item")
-				->join('drug_type','generic_item.drug_type_id=drug_type.drug_type_id','left')
-				->join('item_type','generic_item.item_type_id=item_type.item_type_id','left')
-				->order_by('generic_name');	
+                    $this->db->select("staff_category_id,staff_category")->from("staff_category");
+            }
+            else if($type=="staff_role")
+            {
+            if($this->input->post('search'))
+                    {
+                            $staff_role = strtolower($this->input->post('staff_role'));
+                            $this->db->like('LOWER(staff_role)',$staff_role,'after');
+                    }
+                    if($this->input->post('staff_role_id'))
+                    {
+                            $staff_role_id = $this->input->post('staff_role_id');
+                            $this->db->where('staff_role_id',$staff_role_id);
+                    }
 
-			
-		}
-		else if($type=="equipment"){
-		
-			if($this->input->post('select')){
-					$equipment_id=$this->input->post('equipment_id');
+                    $this->db->select("staff_role_id,staff_role")->from("staff_role");
+            }
+            else if($type=="item_type"){
+                    $this->db->select("item_type_id,item_type")->from("item_type");
+            }
+            else if($type=="drug_type"){
+                    $this->db->select("drug_type_id,drug_type,description")->from("drug_type");
+            }
+            else if($type=="drugs"){
+                    $this->db->select("item_id,item_name")->from("item")->order_by('item_name');
+            }
 
-					$this->db->where('equipment_id',$equipment_id);					
-			}
-			if($this->input->post('search')){
-						$equipment=strtolower($this->input->post('equipment_type'));
-						$this->db->like('LOWER(equipment_type)',$equipment,'after');
-						
-			}
-			if($equipment_type!=0){
-				$this->db->where("equipment.equipment_type_id",$equipment_type);
-			}
-			if($department!=0){
-				$this->db->where("equipment.department_id",$department);
-			}
-			if($area!=0){
-				$this->db->where("equipment.area_id",$area);
-			}
-			if($unit!=0){
-				$this->db->where("equipment.unit_id",$unit);
-			}
-			if($status!=""){
-				$this->db->where("equipment.equipment_status",$status);
-			}
-			$this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipment_type.equipment_type_id,model,procured_by,cost,vendor_name,supply_date,warranty_start_date,warranty_end_date,contact_person_first_name,contact_person_last_name, contact_person_contact,hospital,department,equipment_status,hospital.hospital_id,department.department_id")->from("equipment")
-				->join('equipment_type','equipment.equipment_type_id=equipment_type.equipment_type_id','left')
-				->join('hospital','equipment.hospital_id=hospital.hospital_id','left')
-				->join('department','equipment.department_id=department.department_id','left')
-				->join('vendor','vendor.vendor_id=equipment.vendor_id','left')
-				->join('contact_person','contact_person.contact_person_id=equipment.service_person_id','left')
-				//->join('user','equipment.user_id=user.user_id','left')
-				
-				->order_by('equipment_type');	
-			
-		}
+            else if($type=="dosage"){
 
-		else if($type=="service"){
-			if($this->input->post('select')){
-							$equipment_id=$this->input->post('equipment_id');
+                    if($this->input->post('search')){
 
-							$this->db->where('equipment_id',$equipment_id);
-							
-			}
-			if($this->input->post('search')){
-						$equipment=strtolower($this->input->post('equipment_type'));
-						$this->db->like('LOWER(equipment_type)',$equipment,'after');
+                    $dosage_type=strtolower($this->input->post('dosage_name'));
+                            $this->db->like('LOWER(dosage)',$dosage_type,'after');
+                            }
+                    if($this->input->post('select')){
+                                    $dosage_id=$this->input->post('dosage_id');
 
-						
-						
-			}
-			$this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipment.equipment_id,equipment.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_period,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospital.hospital_id,department.department_id,user.user_id")->from("equipment")
-						->join('equipment_type','equipment.equipment_type_id=equipment_type.equipment_type_id','left')
-						->join('hospital','equipment.hospital_id=hospital.hospital_id','left')
-						->join('department','equipment.department_id=department.department_id','left')
-						->join('user','equipment.user_id=user.user_id','left')
-						
-						->order_by('equipment_type');	
-					
+                                    $this->db->where('dosage_id',$dosage_id);
+                    }
+                    $this->db->select("dosage,dosage_id,dosage_unit")->from("dosage");
 
-		}
+            }
+            else if($type=="generics"){
+
+                    if($this->input->post('select')){
+                                    $generic_id=$this->input->post('generic_item_id');
+
+                                    $this->db->where('generic_item_id',$generic_id);
+
+                    }
+                    if($this->input->post('search')){
+                            $generic_type=strtolower($this->input->post('generic_name'));
+                            $this->db->like('LOWER(generic_name)',$generic_type,'after');
+                            }
+                            $this->db->select("generic_item_id,generic_name,drug_type,item_type,drug_type.drug_type_id,item_type.item_type_id")->from("generic_item")
+                            ->join('drug_type','generic_item.drug_type_id=drug_type.drug_type_id','left')
+                            ->join('item_type','generic_item.item_type_id=item_type.item_type_id','left')
+                            ->order_by('generic_name');	
+
+
+            }
+            else if($type=="equipment"){
+
+                    if($this->input->post('select')){
+                                    $equipment_id=$this->input->post('equipment_id');
+
+                                    $this->db->where('equipment_id',$equipment_id);					
+                    }
+                    if($this->input->post('search')){
+                                            $equipment=strtolower($this->input->post('equipment_type'));
+                                            $this->db->like('LOWER(equipment_type)',$equipment,'after');
+
+                    }
+                    if($equipment_type!=0){
+                            $this->db->where("equipment.equipment_type_id",$equipment_type);
+                    }
+                    if($department!=0){
+                            $this->db->where("equipment.department_id",$department);
+                    }
+                    if($area!=0){
+                            $this->db->where("equipment.area_id",$area);
+                    }
+                    if($unit!=0){
+                            $this->db->where("equipment.unit_id",$unit);
+                    }
+                    if($status!=""){
+                            $this->db->where("equipment.equipment_status",$status);
+                    }
+                    $this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipment_type.equipment_type_id,model,procured_by,cost,vendor_name,supply_date,warranty_start_date,warranty_end_date,contact_person_first_name,contact_person_last_name, contact_person_contact,hospital,department,equipment_status,hospital.hospital_id,department.department_id")->from("equipment")
+                            ->join('equipment_type','equipment.equipment_type_id=equipment_type.equipment_type_id','left')
+                            ->join('hospital','equipment.hospital_id=hospital.hospital_id','left')
+                            ->join('department','equipment.department_id=department.department_id','left')
+                            ->join('vendor','vendor.vendor_id=equipment.vendor_id','left')
+                            ->join('contact_person','contact_person.contact_person_id=equipment.service_person_id','left')
+                            //->join('user','equipment.user_id=user.user_id','left')
+
+                            ->order_by('equipment_type');	
+
+            }
+
+            else if($type=="service"){
+                    if($this->input->post('select')){
+                                                    $equipment_id=$this->input->post('equipment_id');
+
+                                                    $this->db->where('equipment_id',$equipment_id);
+
+                    }
+                    if($this->input->post('search')){
+                                            $equipment=strtolower($this->input->post('equipment_type'));
+                                            $this->db->like('LOWER(equipment_type)',$equipment,'after');
+
+
+
+                    }
+                    $this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipment.equipment_id,equipment.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_period,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospital.hospital_id,department.department_id,user.user_id")->from("equipment")
+                                            ->join('equipment_type','equipment.equipment_type_id=equipment_type.equipment_type_id','left')
+                                            ->join('hospital','equipment.hospital_id=hospital.hospital_id','left')
+                                            ->join('department','equipment.department_id=department.department_id','left')
+                                            ->join('user','equipment.user_id=user.user_id','left')
+
+                                            ->order_by('equipment_type');	
+
+
+            }
 	
-		else if($type=="equipment_type"){
-			if($this->input->post('select')){
-				$equipment_type_id=$this->input->post('equipment_type_id');
-				$this->db->where('equipment_type_id',$equipment_type_id);	
-			}
-			if($this->input->post('search')){
-							
-						$equipment_type_id=strtolower($this->input->post('equipment_type'));
-						$this->db->like('LOWER(equipment_type)',$equipment_type_id,'after');
-						
-			}
-					$this->db->select("equipment_type_id,equipment_type")->from("equipment_type")->order_by("equipment_type");
-					
-		}
-		else if($type=="vendor"){
-			if($this->input->post('select')){
-				$vendor_id=$this->input->post('vendor_id');
-				$this->db->where('vendor_id',$vendor_id);	
-			}
-			if($this->input->post('search')){
-							
-				$vendor_name=strtolower($this->input->post('vendor_name_search'));
-				$this->db->like('LOWER(vendor_name)',$vendor_name,'after');
-						
-			}
-			$this->db->select("*")->from("vendor")->order_by("vendor_id");
-					
-		}
-		else if($type=="vendor-all"){
-			
-			$this->db->select("*")->from("vendor")->order_by("vendor_id");
-					
-		}
+            else if($type=="equipment_type"){
+                    if($this->input->post('select')){
+                            $equipment_type_id=$this->input->post('equipment_type_id');
+                            $this->db->where('equipment_type_id',$equipment_type_id);	
+                    }
+                    if($this->input->post('search')){
+
+                                            $equipment_type_id=strtolower($this->input->post('equipment_type'));
+                                            $this->db->like('LOWER(equipment_type)',$equipment_type_id,'after');
+
+                    }
+                                    $this->db->select("equipment_type_id,equipment_type")->from("equipment_type")->order_by("equipment_type");
+
+            }
+            else if($type=="vendor"){
+                    if($this->input->post('select')){
+                            $vendor_id=$this->input->post('vendor_id');
+                            $this->db->where('vendor_id',$vendor_id);	
+                    }
+                    if($this->input->post('search')){
+
+                            $vendor_name=strtolower($this->input->post('vendor_name_search'));
+                            $this->db->like('LOWER(vendor_name)',$vendor_name,'after');
+
+                    }
+                    $this->db->select("*")->from("vendor")->order_by("vendor_id");
+
+            }
+            else if($type=="vendor-all"){
+
+                    $this->db->select("*")->from("vendor")->order_by("vendor_id");
+
+            }
 		
-		else if($type=="vendor_type"){
-			
-			$this->db->select("vendor_type_id,vendor_type")->from("vendor_type")->order_by("vendor_type");
+            else if($type=="vendor_type"){
 
-		}	
+                    $this->db->select("vendor_type_id,vendor_type")->from("vendor_type")->order_by("vendor_type");
+
+            }	
 
 		
-		else if($type=="contact_person"){
-			if($this->input->post('select')){
-				$contact_person_id=$this->input->post('contact_person_id');
-				$this->db->where('contact_person_id',$contact_person_id);	
-			}
-			if($this->input->post('search')){
-							
-				$contact_person_name=strtolower($this->input->post('contact_person_name_search'));
-				$contact_person_name_splitted = explode ( ' ', $contact_person_name);
-				if(!isset($contact_person_name_splitted[1]))
-				{
-					$contact_person_name_splitted[1] = ' ';
-				}
-				$this->db->like('LOWER(contact_person_first_name)',$contact_person_name_splitted[0],'both');
-				$this->db->or_like('LOWER(contact_person_last_name)',$contact_person_name_splitted[0],'both');
-				$this->db->or_like('LOWER(contact_person_first_name)',$contact_person_name_splitted[1],'both');
-				$this->db->or_like('LOWER(contact_person_last_name)',$contact_person_name_splitted[1],'both');
-				
-						
-			}
-			$this->db->select("*")->from("contact_person")->order_by("contact_person_first_name, contact_person_last_name");
-					
-		}
-		else if($type=="vendor_specific_contact_person")
-		{
-			$this->db->where('vendor_id',$vendor_id);	
-			$this->db->select("*")->from("contact_person")->order_by("contact_person_first_name, contact_person_last_name");
-		}
-		else if($type=="unassigned_contact_person")
-		{
-			$this->db->where('vendor_id','0');	
-			$this->db->select("*")->from("contact_person")->order_by("contact_person_first_name, contact_person_last_name");
-		}
-		else if($type=="drug_type"){
-			if($this->input->post('search')){
-				$drug_type=strtolower($this->input->post('drug_type'));
-				$this->db->like('LOWER(drug_type)',$drug_type,'after');
-	
-				}
-			if($this->input->post('select')){
-					
-					$drug_id=$this->input->post('drug_type_id');
-					$this->db->where('drug_type_id',$drug_id);
-			}
-			
-			$this->db->select("drug_type_id,drug_type,description")->from("drug_type");	
+            else if($type=="contact_person"){
+                    if($this->input->post('select')){
+                            $contact_person_id=$this->input->post('contact_person_id');
+                            $this->db->where('contact_person_id',$contact_person_id);	
+                    }
+                    if($this->input->post('search')){
 
-		}	
-		else if($type=="test_method")
+                            $contact_person_name=strtolower($this->input->post('contact_person_name_search'));
+                            $contact_person_name_splitted = explode ( ' ', $contact_person_name);
+                            if(!isset($contact_person_name_splitted[1]))
+                            {
+                                    $contact_person_name_splitted[1] = ' ';
+                            }
+                            $this->db->like('LOWER(contact_person_first_name)',$contact_person_name_splitted[0],'both');
+                            $this->db->or_like('LOWER(contact_person_last_name)',$contact_person_name_splitted[0],'both');
+                            $this->db->or_like('LOWER(contact_person_first_name)',$contact_person_name_splitted[1],'both');
+                            $this->db->or_like('LOWER(contact_person_last_name)',$contact_person_name_splitted[1],'both');
 
-			{
 
-				if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
+                    }
+                    $this->db->select("*")->from("contact_person")->order_by("contact_person_first_name, contact_person_last_name");
 
-				{
+            }
+            else if($type=="vendor_specific_contact_person")
+            {
+                    $this->db->where('vendor_id',$vendor_id);	
+                    $this->db->select("*")->from("contact_person")->order_by("contact_person_first_name, contact_person_last_name");
+            }
+            else if($type=="unassigned_contact_person")
+            {
+                    $this->db->where('vendor_id','0');	
+                    $this->db->select("*")->from("contact_person")->order_by("contact_person_first_name, contact_person_last_name");
+            }
+            else if($type=="drug_type"){
+                    if($this->input->post('search')){
+                            $drug_type=strtolower($this->input->post('drug_type'));
+                            $this->db->like('LOWER(drug_type)',$drug_type,'after');
 
-						$test_id=$this->input->post('test_method_id');
+                            }
+                    if($this->input->post('select')){
 
-						$this->db->where('test_method_id',$test_id);
+                                    $drug_id=$this->input->post('drug_type_id');
+                                    $this->db->where('drug_type_id',$drug_id);
+                    }
 
-				}
+                    $this->db->select("drug_type_id,drug_type,description")->from("drug_type");	
 
-		    	if($this->input->post('search') && $this->input->post('test_method')!="")  //query to retrieve matches for the text entered in the field from table test_type
+            }	
+            else if($type=="test_method")
 
-		    	{
+                    {
 
-		 		 		$search_method=strtolower($this->input->post('test_method'));
+                            if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
 
-			  	    	$this->db->like('LOWER(test_method)',$search_method,'after');
+                            {
 
-		    	}
+                                            $test_id=$this->input->post('test_method_id');
 
-				$this->db->select("test_method_id,test_method")->from("test_method")->order_by('test_method');
+                                            $this->db->where('test_method_id',$test_id);
 
-			}
-			elseif ($type=="test_group") 
-			{
-				if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
-				{
-						$test_id=$this->input->post('test_group_id');
-						$this->db->where('group_id',$test_id);
-				}
-				if($this->input->post('search') && $this->input->post('group_name')!="")  //query to retrieve matches for the text entered in the field from table test_type
-				{
-						$search_method=strtolower($this->input->post('group_name'));
-						$this->db->like('LOWER(group_name)',$search_method,'after');
-				}
-				if($department!=0 && count($department)>0){
-					$deps = array();
-					foreach($department as $d){
-						$deps[]=$d->department_id;
-					}
-					$this->db->where_in('department_id',$deps);
-				}
-				$this->db->select("test_group.group_id,group_name,test_name")->from("test_group")
-				->join('test_group_link','test_group.group_id = test_group_link.group_id')
-				->join('test_master','test_group_link.test_master_id = test_master.test_master_id')
-				->join('test_method','test_master.test_method_id=test_method.test_method_id')
-				->join('test_area','test_master.test_area_id=test_area.test_area_id')
-				->order_by('group_name');
-			}
+                            }
+
+                    if($this->input->post('search') && $this->input->post('test_method')!="")  //query to retrieve matches for the text entered in the field from table test_type
+
+                    {
+
+                                            $search_method=strtolower($this->input->post('test_method'));
+
+                                    $this->db->like('LOWER(test_method)',$search_method,'after');
+
+                    }
+
+                            $this->db->select("test_method_id,test_method")->from("test_method")->order_by('test_method');
+
+                    }
+                    elseif ($type=="test_group") 
+                    {
+                            if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
+                            {
+                                            $test_id=$this->input->post('test_group_id');
+                                            $this->db->where('group_id',$test_id);
+                            }
+                            if($this->input->post('search') && $this->input->post('group_name')!="")  //query to retrieve matches for the text entered in the field from table test_type
+                            {
+                                            $search_method=strtolower($this->input->post('group_name'));
+                                            $this->db->like('LOWER(group_name)',$search_method,'after');
+                            }
+                            if($department!=0 && count($department)>0){
+                                    $deps = array();
+                                    foreach($department as $d){
+                                            $deps[]=$d->department_id;
+                                    }
+                                    $this->db->where_in('department_id',$deps);
+                            }
+                            $this->db->select("test_group.group_id,group_name,test_name")->from("test_group")
+                            ->join('test_group_link','test_group.group_id = test_group_link.group_id')
+                            ->join('test_master','test_group_link.test_master_id = test_master.test_master_id')
+                            ->join('test_method','test_master.test_method_id=test_method.test_method_id')
+                            ->join('test_area','test_master.test_area_id=test_area.test_area_id')
+                            ->order_by('group_name');
+                    }
 		elseif ($type=="test_status_type") {
 			if($this->input->post('select'))  //query to retrieve row from table when a result is selected from search results
 			{
@@ -550,7 +550,7 @@ class Masters_model extends CI_Model{
 		return $query->result();
 	
 }
-function update_data($type){
+        function update_data($type){
 	if($type=="drugs"){
 			$data = array(
 					  'drug_type'=>$this->input->post('drug_type'),

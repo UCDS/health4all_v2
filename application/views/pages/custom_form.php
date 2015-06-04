@@ -95,8 +95,19 @@ pri.print();
 		else if(isset($registered)){ ?>
 		<iframe id="ifmcontentstoprint" style="height: 0px; width: 0px; position: absolute;display:none"></iframe>
 		<div class="sr-only" id="print-div" style="width:100%;height:100%;"> 
-		<?php $this->load->view($print_layout);?>
+		<?php $this->load->view($print_layout);?>   <!--This line loads the template print_layout based on the 
+                                                                type of the registration form selected.-->
 		</div>
+                <!-- This line loads the MLC layout page for printing -->
+                <!-- This layout has been hard coded.-->
+                <?php $offset = 5; ?>
+                <?php if($registered->presenting_complaints != NULL){?>
+                <div class="sr-only" id="mlc-div" style="width:100%;height:100%;">
+                    <?php $this->load->view("pages/print_layouts/MLC_complaint");
+                        $offset = 4;
+                    ?>
+                </div>
+                <?php }?>
 		<!--we divide the form into panel-header,panel-body and panel-footer -->
 		<div class="row">
 			<div class="panel panel-success col-md-6 col-md-offset-3" >
@@ -133,7 +144,13 @@ pri.print();
 				</div>
 <!--here in the panel-footer print button is displayed -->				
 				<div class="panel-footer">
-					<button type="submit" class="btn btn-primary col-md-offset-5" onclick="printDiv('print-div')" autofocus>Print</button>
+					<button type="submit" class="btn btn-primary col-md-offset-<?php echo $offset?>" onclick="printDiv('print-div')" autofocus>Print</button>
+                                        <!--This code is to display MLC print out button. -->
+                                       <?php
+                                          if($registered->mlc==1 && $form_type=="IP" ){
+                                        ?> 
+                                            <button type="submit" class="btn btn-warning" onclick="printDiv('mlc-div')" autofocus>Print MLC report</button>
+                                        <?php  }?>
 				</div>
 			</div>
 			</div>

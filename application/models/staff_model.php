@@ -141,7 +141,7 @@ class Staff_model extends CI_Model{
 	}
 	//get_print_layouts() selects the print layouts from the database and returns the result
 	function get_print_layouts(){
-		$this->db->select("print_layout_id,print_layout_name")->from("print_layout");
+		$this->db->select("print_layout_id,print_layout_name,print_layout_page")->from("print_layout");
 		$query=$this->db->get();
 		return $query->result();
 	}

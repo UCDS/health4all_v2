@@ -91,11 +91,23 @@
 			}
 				
 		});
+                
+                //Code for previewing in a model. Go to line 155.
+                
+                $("#print_layout").change(function(){
+                    $("#modal_select").removeClass("sr-only");
+                    $("#modal_select").attr("data-target", "#modal-"+$(this).val());
+                });
 		
 	});
+        
   </script>
+  
+                  
+                
 <?php echo form_open('user_panel/form_layout',array('role'=>'form','class'=>'form-custom','id'=>'new-form')); ?>
 			<div class="col-md-10" >
+ 
 				<h4>Create Form for Patient Registration</h4>
 				<div class="panel panel-default">
 				<div class="panel-heading">
@@ -128,7 +140,7 @@
 						<input type="text" name="form_name" class="form-control" required />
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<div class="form-group">
 						<label class="control-label">Print Layout</label>
 						<select class="form-control" name="print_layout" id="print_layout" required >
@@ -137,9 +149,39 @@
 								echo "<option value='$layout->print_layout_id'>$layout->print_layout_name</option>";
 							}
 							?>
-						</select>
-						</div>
+                                                </select>
+						</div>                                            
 					</div>
+                                    <div>
+                                                <div class="form-group">
+                                                    <!-- Button trigger modal -->
+                                                    <!--We change the value of data-target attribute to point to new modals 
+                                                    every time the user sets the value of print layout. Goto line 95 -->
+<button type="button" id= "modal_select" class="btn btn-primary sr-only" data-toggle="modal" data-target="">
+  Preview print layout
+</button>
+
+<!-- Modal -->
+<?php foreach($print_layouts as $layout){ ?>
+    <div class="modal fade" id="modal-<?php echo $layout->print_layout_id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <h4 class="modal-title" id="myModalLabel"><?php echo $layout->print_layout_name; ?></h4>
+                </div>
+                <div class="modal-body">
+                 <?php $this->load->view("pages/print_layouts/$layout->print_layout_page");?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>        
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?> 
+                                                </div>
+                                            </div>
 				</div>
 				</div>
 				<div class="panel-body">
@@ -509,10 +551,10 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-					<div class="layout-div col-md-4 presenting_complaint">
+					<div class="layout-div col-md-4 presenting_complaints">
 						<div class="form-group">
 						<label class="control-label">Complaint</label>
-						<input type="text" name="presenting_complaint" style="width: 170px" class="form-control" />
+						<input type="text" name="presenting_complaints" style="width: 170px" class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
@@ -822,7 +864,7 @@
 				</li>
 				<li>  
 					<div class="checkbox">
-						<label><input type="checkbox" value="1" id="presenting_complaint" class="checklist" />Presenting Complaint</label>
+						<label><input type="checkbox" value="1" id="presenting_complaints" class="checklist" />Presenting Complaint</label>
 					</div>
 				</li>  
 				<li>  
