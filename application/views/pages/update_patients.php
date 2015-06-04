@@ -197,15 +197,54 @@ pri.print();
 	<div class="panel-body">
 	  <!-- Nav tabs -->
 	  <ul class="nav nav-tabs" role="tablist">
-		<li role="presentation" class="active"><a href="#patient" aria-controls="patient" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Patient Info</a></li>
-		<li role="presentation"><a href="#clinical" aria-controls="clinical" role="tab" data-toggle="tab"><i class="fa fa-stethoscope"></i> Clinical</a></li>
-		<li role="presentation"><a href="#diagnostics" aria-controls="diagnostics" role="tab" data-toggle="tab"><i class="glyph-icon flaticon-chemistry20"></i> Diagnostics</a></li>
-		<li role="presentation"><a href="#procedures" aria-controls="procedures" role="tab" data-toggle="tab"><i class="fa fa-scissors"></i> Procedures</a></li>
-		<li role="presentation"><a href="#prescription" aria-controls="prescription" role="tab" data-toggle="tab"><i class="glyph-icon flaticon-drugs5"></i> Prescription</a></li>
-		<li role="presentation"><a href="#discharge" aria-controls="discharge" role="tab" data-toggle="tab"><i class="fa fa-sign-out"></i> Discharge</a></li>
+		<?php 
+			foreach($functions as $f){ 
+				if($f->user_function == "Update Patients") { ?>
+					<li role="presentation" class="active"><a href="#patient" aria-controls="patient" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Patient Info</a></li>
+				<?php } 
+			}
+		?>
+		<?php 
+			foreach($functions as $f){ 
+				if($f->user_function == "Clinical" && ($f->add==1 || $f->edit==1)) { ?>
+					<li role="presentation"><a href="#clinical" aria-controls="clinical" role="tab" data-toggle="tab"><i class="fa fa-stethoscope"></i>Clinical</a></li>
+				<?php } 
+			}
+		?>
+		<?php 
+			foreach($functions as $f){ 
+				if($f->user_function == "View Diagnostics") { ?>
+					<li role="presentation"><a href="#diagnostics" aria-controls="diagnostics" role="tab" data-toggle="tab"><i class="glyph-icon flaticon-chemistry20"></i> Diagnostics</a></li>
+				<?php } 
+			}
+		?>
+		<?php 
+			foreach($functions as $f){ 
+				if($f->user_function == "Procedures" && ($f->add==1 || $f->edit==1)) { ?>
+					<li role="presentation"><a href="#procedures" aria-controls="procedures" role="tab" data-toggle="tab"><i class="fa fa-scissors"></i> Procedures</a></li>
+				<?php } 
+			}
+		?>
+		<?php 
+			foreach($functions as $f){ 
+				if($f->user_function == "Prescription" && ($f->add==1 || $f->edit==1)) { ?>
+					<li role="presentation"><a href="#prescription" aria-controls="prescription" role="tab" data-toggle="tab"><i class="glyph-icon flaticon-drugs5"></i> Prescription</a></li>
+				<?php } 
+			}
+		?>
+		<?php 
+			foreach($functions as $f){ 
+				if($f->user_function == "Discharge Patients") { ?>
+					<li role="presentation"><a href="#discharge" aria-controls="discharge" role="tab" data-toggle="tab"><i class="fa fa-sign-out"></i> Discharge</a></li>
+				<?php } 
+			}
+		?>
 	  </ul>
 	  <!-- Tab panes -->
 	  <div class="tab-content">
+		<?php 
+			foreach($functions as $f){ 
+				if($f->user_function == "Update Patients") { ?>
 		<div role="tabpanel" class="tab-pane active" id="patient">
 			<?php
 				$patient = $patients[0];
@@ -379,6 +418,11 @@ pri.print();
 			</div>
 			</div>
 		</div>
+		<?php }}?>
+		
+		<?php 
+			foreach($functions as $f){ 
+				if($f->user_function == "Clinical" && ($f->add==1 || $f->edit==1)) { ?>
 		<div role="tabpanel" class="tab-pane" id="clinical">
 			<div class="row alt">
 				<div class="col-md-4 col-xs-6">
@@ -484,6 +528,11 @@ pri.print();
 				</div>
 			</div>
 		</div>
+		<?php } } ?>
+		
+		<?php 
+			foreach($functions as $f){ 
+				if($f->user_function == "View Diagnostics") { ?>
 		<div role="tabpanel" class="tab-pane" id="diagnostics">
 			
 			<?php 
@@ -553,6 +602,10 @@ pri.print();
 			No tests on the given date.
 			<?php } ?>
 		</div>
+		<?php } }?>
+		<?php 
+			foreach($functions as $f){ 
+				if($f->user_function == "Procedures" && ($f->add==1 || $f->edit==1)) { ?>
 		<div role="tabpanel" class="tab-pane" id="procedures">
 			<div class="row alt">
 				<div class="col-md-4">
@@ -673,6 +726,10 @@ pri.print();
 				
 			<?php } ?>
 		</div>
+		<?php } }?>
+		<?php 
+			foreach($functions as $f){ 
+				if($f->user_function == "Prescription" && ($f->add==1 || $f->edit==1)) { ?>
 		<div role="tabpanel" class="tab-pane" id="prescription">
 			<div class="row">
 			<div class="col-md-12 alt">
@@ -815,6 +872,10 @@ pri.print();
 			<?php } ?>
 			</div>
 		</div>
+		<?php }} ?>
+		<?php 
+			foreach($functions as $f){ 
+				if($f->user_function == "Discharge" && ($f->add==1 || $f->edit==1)) { ?>
 		<div role="tabpanel" class="tab-pane" id="discharge">
 			<div class="row">
 			<div class="col-md-12 alt">
@@ -830,10 +891,17 @@ pri.print();
 			</div>
 			<div class="col-md-12 alt">
 				<div class="col-md-2">
+				<script>
+				$(function(){
+					$(".outcome_date").Zebra_DatePicker({
+						direction:[false,'<?php echo date("d-M-Y",strtotime($patient->admit_date));?>']
+					});
+				});
+				</script>
 				<label>Outcome Date</label>
 				</div>
 				<div class="col-md-8">
-				<input type="text" name="outcome_date" class="form-control date" value="<?php if($patient->outcome_date!=0) echo $patient->outcome_date;?>" />
+				<input type="text" name="outcome_date" class="form-control outcome_date" value="<?php if($patient->outcome_date!=0) echo $patient->outcome_date;?>" />
 				</div>
 			</div>
 			<div class="col-md-12 alt">
@@ -882,6 +950,7 @@ pri.print();
 				</div>
 			</div>
 		</div>
+		<?php }} ?>
 	  </div>
 
 			<div class="col-md-12 text-center">

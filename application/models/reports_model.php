@@ -97,7 +97,7 @@ class Reports_model extends CI_Model{
 		else{
 			$this->db->select('"0" as area',false);
 		}
-		$this->db->select("department.department_id,visit_name_id, department 'department',
+		$this->db->select("department.department_id,patient_visit.visit_name_id, department 'department',
           SUM(CASE WHEN 1  THEN 1 ELSE 0 END) 'ip',
 		SUM(CASE WHEN gender = 'F'  THEN 1 ELSE 0 END) 'ip_female',
 		SUM(CASE WHEN gender = 'M'  THEN 1 ELSE 0 END) 'ip_male',	
@@ -117,10 +117,73 @@ class Reports_model extends CI_Model{
 		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
+		 ->join('visit_name','patient_visit.visit_name_id=visit_name.visit_name_id','left')
 		 ->where('visit_type','IP')
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')")
 		 ->group_by('department');
 		  
+		$resource=$this->db->get();
+		return $resource->result();
+	}
+	
+	function get_icd_summary(){
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+		}
+		else if($this->input->post('from_date') || $this->input->post('to_date')){
+			$this->input->post('from_date')?$from_date=$this->input->post('from_date'):$from_date=$this->input->post('to_date');
+			$to_date=$from_date;
+		}
+		else{
+			$from_date=date("Y-m-d");
+			$to_date=$from_date;
+		}
+		if($this->input->post('visit_name')){
+			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
+		}
+        //Selection of visit type OP/IP
+		if($this->input->post('visit_type')){
+			$this->db->where('patient_visit.visit_type',$this->input->post('visit_type'));
+		}
+		else 
+			$this->db->where('patient_visit.visit_type','IP');		
+		if($this->input->post('department')){
+			$this->db->select('patient_visit.department_id',false);
+			$this->db->where('patient_visit.department_id',$this->input->post('department'));
+		}
+		else{
+			$this->db->select('"-1" as department_id',false);
+		}
+		if($this->input->post('unit')){
+			$this->db->select('IF(unit!="",unit,0) unit',false);
+			$this->db->where('patient_visit.unit',$this->input->post('unit'));
+		}
+		else{
+			$this->db->select('"0" as unit',false);
+		}
+		if($this->input->post('area')){
+			$this->db->select('IF(area!="",area,0) area',false);
+			$this->db->where('patient_visit.area',$this->input->post('area'));
+		}
+		else{
+			$this->db->select('"0" as area',false);
+		}
+		$this->db->select("patient_visit.icd_10,code_title,icd_code.block_id, block_title, 
+		icd_block.chapter_id, chapter_title, patient_visit.visit_name_id, department 'department',
+          SUM(CASE WHEN 1  THEN 1 ELSE 0 END) 'total',
+		SUM(CASE WHEN gender = 'F'  THEN 1 ELSE 0 END) 'female',
+		SUM(CASE WHEN gender = 'M'  THEN 1 ELSE 0 END) 'male'");
+		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
+		 ->join('department','patient_visit.department_id=department.department_id')
+		 ->join('unit','patient_visit.unit=unit.unit_id','left')
+		 ->join('area','patient_visit.area=area.area_id','left')
+		 ->join('visit_name','patient_visit.visit_name_id=visit_name.visit_name_id','left')
+		 ->join('icd_code','patient_visit.icd_10=icd_code.icd_code','left')
+		 ->join('icd_block','icd_code.block_id=icd_block.block_id','left')
+		 ->join('icd_chapter','icd_block.chapter_id=icd_chapter.chapter_id','left')
+		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')")
+		 ->group_by('icd_10');
 		$resource=$this->db->get();
 		return $resource->result();
 	}
@@ -266,10 +329,12 @@ class Reports_model extends CI_Model{
 		if($visit_name!='-1'){
 			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
 		}
-		if($department!='-1'){
+		if($department!='-1' || $this->input->post('department')){
+			if($this->input->post('department')) $department=$this->input->post('department');
 			$this->db->where('department.department_id',$department);
 		}
 		if(!!$unit){
+			if($this->input->post('unit')) $unit=$this->input->post('unit');
 			$this->db->select('IF(unit!="",unit,0) unit',false);
 			$this->db->where('patient_visit.unit',$unit);
 		}
@@ -277,6 +342,7 @@ class Reports_model extends CI_Model{
 			$this->db->select('"0" as unit_id',false);
 		}
 		if(!!$area){
+			if($this->input->post('area')) $area=$this->input->post('area');
 			$this->db->select('IF(area!="",area,0) area',false);
 			$this->db->where('patient_visit.area',$area);
 		}
@@ -305,6 +371,75 @@ class Reports_model extends CI_Model{
 		 ->join('area','patient_visit.area=area.area_id','left')
 		 ->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
 		 ->where('visit_type','IP')
+		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')")
+		 ->order_by('hosp_file_no','ASC');		  
+		$resource=$this->db->get();
+		return $resource->result();
+	}
+	
+	function get_icd_detail($icd_10,$department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date,$visit_name,$visit_type){
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+		}
+		else if($this->input->post('from_date') || $this->input->post('to_date')){
+			$this->input->post('from_date')?$from_date=$this->input->post('from_date'):$from_date=$this->input->post('to_date');
+			$to_date=$from_date;
+		}
+		else if($from_date=='0' && $to_date=='0'){
+			$from_date=date("Y-m-d");
+			$to_date=$from_date;
+		}
+		if($visit_type!='0'){
+			$this->db->where('patient_visit.visit_type',$visit_type);
+		}
+		if($visit_name!='-1'){
+			$this->db->where('patient_visit.visit_name_id',$visit_name);
+		}
+		if($icd_10!='0'){
+			$this->db->where('patient_visit.icd_10',$icd_10);
+		}
+		if($department!='-1' || $this->input->post('department')){
+			if($this->input->post('department')) $department=$this->input->post('department');
+			$this->db->where('department.department_id',$department);
+		}
+		if(!!$unit){
+			if($this->input->post('unit')) $unit=$this->input->post('unit');
+			$this->db->select('IF(unit!="",unit,0) unit',false);
+			$this->db->where('patient_visit.unit',$unit);
+		}
+		else{
+			$this->db->select('"0" as unit_id',false);
+		}
+		if(!!$area){
+			if($this->input->post('area')) $area=$this->input->post('area');
+			$this->db->select('IF(area!="",area,0) area',false);
+			$this->db->where('patient_visit.area',$area);
+		}
+		else{
+			$this->db->select('"0" as area',false);
+		}
+		if($gender!='0'){
+			$this->db->where('gender',$gender);
+		}
+		if($from_age!='0' && $to_age!='0'){
+			$this->db->where('age_years>=',$from_age,false);
+			$this->db->where('age_years<=',$to_age,false);
+		}
+		if($from_age!='0' && $to_age=='0'){
+			$this->db->where('age_years<=',$from_age,false);
+		}
+		if($from_age=='0' && $to_age!='0'){
+			$this->db->where('age_years>=',$to_age,false);
+		}
+		$this->db->select("hosp_file_no,patient_visit.visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,
+		gender,IF(gender='F' AND father_name ='',spouse_name,father_name) parent_spouse,
+		age_years,age_months,age_days,place,phone,address,admit_date,admit_time, department,unit_name,area_name,mlc_number",false);
+		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
+		 ->join('department','patient_visit.department_id=department.department_id')
+		 ->join('unit','patient_visit.unit=unit.unit_id','left')
+		 ->join('area','patient_visit.area=area.area_id','left')
+		 ->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')")
 		 ->order_by('hosp_file_no','ASC');		  
 		$resource=$this->db->get();
@@ -412,10 +547,27 @@ class Reports_model extends CI_Model{
 	}
 	
 	function get_equipment_summary(){
-		$this->db->select("equipment.equipment_type_id,equipment_type,equipment.department_id,department,equipment.area_id,area_name,equipment.unit_id,unit_name,
-		SUM(CASE WHEN equipment_status=1 THEN 1 ELSE 0 END) 'working',
-		SUM(CASE WHEN equipment_status=0 THEN 1 ELSE 0 END) 'not_working',
+	
+	
+		if($this->input->post('department')){
+			$this->db->where('equipment.department_id',$this->input->post('department'));
+		}
+		if($this->input->post('unit')){
+			$this->db->where('equipment.unit_id',$this->input->post('unit'));
+		}
+		if($this->input->post('area')){
+			$this->db->where('equipment.area_id',$this->input->post('area'));
+		}
+		if($this->input->post('equipment_status')){
+			$this->db->where('equipment.equipment_status',$this->input->post('equipment_status'));
+		}
+		if($this->input->post('equipment_type')){
+			$this->db->where('equipment.equipment_type_id',$this->input->post('equipment_type'));
+		}
+		$this->db->select("equipment.equipment_type_id,equipment_type,equipment.department_id,department,equipment.area_id,area_name,equipment.unit_id,unit_name,equipment_status,		
 		SUM(CASE WHEN 1 THEN 1 ELSE 0 END) 'total',
+		SUM(CASE WHEN equipment_status=1 THEN 1 ELSE 0 END) 'total_working',
+		SUM(CASE WHEN equipment_status=0 THEN 1 ELSE 0 END) 'total_not_working'
 		")
 		->from("equipment")
 		->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id")
@@ -565,7 +717,7 @@ class Reports_model extends CI_Model{
 		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
-		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')");		  
+		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')");
 		$resource=$this->db->get();
 		return $resource->result();
         }

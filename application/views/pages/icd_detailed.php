@@ -1,5 +1,4 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
@@ -62,14 +61,15 @@ $(function(){
 		  });
 });
 </script>
+
 	<?php 
 	$from_date=0;$to_date=0;
 	if($this->input->post('from_date')) $from_date=date("Y-m-d",strtotime($this->input->post('from_date'))); else $from_date = date("Y-m-d");
 	if($this->input->post('to_date')) $to_date=date("Y-m-d",strtotime($this->input->post('to_date'))); else $to_date = date("Y-m-d");
 	?>
 	<div class="row">
-		<h4>Out-Patient Summary Report</h4>	
-		<?php echo form_open("reports/op_summary",array('role'=>'form','class'=>'form-custom')); ?>
+		<h4>ICD Code - Detailed report</h4>	
+		<?php echo form_open("reports/icd_detail",array('role'=>'form','class'=>'form-custom')); ?> 
 					From Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y",strtotime($from_date)); ?>" name="from_date" id="from_date" size="15" />
 					To Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y",strtotime($to_date)); ?>" name="to_date" id="to_date" size="15" />
 					<select name="department" id="department" class="form-control">
@@ -115,104 +115,66 @@ $(function(){
 					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
 		</form>
 	<br />
-	<?php if(isset($report) && count($report)>0){ ?>
 	
+	<?php 
+	if(isset($report) && count($report)>0){ ?>
 		<button type="button" class="btn btn-default btn-md print">
 		  <span class="glyphicon glyphicon-print"></span> Print
 		</button>
 	<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
-	<tr>
-		<th style="text-align:center" rowspan="2">Department</th>
-		<th style="text-align:center" colspan="3"><=14 Years</th>
-		<th style="text-align:center" colspan="3">14 to 30 Years</th>
-		<th style="text-align:center" colspan="3">30 to 50 Years</th>
-		<th style="text-align:center" colspan="3">>50 Years</th>
-		<th style="text-align:center" rowspan="1" colspan="3">Total OP Visits</th>
-	</tr>
-	<tr>
-		<th>Male</th><th>Female</th><th>Total</th>
-		<th>Male</th><th>Female</th><th>Total</th>
-		<th>Male</th><th>Female</th><th>Total</th>
-		<th>Male</th><th>Female</th><th>Total</th>
-		<th>Male</th><th>Female</th><th>Total</th>
-	</tr>
+		<th>Sno</th>
+		<th>Admit Date</th>
+		<th>Admit Time</th>
+		<th>IP No.</th>
+		<th>Gender</th>
+		<th>Name</th>
+		<th>Age</th>
+		<th>Parent / Spouse</th>
+		<th>Address</th>
+		<th>Phone</th>
+		<th>Department</th>
+		<th>Unit/ Area</th>
+		<th>MLC Number</th>
 	</thead>
 	<tbody>
 	<?php 
-	$total_mchild=0;
-	$total_fchild=0;
-	$total_child=0;
-	$total_m14to30=0;
-	$total_f14to30=0;
-	$total_14to30=0;
-	$total_m30to50=0;
-	$total_f30to50=0;
-	$total_30to50=0;
-	$total_m50plus=0;
-	$total_f50plus=0;
-	$total_50plus=0;
-	$total_male=0;
-	$total_female=0;
-	$total_op=0;
+	$total_count=0;
+	$i=1;
 	foreach($report as $s){
+		$age="";
+		if($s->age_years!=0) $age.=$s->age_years."Y ";
+		if($s->age_months!=0) $age.=$s->age_months."M ";
+		if($s->age_days!=0) $age.=$s->age_days."D ";
+		if($s->age_days==0 && $s->age_months==0 && $s->age_years==0) $age.="0D";
 	?>
 	<tr>
+		<td><?php echo $i++;?></td>
+		<td><?php if($s->admit_date!=0) echo date("d-M-Y",strtotime($s->admit_date));?></td>
+		<td><?php if($s->admit_time!=0) echo date("g:iA",strtotime($s->admit_time));?></td>
+		<td><?php echo $s->hosp_file_no;?></td>
+		<td><?php echo $s->gender;?></td>
+		<td><?php echo $s->name;?></td>
+		<td><?php echo $age;?></td>
+		<td><?php echo $s->parent_spouse;?></td>
+		<td><?php if($s->address!="") echo $s->address.", "; if($s->place!="") echo $s->place;?></td>
+		<td><?php echo $s->phone;?></td>
 		<td><?php echo $s->department;?></td>
-		<td class="text-right"><?php echo $s->op_mchild;?></td>
-		<td class="text-right"><?php echo $s->op_fchild;?></td>
-		<td class="text-right"><?php echo $s->op_child;?></td>
-		<td class="text-right"><?php echo $s->op_m14to30;?></td>
-		<td class="text-right"><?php echo $s->op_f14to30;?></td>
-		<td class="text-right"><?php echo $s->op_14to30;?></td>
-		<td class="text-right"><?php echo $s->op_m30to50;?></td>
-		<td class="text-right"><?php echo $s->op_f30to50;?></td>
-		<td class="text-right"><?php echo $s->op_30to50;?></td>
-		<td class="text-right"><?php echo $s->op_m50plus;?></td>
-		<td class="text-right"><?php echo $s->op_f50plus;?></td>
-		<td class="text-right"><?php echo $s->op_50plus;?></td>
-		<td class="text-right"><?php echo $s->op_male;?></td>
-		<td class="text-right"><?php echo $s->op_female;?></td>
-		<td class="text-right"><?php echo $s->op;?></td>
+		<td>
+			<?php echo $s->unit_name;
+				if(!!$s->unit_name && !!$s->area_name) echo  "/ ";
+				echo $s->area_name;
+			?>
+		</td>
+		<td><?php echo $s->mlc_number;?></td>
 	</tr>
 	<?php
-	$total_mchild+=$s->op_mchild;
-	$total_fchild+=$s->op_fchild;
-	$total_child+=$s->op_child;
-	$total_m14to30+=$s->op_m14to30;
-	$total_f14to30+=$s->op_f14to30;
-	$total_14to30+=$s->op_14to30;
-	$total_m30to50+=$s->op_m30to50;
-	$total_f30to50+=$s->op_f30to50;
-	$total_30to50+=$s->op_30to50;
-	$total_m50plus+=$s->op_m50plus;
-	$total_f50plus+=$s->op_f50plus;
-	$total_50plus+=$s->op_50plus;
-	$total_male+=$s->op_male;
-	$total_female+=$s->op_female;
-	$total_op+=$s->op;
+	$total_count++;
 	}
 	?>
 	</tbody>
-	<tfoot>
-		<th>Total </th>
-		<th class="text-right" ><?php echo $total_mchild;?></th>
-		<th class="text-right" ><?php echo $total_fchild;?></th>
-		<th class="text-right" ><?php echo $total_child;?></th>
-		<th class="text-right" ><?php echo $total_m14to30;?></th>
-		<th class="text-right" ><?php echo $total_f14to30;?></th>
-		<th class="text-right" ><?php echo $total_14to30;?></th>
-		<th class="text-right" ><?php echo $total_m30to50;?></th>
-		<th class="text-right" ><?php echo $total_f30to50;?></th>
-		<th class="text-right" ><?php echo $total_30to50;?></th>
-		<th class="text-right" ><?php echo $total_m50plus;?></th>
-		<th class="text-right" ><?php echo $total_f50plus;?></th>
-		<th class="text-right" ><?php echo $total_50plus;?></th>
-		<th class="text-right" ><?php echo $total_male;?></th>
-		<th class="text-right" ><?php echo $total_female;?></th>
-		<th class="text-right" ><?php echo $total_op;?></th>
-	</tfoot>
 	</table>
+		
 	<?php } else { ?>
 	No patient registrations on the given date.
 	<?php } ?>

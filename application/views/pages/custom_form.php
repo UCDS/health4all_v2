@@ -186,7 +186,6 @@ pri.print();
 		<div class="panel-body">
 			<?php
 			foreach($fields as $field=>$mandatory){
-//here we are using switch for display of only required to specify a form 
 				switch($field){				
 				case "first_name": ?>   
 					<div class="<?php echo $class;?>">
@@ -268,6 +267,24 @@ pri.print();
 					</div>
 				<?php 
 					break;
+					case "state" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">State<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<select name="state" class="form-control" <?php if($mandatory) echo "required"; ?>>
+						<option value="">--Select--</option>
+						<?php  						
+						foreach($states as $state){
+							echo "<option value='".$state->state_id."'";
+							if($patient) if($state->state_id==$patient->state_id) echo " selected ";
+							echo ">".$state->state."</option>";
+						}
+						?>
+						</select>
+						</div>
+					</div>
+				<?php 
+					break;
 					case "district" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
@@ -291,6 +308,15 @@ pri.print();
 						<div class="form-group">
 						<label class="control-label">Phone<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<input type="text" name="phone" class="form-control" value="<?php if($patient) echo $patient->phone;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+				<?php 
+					break;
+					case "alt_phone" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Alt. Phone<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="alt_phone" class="form-control" value="<?php if($patient) echo $patient->alt_phone;?>" <?php if($mandatory) echo "required"; ?> />
 						</div>
 					</div>
 				<?php 
@@ -799,15 +825,24 @@ pri.print();
 				<?php 
 					break;
                 case "patient_picture" : ?>
-					<div class="<?php echo $class;?>">
+				<?php 
+					break;
+					}
+			}
+			foreach($fields as $field=>$mandatory){
+				if($field=="patient_picture"){?>
+				
+					<div class="col-md-12">
 						<div class="form-group well well-sm">
+						<div class="row">
 							<div class="col-md-12">
-								<p class="col-md-6" id="results-text">Captured image will appear here..</p>
-								<p class="col-md-6">Camera View</p>
-							</div>
+							<p class="col-md-6" id="results-text">Captured image will appear here..</p>
+							<p class="col-md-6">Camera View</p>
 							<div id="results" class="col-md-6 results"></div>
 							
 							<div id="my_camera" class="col-md-6"></div>
+							</div>
+						</div>
 							<div class="col-md-offset-6" style="position:relative;top:5px">
 							
 							<!-- A button for taking snaps -->
@@ -861,9 +896,7 @@ pri.print();
 							
 						</div>
 					</div>
-				<?php 
-					break;
-					}
+			<?php } 
 			}
 			?>
 			</div>

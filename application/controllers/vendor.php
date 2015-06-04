@@ -120,8 +120,8 @@ function edit($type=""){
 			{
 				$post_vendor_id=$this->input->post('vendor_id');
 				$this->data['contact_persons']=$this->masters_model->get_data("vendor_specific_contact_person",$vendor_id=$post_vendor_id); 
-				$this->data['countries']=$this->masters_model->get_data("countries");
-
+				$this->data['equipment_types']=$this->masters_model->get_data("equipment_type");
+				$this->data['village_towns']=$this->masters_model->get_data("village_town");
 				$this->data['village_towns']=$this->masters_model->get_data("village_town");
 				$this->data['states']=$this->masters_model->get_data("states");
 			}

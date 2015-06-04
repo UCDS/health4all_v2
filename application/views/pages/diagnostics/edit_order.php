@@ -475,7 +475,7 @@ if(count($orders)>0){ ?>
 							<?php foreach($orders as $order){
 										if($order->order_id == $ord) {
 											if($order->test_status==1) 
-												$label="label-success";
+												$label="label-warning";
 											else $label = "label-danger";
 											echo "<div class='label $label'>".$order->test_name."</div><br />";
 										}

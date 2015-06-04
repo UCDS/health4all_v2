@@ -14,7 +14,7 @@ $(function(){
 
 	<?php if(isset($mode)&& $mode=="select"){ ?>
 	<center>	<h3>Edit  Equipment Details</h3></center><br>
-	<?php echo validation_errors(); echo form_open('equipments/edit/equipments',array('role'=>'form','id'=>'edit_equipment')); ?>
+	<?php echo validation_errors(); echo form_open('equipments/edit/equipment',array('role'=>'form','id'=>'edit_equipment')); ?>
 
 
 	<div class="form-group">
@@ -220,7 +220,7 @@ $(function(){
 	<?php } ?>
 	<h3><?php if(isset($msg)) echo $msg;?></h3>	
 	<div class="col-md-12">
-	<?php echo form_open('equipments/edit/equipments',array('role'=>'form','id'=>'search_form','class'=>'form-inline','name'=>'search_equipment'));?>
+	<?php echo form_open('equipments/edit/equipment',array('role'=>'form','id'=>'search_form','class'=>'form-inline','name'=>'search_equipment'));?>
 	<h3> Search Equipment </h3>
 	<table class="table-bordered col-md-12">
 	<tbody>
@@ -235,8 +235,6 @@ $(function(){
 	<?php if(isset($mode) && $mode=="search"){ ?>
 	
 	<h3 class="col-md-12">List of Equipments </h3>
-	<div class="col-md-12 ">
-	</div>	
 	<table class="table-hover table-bordered table-striped col-md-10">
 	<thead>
 	<th>S.No</th><th>Equipment Type </th><th>Make</th><th>Model</th><th>Serial Number</th><th>Asset Number</th><th>Procured By</th><th>Cost</th><th>Supplier</th>
@@ -245,7 +243,7 @@ $(function(){
 	<?php 
 	$i=1;
 	foreach($equipments as $a){ ?>
-	<?php echo form_open('equipments/edit/equipments',array('id'=>'select_equipment_form_'.$a->equipment_id,'role'=>'form')); ?>
+	<?php echo form_open('equipments/edit/equipment',array('id'=>'select_equipment_form_'.$a->equipment_id,'role'=>'form')); ?>
 	<tr onclick="$('#select_equipment_form_<?php echo $a->equipment_id;?>').submit();" >
 		<td><?php echo $i++; ?></td>
 		<td><?php echo $a->equipment_type; ?>
@@ -277,4 +275,6 @@ $(function(){
 	</tbody>
 	</table>
 	<?php } ?>
-	</div></div>
+	</div>
+</div>
+</div>

@@ -70,8 +70,9 @@
 	$(function(){
 		$(".date").Zebra_DatePicker();
 		<?php if(count($test_areas)>1){ ?>
-		$(".test_method").hide();
+		$(".test_areas").hide();
 		$("#test_area").on('change',function(){
+			$(".test_areas").hide();
 			$(".test_area_"+$(this).val()).show();
 		});
 		<?php } ?>
@@ -163,21 +164,29 @@
 		</div>	
 		<hr>
 		<hr>
-		<div class="form-group">
+		<?php
+		$test_areas=array();		
+		foreach($test_masters as $test_master){
+			$test_areas[]=$test_master->test_area_id;
+		}
+		$test_areas=array_unique($test_areas);
+		foreach($test_areas as $test_area){ 
+		?>
+		<div class="form-group test_areas test_area_<?php echo $test_area;?>">
 		<?php 
 		$test_methods=array();
 		foreach($test_masters as $test_master){
+			if($test_master->test_area_id == $test_area)
 			$test_methods[]=$test_master->test_method;
 		}
 		$test_methods=array_unique($test_methods);
 		foreach($test_methods as $test_method){ ?>
-			<div class="col-md-12 test_method test_area_<?php echo $test_master->test_area_id;?>">
+			<div class="col-md-12 test_method">
 				<div class="alert well-sm alert-info"><b><?php echo $test_method;?></b></div>
 		<?php
 			$i=0;
-			$test_area_ids = array();
 			foreach($test_groups as $test_group){
-				if($test_master->test_method == $test_method) { ?>
+				if($test_group->test_method == $test_method) { ?>
 			<div class="col-md-12 well well-sm" >Group tests</div>
 			<?php 
 			break;}
@@ -194,7 +203,7 @@
 		}
 		?>
 		<?php foreach($groups as $test_group){
-				if($test_master->test_method == $test_method) { 
+				if($test_group->test_method == $test_method) { 
 				$tests="";
 				$count =1;
 				foreach($test_groups as $group){
@@ -230,6 +239,7 @@
 		</div>		
 		<?php } ?>
 		</div>
+		<?php } ?>
 	</div>
 	<div class="panel-footer">
 		<div class="col-md-offset-4">
