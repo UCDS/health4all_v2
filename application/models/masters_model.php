@@ -2,7 +2,7 @@
 class Masters_model extends CI_Model{
 	
 	
-	function get_data($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status="",$hospitals=0,$vendor_id=0){
+	function get_data($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=-1,$hospitals=0,$vendor_id=0){
 		if($type=="equipment_types"){
 			$this->db->select("equipment_type_id,equipment_type")->from("equipment_type");
 			$this->db->order_by("equipment_type");
@@ -132,7 +132,6 @@ class Masters_model extends CI_Model{
 			
 		}
 		else if($type=="equipment"){
-		
 			if($this->input->post('select')){
 					$equipment_id=$this->input->post('equipment_id');
 
@@ -155,7 +154,7 @@ class Masters_model extends CI_Model{
 			if($unit!=0){
 				$this->db->where("equipment.unit_id",$unit);
 			}
-			if($status!=""){
+			if($status!="-1"){
 				$this->db->where("equipment.equipment_status",$status);
 			}
 			$this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipment_type.equipment_type_id,model,procured_by,cost,vendor_name,supply_date,warranty_start_date,warranty_end_date,contact_person_first_name,contact_person_last_name, contact_person_contact,hospital,department,equipment_status,hospital.hospital_id,department.department_id")->from("equipment")
@@ -179,9 +178,7 @@ class Masters_model extends CI_Model{
 			}
 			if($this->input->post('search')){
 						$equipment=strtolower($this->input->post('equipment_type'));
-						$this->db->like('LOWER(equipment_type)',$equipment,'after');
-
-						
+						$this->db->like('LOWER(equipment_type)',$equipment,'after');						
 						
 			}
 			$this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipment.equipment_id,equipment.equipment_type_id,model,procured_by,cost,supplier,supply_date,warranty_period,service_engineer,service_engineer_contact,hospital,department,username,equipment_status,hospital.hospital_id,department.department_id,user.user_id")->from("equipment")
@@ -330,7 +327,7 @@ class Masters_model extends CI_Model{
 					}
 					$this->db->where_in('department_id',$deps);
 				}
-				$this->db->select("test_group.group_id,group_name,test_name")->from("test_group")
+				$this->db->select("test_group.group_id,group_name,test_name,test_method")->from("test_group")
 				->join('test_group_link','test_group.group_id = test_group_link.group_id')
 				->join('test_master','test_group_link.test_master_id = test_master.test_master_id')
 				->join('test_method','test_master.test_method_id=test_method.test_method_id')
@@ -544,9 +541,7 @@ class Masters_model extends CI_Model{
 			->join("(SELECT activity_id month_activity_done,date month_activity_date,time month_activity_time,score monthly_score,comments FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Monthly' AND MONTH(date)=MONTH('$week_start') AND YEAR(date)=YEAR('$week_start')) month_done",'facility_activity.activity_id=month_done.month_activity_done','left')
 			->where('area.area_id',$this->input->post('area'));
 		}
-		$query=$this->db->get();				
-		//echo $this->db->last_query();
-
+		$query=$this->db->get();
 		return $query->result();
 	
 }

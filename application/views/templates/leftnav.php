@@ -10,7 +10,7 @@
 				<li ><a href="#">AMC/CMC</a></li>
 				<li class="nav-header">Edit</li>
 				<li <?php if(preg_match("^edit/equipment_type^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/edit/equipment_type">Equipment Type</a></li>
-				<li <?php if(preg_match("^edit/equipments$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/edit/equipments">Equipment Details</a></li>
+				<li <?php if(preg_match("^edit/equipment$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/edit/equipment">Equipment Details</a></li>
 				<li <?php if(preg_match("^edit/service_records^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/edit/service_records">Service Issue</a></li>
 				<li><a href="#">AMC/CMC</a></li>
 				<li class="nav-header">View</li>
@@ -134,11 +134,23 @@
 			<li <?php if(preg_match("^test_order^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/test_order">Order Tests</a></li>
 	<?php } 
 	} 
+	$view_orders = 0;
+	foreach($functions as $f){
+		if($f->user_function=="Diagnostics - Order All"){ ?>
+			<li <?php if(preg_match("^view_orders^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/view_orders/0">View Tests</a></li>
+	<?php 
+		$view_orders=1;
+		} 
+	}
+	if($view_orders==0){
 	foreach($functions as $f){
 		if($f->user_function=="Diagnostics"){ ?>
 			<li <?php if(preg_match("^view_orders^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/view_orders">Update Tests</a></li>
-	<?php } 
-	} 
+	<?php 
+		$view_orders=1;
+		} 
+	}
+	}
 	foreach($functions as $f){
 		if($f->user_function=="Diagnostics"){ ?>
 			<li <?php if(preg_match("^edit_order^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/edit_order">Cancel Orders</a></li>
@@ -181,11 +193,13 @@
 		<li <?php if(preg_match("^edit/specimen_type^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>diagnostics/edit/specimen_type">Specimen Type</a></li>
 		<li <?php if(preg_match("^edit/sample_status^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>diagnostics/edit/sample_status">Sample Status</a></li>
 		<?php } 
-			}
-		}
-		?>
+			} ?>
+	
 </ul>
-</div>	
+</div>
+	<?php
+		}
+		?>	
 
 <?php if(preg_match("^user_panel/*^",current_url())) { ?>
 

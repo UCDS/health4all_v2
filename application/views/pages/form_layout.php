@@ -195,6 +195,20 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
+					<div class="layout-div col-md-4 state">
+						<div class="form-group">
+						<label class="control-label">   State   </label>
+						<select name="state" class="form-control">
+						<option value="">--Select--</option>
+						<?php 
+						foreach($states as $state){
+							echo "<option value='".$state->state_id."'>".$state->state."</option>";
+						}
+						?>
+						</select>
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
 					<div class="layout-div col-md-4 district">
 						<div class="form-group">
 						<label class="control-label">   District   </label>
@@ -216,7 +230,13 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-					<!-- here we use input type for obtaining textbox for father_name,mother_name-->
+					<div class="layout-div col-md-4 alt_phone">
+						<div class="form-group">
+						<label class="control-label">   Alternative Phone    </label>
+						<input type="text" name="alt_phone" style="width: 170px" class="form-control"/>
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
 					<div class="layout-div col-md-4 father_name">
 						<div class="form-group">
 						<label class="control-label"> Father Name </label>
@@ -231,7 +251,6 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-					<!-- here spouse_name is display only if the patient is female -->
 					<div class="layout-div col-md-4 spouse_name">
 						<div class="form-group">
 						<label class="control-label"> Spouse Name </label>
@@ -276,7 +295,6 @@
 					<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 					 </div>
 					</div>
-					<!-- here we use select class in order to obtain a drop-down box for Education Qualification -->
 					<div class="layout-div col-md-4 education_qualification">
 						<div class="form-group">
 						<label class="control-label">Education Qualification</label>
@@ -292,7 +310,6 @@
 					<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-					<!-- here we use select class in order to obtain a drop-down box for Blood Group -->
 					<div class="layout-div col-md-4 blood_group">
 					    <div class="form-group">
 						<label class="control-label">Blood Group</label>
@@ -335,7 +352,6 @@
                         </select>
 						</div>
 					</div>
-					<!-- here we use select class in order to obtain a drop-down box for Delivery Mode -->
 					<div class="layout-div col-md-4 delivery_mode">
 						<div class="form-group">
 						<label class="control-label">Delivery Mode</label>
@@ -614,11 +630,36 @@
 					<div class="layout-div col-md-4 final_diagnosis">
 						<div class="form-group">
 						<label class="control-label">Final Diag.</label>
-						<input type="text" name="final_diag." style="width: 170px" class="form-control" />
+						<input type="text" name="final_diagnosis" style="width: 170px" class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
 			        </div>
+
+					<div class="col-md-12 patient_picture" hidden>
+						<div class="form-group well well-sm">
+						<div class="row">
+							<div class="col-md-12">
+							<p class="col-md-6" id="results-text">Captured image will appear here..</p>
+							<p class="col-md-6">Camera View</p>
+							<div id="results" class="col-md-6 results" style="height:100px"></div>
+
+						<input type="text" name="patient_picture" style="width: 170px" class="sr-only" hidden />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>							
+							<div id="my_camera" class="col-md-6" style="height:100px"></div>
+							</div>
+						</div>
+							<div class="col-md-offset-6" style="position:relative;top:5px">
+							
+							<!-- A button for taking snaps -->
+								<div id="button">
+									<input id="patient_picture" type="hidden" class="sr-only" name="patient_picture" value=""/>
+									<button class="btn btn-default btn-sm" type="button" onclick="save_photo()"><i class="fa fa-camera"></i> Take Picture</button>
+								</div>
+							</div>
+							
+						</div>
+					</div>
 				</div>
 				<div class="panel-footer">
 					<button type="submit" class="btn btn-primary" id="save-form">Save</button>
@@ -628,7 +669,6 @@
 			<div class="col-sm-3 col-md-2 sidebar">
 			<strong>Patient Information</strong>
 			  <ul class="nav nav-sidebar">
-			  <!--here we are labelling the field_name on the left side of the form-->
 				<li>  
 					<div class="checkbox">
 						<label><input type="checkbox" value="1" id="first_name" class="checklist" />First name</label>
@@ -666,7 +706,17 @@
 				</li>
 				<li>  
 					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="state" class="checklist" />State</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
 						<label><input type="checkbox" value="1" id="phone" class="checklist" />Phone</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="alt_phone" class="checklist" />Alternative Phone</label>
 					</div>
 				</li>
 				<li>  
@@ -712,6 +762,11 @@
 				<li>  
 					<div class="checkbox">
 						<label><input type="checkbox" value="1" id="blood_group" class="checklist" />Blood Group</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="patient_picture" class="checklist" />Patient Picture</label>
 					</div>
 				</li>
 			</ul>

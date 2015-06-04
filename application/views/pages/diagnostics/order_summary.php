@@ -208,7 +208,7 @@ $(function(){
 	if($this->input->post('department')) $department = $this->input->post('department'); else $department=-1;
 	if($this->input->post('unit')) $unit = $this->input->post('unit'); else $unit=-1;
 	if($this->input->post('area')) $area = $this->input->post('area'); else $area=-1;
-	if($this->input->post('test_area')) $test_area = $this->input->post('test_area'); else $test_area=-1;
+	if($this->input->post('lab_department')) $test_area = $this->input->post('lab_department'); else $test_area=-1;
 	if($this->input->post('specimen_type')) $specimen_type = $this->input->post('specimen_type'); else $specimen_type=-1;
 	if($this->input->post('test_method')) $test_method = $this->input->post('test_method'); else $test_method=-1;
 	?>

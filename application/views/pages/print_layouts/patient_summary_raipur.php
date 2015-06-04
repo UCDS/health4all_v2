@@ -3,35 +3,27 @@
 		<?php $patient=$patients[0];?>
 		<table style="width:98%;padding:5px">
 				<tr>
-				<td colspan="3">
-				<img style="float:right" style="margin-top:-20px" src="<?php echo base_url();?>assets/images/ap-logo.png" width="60px" />
-				<img style="float:left" src="<?php echo base_url();?>assets/images/<?php $hospital=$this->session->userdata('hospital');echo $hospital['logo'];?>" width="60px" />
-				<div style="float:middle;text-align:center">
-				<b>Government of Andhra Pradesh</b><br />
-				<font size="4"><?php echo $hospital['hospital'];?></font>
+				<td colspan="3" align="center">
+				<img align="left" src="<?php echo base_url();?>assets/images/<?php $hospital=$this->session->userdata('hospital');echo $hospital['logo'];?>" width="50px" />
+				<font size="3"><?php echo $hospital['hospital'];?></font><br />
 					<?php echo $hospital['description'];?> 
 					@ 
-					<?php echo $hospital['district'];?>
-					<br />
-					<br />
-				<span style="border:1px solid #ccc;padding:5px;margin:5px;"><u><b>DISCHARGE SUMMARY</b></u></span>
-				<br />
-				<br />
-				</div>
+					<?php echo $hospital['place'];?>, 
+					<?php echo $hospital['district'];?>,
 				</td>
 				</tr>
 				<tbody height="10%" style="border:1px solid black;">
 				<tr width="95%">
 						<td style="padding:5px;">Name: <?php echo $patient->name; ?></td>
-						<td>Age/Sex: <?php 
-						
+						<td>Gender: <?php echo $patient->gender; ?></td>
+						<td>Age: 	
+							<?php 
 							if($patient->age_years!=0){ echo $patient->age_years." Yrs "; } 
 							if($patient->age_months!=0){ echo $patient->age_months." Mths "; }
 							if($patient->age_days!=0){ echo $patient->age_days." Days "; }
 							if($patient->age_years==0 && $patient->age_months == 0 && $patient->age_days==0) echo "0 Days";
-							echo "/".$patient->gender; ?></td>
-						<td>Admit Date:<?php echo date("d-M-Y",strtotime($patient->admit_date)); 
-						echo date("g:iA",strtotime($patient->admit_time)); ?></td>
+							?>
+						</td>
 				</tr>
 				<tr width="95%">
 						<td  style="padding:5px;">Father / Spouse Name :  <?php echo $patient->parent_spouse; ?></td>
@@ -39,28 +31,69 @@
 						<td>Phone : <?php echo $patient->phone; ?></td>
 				</tr>
 				<tr width="95%">
+						<td  style="padding:5px;">OP number : <?php echo $patient->hosp_file_no; ?></td>
 						<td>Department : <?php echo $patient->department; ?> </td>
-						<td  style="padding:5px;"><?php echo $patient->visit_type;?> number : <?php echo $patient->hosp_file_no; ?></td>
-						<td><?php if(!!$patient->outcome) echo $patient->outcome; else echo "Discharge"?> 
-						Date: <?php 
-						if(!!$patient->outcome_date) echo date("d-M-Y",strtotime($patient->outcome_date)); 
-						if(!!$patient->outcome_time) echo date("g:iA",strtotime($patient->outcome_time)); 
-						?></td>
+						<td><?php echo date("d-M-Y",strtotime($patient->admit_date)); ?></td>
 				</tr>
 				</tbody>
-				<?php if(!!$patient->clinical_findings) { ?>
-				<tr class="print-element" width="95%" height="80px">
-					<td colspan="3">
-					<b>Clinical Findings</b>: <?php echo $patient->clinical_findings;?>
+				<tr style="border:1px solid black" >
+						<td style="padding:5px;">Weight : <?php if(!!$patient->admit_weight) echo $patient->admit_weight;?></td>
+						<td>Pulse : <?php if(!!$patient->pulse_rate) echo $patient->pulse_rate;?> </td>
+						<td> BP : <?php if(!!$patient->sbp) echo $patient->sbp;?> / <?php if(!!$patient->dbp) echo $patient->dbp;?></td>
+				</tr>
+				
+				<tr class="print-element" width="95%">
+					<td>
+					<br>
+						<u><b>Clinical</b></u>
+					<br>
 					</td>
 				</tr>
-				<?php } ?>
-				<?php 
-				if(isset($tests) && count($tests)>0){ ?>				
+				<tr class="print-element" width="95%" height="40px">
+					<td colspan="3">
+						Symptoms: <?php if(!!$patient->presenting_complaints) echo $patient->presenting_complaints;?>
+					</td>
+				</tr>
+				<tr class="print-element" width="95%" height="40px">
+					<td colspan="3">
+						Patient History: <?php if(!!$patient->past_history) echo $patient->past_history;?>
+					</td>
+				</tr>
+				<tr class="print-element" width="95%" height="40px">
+					<td colspan="3">
+						Family History: <?php if(!!$patient->family_history) echo $patient->family_history;?>
+					</td>
+				</tr>
+				<tr class="print-element" width="95%" height="40px">
+					<td colspan="3">
+						Clinical Findings: <?php if(!!$patient->clinical_findings) echo $patient->clinical_findings;?>
+					</td>
+				</tr>
+				<tr class="print-element" width="95%" height="40px">
+					<td colspan="3">
+						CVS: <?php if(!!$patient->cvs) echo $patient->cvs;?>
+					</td>
+				</tr>
+				<tr class="print-element" width="95%" height="40px">
+					<td colspan="3">
+						RS: <?php if(!!$patient->rs) echo $patient->rs;?>
+					</td>
+				</tr>
+				<tr class="print-element" width="95%" height="40px">
+					<td colspan="3">
+						PA: <?php if(!!$patient->pa) echo $patient->pa;?>
+					</td>
+				</tr>
+				<tr class="print-element" width="95%" height="40px">
+					<td colspan="3">
+						CNS: <?php if(!!$patient->cns) echo $patient->cns;?>
+					</td>
+				</tr>
 				<tr  class="print-element" style="width:100%">
 					<td colspan="3"><hr><b><u>Diagnositcs</u></b><br></td>
 				</tr>
-				<?php
+				<?php 
+				if(isset($tests) && count($tests)>0){
 					$count=0;
 					$text_result_tests=array();
 					foreach($tests as $test){	
@@ -160,21 +193,36 @@
 				</tr>
 				<?php }
 				} ?>
-				<?php if(!!$patient->final_diagnosis) { ?>
+				<tr class="print-element" width="95%">
+					<td colspan="3"><hr>
+					<b><u>Diagnosis</u></b>
+					</td>
+				</tr>
 				<tr class="print-element" width="95%" height="40px">
 					<td colspan="3">
 					<b>Final Diagnosis</b>: <?php echo $patient->final_diagnosis;?>
 					</td>
 				</tr>
-				<?php } ?>
-				<?php if(!!$patient->advise) { ?>
+				<tr class="print-element" width="95%" height="40px">
+					<td colspan="3">
+					<b>Decision</b>: <?php echo $patient->decision;?>
+					</td>
+				</tr>
 				<tr class="print-element" width="95%" height="40px">
 					<td colspan="3">
 					<b>Advise</b>: <?php echo $patient->advise;?>
 					</td>
 				</tr>
-				<?php } ?>
-				<?php if(isset($prescription) && !!$prescription){ ?>
+				<tr class="print-element" width="95%" height="40px">
+					<td colspan="3">
+					<b>Date of Surgery</b>:
+					</td>
+				</tr>
+				<tr class="print-element" width="95%" height="40px">
+					<td colspan="3">
+					<b>Admit on</b>:
+					</td>
+				</tr>
 				<tr class="print-element" width="95%">
 					<td class="print-text" colspan="3">
 					<hr>
@@ -184,6 +232,7 @@
 				<tr>
 				<td colspan="3">
 				
+				<?php if(isset($prescription) && !!$prescription){ ?>
 					<table id="table-prescription">
 					<thead>
 						<tr>
@@ -233,12 +282,7 @@
 					<?php } ?>
 					</tbody>
 				</table>
+				<?php } ?>
 				</td>
 				</tr>
-				<?php } ?>
-				<tr class="print-element" width="95%" height="40px">
-					<td colspan="3" style="text-align:right">
-						<b>Doctor</b>
-					</td>
-				</tr>				
 		</table>
