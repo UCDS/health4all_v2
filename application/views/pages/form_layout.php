@@ -226,7 +226,7 @@
                     <div class="layout-div col-md-4 address">
 						<div class="form-group">
 						<label class="control-label">    Address    </label>
-						<input type="text" name="address" style="width: 170px" class="form-control"/>
+						<textarea name="address" rows="4" cols="30" class="form-control"></textarea>
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
@@ -570,10 +570,10 @@
 					<div class="layout-div col-md-4 presenting_complaints">
 						<div class="form-group">
 						<label class="control-label">Complaint</label>
-						<input type="text" name="presenting_complaints" style="width: 170px" class="form-control" />
+                                                <textarea rows="4" cols="30" name="presenting_complaints" class="form-control" ></textarea>
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
-					</div>
+                                        </div>
 					<div class="layout-div col-md-4 past_history">
 						<div class="form-group">
 						<label class="control-label">Past history</label>

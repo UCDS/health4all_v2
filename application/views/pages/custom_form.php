@@ -253,7 +253,7 @@ pri.print();
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Address<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-						<input type="text" name="address" class="form-control" value="<?php if($patient) echo $patient->address;?>"  <?php if($mandatory) echo "required"; ?> />
+						<textarea rows="4" cols="30" name="address" class="form-control" value="<?php if($patient) echo $patient->address;?>"  <?php if($mandatory) echo "required"; ?>></textarea>
 						</div>
 					</div>
 				<?php 
@@ -571,7 +571,7 @@ pri.print();
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Presenting Complaint<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-						<input type="text" name="presenting_complaints" class="form-control" value="<?php if($patient) echo $patient->presenting_complaints;?>" <?php if($mandatory) echo "required"; ?> />
+                                                <textarea rows="4" cols="30" name="presenting_complaints" class="form-control" value="<?php if($patient) echo $patient->presenting_complaints;?>" <?php if($mandatory) echo "required"; ?>></textarea>
 						</div>
 					</div>
 				<?php 
