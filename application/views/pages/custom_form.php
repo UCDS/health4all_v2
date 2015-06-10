@@ -87,6 +87,7 @@ pri.document.close();
 pri.focus();
 pri.print();
 }
+
 </script>
 		<?php if(isset($duplicate)) { ?>
 		<!-- If duplicate IP no is found then it displays the error message -->
@@ -97,6 +98,17 @@ pri.print();
 		<div class="sr-only" id="print-div" style="width:100%;height:100%;"> 
 		<?php $this->load->view($print_layout);?>
 		</div>
+                <!-- Script for printing MLC complaint -->
+                <?php
+                
+                if($registered->mlc==1){ ?>
+                <div class="sr-only" id="print-MLC-div" style="width:100%;height:100%;"> 
+                    <?php $this->load->view("pages/print_layouts/MLC_complaint");
+                        $offset=4;
+                    ?>
+		</div>
+                <?php }
+                else $offset=5;?>
 		<!--we divide the form into panel-header,panel-body and panel-footer -->
 		<div class="row">
 			<div class="panel panel-success col-md-6 col-md-offset-3" >
@@ -133,7 +145,10 @@ pri.print();
 				</div>
 <!--here in the panel-footer print button is displayed -->				
 				<div class="panel-footer">
-					<button type="submit" class="btn btn-primary col-md-offset-5" onclick="printDiv('print-div')" autofocus>Print</button>
+                                    <button type="button" class="btn btn-primary col-md-offset-<?php echo $offset;?>" onclick="printDiv('print-div')" autofocus>Print</button>
+                                        <?php if($registered->mlc==1){?>
+                                            <button type="button" class="btn btn-warning" onclick="printDiv('print-MLC-div')" autofocus>Print MLC</button>
+                                        <?php }?>                                
 				</div>
 			</div>
 			</div>
@@ -253,8 +268,8 @@ pri.print();
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Address<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-						<textarea rows="4" cols="30" name="address" class="form-control" value="<?php if($patient) echo $patient->address;?>"  <?php if($mandatory) echo "required"; ?>></textarea>
-						</div>
+						<textarea rows="1" cols="30" name="address" class="form-control" value="<?php if($patient) echo $patient->address;?>"  <?php if($mandatory) echo "required"; ?>></textarea>
+						</div> 
 					</div>
 				<?php 
 					break;
@@ -571,7 +586,7 @@ pri.print();
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Presenting Complaint<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-                                                <textarea rows="4" cols="30" name="presenting_complaints" class="form-control" value="<?php if($patient) echo $patient->presenting_complaints;?>" <?php if($mandatory) echo "required"; ?>></textarea>
+                                                <textarea rows="1" cols="30" name="presenting_complaints" class="form-control" value="<?php if($patient) echo $patient->presenting_complaints;?>" <?php if($mandatory) echo "required"; ?>></textarea>
 						</div>
 					</div>
 				<?php 
