@@ -201,42 +201,54 @@ pri.print();
 			foreach($functions as $f){ 
 				if($f->user_function == "Update Patients") { ?>
 					<li role="presentation" class="active"><a href="#patient" aria-controls="patient" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Patient Info</a></li>
-				<?php } 
+				<?php 
+				break;
+				} 
 			}
 		?>
 		<?php 
 			foreach($functions as $f){ 
 				if($f->user_function == "Clinical" && ($f->add==1 || $f->edit==1)) { ?>
 					<li role="presentation"><a href="#clinical" aria-controls="clinical" role="tab" data-toggle="tab"><i class="fa fa-stethoscope"></i>Clinical</a></li>
-				<?php } 
+				<?php 
+				break;
+				 } 
 			}
 		?>
 		<?php 
 			foreach($functions as $f){ 
 				if($f->user_function == "View Diagnostics") { ?>
 					<li role="presentation"><a href="#diagnostics" aria-controls="diagnostics" role="tab" data-toggle="tab"><i class="glyph-icon flaticon-chemistry20"></i> Diagnostics</a></li>
-				<?php } 
+				<?php 
+				break;
+				 } 
 			}
 		?>
 		<?php 
 			foreach($functions as $f){ 
 				if($f->user_function == "Procedures" && ($f->add==1 || $f->edit==1)) { ?>
 					<li role="presentation"><a href="#procedures" aria-controls="procedures" role="tab" data-toggle="tab"><i class="fa fa-scissors"></i> Procedures</a></li>
-				<?php } 
+				<?php 
+				break;
+				 } 
 			}
 		?>
 		<?php 
 			foreach($functions as $f){ 
 				if($f->user_function == "Prescription" && ($f->add==1 || $f->edit==1)) { ?>
 					<li role="presentation"><a href="#prescription" aria-controls="prescription" role="tab" data-toggle="tab"><i class="glyph-icon flaticon-drugs5"></i> Prescription</a></li>
-				<?php } 
+				<?php 
+				break;
+				 } 
 			}
 		?>
 		<?php 
 			foreach($functions as $f){ 
-				if($f->user_function == "Discharge Patients") { ?>
+				if($f->user_function == "Discharge" && ($f->add==1 || $f->edit==1)) { ?>
 					<li role="presentation"><a href="#discharge" aria-controls="discharge" role="tab" data-toggle="tab"><i class="fa fa-sign-out"></i> Discharge</a></li>
-				<?php } 
+				<?php 
+				break;
+				 } 
 			}
 		?>
 	  </ul>
@@ -418,7 +430,9 @@ pri.print();
 			</div>
 			</div>
 		</div>
-		<?php }}?>
+		<?php 
+				break;
+				 }}?>
 		
 		<?php 
 			foreach($functions as $f){ 
@@ -528,7 +542,9 @@ pri.print();
 				</div>
 			</div>
 		</div>
-		<?php } } ?>
+		<?php 
+				break;
+				 } } ?>
 		
 		<?php 
 			foreach($functions as $f){ 
@@ -602,7 +618,9 @@ pri.print();
 			No tests on the given date.
 			<?php } ?>
 		</div>
-		<?php } }?>
+		<?php 
+				break;
+				 } }?>
 		<?php 
 			foreach($functions as $f){ 
 				if($f->user_function == "Procedures" && ($f->add==1 || $f->edit==1)) { ?>
@@ -726,7 +744,9 @@ pri.print();
 				
 			<?php } ?>
 		</div>
-		<?php } }?>
+		<?php  
+				break;
+				} }?>
 		<?php 
 			foreach($functions as $f){ 
 				if($f->user_function == "Prescription" && ($f->add==1 || $f->edit==1)) { ?>
@@ -872,7 +892,9 @@ pri.print();
 			<?php } ?>
 			</div>
 		</div>
-		<?php }} ?>
+		<?php 
+				break;
+				 }} ?>
 		<?php 
 			foreach($functions as $f){ 
 				if($f->user_function == "Discharge" && ($f->add==1 || $f->edit==1)) { ?>
@@ -950,7 +972,9 @@ pri.print();
 				</div>
 			</div>
 		</div>
-		<?php }} ?>
+		<?php 
+				break;
+		}} ?>
 	  </div>
 
 			<div class="col-md-12 text-center">

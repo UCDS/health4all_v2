@@ -558,7 +558,7 @@ class Reports_model extends CI_Model{
 		if($this->input->post('area')){
 			$this->db->where('equipment.area_id',$this->input->post('area'));
 		}
-		if($this->input->post('equipment_status')){
+		if($this->input->post('equipment_status')!=NULL){
 			$this->db->where('equipment.equipment_status',$this->input->post('equipment_status'));
 		}
 		if($this->input->post('equipment_type')){
