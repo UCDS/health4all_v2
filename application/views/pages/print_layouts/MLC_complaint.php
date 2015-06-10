@@ -79,9 +79,9 @@
 		</div>	
                 <div class="row">
                     <!-- To display the MLC Reason we use "presenting_complaint" field of "patient_visits" table-->
-			<div class="column">
-				<?php if($registered->presenting_complaints != NULL) {echo "<b>MLC Reason:</b> ".$registered->presenting_complaints;}?>			
-			</div>
+				<div>
+					<?php if($registered->presenting_complaints != NULL) {echo "<b>MLC Reason:</b> ".$registered->presenting_complaints;}?>			
+				</div>
                 </div>
 		
 	
