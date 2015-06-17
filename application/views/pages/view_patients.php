@@ -224,7 +224,7 @@ pri.print();
 			<div class="col-md-4 col-xs-12 col-lg-3">
 				<b>ID Proof: </b>
 				<?php 
-					echo $patient->id_proof_type; if(!!$patient->id_proof_no) $patient->id_proof_no;
+					echo $patient->id_proof_type; if(!!$patient->id_proof_number) $patient->id_proof_number;
 				?>
 			</div>
 			<div class="col-md-4 col-xs-12 col-lg-3">

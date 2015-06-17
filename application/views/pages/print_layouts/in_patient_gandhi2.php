@@ -71,13 +71,6 @@
 			<div class="column">
 				<?php echo "<b>PS Name:</b>" .$registered->ps_name;?>
 			</div>
-			<div class="column">
-				<?php echo "";?>
-			</div>
-			<!-- To display the MLC Reason we use "presenting_complaints" field of "patient_visits" table-->
-			<div class="column">
-				<?php if($registered->presenting_complaints != NULL) {echo "<b>MLC Reason:</b> ".$registered->presenting_complaints;}?>			
-			</div>
 			<?php } ?>
 		</div>	
 		<div class="row">
@@ -126,13 +119,6 @@
 			</div>
 			<div class="column">
 				<?php echo "<b>PS Name:</b>" .$registered->ps_name;?>
-			</div>
-			<div class="column">
-				<?php echo "";?>
-			</div>
-			<!-- To display the MLC Reason we use "presenting_complaints" field of "patient_visits" table-->
-			<div class="column">
-				<?php if($registered->presenting_complaints != NULL) {echo "<b>MLC Reason:</b> ".$registered->presenting_complaints;}?>			
 			</div>
 			<?php } ?>
 		</div>	

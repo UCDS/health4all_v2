@@ -21,7 +21,7 @@ class Register_model extends CI_Model{
 		if($this->input->post('mother_name'))$mother_name=$this->input->post('mother_name'); else $mother_name="";
 		if($this->input->post('id_proof_type'))$id_proof_type=$this->input->post('id_proof_type'); else $id_proof_type="";
 		if($this->input->post('id_proof_no'))$id_proof_no=$this->input->post('id_proof_no'); else $id_proof_no="";
-		if($this->input->post('occupation'))$occupation=$this->input->post('occupation'); else $occupation="";
+		if($this->input->post('occupation'))$occupation=$this->input->post('occupation'); else $occupation=0;
 		if($this->input->post('education_level'))$education_level=$this->input->post('education_level'); else $education_level="";
 		if($this->input->post('education_qualification'))$education_qualification=$this->input->post('education_qualification'); else $education_qualification="";
 		if($this->input->post('blood_group'))$blood_group=$this->input->post('blood_group'); else $blood_group="";
@@ -108,7 +108,7 @@ class Register_model extends CI_Model{
 			'mother_name'=>$mother_name,
 			'id_proof_type_id'=>$id_proof_type,
 			'id_proof_number'=>$id_proof_no,
-			'occupation'=>$occupation,
+			'occupation_id'=>$occupation,
 			'education_level'=>$education_level,
 			'education_qualification'=>$education_qualification,
 			'blood_group'=>$blood_group,
@@ -262,7 +262,7 @@ class Register_model extends CI_Model{
 		if($this->input->post('mother_name'))$mother_name=$this->input->post('mother_name'); else $mother_name="";
 		if($this->input->post('id_proof_type'))$id_proof_type=$this->input->post('id_proof_type'); else $id_proof_type="";
 		if($this->input->post('id_proof_no'))$id_proof_no=$this->input->post('id_proof_no'); else $id_proof_no="";
-		if($this->input->post('occupation'))$occupation=$this->input->post('occupation'); else $occupation="";
+		if($this->input->post('occupation'))$occupation=$this->input->post('occupation'); else $occupation=0;
 		// if($this->input->post('education_level'))$education_level=$this->input->post('education_level'); else $education_level="";
 		// if($this->input->post('education_qualification'))$education_qualification=$this->input->post('education_qualification'); else $education_qualification="";
 		if($this->input->post('blood_group'))$blood_group=$this->input->post('blood_group'); else $blood_group="";
@@ -332,7 +332,7 @@ class Register_model extends CI_Model{
 			'mother_name'=>$mother_name,
 			'id_proof_type_id'=>$id_proof_type,
 			'id_proof_number'=>$id_proof_no,
-			'occupation'=>$occupation,
+			'occupation_id'=>$occupation,
 			// 'education_level'=>$education_level,
 			// 'education_qualification'=>$education_qualification,
 			'blood_group'=>$blood_group,
@@ -537,16 +537,18 @@ class Register_model extends CI_Model{
 		}
 		//Build the query to retrieve the patient records based on the search query.
 		$this->db->select("patient.*,patient_visit.*,CONCAT(first_name,' ',last_name) name,
-		IF(father_name IS NULL OR father_name='',spouse_name,father_name) parent_spouse,patient.*,patient_visit.*,mlc.*,
-		area_name,states.state_id,states.state,unit_name,unit.unit_id,code_title,area.area_id,district,department,patient.patient_id,patient_visit.visit_id",false)
+		IF(father_name IS NULL OR father_name='',spouse_name,father_name) parent_spouse,patient.*,patient_visit.*,mlc.*,occupation,id_proof_type,
+		area_name,state.state_id,state.state,unit_name,unit.unit_id,code_title,area.area_id,district,department,patient.patient_id,patient_visit.visit_id",false)
 		->from('patient')
 		->join('patient_visit','patient.patient_id=patient_visit.patient_id')
 		->join('department','patient_visit.department_id=department.department_id','left')
 		->join('district','patient.district_id=district.district_id','left')
-		->join('states','district.state_id=states.state_id','left')
+		->join('state','district.state_id=state.state_id','left')
 		->join('unit','patient_visit.unit=unit.unit_id','left')
 		->join('area','patient_visit.area=area.area_id','left')
 		->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
+		->join('occupation','patient.occupation_id=occupation.occupation_id','left')
+		->join('id_proof_type','patient.id_proof_type_id=id_proof_type.id_proof_type_id','left')
 		->join('icd_code','patient_visit.icd_10=icd_code.icd_code','left')
 		->order_by('name','ASC');
 		$query=$this->db->get();

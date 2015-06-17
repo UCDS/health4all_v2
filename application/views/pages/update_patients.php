@@ -422,10 +422,15 @@ pri.print();
 			</div>
 			<div class="col-md-4 col-xs-6">
 				<label class="control-label">Occupation</label>
-				<select name="occupation" class="form-control" >
+				<select name="occupation" class="form-control">
 				<option value="">--Select--</option>
-					<option value="private" <?php if(isset($patient) && $patient->occupation=="private") echo " selected ";?> >Non government</option>
-					<option value="government" <?php if(isset($patient) && $patient->occupation=="government") echo " selected ";?> >Government</option>
+				<?php 
+				foreach($occupations as $occupation){
+					echo "<option value='".$occupation->occupation_id."'";
+					if($patient) if($occupation->occupation_id==$patient->occupation_id) echo " selected ";
+					echo ">".$occupation->occupation."</option>";
+				}
+				?>
 				</select>
 			</div>
 			</div>

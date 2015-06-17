@@ -473,7 +473,7 @@ class Masters_model extends CI_Model{
 			$this->db->select("district_id,district")->from("district");
 		}
 		else if($type=="states"){
-			$this->db->select("state_id,state")->from("states");
+			$this->db->select("state_id,state")->from("state");
 		}
 		else if($type=="countries"){
 			$this->db->select("*")->from("countries")->order_by('country_name');;
@@ -1181,7 +1181,7 @@ else if($type=="dosage"){
 					   'latitude'=>$this->input->post('latitude')
 			);
 
-		$table="states";
+		$table="state";
 		}
 		elseif($type=="vendor"){
 		echo "type = ".$this->input->post('vendor_type_id');
