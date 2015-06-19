@@ -3,20 +3,35 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <script type="text/javascript">
 $(function(){
-	$("#date").Zebra_DatePicker({
-		
+	$("#date,#calldate").Zebra_DatePicker({
+			});
+	$("#vendor").on('change',function(){
+		var vendor_id=$(this).val();
+		$("#contact_person_id option").hide();
+		$("#contact_person_id option[class="+vendor_id+"]").show();
 	});
-	
 });
 </script>
 
 <div class="col-md-8 col-md-offset-2">
 
 	<?php if(isset($mode)&& $mode=="select"){ ?>
-	<center>	<h3>Edit  Equipment Details</h3></center><br>
-	<?php echo validation_errors(); echo form_open('equipments/edit/equipments',array('role'=>'form','id'=>'edit_equipment')); ?>
+	<center>	<h3>Edit  Service Issue</h3></center><br>
+	<?php echo validation_errors(); echo form_open('equipments/edit/service_records',array('role'=>'form','id'=>'edit_service_record')); ?>
 
 
+	<div class="form-group">
+		<div class="col-md-3">
+		<label for="drug_type" >Call Date<font color='red'>*</font></label>
+		</div>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder=" Call Date" form="add_service_record" id="calldate" name="call_date"
+		<?php if(isset($service_records)){
+			echo "value='".$service_records[0]->call_date."' ";
+			}
+		?> />
+		</div>
+	</div>
 	<div class="form-group">
 		<label for="equipment_type" class="col-md-4" >Equipment Type</label>
 		<div  class="col-md-8">

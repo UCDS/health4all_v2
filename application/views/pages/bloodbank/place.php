@@ -1,17 +1,19 @@
 
 	<div class="col-md-10 col-sm-9">
-		<h1>Welcome to Blood Bank - <?php echo $userdata['hospital'];?>!</h1>
-		<br />
-		<br />
-		<p> Current place set to <b><?php 
-		$place=$this->session->userdata('place');
-		echo $place['name']; ?></b>
-		<br />
-		<br />
-		Change :
+		<div class="well">
+			<h4>Blood Bank - <?php echo $hospitaldata['hospital'];?>!</h4>
+			<br />
+			<br />
+			<p> Current place set to <b><?php 
+			$place=$this->session->userdata('place');
+			echo $place['name']; ?></b>
+			<br />
+			<br />
 		<?php 
-		echo form_open('bloodbank/user_panel/place'); ?>
-				<select name="camp" id="camps" >
+		echo form_open('bloodbank/user_panel/place',array('class'=>'form-custom')); ?>
+		Change :
+
+			<select name="camp" id="camps" class="form-control" >
 				<option value="">--Select Location--</option>
 				<?php foreach($camps as $camp){
 					echo "<option value='".$camp->camp_id."' id='camp".$camp->camp_id."'>$camp->camp_name, $camp->location</option>";
@@ -21,18 +23,19 @@
 				}
 				?>
 				</select>
-				<input type="submit" value="Select Camp" />
-				<input type="submit" value="BloodBank" name="reset" />
+				<input type="submit" value="Select Camp" class="btn btn-primary btn-sm" />
+				<input type="submit" value="BloodBank" name="reset" class="btn btn-primary btn-sm" />
 		</form>
+		</div>
 		<hr>
-		<h1>Add Camp</h1>
+		<h4>Add Camp</h4>
 		<?php echo form_open('bloodbank/staff/set_place'); ?>
 		Camp name : <input type="text" name="camp" required />
 		Address : <input type="text" name="location" size="40" required />
 		<input type="submit" value="Add Camp" name="add_camp" />
 		</form>
 		<hr>
-		<h1>Add Hospital</h1>
+		<h4>Add Hospital</h4>
 		<?php echo form_open('bloodbank/staff/set_place'); ?>
 		Hospital name : <input type="text" name="hospital" required />
 		Place : <input type="text" name="location" size="20" required />

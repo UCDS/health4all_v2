@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/highcharts.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/exporting.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/selectize.css">
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.selectize.js"></script>
 <script type="text/javascript">
 $(function(){
 	$("#from_date").Zebra_DatePicker({
@@ -14,13 +14,71 @@ $(function(){
 	  enabled_dates: ['7,14,21,28-31 * * *'],
 	  direction:false
 	});
-	$("#hospital").on('change',function(){
-		var hospital_id=$(this).val();
-		$("#area option").hide().attr('disabled',true);
-		$("#area option[class="+hospital_id+"]").show().attr('disabled',false);
-	});
+	$("#hospital").selectize();
 });
 </script>
+		<style type="text/css">
+		.selectize-control.repositories .selectize-dropdown > div {
+			border-bottom: 1px solid rgba(0,0,0,0.05);
+		}
+		.selectize-control.repositories .selectize-dropdown .by {
+			font-size: 11px;
+			opacity: 0.8;
+		}
+		.selectize-control.repositories .selectize-dropdown .by::before {
+			content: 'by ';
+		}
+		.selectize-control.repositories .selectize-dropdown .name {
+			font-weight: bold;
+			margin-right: 5px;
+		}
+		.selectize-control.repositories .selectize-dropdown .title {
+			display: block;
+		}
+		.selectize-control.repositories .selectize-dropdown .description {
+			font-size: 12px;
+			display: block;
+			color: #a0a0a0;
+			white-space: nowrap;
+			width: 100%;
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}
+		.selectize-control.repositories .selectize-dropdown .meta {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			font-size: 10px;
+		}
+		.selectize-control.repositories .selectize-dropdown .meta li {
+			margin: 0;
+			padding: 0;
+			display: inline;
+			margin-right: 10px;
+		}
+		.selectize-control.repositories .selectize-dropdown .meta li span {
+			font-weight: bold;
+		}
+		.selectize-control.repositories::before {
+			-moz-transition: opacity 0.2s;
+			-webkit-transition: opacity 0.2s;
+			transition: opacity 0.2s;
+			content: ' ';
+			z-index: 2;
+			position: absolute;
+			display: block;
+			top: 12px;
+			right: 34px;
+			width: 16px;
+			height: 16px;
+			background: url(<?php echo base_url();?>assets/images/spinner.gif);
+			background-size: 16px 16px;
+			opacity: 0;
+		}
+		.selectize-control.repositories.loading::before {
+			opacity: 0.4;
+		}
+		</style>
 
 
 <div class="col-md-10 col-md-offset-2">
@@ -28,17 +86,28 @@ $(function(){
 		<div class="alert alert-info"><?php echo $msg;?></div>
 	<?php } ?>
 	<?php echo validation_errors();?>
-	<?php echo form_open('sanitation/view_summary',array('role'=>'form','class'=>'form-custom')); ?>
+	<?php echo form_open('sanitation/view_scores',array('role'=>'form','class'=>'form-custom')); ?>
+	<div class="col-md-4">
+		<select name="hospital" id="hospital" class="repositories" required >
+		<option value="">Hospital</option>
+		<?php foreach($all_hospitals as $d){
+			echo "<option value='$d->hospital_id'>$d->hospital</option>";
+		}
+		?>
+		</select>
+	</div>
 	<label for="from_date">From Date</label>
-	<input class="date form-control" name="from_date" id="from_date" type="text" /> 
+	<input class="date form-control" name="from_date" id="from_date" type="text" required /> 
 	<label for="to_date">To Date</label>
-	<input class="date form-control" name="to_date" id="to_date" type="text" /> 
+	<input class="date form-control" name="to_date" id="to_date" type="text" required /> 
+	<input type="text" class="sr-only" value="1" name="from_summary" hidden />
 	<input type="submit" class="btn btn-primary btn-md" name="submit" value="Submit" />
 	</form>
 	<?php if(isset($scores) && count($scores)>0) {
 		$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 		$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
 		?>
+	<!--
 	<script>
 	$(function(){
 	/*
@@ -103,6 +172,7 @@ $(function(){
 	});
 	*/
 	</script>
+	-->
 	<br />
 	<br />
 	<div class="panel">

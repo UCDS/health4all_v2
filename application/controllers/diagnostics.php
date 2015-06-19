@@ -17,7 +17,7 @@ parent::__construct();
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 }
 
-function test_order(){
+function test_order($departments=0){
 	if(!$this->session->userdata('logged_in')){
 		show_404();
 	}
@@ -30,9 +30,16 @@ function test_order(){
 	$this->load->view('templates/header',$this->data);
 	$this->load->view('templates/leftnav');
 	$this->form_validation->set_rules('visit_id','Patient','required|trim|xss_clean');
-	$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
-	$this->data['test_masters']=$this->masters_model->get_data('test_name',0,$this->data['departments']);
-	$this->data['test_groups']=$this->masters_model->get_data('test_group');
+	if($departments==0){
+		$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
+		$this->data['test_masters']=$this->masters_model->get_data('test_name',0,$this->data['departments']);
+		$this->data['test_groups']=$this->masters_model->get_data('test_group',0,$this->data['departments']);
+	}
+	else{
+		$this->data['test_areas']=$this->masters_model->get_data('test_area',0);
+		$this->data['test_masters']=$this->masters_model->get_data('test_name',0);
+		$this->data['test_groups']=$this->masters_model->get_data('test_group',0);
+	}
 	$this->data['specimen_types']=$this->masters_model->get_data('specimen_type');
 	if ($this->form_validation->run() === FALSE){
 		$this->load->view($page,$this->data);
@@ -52,10 +59,14 @@ function test_order(){
 
 
 
-function view_orders(){
+function view_orders($access=1){
 	if(!$this->session->userdata('logged_in')){
 		show_404();
 	}
+	if($access!="1" && $access != '0') show_404();
+	if($access=='0') 
+		$this->data['update'] = 0;
+	else $this->data['update']=1;
 	$this->load->helper('form');
 	$this->load->library('form_validation');
 	$user=$this->session->userdata('logged_in');
@@ -65,7 +76,12 @@ function view_orders(){
 	$this->load->view('templates/header',$this->data);
 	$this->load->view('templates/leftnav');
 	$this->form_validation->set_rules('order_id','Order','trim|xss_clean');
+	if($access=='0'){
+	$this->data['test_areas']=$this->masters_model->get_data('test_area',0);
+	}
+	else{
 	$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
+	}
 	$this->data['micro_organisms']=$this->masters_model->get_data('micro_organism');
 	$this->data['antibiotics']=$this->masters_model->get_data('antibiotic');
 	$this->data['test_methods']=$this->masters_model->get_data("test_method");

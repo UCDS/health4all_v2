@@ -70,8 +70,9 @@
 	$(function(){
 		$(".date").Zebra_DatePicker();
 		<?php if(count($test_areas)>1){ ?>
-		$(".test_method").hide();
+		$(".test_areas").hide();
 		$("#test_area").on('change',function(){
+			$(".test_areas").hide();
 			$(".test_area_"+$(this).val()).show();
 		});
 		<?php } ?>
@@ -83,12 +84,11 @@
 
 </center>
 <br>
+<?php echo validation_errors(); echo form_open('diagnostics/test_order',array('role'=>'form','class'=>'form-custom')); ?>
 <div class="panel panel-default">
 	<div class="panel-heading">
-		<h4>Order a test</h4>
-	</div>
-	<div class="panel-body">
-		<?php echo validation_errors(); echo form_open('diagnostics/test_order',array('role'=>'form','class'=>'form-custom')); ?>
+	<div class="row">
+		<b>Order a test - </b>
 		<?php if(count($test_areas)>1){ ?>
 		<div class="form-group">
 			<label for="test_area">Test Area<font color='red'>*</font></label>
@@ -105,60 +105,125 @@
 			<input type="text" value="<?php echo $test_areas[0]->test_area_id;?>" name="test_area" class="sr-only" hidden readonly />
 			<b><?php echo $test_areas[0]->test_area;?></b>
 		<?php } ?>
-		<div class="form-group pull-right">
+		<div class="col-md-6 pull-right">
 			<label>Order Date-Time</label> <input class="form-control date" name="order_date" value="<?php echo date("d-M-Y");?>" size="10" />
 			<input class="form-control time" name="order_time" value="<?php echo date("g:ia");?>"  size="5" /> 
 		</div>
-		<hr>
-		<div class="form-group">
-			<select class="form-control" id="visit_type" name="patient_type">
+	</div>
+	</div>
+	<div class="panel-body">
+		<div class="col-md-12">
+			<div class="col-md-6">
+			<select class="form-control" id="visit_type" style="width:100px" name="patient_type">
 				<option value="" disabled>Select Patient Type</option>
 				<option value="OP">OP</option>
 				<option value="IP" selected>IP</option>
 			</select>
-			<select class="form-control" id="year" name="year">
+			<select class="form-control" id="year" style="width:100px"  name="year">
 				<option value="" disabled>Select Admission Year</option>
 				<option value="<?php echo date("Y",strtotime("Last Year"));?>"><?php echo date("Y",strtotime("Last Year"));?></option>
 				<option value="<?php echo date("Y");?>" selected><?php echo date("Y");?></option>
 			</select>
 			<font color='red'>*</font>
-			<br />
-			<br />
-			<label>OP/IP Number<font color='red'>*</font></label>
+			</div>
+			<div class="col-md-6">
 			<select id="select-patient" class="repositories" placeholder="Select a Patient..." name="visit_id" ></select>
+			</div>
 		</div>
 		<div class='col-md-12 selected_patient'>
 		</div>
 		<hr>
-		<div class="form-group">
+		<hr>
+		<div class="col-md-12">
+		<div class="col-md-6">
+			<label>Specimen Type</label>
 			<select class="form-control" name="specimen_type">
-				<option value="" selected disabled>Specimen Type</option>
+				<option value="" selected disabled>Select</option>
 				<?php foreach($specimen_types as $specimen){ ?>
 					<option value="<?php echo $specimen->specimen_type_id;?>"><?php echo $specimen->specimen_type;?></option>
 				<?php } ?>
 			</select><font color='red'>*</font>
-			
-			<label>Specimen Source<font color='red'></font></label><!--creating a label for the new field specimen_source-->
-			<input type="text" placeholder="Specimen source" class="form-control" name="specimen_source" /><br><br><!--creating the input field for the specimen_source-->
-			<label>Sample ID<font color='red'>*</font></label>
+		</div>
+		<div class="col-md-6">
+			<label>Source</label><!--creating a label for the new field specimen_source-->
+			<input type="text" placeholder="Specimen source" class="form-control" name="specimen_source" />
+		</div>
+		</div>
+		<!--creating the input field for the specimen_source-->
+		<hr>
+		<hr>
+		<div class="col-md-12">
+		<div class="col-md-6">
+		<label>Sample ID<font color='red'>*</font></label>
 			<input type="text" placeholder="Sample ID" name="sample_id" class="form-control" />
+		</div>
+		<div class="col-md-6">
+			<label>Container Type</label>
 			<input type="text" placeholder="Sample Container Type" name="sample_container" class="form-control" />
+		</div>
 		</div>	
 		<hr>
-		<h5>Individual Tests</h5>
-		<div class="form-group">
+		<hr>
+		<?php
+		$test_areas=array();		
+		foreach($test_masters as $test_master){
+			$test_areas[]=$test_master->test_area_id;
+		}
+		$test_areas=array_unique($test_areas);
+		foreach($test_areas as $test_area){ 
+		?>
+		<div class="form-group test_areas test_area_<?php echo $test_area;?>">
 		<?php 
 		$test_methods=array();
 		foreach($test_masters as $test_master){
+			if($test_master->test_area_id == $test_area)
 			$test_methods[]=$test_master->test_method;
 		}
 		$test_methods=array_unique($test_methods);
 		foreach($test_methods as $test_method){ ?>
-			<div class="col-md-12 test_method test_area_<?php echo $test_master->test_area_id;?>">
-				<div class="alert alert-info"><b><?php echo $test_method;?></b></div>
+			<div class="col-md-12 test_method">
+				<div class="alert well-sm alert-info"><b><?php echo $test_method;?></b></div>
 		<?php
 			$i=0;
-			$test_area_ids = array();
+			foreach($test_groups as $test_group){
+				if($test_group->test_method == $test_method) { ?>
+			<div class="col-md-12 well well-sm" >Group tests</div>
+			<?php 
+			break;}
+			}
+			?>
+		<?php 
+		$groups = array();
+		$group_ids = array();
+		foreach($test_groups as $group){
+			if(!in_array($group->group_id,$group_ids)){
+				$groups[] = $group;
+				$group_ids[] = $group->group_id;
+			}
+		}
+		?>
+		<?php foreach($groups as $test_group){
+				if($test_group->test_method == $test_method) { 
+				$tests="";
+				$count =1;
+				foreach($test_groups as $group){
+					if($test_group->group_id == $group->group_id){
+						$tests.=$count.". ".$group->test_name."<br />";
+						$count++;
+					}
+				}
+				?>
+			<div class="col-md-4 panel test_group test_group_<?php echo $test_group->group_id;?>">
+				<div class="checkbox" data-toggle="popover" data-placement="bottom" data-content="<?php echo $tests;?>">
+					<input class="checkbox form-control" type="checkbox" name="test_group[]" id="<?php echo $test_group->group_name;?>" value="<?php echo $test_group->group_id;?>" />
+					<label for="<?php echo $test_group->group_name;?>"><?php echo $test_group->group_name;?></label>
+				</div>
+			</div>
+		<?php }
+		} 
+		if(!!$test_masters) { ?>
+		<div class="col-md-12 well well-sm">Individual Tests</div>
+		<?php 
 			foreach($test_masters as $test_master){ 
 				if($test_master->test_method == $test_method) { ?>
 				<div class="col-md-4 panel">
@@ -169,21 +234,12 @@
 				</div>
 			<?php
 				}
-			} ?>
-
-		<?php foreach($test_groups as $test_group){
-				if($test_master->test_method == $test_method) { ?>
-			<div class="col-md-4 panel test_group test_group_<?php echo $test_group->group_id;?>">
-				<div class="checkbox">
-					<input class="checkbox form-control" type="checkbox" name="test_group[]" id="<?php echo $test_group->group_name;?>" value="<?php echo $test_group->group_id;?>" />
-					<label for="<?php echo $test_group->group_name;?>"><?php echo $test_group->group_name;?></label>
-				</div>
-			</div>
-		<?php }
-		} 		?>
+			}
+		}?>
 		</div>		
 		<?php } ?>
 		</div>
+		<?php } ?>
 	</div>
 	<div class="panel-footer">
 		<div class="col-md-offset-4">

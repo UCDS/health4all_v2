@@ -9,7 +9,7 @@
 	});
 </script>
 <div class="col-md-10 col-sm-9">
-	<h1>Donors Report</h1>
+	<h4>Donors Report</h4>
 	<?php echo form_open('bloodbank/user_panel/blood_donors'); ?>
 	<div>
 		<input type="text" class="date" size="12" name="donation_date" />

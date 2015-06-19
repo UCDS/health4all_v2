@@ -1,3 +1,25 @@
+<script>
+$(function(){
+	$(".add_all").click(function(){
+		if($(this).is(":checked"))
+			$(".add").prop('checked',true);
+		else
+			$(".add").prop('checked',false);
+	});
+	$(".edit_all").click(function(){
+		if($(this).is(":checked"))
+			$(".edit").prop('checked',true);
+		else
+			$(".edit").prop('checked',false);
+	});
+	$(".view_all").click(function(){
+		if($(this).is(":checked"))
+			$(".view").prop('checked',true);
+		else
+			$(".view").prop('checked',false);
+	});
+});
+</script>
 <div class="row col-md-offset-2">
 	<?php if(isset($msg)){ ?>
 		<div class="alert alert-info"><?php echo $msg;?></div>
@@ -51,13 +73,19 @@
 								<th>View</th>
 							</thead>
 							<tbody>
+							<tr>
+								<td>All</td>
+								<td><input type="checkbox" class="add_all" value="add_all" /></td>
+								<td><input type="checkbox" class="edit_all" value="add_all" /></td>
+								<td><input type="checkbox" class="view_all" value="add_all" /></td>
+							</tr>
 							<?php foreach($user_functions as $f){ ?>
 								<tr>
 									<td><?php echo $f->user_function;?>
 									<input type="checkbox" value="<?php echo $f->user_function_id;?>" name="user_function[]" class="sr-only" checked /></td>
-									<td><input type="checkbox" name="<?php echo $f->user_function_id;?>[]" value="add" /></td>
-									<td><input type="checkbox" name="<?php echo $f->user_function_id;?>[]" value="edit" /></td>
-									<td><input type="checkbox" name="<?php echo $f->user_function_id;?>[]" value="view" /></td>
+									<td><input type="checkbox" class="add" name="<?php echo $f->user_function_id;?>[]" value="add" /></td>
+									<td><input type="checkbox" class="edit" name="<?php echo $f->user_function_id;?>[]" value="edit" /></td>
+									<td><input type="checkbox" class="view" name="<?php echo $f->user_function_id;?>[]" value="view" /></td>
 								</tr>
 							<?php } ?>
 							</tbody>

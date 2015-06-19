@@ -180,8 +180,14 @@ class Sanitation_model extends CI_Model{
 	}
 	
 	function get_scores_summary(){
-		$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
-		$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+		}
+		else {
+			$from_date = date("Y-m-d",strtotime('2014-07-01'));
+			$to_date = date("Y-m-d",strtotime("-7 Days"));
+		}
 		if($this->input->post('order_by')){
 			if($this->input->post('order_by')=="desc") $order = "weekly_score DESC";
 			if($this->input->post('order_by')=="asc") $order = "weekly_score ASC";
@@ -238,9 +244,17 @@ class Sanitation_model extends CI_Model{
 				$this->db->where('hospital.hospital_id',$hospital);
 			}
 			if($this->input->post('from_date') && $this->input->post('to_date')){
-			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
-			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
-			$this->db->where("(date BETWEEN '$from_date' AND '$to_date')");
+				$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+				$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+				$this->db->where("(date BETWEEN '$from_date' AND '$to_date')");
+			}
+			else {
+				$from_date = '2014-07-01';
+				if(date("d")<7)
+					$to_date = date("Y-m-29",strtotime('Last month'));
+				else
+				$to_date = date("Y-m-d",strtotime('-7 Days'));
+				$this->db->where("(date BETWEEN '$from_date' AND '$to_date')");
 			}
 			$this->db->select('hospital,SUM(score) score,SUM(weightage) weightage,date,DATE_ADD(date,INTERVAL 6 DAY),
 			activity_name,comments,frequency_type',false)
@@ -250,9 +264,9 @@ class Sanitation_model extends CI_Model{
 			->join('activity_done','facility_activity.activity_id = activity_done.activity_id','left')
 			->join('department','area.department_id=department.department_id')
 			->join('hospital','department.hospital_id=hospital.hospital_id')
-			->group_by('date,area_activity.area_activity_id');
+			->group_by('date,area_activity.area_activity_id')
+			->order_by('date desc');
 			$query=$this->db->get();
-			echo $this->db->last_query();
 			return $query->result();
 		}
 

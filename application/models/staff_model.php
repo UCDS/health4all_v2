@@ -52,8 +52,8 @@ class Staff_model extends CI_Model{
 	}
 	
 	//get_department() selects the clinical departments from the database and returns the result
-	function get_department(){
-		$this->db->select("department_id,department")->from("department")->where('clinical','1');
+	function get_department($clinical=1){
+		$this->db->select("department_id,department")->from("department")->where('clinical',$clinical)->order_by('department');
 		$query=$this->db->get();
 		return $query->result();
 	}
@@ -79,6 +79,12 @@ class Staff_model extends CI_Model{
 	//get_id_proof_type() selects the ID Proof types from the database and returns the result
 	function get_id_proof_type(){
 		$this->db->select("id_proof_type_id,id_proof_type")->from("id_proof_type");
+		$query=$this->db->get();
+		return $query->result();
+	}
+	//get_occupations() selects the occupations from the database and returns the result
+	function get_occupations(){
+		$this->db->select("occupation_id,occupation")->from("occupation");
 		$query=$this->db->get();
 		return $query->result();
 	}
@@ -133,9 +139,15 @@ class Staff_model extends CI_Model{
 		}
 		else return true;
 	}
+	//get_visit_name() selects the visit names from the database and returns the result
+	function get_visit_name(){
+		$this->db->select("visit_name_id,visit_name")->from("visit_name");
+		$query=$this->db->get();
+		return $query->result();
+	}
 	//get_print_layouts() selects the print layouts from the database and returns the result
 	function get_print_layouts(){
-		$this->db->select("print_layout_id,print_layout_name")->from("print_layout");
+		$this->db->select("print_layout_id,print_layout_name,print_layout_page")->from("print_layout");
 		$query=$this->db->get();
 		return $query->result();
 	}

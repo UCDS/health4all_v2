@@ -91,11 +91,23 @@
 			}
 				
 		});
+                
+                //Code for previewing in a model. Go to line 155.
+                
+                $("#print_layout").change(function(){
+                    $("#modal_select").removeClass("sr-only");
+                    $("#modal_select").attr("data-target", "#modal-"+$(this).val());
+                });
 		
 	});
+        
   </script>
+  
+                  
+                
 <?php echo form_open('user_panel/form_layout',array('role'=>'form','class'=>'form-custom','id'=>'new-form')); ?>
 			<div class="col-md-10" >
+ 
 				<h4>Create Form for Patient Registration</h4>
 				<div class="panel panel-default">
 				<div class="panel-heading">
@@ -128,7 +140,7 @@
 						<input type="text" name="form_name" class="form-control" required />
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<div class="form-group">
 						<label class="control-label">Print Layout</label>
 						<select class="form-control" name="print_layout" id="print_layout" required >
@@ -137,9 +149,39 @@
 								echo "<option value='$layout->print_layout_id'>$layout->print_layout_name</option>";
 							}
 							?>
-						</select>
-						</div>
+                                                </select>
+						</div>                                            
 					</div>
+                                    <div>
+                                                <div class="form-group">
+                                                    <!-- Button trigger modal -->
+                                                    <!--We change the value of data-target attribute to point to new modals 
+                                                    every time the user sets the value of print layout. Goto line 95 -->
+<button type="button" id= "modal_select" class="btn btn-primary sr-only" data-toggle="modal" data-target="">
+  Preview print layout
+</button>
+
+<!-- Modal -->
+<?php foreach($print_layouts as $layout){ ?>
+    <div class="modal fade" id="modal-<?php echo $layout->print_layout_id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width:55%">
+            <div class="modal-content">
+                <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <h4 class="modal-title" id="myModalLabel"><?php echo $layout->print_layout_name; ?></h4>
+                </div>
+                <div class="modal-body">
+                 <?php $this->load->view("pages/print_layouts/$layout->print_layout_page");?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>        
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?> 
+                                                </div>
+                                            </div>
 				</div>
 				</div>
 				<div class="panel-body">
@@ -184,7 +226,7 @@
                     <div class="layout-div col-md-4 address">
 						<div class="form-group">
 						<label class="control-label">    Address    </label>
-						<input type="text" name="address" style="width: 170px" class="form-control"/>
+						<textarea name="address" rows="4" cols="30" class="form-control"></textarea>
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
@@ -192,6 +234,20 @@
 						<div class="form-group">
 						<label class="control-label">   Place      </label>
 							<input type="text" name="place" style="width: 170px" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 state">
+						<div class="form-group">
+						<label class="control-label">   State   </label>
+						<select name="state" class="form-control">
+						<option value="">--Select--</option>
+						<?php 
+						foreach($states as $state){
+							echo "<option value='".$state->state_id."'>".$state->state."</option>";
+						}
+						?>
+						</select>
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
@@ -216,7 +272,13 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-					<!-- here we use input type for obtaining textbox for father_name,mother_name-->
+					<div class="layout-div col-md-4 alt_phone">
+						<div class="form-group">
+						<label class="control-label">   Alternative Phone    </label>
+						<input type="text" name="alt_phone" style="width: 170px" class="form-control"/>
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
 					<div class="layout-div col-md-4 father_name">
 						<div class="form-group">
 						<label class="control-label"> Father Name </label>
@@ -231,7 +293,6 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-					<!-- here spouse_name is display only if the patient is female -->
 					<div class="layout-div col-md-4 spouse_name">
 						<div class="form-group">
 						<label class="control-label"> Spouse Name </label>
@@ -258,7 +319,8 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-						<div class="layout-div col-md-4 occupation">
+					<div class="layout-div col-md-4 occupation">
+						<div class="form-group">
 						<label class="control-label"> Occupation: </label>
 						<select class="form-control" name="occupation" id="occupation" >
 							<option value="">Select</option>
@@ -275,7 +337,6 @@
 					<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 					 </div>
 					</div>
-					<!-- here we use select class in order to obtain a drop-down box for Education Qualification -->
 					<div class="layout-div col-md-4 education_qualification">
 						<div class="form-group">
 						<label class="control-label">Education Qualification</label>
@@ -291,7 +352,6 @@
 					<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-					<!-- here we use select class in order to obtain a drop-down box for Blood Group -->
 					<div class="layout-div col-md-4 blood_group">
 					    <div class="form-group">
 						<label class="control-label">Blood Group</label>
@@ -334,7 +394,6 @@
                         </select>
 						</div>
 					</div>
-					<!-- here we use select class in order to obtain a drop-down box for Delivery Mode -->
 					<div class="layout-div col-md-4 delivery_mode">
 						<div class="form-group">
 						<label class="control-label">Delivery Mode</label>
@@ -391,17 +450,28 @@
 						<input type="text" name="visit_information" style="width: 170px" class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
-						</div>
-						<div class="layout-div col-md-4 hospital">
+					</div>
+					<div class="layout-div col-md-4 hospital">
 						<div class="form-group">
 						<label class="control-label">   Hospital   </label>
-						<input type="text" name="hospital" style="width: 170px" class="form-control" />
+						<select name="hospital" style="width: 170px" class="form-control" readonly>
+						<option value="">Hospital</option>
+						</select>
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>	
+					<div class="layout-div col-md-4 visit_name">
+						<div class="form-group">
+						<label class="control-label">   Visit Name   </label>
+						<select name="visit_name" style="width: 170px" class="form-control" readonly>
+						<option value="">Visit Name</option>
+						</select>
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>				
 					<div class="layout-div col-md-4 department">
 						<div class="form-group">
-						<label class="control-label">  Department   </label>
+						<label class="control-label">Department</label>
 						<select name="department" style="width: 170px" class="form-control">
 						<option value="">--Select--</option>
 						<?php 
@@ -497,13 +567,13 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-					<div class="layout-div col-md-4 presenting_complaint">
+					<div class="layout-div col-md-4 presenting_complaints">
 						<div class="form-group">
 						<label class="control-label">Complaint</label>
-						<input type="text" name="presenting_complaint" style="width: 170px" class="form-control" />
+                                                <textarea rows="4" cols="30" name="presenting_complaints" class="form-control" ></textarea>
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
-					</div>
+                                        </div>
 					<div class="layout-div col-md-4 past_history">
 						<div class="form-group">
 						<label class="control-label">Past history</label>
@@ -561,48 +631,6 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-					<div class="layout-div col-md-4 past_history">
-						<div class="form-group">
-						<label class="control-label">Past history</label>
-						<input type="text" name="" class="past_history"-class="form-control" />
-						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
-						</div>
-					</div>
-					<div class="layout-div col-md-4 admit_weight">
-						<div class="form-group">
-						<label class="control-label">Admit Weight</label>
-						<input type="text" name="" class="admit_weight"-class="form-control" />
-						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
-						</div>
-					</div>
-					<div class="layout-div col-md-4 pulse_rate">
-						<div class="form-group">
-						<label class="control-label">Pulse Rate</label>
-						<input type="text" name="" class="pulse_rate form-control" />
-						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
-						</div>
-					</div>
-					<div class="layout-div col-md-4 respiratory_rate">
-						<div class="form-group">
-						<label class="control-label">Respiratory Rate</label>
-						<input type="text" name="" class="respiratory_rate form-control" />
-						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
-						</div>
-					</div>
-					<div class="layout-div col-md-4 temperature">
-						<div class="form-group">
-						<label class="control-label">Temperature</label>
-						<input type="text" name="" class="temperature"-class="form-control" />
-						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
-						</div>
-					</div>
-					<div class="layout-div col-md-4 blood_pressure">
-						<div class="form-group">
-						<label class="control-label">Blood Pressure</label>
-						<input type="text" name="" class="blood_pressure"-class="form-control" />
-						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
-						</div>
-					</div>
 					<div class="layout-div col-md-4 outcome">
 						<div class="radio ">
 						<label class="control-label">
@@ -644,11 +672,36 @@
 					<div class="layout-div col-md-4 final_diagnosis">
 						<div class="form-group">
 						<label class="control-label">Final Diag.</label>
-						<input type="text" name="final_diag." style="width: 170px" class="form-control" />
+						<input type="text" name="final_diagnosis" style="width: 170px" class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
 			        </div>
+
+					<div class="col-md-12 patient_picture" hidden>
+						<div class="form-group well well-sm">
+						<div class="row">
+							<div class="col-md-12">
+							<p class="col-md-6" id="results-text">Captured image will appear here..</p>
+							<p class="col-md-6">Camera View</p>
+							<div id="results" class="col-md-6 results" style="height:100px"></div>
+
+						<input type="text" name="patient_picture" style="width: 170px" class="sr-only" hidden />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>							
+							<div id="my_camera" class="col-md-6" style="height:100px"></div>
+							</div>
+						</div>
+							<div class="col-md-offset-6" style="position:relative;top:5px">
+							
+							<!-- A button for taking snaps -->
+								<div id="button">
+									<input id="patient_picture" type="hidden" class="sr-only" name="patient_picture" value=""/>
+									<button class="btn btn-default btn-sm" type="button" onclick="save_photo()"><i class="fa fa-camera"></i> Take Picture</button>
+								</div>
+							</div>
+							
+						</div>
+					</div>
 				</div>
 				<div class="panel-footer">
 					<button type="submit" class="btn btn-primary" id="save-form">Save</button>
@@ -658,7 +711,6 @@
 			<div class="col-sm-3 col-md-2 sidebar">
 			<strong>Patient Information</strong>
 			  <ul class="nav nav-sidebar">
-			  <!--here we are labelling the field_name on the left side of the form-->
 				<li>  
 					<div class="checkbox">
 						<label><input type="checkbox" value="1" id="first_name" class="checklist" />First name</label>
@@ -696,7 +748,17 @@
 				</li>
 				<li>  
 					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="state" class="checklist" />State</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
 						<label><input type="checkbox" value="1" id="phone" class="checklist" />Phone</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="alt_phone" class="checklist" />Alternative Phone</label>
 					</div>
 				</li>
 				<li>  
@@ -742,6 +804,11 @@
 				<li>  
 					<div class="checkbox">
 						<label><input type="checkbox" value="1" id="blood_group" class="checklist" />Blood Group</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="patient_picture" class="checklist" />Patient Picture</label>
 					</div>
 				</li>
 			</ul>
@@ -802,6 +869,11 @@
 			  <ul class="nav nav-sidebar">
 				<li>  
 					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="visit_name" class="checklist" />Visit Name</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
 						<label><input type="checkbox" value="1" id="hospital" class="checklist" />Hospital</label>
 					</div>
 				</li>
@@ -847,7 +919,7 @@
 				</li>
 				<li>  
 					<div class="checkbox">
-						<label><input type="checkbox" value="1" id="presenting_complaint" class="checklist" />Presenting Complaint</label>
+						<label><input type="checkbox" value="1" id="presenting_complaints" class="checklist" />Presenting Complaint</label>
 					</div>
 				</li>  
 				<li>  

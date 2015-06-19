@@ -24,7 +24,7 @@ class Register_model extends CI_Model{
 		$parent_spouse=$this->input->post('parent_spouse');
 		$maritial=$this->input->post('maritial_status');
 		$occupation=$this->input->post('occupation');
-		$dob=$this->input->post('dob');
+		$dob=date("Y-m-d",strtotime($this->input->post('dob')));
 		$age=$this->input->post('age');
 		$sex=$this->input->post('gender');
 		$blood_group=$this->input->post('blood_group');
@@ -32,7 +32,8 @@ class Register_model extends CI_Model{
 		$email=$this->input->post('email');
 		$address=$this->input->post('address');
 		$replacement_patient_id="";
-		$camp_id=$place['camp_id'];
+		if(!!$place['camp_id']) $camp_id=$place['camp_id'];
+		else $camp_id = 0;
 		$data=array(
 		'name'=>$name,
 		'parent_spouse'=>$parent_spouse,
@@ -238,12 +239,15 @@ class Register_model extends CI_Model{
 	function make_request(){
 		$userdata=$this->session->userdata('logged_in');
 		$staff_id=$userdata['user_id'];
-		$request_type=$this->input->post('request_type');
-		$patient_name=$this->input->post('patient');
-		$patient_id=$this->input->post('ip_no');
-		$hospital_id=$this->input->post('hospital');
-		$ward_unit=$this->input->post('ward_unit');
-		$diagnosis=$this->input->post('diagnosis');
+		$hospitaldata=$this->session->userdata('hospital');
+		$bloodbank_id = $hospitaldata['hospital_id'];
+		$this->db->select('visit_id')->from('patient_visit')
+		->where('hosp_file_no',$this->input->post('hosp_file_no'))
+		->where('visit_type',$this->input->post('patient_type'))
+		->where('YEAR(admit_date)',$this->input->post('year'),false); 
+		$query=$this->db->get();
+		$row=$query->row();
+		$visit_id=$row->visit_id;
 		$blood_transfusion_required=$this->input->post('blood_transfusion');
 		$blood_groups=$this->input->post('blood_group');
 		$whole_blood_units=$this->input->post('whole_blood_units');
@@ -253,18 +257,14 @@ class Register_model extends CI_Model{
 		$prp_units=$this->input->post('prp_units');
 		$platelet_concentrate_units=$this->input->post('platelet_concentrate_units');
 		$cryoprecipitate_units=$this->input->post('cryoprecipitate_units');
-		$request_date=$this->input->post('request_date');
+		$request_date=date("Y-m-d",strtotime($this->input->post('request_date')));
 		$i=0;
 		foreach($blood_groups as $blood_group){
 		$data[]=array(
 		'staff_id'=>$staff_id,
-		'request_type'=>$request_type,
-		'patient_name'=>$patient_name,
-		'patient_id'=>$patient_id,
-		'hospital_id'=>$hospital_id,
-		'ward_unit'=>$ward_unit,
+		'bloodbank_id'=>$bloodbank_id,
+		'patient_id'=>$visit_id,
 		'blood_group'=>$blood_group,
-		'diagnosis'=>$diagnosis,
 		'blood_transfusion_required'=>$blood_transfusion_required,
 		'whole_blood_units'=>$whole_blood_units[$i],
 		'packed_cell_units'=>$packed_cell_units[$i],

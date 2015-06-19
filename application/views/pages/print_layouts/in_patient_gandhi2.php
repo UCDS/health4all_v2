@@ -40,9 +40,11 @@
 			<div  class="column">
 				<b>Gender/Age:</b> 
 				<?php echo $registered->gender."/";
-				if($registered->age_years!=0) echo $registered->age_years."y "; 
-				if($registered->age_months!=0) echo $registered->age_months."m "; 
-				if($registered->age_days!=0) echo $registered->age_years."d "; ?>
+				if($registered->age_years!=0) echo $registered->age_years."Y "; 
+				if($registered->age_months!=0) echo $registered->age_months."M "; 
+				if($registered->age_days!=0) echo $registered->age_days."D "; 
+				if($registered->age_years==0 && $registered->age_months == 0 && $registered->age_days==0) echo "0 Days";
+				?>
 			</div>
 			<div   class="column">
 				<b>Department:</b> <?php echo $registered->department; ?>			
@@ -68,13 +70,6 @@
 			</div>
 			<div class="column">
 				<?php echo "<b>PS Name:</b>" .$registered->ps_name;?>
-			</div>
-			<div class="column">
-				<?php echo "";?>
-			</div>
-			<!-- To display the MLC Reason we use "presenting_complaints" field of "patient_visits" table-->
-			<div class="column">
-				<?php if($registered->presenting_complaints != NULL) {echo "<b>MLC Reason:</b> ".$registered->presenting_complaints;}?>			
 			</div>
 			<?php } ?>
 		</div>	
@@ -94,9 +89,11 @@
 			<div  class="column">
 				<b>Gender/Age:</b> 
 				<?php echo $registered->gender."/";
-				if($registered->age_years!=0) echo $registered->age_years."y "; 
-				if($registered->age_months!=0) echo $registered->age_months."m "; 
-				if($registered->age_days!=0) echo $registered->age_years."d "; ?>
+				if($registered->age_years!=0) echo $registered->age_years."Y "; 
+				if($registered->age_months!=0) echo $registered->age_months."M "; 
+				if($registered->age_days!=0) echo $registered->age_days."D "; 
+				if($registered->age_years==0 && $registered->age_months == 0 && $registered->age_days==0) echo "0 Days";
+				?>
 			</div>
 			<div  class="column">
 				<b>Department:</b> <?php echo $registered->department; ?>			
@@ -122,13 +119,6 @@
 			</div>
 			<div class="column">
 				<?php echo "<b>PS Name:</b>" .$registered->ps_name;?>
-			</div>
-			<div class="column">
-				<?php echo "";?>
-			</div>
-			<!-- To display the MLC Reason we use "presenting_complaints" field of "patient_visits" table-->
-			<div class="column">
-				<?php if($registered->presenting_complaints != NULL) {echo "<b>MLC Reason:</b> ".$registered->presenting_complaints;}?>			
 			</div>
 			<?php } ?>
 		</div>	

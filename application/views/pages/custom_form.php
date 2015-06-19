@@ -24,9 +24,10 @@ $(function(){
 				getAge(date);
 		}
 	});
-	
+	<?php if($patient && $patient->gender != 'F') { ?>
 	$("#spouse_name").prop('disabled',true);
-	$(".gender").change(function(){
+	<?php } ?>
+	$(".gender").on('change',function(){
 		if($(this).val()=="M"){
 			$("#spouse_name").prop('disabled',true);
 		}
@@ -38,7 +39,7 @@ $(function(){
 	$("#department").on('change',function(){
 		var department_id=$(this).val();
 		$("#unit option,#area option").hide();
-		$("#unit option[class="+department_id+"],#area option[class="+department_id+"]").show();
+		$("#unit option[class='"+department_id+"'],#area option[class='"+department_id+"']").show();
 	});
 	if($(".mlc:radio").val()==0)
 	$(".mlc:text").parent().parent().hide();
@@ -86,6 +87,7 @@ pri.document.close();
 pri.focus();
 pri.print();
 }
+
 </script>
 		<?php if(isset($duplicate)) { ?>
 		<!-- If duplicate IP no is found then it displays the error message -->
@@ -93,9 +95,20 @@ pri.print();
 		<?php } 
 		else if(isset($registered)){ ?>
 		<iframe id="ifmcontentstoprint" style="height: 0px; width: 0px; position: absolute;display:none"></iframe>
-		<div class="sr-only" id="print-div" style="width:100%;height:100%;"> 
+		<div id="print-div" class="sr-only" style="width:100%;height:100%;"> 
 		<?php $this->load->view($print_layout);?>
 		</div>
+                <!-- Script for printing MLC complaint -->
+                <?php
+                
+                if($registered->mlc==1){ ?>
+                <div class="sr-only" id="print-MLC-div" style="width:100%;height:100%;"> 
+                    <?php $this->load->view("pages/print_layouts/MLC_complaint");
+                        $offset=4;
+                    ?>
+				</div>
+                <?php }
+                else $offset=5;?>
 		<!--we divide the form into panel-header,panel-body and panel-footer -->
 		<div class="row">
 			<div class="panel panel-success col-md-6 col-md-offset-3" >
@@ -113,7 +126,14 @@ pri.print();
 							<th>Patient Name</th>
 							<td><?php echo $registered->name;?></td>
 							<th>Age</th>
-							<td><?php echo $registered->age_years;?></td>
+							<td>
+								<?php
+									if($registered->age_years!=0) echo $registered->age_years."Y ";
+									if($registered->age_months) echo $registered->age_months."M "; 
+									if($registered->age_days) echo $registered->age_days."D "; 
+									if($registered->age_years==0 && $registered->age_months == 0 && $registered->age_days==0) echo "0 Days";
+								?>
+							</td>
 						</tr>
 						<tr> 
 							<th>Gender</th>
@@ -125,7 +145,10 @@ pri.print();
 				</div>
 <!--here in the panel-footer print button is displayed -->				
 				<div class="panel-footer">
-					<button type="submit" class="btn btn-primary col-md-offset-5" onclick="printDiv('print-div')"> Print</button>
+                                    <button type="button" class="btn btn-primary col-md-offset-<?php echo $offset;?>" onclick="printDiv('print-div')" autofocus>Print</button>
+                                        <?php if($registered->mlc==1){?>
+                                            <button type="button" class="btn btn-warning" onclick="printDiv('print-MLC-div')" autofocus>Print MLC</button>
+                                        <?php }?>                                
 				</div>
 			</div>
 			</div>
@@ -148,21 +171,29 @@ pri.print();
 				<div class="form-group">
 				<?php if($patient){ ?>
 				<label class="control-label">Patient ID</label>
-				<input type="text" name="patient_id" class="form-control" size="3" value="<?php echo $patient->patient_id;?>" readonly />
+				<input type="text" name="patient_id" class="form-control" size="5" value="<?php echo $patient->patient_id;?>" readonly />
 				<?php } ?>
 				<?php if($form_type=="IP"){ ?>
 				<label class="control-label">IP No</label>
 				<?php if($update){ ?>
 				<input type="text" name="visit_id" class="form-control sr-only" size="3" value="<?php echo $patient->visit_id;?>" readonly />
 				<?php } ?>
-				<input type="text" name="hosp_file_no" <?php if($update){?> value="<?php echo $patient->hosp_file_no;?>" <?php } ?> class="form-control" size="3" />
+				<input type="text" name="hosp_file_no" <?php if($update){?> value="<?php echo $patient->hosp_file_no;?>" <?php } ?> class="form-control" size="5" required />
 				<?php } ?>
 				<label class="control-label">Date</label>
-				<input type="text" name="date" class="form-control date" value="<?php echo date("d-M-Y");?>" required />
+				<?php 
+					if($update) $date = date("d-M-Y",strtotime($patient->admit_date));
+					else $date=date("d-M-Y");
+				?>
+				<input type="text" name="date" class="form-control date" style="width:150px"  value="<?php echo $date;?>" required />
 				</div>
 				<div class="form-group">
 				<label class="control-label">Time</label>
-				<input type="text" name="time" class="form-control time" value="<?php echo date("g:iA");?>"  required />
+				<?php 
+					if($update) $time = date("g:iA",strtotime($patient->admit_time));
+					else $time=date("g:iA");
+				?>
+				<input type="text" name="time" class="form-control time" style="width:100px" value="<?php echo $time;?>"  required />
 				</div>
 			</div>
 			<h4><?php echo $form_name; ?></h4>
@@ -170,7 +201,6 @@ pri.print();
 		<div class="panel-body">
 			<?php
 			foreach($fields as $field=>$mandatory){
-//here we are using switch for display of only required to specify a form 
 				switch($field){				
 				case "first_name": ?>   
 					<div class="<?php echo $class;?>">
@@ -203,7 +233,6 @@ pri.print();
 					
 					<div class="<?php echo $class;?> sr-only">
 						<div class="form-group">
-						<label class="control-label">Age<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<label class="control-label">Age<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<input type="text" name="age_years" class="form-control" size="1"  value="<?php if($patient)  echo $patient->age_years;?>" <?php if($mandatory) echo "required"; ?> />Y
 						<input type="text" name="age_months" class="form-control" size="1" value="<?php if($patient)  echo $patient->age_months;?>" <?php if($mandatory) echo "required"; ?> />M
@@ -239,8 +268,8 @@ pri.print();
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Address<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-						<input type="text" name="address" class="form-control" value="<?php if($patient) echo $patient->address;?>"  <?php if($mandatory) echo "required"; ?> />
-						</div>
+						<textarea rows="1" cols="30" name="address" class="form-control" <?php if($mandatory) echo "required"; ?>><?php if($patient) echo $patient->address;?></textarea>
+						</div> 
 					</div>
 				<?php 
 					break;
@@ -249,6 +278,24 @@ pri.print();
 						<div class="form-group">
 						<label class="control-label">Place<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<input type="text" name="place" class="form-control" value="<?php if($patient) echo $patient->place;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+				<?php 
+					break;
+					case "state" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">State<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<select name="state" class="form-control" <?php if($mandatory) echo "required"; ?>>
+						<option value="">--Select--</option>
+						<?php  						
+						foreach($states as $state){
+							echo "<option value='".$state->state_id."'";
+							if($patient) if($state->state_id==$patient->state_id) echo " selected ";
+							echo ">".$state->state."</option>";
+						}
+						?>
+						</select>
 						</div>
 					</div>
 				<?php 
@@ -276,6 +323,15 @@ pri.print();
 						<div class="form-group">
 						<label class="control-label">Phone<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<input type="text" name="phone" class="form-control" value="<?php if($patient) echo $patient->phone;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+				<?php 
+					break;
+					case "alt_phone" :  ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Alt. Phone<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="alt_phone" class="form-control" value="<?php if($patient) echo $patient->alt_phone;?>" <?php if($mandatory) echo "required"; ?> />
 						</div>
 					</div>
 				<?php 
@@ -317,7 +373,7 @@ pri.print();
 						<?php 
 						foreach($id_proof_types as $id_proof_type){
 							echo "<option value='".$id_proof_type->id_proof_type_id."'";
-							if($patient) if($id_proof->id_proof_id==$patient->id_proof_id) echo " selected ";
+							if($patient) if($id_proof_type->id_proof_type_id==$patient->id_proof_type_id) echo " selected ";
 							echo ">".$id_proof_type->id_proof_type."</option>";
 						}
 						?>
@@ -330,7 +386,7 @@ pri.print();
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Id Proof No<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-						<input type="text" name="id_proof_no" id="id_proof_no" class="form-control" value="<?php if($patient) echo $patient->id_proof_no;?>" <?php if($mandatory) echo "required"; ?> />
+						<input type="text" name="id_proof_no" id="id_proof_no" class="form-control" value="<?php if($patient) echo $patient->id_proof_number;?>" <?php if($mandatory) echo "required"; ?> />
 						</div>
 					</div>	
 				<?php 
@@ -341,11 +397,14 @@ pri.print();
 						<label class="control-label">Occupation<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<select name="occupation" class="form-control" <?php if($mandatory) echo "required"; ?>>
 						<option value="">--Select--</option>
-							<option value="private">Non government</option>
-							<option value="government">Government</option>
+						<?php 
+						foreach($occupations as $occupation){
+							echo "<option value='".$occupation->occupation_id."'";
+							if($patient) if($occupation->occupation_id==$patient->occupation_id) echo " selected ";
+							echo ">".$occupation->occupation."</option>";
+						}
+						?>
 						</select>
-						<?php if($patient) echo $patient->occupation;?>
-						<?php if($mandatory)?> 
 						</div>
 					</div>
 				<?php 
@@ -379,21 +438,18 @@ pri.print();
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Blood Group<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-						<select name="blood_group" class="form-control" <?php if($mandatory) echo "required"; ?>>
-						<option value="">--Select--</option> 
-							<option value="">Select</option>
-							<option value="A+">A+</option>
-							<option value="A-">A-</option>
-							<option value="B+">B+</option>
-							<option value="B-">B-</option>
-				            <option value="AB+">AB+</option>
-							<option value="AB-">AB-</option>
-							<option value="O+">O+</option>
-							<option value="O-">O-</option>
+						<select name="blood_group" class="form-control">
+							<option value="">--Select--</option> 
+							<option value="A+" <?php if($patient->blood_group == "A+") echo " selected ";?>>A+</option>
+							<option value="A-" <?php if($patient->blood_group == "A-") echo " selected ";?>>A-</option>
+							<option value="B+" <?php if($patient->blood_group == "B+") echo " selected ";?>>B+</option>
+							<option value="B-" <?php if($patient->blood_group == "B-") echo " selected ";?>>B-</option>
+							<option value="AB+" <?php if($patient->blood_group == "AB+") echo " selected ";?>>AB+</option>
+							<option value="AB-" <?php if($patient->blood_group == "AB-") echo " selected ";?>>AB-</option>
+							<option value="O+" <?php if($patient->blood_group == "O+") echo " selected ";?>>O+</option>
+							<option value="O-" <?php if($patient->blood_group == "O-") echo " selected ";?>>O-</option>
 						</select>
 						<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?>
-						<?php if($patient) echo $patient->blood_group ;?>
-						<?php if($mandatory) ?> 
 						</div>
 					</div>
 				<?php 
@@ -535,7 +591,7 @@ pri.print();
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Presenting Complaint<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-						<input type="text" name="presenting_complaints" class="form-control" value="<?php if($patient) echo $patient->presenting_complaints;?>" <?php if($mandatory) echo "required"; ?> />
+                            <textarea rows="1" cols="30" name="presenting_complaints" class="form-control" <?php if($mandatory) echo "required"; ?>><?php if($patient) echo $patient->presenting_complaints;?></textarea>
 						</div>
 					</div>
 				<?php 
@@ -681,7 +737,7 @@ pri.print();
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Temperature<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-						<input type="text" name="temperature" class="form-control mlc" value="<?php if($update) echo $patient->temperature;?>"  <?php if($mandatory) echo "required"; ?> />
+						<input type="text" name="temperature" class="form-control temperature" value="<?php if($update) echo $patient->temperature;?>"  <?php if($mandatory) echo "required"; ?> />
 						</div>
 					</div>
 					<?php 
@@ -690,8 +746,8 @@ pri.print();
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Blood Pressure<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-						<input type="text" name="sbp" style="width:50px" class="form-control blood_pressure" value="<?php if($update) echo $patient->blood_pressure;?>"  <?php if($mandatory) echo "required"; ?> />/
-	                    <input type="text" name="dbp"  style="width:50px" class="form-control blood_pressure" value="<?php if($update) echo $patient->blood_pressure;?>"  <?php if($mandatory) echo "required"; ?> />
+						<input type="text" name="sbp" style="width:50px" class="form-control blood_pressure" value="<?php if($update) echo $patient->sbp;?>"  <?php if($mandatory) echo "required"; ?> />/
+	                    <input type="text" name="dbp"  style="width:50px" class="form-control blood_pressure" value="<?php if($update) echo $patient->dbp;?>"  <?php if($mandatory) echo "required"; ?> />
 						</div>
 					</div>
 					<?php 
@@ -773,7 +829,94 @@ pri.print();
 					</div>
 				<?php 
 					break;
+                case "visit_name" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Visit Name<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<select name="visit_name" class="form-control" <?php if($mandatory) echo "required"; ?>>
+						<?php foreach($visit_names as $visit_name){ ?>
+						<option value="<?php echo $visit_name->visit_name_id;?>"
+						<?php if($update && $patient->visit_name_id == $visit_name->visit_name_id) echo " selected ";?>>
+						<?php echo $visit_name->visit_name;?></option>
+						<?php } ?>
+						</select>
+						</div>
+					</div>
+				<?php 
+					break;
+                case "patient_picture" : ?>
+				<?php 
+					break;
 					}
+			}
+			foreach($fields as $field=>$mandatory){
+				if($field=="patient_picture"){?>
+				
+					<div class="col-md-12">
+						<div class="form-group well well-sm">
+						<div class="row">
+							<div class="col-md-12">
+							<p class="col-md-6" id="results-text">Captured image will appear here..</p>
+							<p class="col-md-6">Camera View</p>
+							<div id="results" class="col-md-6 results"></div>
+							
+							<div id="my_camera" class="col-md-6"></div>
+							</div>
+						</div>
+							<div class="col-md-offset-6" style="position:relative;top:5px">
+							
+							<!-- A button for taking snaps -->
+								<div id="button">
+									<input id="patient_picture" type="hidden" class="sr-only" name="patient_picture" value=""/>
+									<button class="btn btn-default btn-sm" type="button" onclick="save_photo()"><i class="fa fa-camera"></i> Take Picture</button>
+								</div>
+							</div>
+							<!-- First, include the Webcam.js JavaScript Library -->
+							<script type="text/javascript" src="<?php echo base_url();?>assets/js/webcam.min.js"></script>
+							
+							<!-- Configure a few settings and attach camera -->
+							<script language="JavaScript">
+								Webcam.set({
+									width: 320,
+									height: 240,
+									// device capture size
+									dest_width: 320,
+									dest_height: 240,
+									// final cropped size
+									crop_width: 200,
+									crop_height: 240,											
+									image_format: 'jpeg',
+									jpeg_quality: 90
+								});
+								Webcam.attach( '#my_camera' );
+							</script>
+							
+							<!-- Code to handle taking the snapshot and displaying it locally -->
+							<script language="JavaScript">
+								
+								function save_photo() {
+									// actually snap photo (from preview freeze) and display it
+									Webcam.snap( function(data_uri) {
+										// display results in page
+										document.getElementById('results').innerHTML = 
+											'<img src="'+data_uri+'"/>';
+										document.getElementById('results-text').innerHTML = 
+											'Captured Image';
+										//Store image data in input field.
+										var raw_image_data = data_uri.replace(/^data\:image\/\w+\;base64\,/, '');
+										
+										document.getElementById('patient_picture').value = raw_image_data;
+										
+										// swap buttons back
+										document.getElementById('pre_take_buttons').style.display = '';
+										document.getElementById('post_take_buttons').style.display = 'none';
+									} );
+								}
+							</script>
+							
+						</div>
+					</div>
+			<?php } 
 			}
 			?>
 			</div>
@@ -788,9 +931,24 @@ pri.print();
 			<?php echo form_open("register/custom_form/$form_id",array('role'=>'form','class'=>'form-custom')); ?>
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					Search for a patient
+					<?php echo $form_name;?> - Search for a patient
 				</div>
 				<div class="panel-body">
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Year</label>
+						<select class="form-control" name="search_year">
+							<?php 
+								$i=2013;
+								$year = date("Y");
+								while($year>=$i){ ?>
+								<option value="<?php echo $year;?>"><?php echo $year--;?></option>
+							<?php
+								}
+							?>
+						</select>
+						</div>
+					</div>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">OP Number</label>
@@ -827,7 +985,7 @@ pri.print();
 				</div>
 			</div>
 			</form>
-			<?php if(isset($patients)){ 
+			<?php if(isset($patients) && count($patients)!=1){ 
 			?>
 					<div class="panel panel-default">
 						<div class="panel-heading">
@@ -838,7 +996,7 @@ pri.print();
 							<?php if($this->input->post('search_phone')) echo "Phone Number : ".$this->input->post('search_phone')." | "; ?>
 						</div>
 						<div class="panel-body">
-							<?php if(count($patients)>0){ ?>
+							<?php if(count($patients)>1){ ?>
 								<table class="table table-striped table-hover">
 									<thead>
 										<tr>
@@ -869,15 +1027,14 @@ pri.print();
 											<td><?php echo $patient->name; ?></td>
 											<td>
 												<?php 
-//HERE THE AGE IS DISPLAYED IN DATE-MONTH-YEAR FORMAT
-													if($patient->age_years!=0) echo $patient->age_years."y ";
-													if($patient->age_months) echo $patient->age_months."m "; 
-													if($patient->age_days) echo $patient->age_days."d "; 
+													if($patient->age_years!=0) echo $patient->age_years."Y ";
+													if($patient->age_months) echo $patient->age_months."M "; 
+													if($patient->age_days) echo $patient->age_days."D "; 
+													if($patient->age_years==0 && $patient->age_months == 0 && $patient->age_days==0) echo "0 Days";
 												?>
 											</td>
 											<td><?php echo $patient->gender;?></td>
 											<td><?php echo $patient->department;?></td>
-<!--HERE THE DATE IS DISPLAYED IN ADMITDATE-MONTH-YEAR FORMAT -->
 											<td><?php echo date("d-M-Y",strtotime($patient->admit_date));?></td>
 											<td><?php echo $patient->phone;?></td>
 											<td><?php echo $patient->parent_spouse;?></td>
@@ -886,7 +1043,6 @@ pri.print();
 									</tbody>
 								</table>	
 							<?php }  else echo "No patients matched your search.";?>
-<!--if the given details of patient are existed in database then it displays the information of the particular patient orelse it it display not found message-->							
 						</div>
 					</div>
 				<?php } ?>

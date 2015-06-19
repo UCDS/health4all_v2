@@ -37,34 +37,86 @@ $(function(){
 		</div>
 	</div>
 	
+	
+	<div class="form-group">
+		<div class="col-md-3">
+			<label for="vendor_type_id" >Vendor Type<font color='red'>*</font></label>
+		</div>
+		<div class="col-md-6">
+			<select name="vendor_type_id" id="vendor_type_id" class="form-control">
+		<option value="">--select--</option>
+		<?php foreach($vendor_types as $d){
+			echo "<option value='$d->vendor_type_id'>$d->vendor_type</option>";
+		}
+		?>
+		</select>
+		
+		</div>
+	</div>
+	
 	<div class="form-group">
 		<label for="vendor_address" class="col-md-3"> Address</label>
 		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" Address" id="vendor_address" name="model" />
+		<input type="text" class="form-control" placeholder=" Address" id="vendor_address" name="vendor_address" />
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_city" class="col-md-3"> City</label>
-		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" City" id="vendor_city" name="serial_number" />
+		<label for="village_town_id" class="col-md-3"> City<font color='red'>*</font></label>
+
+		<div class="col-md-6">
+			<select name="village_town_id" id="village_town_id" class="form-control">
+			<option value="">--select--</option>
+			<?php foreach($village_towns as $d){
+				echo "<option value='$d->village_town_id'";
+				echo ">$d->village_town</option>";
+			}
+			?>
+			</select>		
+
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_state" class="col-md-3"> State</label>
-		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" State" id="description" name="vendor_state" />
+		<label for="vendor_state_id" class="col-md-3"> State<font color='red'>*</font></label>
+		<div class="col-md-6">
+			<select name="vendor_state_id" id="vendor_state_id" class="form-control">
+			<option value="">--select--</option>
+			<?php foreach($states as $d){
+				echo "<option value='$d->state_id'";
+				echo ">$d->state</option>";
+			}
+			?>
+			</select>		
+
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_country" class="col-md-3"> Country</label>
-		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" Country" id="vendor_country" name="vendor_country" />
+		<label for="vendor_country_id" class="col-md-3"> Country</label>
+		<div class="col-md-6">
+			<select name="vendor_country_id" id="vendor_country_id" class="form-control">
+			<option value="">--select--</option>
+			<?php foreach($countries as $d){
+				echo "<option value='$d->id'";
+				if($d->country_code == "IN")
+				{
+					echo " selected ";
+				}
+				echo ">$d->country_name</option>";
+			}
+			?>
+			</select>		
 		</div>
 	</div>
 	<div class="form-group">
 		<label for="account_no" class="col-md-3"> Bank Account Number</label>
 		<div  class="col-md-6">
 		<input type="text" class="form-control" placeholder=" Bank Account Number" id="account_no" name="account_no" />
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="bank_name" class="col-md-3"> Bank Name</label>
+		<div  class="col-md-6">
+		<input type="text" class="form-control" placeholder=" Bank Name" id="bank_name" name="bank_name" />
 		</div>
 	</div>
 	<div class="form-group">
@@ -82,9 +134,9 @@ $(function(){
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="vendor_phone" class="col-md-3"> Phone Number</label>
+		<label for="vendor_phone" class="col-md-3"> Phone Number<font color='red'>*</font></label>
 		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder="Phone number" form="vendor_phone" id="vendor_phone" name="vendor_phone" />
+		<input type="text" class="form-control" placeholder="Phone number" id="vendor_phone" name="vendor_phone" required />
 		
 		</div>
 	</div>
@@ -94,12 +146,30 @@ $(function(){
 		<input type="text" class="form-control" placeholder=" PAN" id="vendor_pan" name="vendor_pan" />
 		</div>
 	</div>
+	
 	<div class="form-group">
-		<label for="contact_person_id" class="col-md-3">  Primary Contact Person</label>
-		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" Primary Contact Person" id="contact_person_id" name="contact_person_id" />
+		<div class="col-md-3">
+			<label for="contact_person_id">  Primary Contact Person<font color='red'>*</font></label>
+		</div>
+		<div class="col-md-6">
+			<select name="contact_person_id" id="vendor" class="form-control" required>
+		<?php 
+		if(sizeof($contact_persons) <= 0)
+			echo "<option value=''>Add atleast one contact person without vendor to add new vendor</option>";
+		else
+		{
+			echo "<option value=''>--select--</option>";
+			foreach($contact_persons as $d){
+				echo "<option value='$d->contact_person_id'>$d->contact_person_first_name $d->contact_person_first_name </option>";
+			}
+		}
+		?>
+		</select>
+		
 		</div>
 	</div>
+	
+	
 	</div>	
 	
 	<input type="hidden" class="form-control" value='1' placeholder=" Service Engineer Contact" id="description" name="user" />

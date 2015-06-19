@@ -35,10 +35,10 @@
 	<div class="form-group">
 		<input type='hidden' name='contact_person_id' value='<?php echo $contact_persons[0]->contact_person_id; ?>' />
 		<div class="col-md-3">
-			<label for="contact_person_first_name" class="control-label">First Name</label>
+			<label for="contact_person_first_name" class="control-label">First Name<font color='red'>*</font></label>
 		</div>
 		<div class="col-md-6">
-			<input type="text" class="form-control" placeholder="First Name" id="contact_person_first_name" name="contact_person_first_name" required 
+			<input type="text" class="form-control" placeholder="First Name" id="contact_person_first_name"  name="contact_person_first_name" required 
 			value="<?php echo $contact_persons[0]->contact_person_first_name; ?>"/>
 		</div>
 	</div>
@@ -95,17 +95,17 @@
 			<label for="contact_person_email" class="control-label">Email</label>
 		</div>
 		<div class="col-md-6">
-			<input type="text" class="form-control" placeholder=" Email" id="contact_person_" name="contact_person_email" required 
+			<input type="text" class="form-control" placeholder=" Email" id="contact_person_" name="contact_person_email"  
 			value="<?php echo $contact_persons[0]->contact_person_email; ?>"/>
 		</div>
 	</div>
 
 	<div class="form-group">
 		<div class="col-md-3">
-			<label for="contact_person_contact" class="control-label">Phone Number</label>
+			<label for="contact_person_contact" class="control-label">Phone Number<font color='red'>*</font></label>
 		</div>
 		<div class="col-md-6">
-			<input type="text" class="form-control" placeholder=" Email" id="contact_person_contact" name="contact_person_contact" required 
+			<input type="text" class="form-control" placeholder=" Email" id="contact_person_contact" name="contact_person_contact" required
 			value="<?php echo $contact_persons[0]->contact_person_contact; ?>"/>
 		</div>
 	</div>
@@ -116,7 +116,7 @@
 			<label for="contact_person_designation" class="control-label">Designation</label>
 		</div>
 		<div class="col-md-6">
-			<input type="text" class="form-control" placeholder=" Email" id="contact_person_designation" name="contact_person_designation" required 
+			<input type="text" class="form-control" placeholder=" Email" id="contact_person_designation" name="contact_person_designation"  
 			value="<?php echo $contact_persons[0]->designation; ?>"/>
 		</div>
 	</div>
@@ -124,7 +124,7 @@
 	<div class="form-group">
 	<?php //echo var_dump($vendors); ?>
 		<div class="col-md-3">
-			<label for="vendor_id" >Vendor<font color='red'>*</font></label>
+			<label for="vendor_id" >Vendor</label>
 		</div>
 	
 		<div class="col-md-6">
@@ -160,7 +160,7 @@
 	<table class="table-bordered col-md-12">
 	<tbody>
 	<tr>
-		<td><input type="text" class="form-control" placeholder=" Name " id="contact_person_name" name="contact_person_name"> 
+		<td><input type="text" class="form-control" placeholder=" Name " id="contact_person_name" name="contact_person_name_search"> 
 		
 		
 				<td><input class="btn btn-lg btn-primary btn-block" name="search" value="Search" type="submit" /></td></tr>

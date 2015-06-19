@@ -17,7 +17,7 @@
 
 <div class="col-md-10 col-sm-9">
 	
-	<h1>Report of Blood Donors at Indian Red Cross Society Bloodbank - Vidyanagar</h1>
+	<h4>Report of Blood Donors at Indian Red Cross Society Bloodbank - Vidyanagar</h4>
 	<?php echo form_open('bloodbank/user_panel/issue_summary'); ?>
 	<div>
 		<input type="text" class="date" size="12" id="from_date" name="from_date" />

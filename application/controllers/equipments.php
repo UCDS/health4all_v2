@@ -66,7 +66,10 @@ else if($type=="service_records"){
              
              
 			);
-$this->data['user']=$this->masters_model->get_data("user");
+		$this->data['user']=$this->masters_model->get_data("user");
+		$this->data['vendors']=$this->masters_model->get_data("vendor");
+		$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
+
 		
 }
 
@@ -87,11 +90,12 @@ $this->data['user']=$this->masters_model->get_data("user");
                   ),
 		);
 
-        $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
+	        $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
 		$this->data['department']=$this->masters_model->get_data("department");
 		$this->data['areas']=$this->masters_model->get_data("area");
 		$this->data['units']=$this->masters_model->get_data("unit");
-		
+		$this->data['vendors']=$this->masters_model->get_data("vendor");
+		$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
 
 	}
 			
@@ -157,7 +161,7 @@ $this->data['equipment_types']=$this->masters_model->get_data("equipment_type");
 
 }
 
-else if($type=="equipments"){
+else if($type=="equipment"){
 		 	$title="Edit Equipment Details";
 		
 			$config=array(
@@ -168,12 +172,29 @@ else if($type=="equipments"){
                   )
 			);
 $this->data['equipments']=$this->masters_model->get_data("equipment");
-
 $this->data['equipment_type']=$this->masters_model->get_data("equipment_types");
 $this->data['hospital']=$this->masters_model->get_data("hospital");
 $this->data['department']=$this->masters_model->get_data("department");
 $this->data['user']=$this->masters_model->get_data("user");
  }
+
+	//controller for updating service issue
+	else if($type=="service_records"){
+		 	$title="Edit Service Issue";
+		
+			$config=array(
+               array(
+                     'field'   => 'equipment_type',
+                     'label'   => 'Equipment Name ',
+                     'rules'   => 'trim|xss_clean'
+                  )
+				);
+				$this->data['service_records']=$this->masters_model->get_data("service_record");
+		$this->data['user']=$this->masters_model->get_data("user");
+		$this->data['vendors']=$this->masters_model->get_data("vendor");
+		$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
+
+	}	
 
 			
 		else{
@@ -218,16 +239,28 @@ $this->data['user']=$this->masters_model->get_data("user");
 		$this->load->view('templates/footer');
 	}
 
-	function view($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=0){	
+	function view($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=-1){	
 		$this->load->helper('form_helper');
 		switch($type){
 			case "equipments_detailed" : 
 				$this->data['title']="Equipments Detailed report";
 				$this->data['equipments']=$this->masters_model->get_data("equipment",$equipment_type,$department,$area,$unit,$status);
+				$this->data['all_departments']=$this->staff_model->get_department();
+				$this->data['units']=$this->staff_model->get_unit();
+				$this->data['areas']=$this->staff_model->get_area();
+
+				
 				break;
 			case "equipments_summary" :
 				$this->data['title']="Equipments Summary report";
 				$this->data['summary']=$this->reports_model->get_equipment_summary();
+			        $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
+				$this->data['all_departments']=$this->masters_model->get_data("department");
+				$this->data['areas']=$this->masters_model->get_data("area");
+				$this->data['units']=$this->masters_model->get_data("unit");
+				$this->data['vendors']=$this->masters_model->get_data("vendor");
+				$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
+
 				break;
 		}				
 		$this->load->view('templates/header',$this->data);

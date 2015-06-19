@@ -13,10 +13,10 @@ class Reports_model extends CI_Model{
 	$userdata=$this->session->userdata('hospital');
 	$hospital=$userdata['hospital_id'];
 	if($this->input->post('from_date') && $this->input->post('to_date')){
-		 $this->db->where('(donation_date BETWEEN "'.$this->input->post('from_date').'" AND "'.$this->input->post('to_date').'")');
+		 $this->db->where('(donation_date BETWEEN "'.date("Y-m-d",strtotime($this->input->post('from_date'))).'" AND "'.date("Y-m-d",strtotime($this->input->post('to_date'))).'")');
 	 }
 	 else if($this->input->post('from_date') || $this->input->post('to_date')){
-		 $this->input->post('from_date')==""?$date=$this->input->post('to_date'):$date=$this->input->post('from_date');
+		 $this->input->post('from_date')==""?$date=date("Y-m-d",strtotime($this->input->post('to_date'))):$date=date("Y-m-d",strtotime($this->input->post('from_date')));
 		 $this->db->where('donation_date',$date);
 	 }
 	 else{
@@ -41,7 +41,7 @@ class Reports_model extends CI_Model{
 	 ')
 	 ->from('blood_donor')
 	 ->join('bb_donation','blood_donor.donor_id=bb_donation.donor_id')
-	 ->join('blood_donation_camp','bb_donation.camp_id=blood_donation_camp.camp_id')
+	 ->join('blood_donation_camp','bb_donation.camp_id=blood_donation_camp.camp_id','left')
 	 ->where('status_id >=',5)->where('bb_donation.hospital_id',$hospital)
 	 ->group_by('donation_date,bb_donation.camp_id')
 	 ->order_by('donation_date','desc');
@@ -62,10 +62,10 @@ class Reports_model extends CI_Model{
 	$userdata=$this->session->userdata('hospital');
 	$hospital=$userdata['hospital_id'];
 	if($this->input->post('from_date') && $this->input->post('to_date')){
-		 $this->db->where('(donation_date BETWEEN "'.$this->input->post('from_date').'" AND "'.$this->input->post('to_date').'")');
+		 $this->db->where('(donation_date BETWEEN "'.date("Y-m-d",strtotime($this->input->post('from_date'))).'" AND "'.date("Y-m-d",strtotime($this->input->post('to_date'))).'")');
 	 }
 	 else if($this->input->post('from_date') || $this->input->post('to_date')){
-		 $this->input->post('from_date')==""?$date=$this->input->post('to_date'):$date=$this->input->post('from_date');
+		 $this->input->post('from_date')==""?$date=date("Y-m-d",strtotime($this->input->post('to_date'))):$date=date("Y-m-d",strtotime($this->input->post('from_date')));
 		 $this->db->where('donation_date',$date);
 	 }
 	 else{
@@ -197,7 +197,7 @@ class Reports_model extends CI_Model{
 			$this->db->where("(bb_slot.date BETWEEN '$from_date' AND '$to_date')");
 		}
 		else if($this->input->post('from_date') || $this->input->post('to_date')){
-		 $this->input->post('from_date')==""?$date=$this->input->post('to_date'):$date=$this->input->post('from_date');
+		 $this->input->post('from_date')==""?$date=date("Y-m-d",strtotime($this->input->post('to_date'))):$date=date("Y-m-d",strtotime($this->input->post('from_date')));
 		 $this->db->where('bb_slot.date',$date);
 		}
 		else{
@@ -227,7 +227,7 @@ class Reports_model extends CI_Model{
 			$this->db->where("(DATE(bb_donation.donation_date) BETWEEN '$from' AND '$to')");
 		}
 		else if($this->input->post('from_date') || $this->input->post('to_date')){
-		 $this->input->post('from_date')==""?$date=$this->input->post('to_date'):$date=$this->input->post('from_date');
+		 $this->input->post('from_date')==""?$date=date("Y-m-d",strtotime($this->input->post('to_date'))):$date=date("Y-m-d",strtotime($this->input->post('from_date')));
 		 $this->db->where('DATE(bb_donation.donation_date)',$date);
 		}
 		else if($from_date!="0" && $to_date!="0"){
@@ -299,7 +299,7 @@ class Reports_model extends CI_Model{
 			$this->db->where("(DATE(bb_donation.donation_date) BETWEEN '$from' AND '$to')");
 		}
 		else if($this->input->post('from_date') || $this->input->post('to_date')){
-		 $this->input->post('from_date')==""?$date=$this->input->post('to_date'):$date=$this->input->post('from_date');
+		 $this->input->post('from_date')==""?$date=date("Y-m-d",strtotime($this->input->post('to_date'))):$date=date("Y-m-d",strtotime($this->input->post('from_date')));
 		 $this->db->where('DATE(bb_donation.donation_date)',$date);
 		}	
 		if($this->input->post('from_num') && $this->input->post('to_num')){
@@ -357,7 +357,7 @@ class Reports_model extends CI_Model{
 			$this->db->where("(DATE(blood_screening.screening_datetime) BETWEEN '$from_date' AND '$to_date')");
 		}
 		else if($this->input->post('from_date') || $this->input->post('to_date')){
-		 $this->input->post('from_date')==""?$date=$this->input->post('to_date'):$date=$this->input->post('from_date');
+		 $this->input->post('from_date')==""?$date=date("Y-m-d",strtotime($this->input->post('to_date'))):$date=date("Y-m-d",strtotime($this->input->post('from_date')));
 		 $this->db->where('DATE(blood_screening.screening_datetime)',$date);
 		}
 		if($this->input->post('from_num') && $this->input->post('to_num')){
@@ -396,7 +396,7 @@ class Reports_model extends CI_Model{
 			$this->db->where("(DATE(blood_issue.issue_date) BETWEEN '$from_date' AND '$to_date')");
 		}
 		else if($this->input->post('from_date') || $this->input->post('to_date')){
-		 $this->input->post('from_date')==""?$date=$this->input->post('to_date'):$date=$this->input->post('from_date');
+		 $this->input->post('from_date')==""?$date=date("Y-m-d",strtotime($this->input->post('to_date'))):$date=date("Y-m-d",strtotime($this->input->post('from_date')));
 		 $this->db->where('DATE(blood_issue.issue_date)',$date);
 		}
 		else if($from_date!="0" && $to_date!="0"){
@@ -465,7 +465,7 @@ class Reports_model extends CI_Model{
 			$this->db->where("grouping_date BETWEEN '$from_date' AND '$to_date')");
 		}
 		else if($this->input->post('from_date') || $this->input->post('to_date')){
-		 $this->input->post('from_date')==""?$date=$this->input->post('to_date'):$date=$this->input->post('from_date');
+		 $this->input->post('from_date')==""?$date=date("Y-m-d",strtotime($this->input->post('to_date'))):$date=date("Y-m-d",strtotime($this->input->post('from_date')));
 		 $this->db->where('grouping_date',$date);
 		}
 		if($this->input->post('from_num') && $this->input->post('to_num')){
@@ -501,11 +501,11 @@ class Reports_model extends CI_Model{
 		$hospital=$userdata['hospital_id'];
 	//If from date and to date are given, get the values between those dates.
 	 if($this->input->post('from_date') && $this->input->post('to_date')){
-		 $this->db->where('(issue_date BETWEEN "'.$this->input->post('from_date').'" AND "'.$this->input->post('to_date').'")');
+		 $this->db->where('(issue_date BETWEEN "'.date("Y-m-d",strtotime($this->input->post('from_date'))).'" AND "'.date("Y-m-d",strtotime($this->input->post('to_date'))).'")');
 	 }
 	//If from date OR to date are given, get the values on the given date.
 	 else if($this->input->post('from_date') || $this->input->post('to_date')){
-		 $this->input->post('from_date')==""?$date=$this->input->post('to_date'):$date=$this->input->post('from_date');
+		 $this->input->post('from_date')==""?$date=date("Y-m-d",strtotime($this->input->post('to_date'))):$date=date("Y-m-d",strtotime($this->input->post('from_date')));
 		 $this->db->where('issue_date',$date);
 	 }
 	//Default : Last 30 days.

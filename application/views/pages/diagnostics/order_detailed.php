@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme-default.css" >
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
@@ -14,7 +14,7 @@
 			showProcessing: true,
 			headerTemplate : '{content} {icon}', // Add icon for jui theme; new in v2.7!
 
-			widgets: [ 'default', 'zebra', 'print', 'stickyHeaders'],
+			widgets: [ 'default', 'zebra', 'print', 'stickyHeaders','filter'],
 
 			widgetOptions: {
 
@@ -56,24 +56,101 @@
 			  uitheme : 'jui'
 			}
 		  };
-			$("#table-1").tablesorter(options);
+			$("#table-sort").tablesorter(options);
 		  $('.print').click(function(){
-			$('#table-1').trigger('printTable');
+			$('#table-sort').trigger('printTable');
 		  });
 	$("#from_date,#to_date").Zebra_DatePicker();
+	$("#test_master").chained("#test_method");
 		});
 	</script>
+	<?php 
+	?>
 	<div class="row">
 		<h4>Test Order Detailed report</h4>	
-		<?php echo form_open("reports/order_detail/$type",array('role'=>'form','class'=>'form-custom')); ?> 
+		<?php echo form_open("reports/order_summary/$type",array('role'=>'form','class'=>'form-custom')); ?> 
+					From Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y",strtotime($from_date)); ?>" name="from_date" id="from_date" size="15" />
+					To Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y",strtotime($to_date)); ?>" name="to_date" id="to_date" size="15" />
+					<select name="lab_department" class="form-control">
+					<option value="">Lab</option>
+					<?php 
+					foreach($lab_departments as $dept){
+						echo "<option value='".$dept->test_area_id."'";
+						if($test_area == $dept->test_area_id) echo " selected ";
+						echo ">".$dept->test_area."</option>";
+					}
+					?>
+					</select>
+					<select name="test_method" id="test_method" class="form-control">
+					<option value="">Method</option>
+					<?php 
+					foreach($test_methods as $method){
+						echo "<option value='".$method->test_method_id."'";
+						if($test_method == $method->test_method_id) echo " selected ";
+						echo ">".$method->test_method."</option>";
+					}
+					?>
+					</select>
+					<select name="specimen_type" class="form-control">
+					<option value="">Specimen</option>
+					<?php 
+					foreach($specimen_types as $specimen){
+						echo "<option value='".$specimen->specimen_type_id."'";
+						if($specimen_type == $specimen->specimen_type_id) echo " selected ";
+						echo ">".$specimen->specimen_type."</option>";
+					}
+					?>
+					</select>
+					
+					<br />
+					<br />	
+						<select name="test_master" id="test_master" class="form-control" title="Select Test Method to enable">
+						<option value="">Test</option>
+						<?php 
+						foreach($test_masters as $test_master){
+							echo "<option value='".$test_master->test_master_id."' class='".$test_master->test_method_id."'";
+							if($test_master_id == $test_master->test_master_id) echo " selected ";
+							echo ">".$test_master->test_name."</option>";
+						}
+						?>
+						</select>
+						<select name="department" id="department" class="form-control">
+						<option value="">Department</option>
+						<?php 
+						foreach($all_departments as $dept){
+							echo "<option value='".$dept->department_id."'";
+							if($department == $dept->department_id) echo " selected ";
+							echo ">".$dept->department."</option>";
+						}
+						?>
+						</select>
+						<select name="unit" id="unit" class="form-control" >
+						<option value="">Unit</option>
+						<?php 
+						foreach($units as $unit){
+							echo "<option value='".$unit->unit_id."' class='".$unit->department_id."'";
+							if($unit_id == $unit->unit_id) echo " selected ";
+							echo ">".$unit->unit_name."</option>";
+						}
+						?>
+						</select>
+						<select name="area" id="area" class="form-control" >
+						<option value="">Area</option>
+						<?php 
+						foreach($areas as $area){
+							echo "<option value='".$area->area_id."' class='".$area->department_id."'";
+							if($area_id == $area->area_id) echo " selected ";
+							echo ">".$area->area_name."</option>";
+						}
+						?>
+						</select>
 					Visit Type : <select class="form-control" name="visit_type">
-									<option value="">All</option>
-									<option value="OP">OP</option>
-									<option value="IP">IP</option>
+									<option value="" selected>All</option>
+									<option value="OP" <?php if($visit_type == "OP") echo " selected ";?>>OP</option>
+									<option value="IP" <?php if($visit_type == "IP") echo " selected ";?>>IP</option>
 								</select>
-					From Date : <input type="text" class="form-control" value="<?php echo date("d-M-Y"); ?>" name="from_date" id="from_date" size="15" />
-					To Date : <input type="text" class="form-control" value="<?php echo date("d-M-Y"); ?>" name="to_date" id="to_date" size="15" />
-					<input type="submit" class="btn btn-primary btn-sm" value="Submit" />
+						<input type="text" name="patient_number" class="form-control" value="<?php if(!!$this->input->post('patient_number')) echo $this->input->post('patient_number');?>" placeholder="IP/OP Number" />
+					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
 		</form>
 	<br />
 	
@@ -82,17 +159,25 @@
 		<button type="button" class="btn btn-default btn-md print">
 		  <span class="glyphicon glyphicon-print"></span> Print
 		</button>
-		<table class="table table-bordered table-striped" id="table-1">
+		<?php 
+			$url_string = current_url();
+			$url_string = str_replace(base_url()."reports/order_detail/","",$url_string);
+		?>
+		<a href="<?php echo base_url();?>reports/text_result/<?php echo $url_string;?>" class="btn btn-default btn-md">
+		  <span class="glyphicon glyphicon-text"></span> View Report Text
+		</a>
+		<table class="table table-bordered table-striped table-hover" id="table-sort">
 		<thead>
 			<th>#</th>
+			<th>Order ID</th>
 			<th>Order Date</th>
 			<th>Sample ID</th>
-			<th>Patient ID</th>
+			<th>IP/OP Number</th>
 			<th>Patient Name</th>
 			<th>Age/Gender</th>
 			<th>Department/Unit/Area</th>
 			<th>Specimen</th>
-			<th>Tests</th>
+			<th>Test(s)</th>
 			<th>Received By</th>
 		</thead>
 		<tbody>
@@ -104,18 +189,22 @@
 			$o=array_unique($o);
 			$i=1;
 			foreach($o as $ord){	?>
-				<tr>
+				<tr onclick="$('#order_<?php echo $ord;?>').submit()">
 				<?php
 				foreach($report as $order) { 
 					if($order->order_id==$ord){ ?>
 						<td><?php echo $i++;?></td>
 						<td>
-							<?php echo form_open("diagnostics/view_orders",array('role'=>'form','class'=>'form-custom')); ?>
-							<?php echo date("d-M-Y",strtotime($order->order_id));?>
+							<?php echo form_open("diagnostics/view_results",array('role'=>'form','class'=>'form-custom','id'=>'order_'.$order->order_id)); ?>
+							<?php echo $order->order_id;?>
 							<input type="hidden" class="sr-only" name="order_id" value="<?php echo $order->order_id;?>" />
+							</form>
+						</td>
+						<td>
+							<?php echo date("d-M-Y",strtotime($order->order_date_time));?>
 						</td>
 						<td><?php echo $order->sample_code;?></td>
-						<td><?php echo $order->hosp_file_no;?></td>
+						<td><?php echo $order->visit_type." #".$order->hosp_file_no;?></td>
 						<td><?php echo $order->first_name." ".$order->last_name;?></td>
 						<td>
 							<?php
@@ -123,10 +212,15 @@
 								if($order->age_years!=0) $age.=$order->age_years."Y ";
 								if($order->age_months!=0) $age.=$order->age_months."M ";
 								if($order->age_days!=0) $age.=$order->age_days."D ";
+								if($order->age_days == 0 && $order->age_months == 0 && $order->age_years == 0) $age.="0D";
 								echo $age;
 							?>
 						</td>
-						<td><?php echo $order->department;?></td>
+						<td>
+							<?php echo $order->department;?>
+							<?php if(!!$order->unit_name) echo "/ ".$order->unit_name;?>
+							<?php if(!!$order->area_name) echo "/ ".$order->area_name;?>
+						</td>
 						<td><?php echo $order->specimen_type;?></td>
 						<td>
 							<?php 
@@ -142,6 +236,8 @@
 										}
 									} 
 							?>
+						</td>
+						<td>
 						</td>
 				<?php break;
 					}

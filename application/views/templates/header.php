@@ -6,9 +6,19 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">	
 	<title><?php echo $title; ?> - Health4All</title>
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/bootstrap.css" media='screen,print'>
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/font-awesome.min.css" >
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/flaticon.css" >
 	
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.min.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.chained.min.js"></script>
+	<script>
+	$(function () {
+	  $('[data-toggle="popover"]').popover({trigger:'hover',html:true});
+		$("#unit").chained("#department");
+		$("#area").chained("#department");
+	});
+	</script>
 </head>
 <body>
 <div id="wrap">
@@ -31,10 +41,10 @@
 			//Loop through the session data to check if the user has access to each function and only display those.
 			foreach($functions as $f){
 					//Check if the user has access to Out Patient Registration forms or In Patient Registration forms 
-					if($f->user_function=="Out Patient Registration" || $f->user_function=="In Patient Registration"){ 
+					if($f->user_function=="Out Patient Registration" || $f->user_function=="In Patient Registration" || $f->user_function == "View Patients"){ 
 					// If they do, display dropdown menu which will contain all the links to the forms. ?>
 						<li class="dropdown  <?php if(preg_match("^".base_url()."register^",current_url())){ echo "active";}?>">
-									<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Patients <b class="caret"></b></a>
+									<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><i class="fa fa-user"></i> Patients <b class="caret"></b></a>
 									<ul class="dropdown-menu">
 						<?php
 						//Loop through the user session data to check if the user has access to Out Patient forms
@@ -61,7 +71,23 @@
 									break;
 								}
 							} ?>
-							
+							<li class="divider"></li>
+							<?php
+								foreach($functions as $f){
+									if($f->user_function == "View Patients"){ ?>
+										<li><a href="<?php echo base_url()."register/view_patients"; ?>">View Patients</a></li>
+									<?php 
+									break;
+									} 
+								} ?>
+							<?php
+								foreach($functions as $f){
+									if($f->user_function == "Update Patients"){ ?>
+										<li><a href="<?php echo base_url()."register/update_patients"; ?>">Update Patients</a></li>
+									<?php 
+									break;
+									} 
+								} ?>
 							</ul>
 						  </li>	
 					<?php
@@ -69,24 +95,43 @@
 						} 
 					} 
 				?> 
-
 			<?php foreach($functions as $f){
-					if($f->user_function=="Diagnostics" || $f->user_function=="Bloodbank" || $f->user_function == "Sanitation Evaluation"){ ?>
+					if($f->user_function=="Diagnostics" ||$f->user_function=="Diagnostics - Order All" || $f->user_function=="Bloodbank" || $f->user_function == "Sanitation Evaluation"){ ?>
 					<li class="dropdown  <?php if(preg_match("^".base_url()."services^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Services <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-						<?php foreach($functions as $f){
-								if($f->user_function=="Diagnostics"){ ?>
-									<li><a href="<?php echo base_url()."diagnostics/test_order";?>">Diagnostics</a></li>
 						<?php
+						$diagnostics=0;
+						foreach($functions as $f){
+								if($f->user_function=="Diagnostics - Order All"){ ?>
+									<li><a href="<?php echo base_url()."diagnostics/test_order/1";?>"><i class="glyph-icon flaticon-chemistry20"></i> Diagnostics</a></li>
+						<?php		$diagnostics=1;
 									break;
 								}
 							}
+						if($diagnostics==0){
+						foreach($functions as $f){
+								if($f->user_function=="Diagnostics - Order"){ ?>
+									<li><a href="<?php echo base_url()."diagnostics/test_order";?>"><i class="glyph-icon flaticon-chemistry20"></i> Diagnostics</a></li>
+						<?php		$diagnostics=1;
+									break;
+								}
+							}
+						}
+						if($diagnostics==0){
+						foreach($functions as $f){
+								if($f->user_function=="Diagnostics"){ ?>
+									<li><a href="<?php echo base_url()."diagnostics/view_orders";?>"><i class="glyph-icon flaticon-chemistry20"></i> Diagnostics</a></li>
+						<?php		$diagnostics=1;
+									break;
+								}
+							}
+						}
 						?>	
 
 						<?php foreach($functions as $f){
 								if($f->user_function=="Bloodbank"){ ?>
-									<li><a href="<?php echo base_url();?>bloodbank/user_panel/place">BloodBank</a></li>
+									<li><a href="<?php echo base_url();?>bloodbank/user_panel/place"><i class="fa fa-tint" style="color:#E84F4F" ></i> BloodBank</a></li>
 						<?php
 									break;
 								}
@@ -97,7 +142,7 @@
 						$evaluate=0;
 						foreach($functions as $f){
 								if($f->user_function=="Sanitation Evaluation" && ($f->add==1 || $f->edit==1)){ ?>
-									<li><a href="<?php echo base_url();?>sanitation/evaluate">Sanitation</a></li>
+									<li><a href="<?php echo base_url();?>sanitation/evaluate"><i class="glyph-icon flaticon-sweep1"></i>  Sanitation</a></li>
 						<?php
 									$evaluate=1;
 									break;
@@ -121,13 +166,13 @@
 					} 
 				?> 
 			<?php foreach($functions as $f){
-					if($f->user_function=="Equipment" || $f->user_function=="Consumables" || $f->user_function=="HR" || $f->user_function=="vendor"){ ?>
+					if($f->user_function=="Equipment" || $f->user_function=="Consumables" || $f->user_function=="HR" || $f->user_function=="Vendor"){ ?>
 			<li class="dropdown  <?php if(preg_match("^".base_url()."inventory^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Resources <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 						<?php foreach($functions as $f){
 								if($f->user_function=="HR"){ ?>
-									<li><a href="<?php echo base_url()."staff/add/staff";?>">HR</a></li>
+									<li><a href="<?php echo base_url()."staff/add/staff";?>"><i class="fa fa-user-md"></i> HR</a></li>
 						<?php
 									break;
 								}
@@ -136,7 +181,7 @@
 
 						<?php foreach($functions as $f){
 								if($f->user_function=="Equipment"){ ?>
-									<li><a href="<?php echo base_url()."equipments/add/equipment";?>">Equipment</a></li>
+									<li><a href="<?php echo base_url()."equipments/add/equipment";?>"><i class="glyph-icon flaticon-medical-equipment"></i> Equipment</a></li>
 						<?php
 									break;
 								}
@@ -144,14 +189,14 @@
 						?>
 						<?php foreach($functions as $f){
 								if($f->user_function=="Consumables"){ ?>
-						  <li><a href="<?php echo base_url()."consumables/add/dosages";?>">Consumables</a></li>
+						  <li><a href="<?php echo base_url()."consumables/add/dosages";?>"><i class="glyph-icon flaticon-drugs5"></i> Consumables</a></li>
 						<?php
 									break;
 								}
 							}
 						?>
 						<?php foreach($functions as $f){
-								if($f->user_function=="vendor"){ ?>
+								if($f->user_function=="Vendor"){ ?>
 						  <li><a href="<?php echo base_url()."vendor/add/vendor";?>">Vendor</a></li>
 						<?php
 									break;
@@ -172,13 +217,13 @@
 					$f->user_function=="OP Detail" || $f->user_function=="IP Detail" || 
 					$f->user_function=="Diagnostics - Detail" || $f->user_function=="Diagnostics - Summary" || 
 					($f->user_function == "Sanitation Evaluation" && $f->view==1) || 
-					$f->user_function == "Reports - Blood Bank"){ ?>
+					$f->user_function == "Bloodbank"){ ?>
 					<li class="dropdown  <?php if(preg_match("^".base_url()."reports^",current_url())){ echo "active";}?>">
-						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Reports <b class="caret"></b></a>
+						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><i class="fa fa-line-chart"></i> Reports <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 			<?php	
 				foreach($functions as $f){
-					if($f->user_function=="OP Summary" || $f->user_function=="IP Summary"){ ?>
+					if($f->user_function=="OP Summary" || $f->user_function=="IP Summary" || $f->user_function == "Bloodbank"){ ?>
 						  <li class="dropdown-header">Summary reports</li>
 			<?php
 				break;
@@ -186,21 +231,23 @@
 				}	
 				foreach($functions as $f){
 				if($f->user_function=="OP Summary"){ ?>
-						  <li><a href="<?php echo base_url()."reports/op_summary";?>">OP Summary</a></li>
+                                            <li><a href="<?php echo base_url()."reports/op_summary";?>">OP Summary</a></li>
 				<?php	}
+                                }
+				foreach($functions as $f){
 					if($f->user_function=="IP Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/ip_summary";?>">IP Summary</a></li>
+						  <li><a href="<?php echo base_url()."reports/ip_op_trends";?>">IP/OP Trends</a></li>
+						  <li><a href="<?php echo base_url()."reports/icd_summary";?>">ICD Code Summary</a></li>
 				<?php	} 
+                                }
+				foreach($functions as $f){
 					if($f->user_function=="Diagnostics - Summary"){ ?>
-						  <li><a href="<?php echo base_url()."reports/order_summary";?>">Orders Summary</a></li>
-						  <li><a href="<?php echo base_url()."reports/order_summary/department";?>">Orders Summary - Department</a></li>
+						  <li><a href="<?php echo base_url()."reports/order_summary/department";?>">Orders Summary</a></li>
 						  <li><a href="<?php echo base_url()."reports/sensitivity_summary";?>">Sensitivity Report</a></li>
 				<?php	} 
-					if($f->user_function=="BloodBank Summary"){ ?>
-						  <li><a href="<?php echo base_url()."bloodbank/reports/donation_summary";?>">Blood Donations</a></li>
-						  <li><a href="<?php echo base_url()."bloodbank/reports/issue_summary";?>">Blood Issues</a></li>
-						  <li><a href="<?php echo base_url()."bloodbank/reports/hospital_issues";?>">Blood Issues - Hospital Wise</a></li>
-						  <li><a href="<?php echo base_url()."bloodbank/reports/available_blood";?>">Available Blood</a></li>
+					if($f->user_function=="Bloodbank"){ ?>
+						  <li><a href="<?php echo base_url()."bloodbank/user_panel/donation_summary";?>">Bloodbank Reports</a></li>
 				<?php	}
 					if($f->user_function=="Masters - Sanitation" || $f->user_function == "Sanitation Summary"){ ?>
 						<li><a href="<?php echo base_url()."sanitation/view_summary";?>">Sanitation Evaluation</a></li>
@@ -223,17 +270,7 @@
 			<?php	}
 			if($f->user_function=="IP Detail"){ ?>
 						<li><a href="<?php echo base_url()."reports/ip_detail";?>">IP Detail</a></li>
-			<?php }
-			if($f->user_function=="Diagnostics - Detail"){ ?>
-						<li><a href="<?php echo base_url()."reports/order_detail";?>">Orders Detail</a></li>
-			<?php }
-			if($f->user_function=="BloodBank Detail"){ ?>
-						<li><a href="<?php echo base_url()."bloodbank/reports/report_donations";?>">Blood Donations</a></li>
-						<li><a href="<?php echo base_url()."bloodbank/reports/report_issue";?>">Blood Issues</a></li>
-						<li><a href="<?php echo base_url()."bloodbank/reports/report_inventory";?>">Blood Inventory</a></li>
-						<li><a href="<?php echo base_url()."bloodbank/reports/blood_donors";?>">Blood Donors</a></li>
-						<li><a href="<?php echo base_url()."bloodbank/reports/report_screening";?>">Screening</a></li>
-						<li><a href="<?php echo base_url()."bloodbank/reports/report_grouping";?>">Grouping</a></li>
+						<li><a href="<?php echo base_url()."reports/icd_detail";?>">ICD Code Detail</a></li>
 			<?php }
 			if($f->user_function=="Sanitation Evaluation"){ ?>
 								<li><a href="<?php echo base_url()."sanitation/view_scores";?>">Sanitation Evaluation</a></li>
@@ -247,7 +284,7 @@
 			}
 			?>
 			</li>
-			<li class=" <?php if(preg_match("^".base_url()."help^",current_url())) echo "active";?>"><a href="<?php echo base_url()."help";?>" >Help</a></li>
+			<li class=" <?php if(preg_match("^".base_url()."help^",current_url())) echo "active";?>"><a href="<?php echo base_url()."help";?>" ><i class="fa fa-question"></i> Help</a></li>
 
 
 
@@ -261,14 +298,14 @@
 				<?php
 				foreach($functions as $f){
 				if($f->user_function=="Masters - Application"){ ?>
-                  <li><a href="<?php echo base_url()."user_panel/settings";?>">Settings</a></li>
+                  <li><a href="<?php echo base_url()."user_panel/settings";?>"><i class="fa fa-gear"></i> Settings</a></li>
 				  <li class="divider"></li>
 				<?php break;
 					}
 				}
 				?>
-                  <li><a href="<?php echo base_url()."user_panel/change_password";?>">Change Password</a></li>
-				  <li><a href="<?php echo base_url();?>home/logout">Logout</a></li>
+                  <li><a href="<?php echo base_url()."user_panel/change_password";?>"><i class="fa fa-edit"></i> Change Password</a></li>
+				  <li><a href="<?php echo base_url();?>home/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
                 </ul>
 			</li>
           </ul>	

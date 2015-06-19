@@ -22,7 +22,7 @@ class Staff_model extends CI_Model{
 	   }
 	}
 	function staff_list(){
-		$this->db->select("*")->from("staff")->where("department_id","4")->order_by('staff_id');
+		$this->db->select("*")->from("staff")->where("department_id","4")->order_by('staff_id')->where('status',1);
 		$query=$this->db->get();
 		return $query->result();
 	}

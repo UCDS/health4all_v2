@@ -29,7 +29,7 @@ class Inventory_model extends CI_Model{
 		$donation_ids=$this->input->post('donation_id');
 		$data=array();
 		$update_data=array();
-		$grouping_date=$this->input->post('grouping_date');
+		$grouping_date=date("Y-m-d",strtotime($this->input->post('grouping_date')));
 		$forward_by=$this->input->post('forward_by');
 		$reverse_by=$this->input->post('reverse_by');
 		foreach($donation_ids as $donation_id){
@@ -247,7 +247,7 @@ class Inventory_model extends CI_Model{
 	
 	function blood_screening(){
 		$tested=$this->input->post('test');
-		$date=$this->input->post('screened_date');
+		$date=date("Y-m-d",strtotime($this->input->post('screened_date')));
 		$staff=$this->input->post('staff');
 		$data=array();
 		$status_data=array();
@@ -296,8 +296,13 @@ class Inventory_model extends CI_Model{
 		if($this->input->post('request_id')){
 		$this->db->where('request_id',$this->input->post('request_id'));
 		}
-		$this->db->select('*')
+		$this->db->select('blood_request.*, patient_visit.hosp_file_no, patient.first_name, patient.last_name, hospital, department.department, unit_name, area_name')
 		->from('blood_request')
+		->join('patient_visit','blood_request.patient_id = patient_visit.visit_id','left')
+		->join('patient','patient_visit.patient_id = patient.patient_id','left')
+		->join('department','patient_visit.department_id = department.department_id','left')
+		->join('unit','patient_visit.unit = unit.unit_id','left')
+		->join('area','patient_visit.area = area.area_id','left')
 		->join('hospital','blood_request.bloodbank_id=hospital.hospital_id')
 		->where('request_status','Pending')
 		->where('blood_request.bloodbank_id',$hospital)
