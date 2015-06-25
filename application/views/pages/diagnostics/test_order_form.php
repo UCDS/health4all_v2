@@ -127,7 +127,7 @@
 			<font color='red'>*</font>
 			</div>
 			<div class="col-md-6">
-			<select id="select-patient" class="repositories" placeholder="Select a Patient..." name="visit_id" ></select>
+			<select id="select-patient" class="repositories" placeholder="Select a Patient..." name="visit_id" required ></select>
 			</div>
 		</div>
 		<div class='col-md-12 selected_patient'>
@@ -137,7 +137,7 @@
 		<div class="col-md-12">
 		<div class="col-md-6">
 			<label>Specimen Type</label>
-			<select class="form-control" name="specimen_type">
+			<select class="form-control" name="specimen_type" required>
 				<option value="" selected disabled>Select</option>
 				<?php foreach($specimen_types as $specimen){ ?>
 					<option value="<?php echo $specimen->specimen_type_id;?>"><?php echo $specimen->specimen_type;?></option>
@@ -155,7 +155,7 @@
 		<div class="col-md-12">
 		<div class="col-md-6">
 		<label>Sample ID<font color='red'>*</font></label>
-			<input type="text" placeholder="Sample ID" name="sample_id" class="form-control" />
+			<input type="text" placeholder="Sample ID" name="sample_id" class="form-control" required />
 		</div>
 		<div class="col-md-6">
 			<label>Container Type</label>
@@ -215,8 +215,8 @@
 				?>
 			<div class="col-md-4 panel test_group test_group_<?php echo $test_group->group_id;?>">
 				<div class="checkbox" data-toggle="popover" data-placement="bottom" data-content="<?php echo $tests;?>">
-					<input class="checkbox form-control" type="checkbox" name="test_group[]" id="<?php echo $test_group->group_name;?>" value="<?php echo $test_group->group_id;?>" />
-					<label for="<?php echo $test_group->group_name;?>"><?php echo $test_group->group_name;?></label>
+					<input class="checkbox form-control" type="checkbox" name="test_group[]" id="group_<?php echo $test_group->group_id;?>" value="<?php echo $test_group->group_id;?>" />
+					<label for="group_<?php echo $test_group->group_id;?>"><?php echo $test_group->group_name;?></label>
 				</div>
 			</div>
 		<?php }
