@@ -92,11 +92,14 @@
 				
 		});
                 
-                //Code for previewing in a model. Go to line 155.
+                //Code for previewing in a model. Go to line 969.
                 
                 $("#print_layout").change(function(){
-                    $("#modal_select").removeClass("sr-only");
-                    $("#modal_select").attr("data-target", "#modal-"+$(this).val());
+                        if($(this).val()==""){}
+                        else{
+                            $("#modal_select").removeClass("sr-only");
+                            $("#modal_select").attr("data-target", "#modal-"+$(this).val());
+                        }
                 });
 		
 	});
@@ -112,8 +115,9 @@
 				<div class="panel panel-default">
 				<div class="panel-heading">
 				<div class="row">
-					<div class="col-md-4">
-						<label class="control-label">Select number of columns :</label>
+					<div class="col-md-5">
+						<label class="control-label">Select number of columns:</label>
+                                                
 						<div class="radio">
 							<label class="control-label"><input type="radio" value="1" name="cols" class="num_cols" />1</label>
 						</div>
@@ -123,10 +127,11 @@
 						<div class="radio">
 							<label class="control-label"><input type="radio" value="3" name="cols" class="num_cols" checked />3</label>
 						</div>
+                                        
 					</div>					
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<div class="form-group">
-						<label class="control-label">Select form type</label>
+						<label class="control-label">Form type</label>
 						<select class="form-control" name="form_type" id="form-type" required >
 							<option value="">Select</option>
 							<option value="OP">OP</option>
@@ -137,10 +142,11 @@
 					<div class="col-md-4">
 						<div class="form-group">
 						<label class="control-label">Form Name</label>
-						<input type="text" name="form_name" class="form-control" required />
+						<input type="text" name="form_name" size="15" class="form-control" required />
 						</div>
 					</div>
-					<div class="col-md-3">
+                                    <br><br>
+					<div class="col-md-7">
 						<div class="form-group">
 						<label class="control-label">Print Layout</label>
 						<select class="form-control" name="print_layout" id="print_layout" required >
@@ -150,39 +156,14 @@
 							}
 							?>
                                                 </select>
-						</div>                                            
+                                                <button type="button" id= "modal_select" class="btn btn-primary sr-only" data-toggle="modal" data-target="">
+                                                    Preview print layout
+                                                </button>
+						</div>                                             
 					</div>
-                                    <div>
-                                                <div class="form-group">
-                                                    <!-- Button trigger modal -->
-                                                    <!--We change the value of data-target attribute to point to new modals 
-                                                    every time the user sets the value of print layout. Goto line 95 -->
-<button type="button" id= "modal_select" class="btn btn-primary sr-only" data-toggle="modal" data-target="">
-  Preview print layout
-</button>
-
-<!-- Modal -->
-<?php foreach($print_layouts as $layout){ ?>
-    <div class="modal fade" id="modal-<?php echo $layout->print_layout_id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                     <h4 class="modal-title" id="myModalLabel"><?php echo $layout->print_layout_name; ?></h4>
-                </div>
-                <div class="modal-body">
-                 <?php $this->load->view("pages/print_layouts/$layout->print_layout_page");?>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>        
-                </div>
-            </div>
-        </div>
-    </div>
-<?php } ?> 
-                                                </div>
-                                            </div>
-				</div>
+                                    
+                                            
+				</div> <!-- end of row class -->
 				</div>
 				<div class="panel-body">
 				<div class="alert alert-info">Select fields from the right menu to start creating the form! >></div>
@@ -226,7 +207,7 @@
                     <div class="layout-div col-md-4 address">
 						<div class="form-group">
 						<label class="control-label">    Address    </label>
-						<textarea name="address" rows="4" cols="30" class="form-control"></textarea>
+						<textarea name="address" rows="1" cols="20" class="form-control"></textarea>
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
@@ -570,7 +551,7 @@
 					<div class="layout-div col-md-4 presenting_complaints">
 						<div class="form-group">
 						<label class="control-label">Complaint</label>
-                                                <textarea rows="4" cols="30" name="presenting_complaints" class="form-control" ></textarea>
+                                                <textarea rows="1" cols="30" name="presenting_complaints" class="form-control" ></textarea>
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
                                         </div>
@@ -706,7 +687,7 @@
 				<div class="panel-footer">
 					<button type="submit" class="btn btn-primary" id="save-form">Save</button>
 				</div>
-				</div>
+				</div> <!-- End of panel default -->
 			</div>
 			<div class="col-sm-3 col-md-2 sidebar">
 			<strong>Patient Information</strong>
@@ -985,3 +966,22 @@
 			</div>
       </form>
 
+<!-- Modal -->
+<?php foreach($print_layouts as $layout){ ?>
+    <div class="modal fade" id="modal-<?php echo $layout->print_layout_id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width:55%">
+            <div class="modal-content"> 
+                <div class="modal-header">
+                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                     <h4 class="modal-title" id="myModalLabel"><?php echo $layout->print_layout_name; ?></h4>
+                </div>
+                <div class="modal-body" style='min-height:540px'>
+                 <?php $this->load->view("pages/print_layouts/$layout->print_layout_page");?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>        
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
