@@ -164,7 +164,7 @@
 <!-- Modal -->
 <?php foreach($print_layouts as $layout){ ?>
     <div class="modal fade" id="modal-<?php echo $layout->print_layout_id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog" style="width:55%">
             <div class="modal-content">
                 <div class="modal-header">
                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

@@ -1,10 +1,10 @@
 <!-- This layout is designed to print the details for three times apart from all other forms. This form also includes MLC Reasons 	-->
 	<style>
-	@media print{
+	@media print,screen{
 		.column{
 			position:relative;float:left;width:33%;margin:5px 0px;
 		}
-		.container{
+		.container-print{
 			font-size:14px;
 			font-family:"Trebuchet MS",serif;
 			height:25%;
@@ -12,6 +12,7 @@
 			border-radius:0.3em;
 			padding:5px 10px;
 			margin-bottom:1.5px;
+			
 		}
 		.heading{
 			font-size:18px;
@@ -24,11 +25,11 @@
 		}
 	}
 	</style>
-		<div class="container">
+		<div class="container-print">
 			<div class="heading">
 				Rajiv Gandhi Institute of Medical Sciences, Kadapa
 			</div>
-			<div class="row">
+			<div>
 			<div class="column">
 				<b>IP No:</b> <span style="font-size:2.5em;position:absolute;margin:-20px 0 0 10px;"> <?php echo $registered->hosp_file_no;?></span>
 			</div>
@@ -39,7 +40,7 @@
 				<b>Admit Time:</b> <?php echo date("g:ia",strtotime($registered->admit_time)); ?>
 			</div>
 			</div>
-			<div class="row">
+			<div>
 			<div  class="column">
 				<b>Name:</b> <?php echo $registered->name; ?>
 			</div>
@@ -56,7 +57,7 @@
 				<b>Department:</b> <?php echo $registered->department; ?>			
 			</div>
 			</div>
-			<div class="row">
+			<div>
 			<div  class="column">
 				<b>Parent/Spouse:</b> <?php echo $registered->parent_spouse; ?>
 			</div>
@@ -71,7 +72,7 @@
 				?>
 			</div>
 			</div>
-			<div class="row">
+			<div>
 			<div  class="column">
 				<b>Phone:</b> <?php echo $registered->phone; ?>
 			</div>
@@ -91,11 +92,11 @@
 			<?php } ?>
 			</div>
 		</div>	
-		<div class="container">
+		<div  class="row container-print">
 			<div class="heading">
 				Rajiv Gandhi Institute of Medical Sciences, Kadapa
 			</div>
-			<div class="row">
+			<div>
 			<div class="column">
 				<b>IP No:</b> <span style="font-size:2.5em;position:absolute;margin:-20px 0 0 10px;"> <?php echo $registered->hosp_file_no;?></span>
 			</div>
@@ -106,7 +107,7 @@
 				<b>Admit Time:</b> <?php echo date("g:ia",strtotime($registered->admit_time)); ?>
 			</div>
 			</div>
-			<div class="row">
+			<div>
 			<div  class="column">
 				<b>Name:</b> <?php echo $registered->name; ?>
 			</div>
@@ -123,7 +124,7 @@
 				<b>Department:</b> <?php echo $registered->department; ?>			
 			</div>
 			</div>
-			<div class="row">
+			<div>
 			<div  class="column">
 				<b>Parent/Spouse:</b> <?php echo $registered->parent_spouse; ?>
 			</div>
@@ -138,7 +139,7 @@
 				?>
 			</div>
 			</div>
-			<div class="row">
+			<div>
 			<div  class="column">
 				<b>Phone:</b> <?php echo $registered->phone; ?>
 			</div>

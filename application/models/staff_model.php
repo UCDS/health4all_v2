@@ -82,6 +82,12 @@ class Staff_model extends CI_Model{
 		$query=$this->db->get();
 		return $query->result();
 	}
+	//get_occupations() selects the occupations from the database and returns the result
+	function get_occupations(){
+		$this->db->select("occupation_id,occupation")->from("occupation");
+		$query=$this->db->get();
+		return $query->result();
+	}
 	//get_user_function() selects the functions from the database and returns the result
 	function get_user_function(){
 		$this->db->select("user_function_id,user_function")->from("user_function");

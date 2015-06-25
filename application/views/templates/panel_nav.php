@@ -1,5 +1,9 @@
-<div class="col-sm-3 col-md-2">
-  <ul class="nav nav-pills nav-stacked">
+    <link href="<?php echo base_url();?>assets/css/simple-sidebar.css" rel="stylesheet">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                
 	<li <?php if(current_url()==base_url()."bloodbank/user_panel/place"){ echo "class='active'";}?>><a href="<?php echo base_url();?>bloodbank/user_panel/place">Place</a></li>
 	<li <?php if(current_url()==base_url()."bloodbank/create_slots"){ echo "class='active'";}?>><a href="<?php echo base_url();?>bloodbank/create_slots">Create Slots</a></li>
 	<li <?php if(current_url()==base_url()."bloodbank/register"){ echo "class='active'";}?>><a href="<?php echo base_url();?>bloodbank/register">Walk In</a></li>
@@ -12,6 +16,10 @@
 	<li <?php if(current_url()==base_url()."bloodbank/inventory/issue"){ echo "class='active'";}?>><a href="<?php echo base_url();?>bloodbank/inventory/issue">Issue</a></li>
 	<li <?php if(current_url()==base_url()."bloodbank/inventory/discard"){ echo "class='active'";}?>><a href="<?php echo base_url();?>bloodbank/inventory/discard">Discard</a></li>
 
+            </ul>
+        </div>
+<div class="col-sm-3 col-md-2">
+  <ul class="nav nav-pills nav-stacked">
   </ul>
   
 </div>
