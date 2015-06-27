@@ -5,6 +5,7 @@ class User_panel extends CI_Controller {
 		parent::__construct();
 		$this->load->model('reports_model');		
 		$this->load->model('staff_model');	
+		$this->load->model('masters_model');	
 		if($this->session->userdata('logged_in')){
 		$userdata=$this->session->userdata('logged_in');
 		$user_id=$userdata['user_id'];
@@ -62,6 +63,45 @@ class User_panel extends CI_Controller {
 			show_404();
 		}
 	}
+		function edit_user(){
+		if($this->session->userdata('logged_in')){
+		$this->load->helper('form');
+		$this->data['title']="Edit User";
+		$this->data['userdata']=$this->session->userdata('logged_in');
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('templates/leftnav',$this->data);
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('user', 'Username', 'trim|xss_clean');
+		if ($this->form_validation->run() === FALSE){
+			$this->data['user']=$this->masters_model->get_data("user");
+			$this->data["staff"]=$this->staff_model->get_staff();
+			$this->load->view('pages/edit_user',$this->data);
+		}
+		else{
+			if($this->input->post('update')){
+				if($this->masters_model->update_data("user")){
+					$this->data['msg']="Updated Successfully";
+					$this->data["user_functions"]=$this->staff_model->get_user_function();
+					$this->data["staff"]=$this->staff_model->get_staff();
+				}
+				else{
+					$this->data['msg']="Failed";
+					$this->load->view('pages/edit_user',$this->data);
+				}
+			}
+			else if($this->input->post('select')){
+            $this->data['mode']="select";
+			$this->data["user_functions"]=$this->staff_model->get_user_function();
+			$this->data["staff"]=$this->staff_model->get_staff();
+			$this->data['user']=$this->masters_model->get_data("user");
+   			}
+			$this->data["user"]=$this->masters_model->get_data("user");
+			$this->load->view('pages/edit_user',$this->data);	
+			}
+		 $this->load->view('templates/footer');	
+		}
+	}
+
 	function create_form(){
 		if($this->session->userdata('logged_in')){
 				if($this->staff_model->upload_form()){

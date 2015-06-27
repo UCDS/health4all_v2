@@ -90,7 +90,7 @@ class Staff_model extends CI_Model{
 	}
 	//get_user_function() selects the functions from the database and returns the result
 	function get_user_function(){
-		$this->db->select("user_function_id,user_function")->from("user_function");
+		$this->db->select("user_function_id,user_function,description")->from("user_function");
 		$query=$this->db->get();
 		return $query->result();
 	}
