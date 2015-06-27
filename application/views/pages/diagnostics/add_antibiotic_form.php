@@ -5,12 +5,12 @@
 <h3>Add Antibiotic</h3>
 </center><br>
 <center>
-<?php echo validation_errors(); echo form_open('diagnostics/add/Antibiotic',array('role'=>'form')); ?>
+<?php echo validation_errors(); echo form_open('diagnostics/add/antibiotic',array('role'=>'form')); ?>
 </center>
 <div class="form-group">
-<label for="Antibiotic" class="col-md-4">Antibiotic<font color='red'>*</font></label>
+<label for="antibiotic" class="col-md-4">Antibiotic<font color='red'>*</font></label>
 <div class="col-md-8">
-<input type="text" class="form-control" placeholder="Antibiotic" id="Antibiotic" name="Antibiotic" />
+<input type="text" class="form-control" placeholder="antibiotic" id="antibiotic" name="antibiotic" />
 </div>
 </div>
 <div class="col-md-3 col-md-offset-4">

@@ -120,8 +120,10 @@
 							if($test->test_status == 0) { 
 								$result="Test not done";
 							} 
-							else{	
+							else{
+								if($test->test_result!=NULL)
 								$result=$test->test_result." ".$test->lab_unit; 
+								else $result ="";
 							}
 							echo $result;
 						}

@@ -93,9 +93,9 @@ pri.print();
 		$order_date_time = $order[0]->order_date_time;
 		$reported_date_time = $order[0]->reported_date_time;
 		$done_by = $order[0]->done_first." ".$order[0]->done_last;
-		$done_by_designation = $order[0]->done_designation;
+		$done_by_designation = $order[0]->done_by_designation;
 		$approved_by = $order[0]->approved_first." ".$order[0]->approved_last;
-		$approved_by_designation = $order[0]->approved_designation;
+		$approved_by_designation = $order[0]->approved_by_designation;
 		$age="";
 		if($order[0]->age_years!=0) $age.=$order[0]->age_years."Y ";
 		if($order[0]->age_months!=0) $age.=$order[0]->age_months."M ";
@@ -199,7 +199,9 @@ pri.print();
 					<?php if($test['numeric_result']==1){ 
 
 							if($test['test_status'] == 2) { 
+								if($test['test_result']!=NULL)
 								$result=$test['test_result']." ".$test['lab_unit']; 
+								else $result ="";
 							} 
 							else{	
 								$result="Test not done.";
@@ -256,7 +258,9 @@ pri.print();
 					<?php if($test['numeric_result']==1){ 
 
 							if($test['test_status'] == 2) { 
+								if($test['test_result']!=NULL)
 								$result=$test['test_result']." ".$test['lab_unit']; 
+								else $result ="";
 							} 
 							else{	
 								$result="Test not done.";
@@ -399,7 +403,9 @@ pri.print();
 					<?php if($test->numeric_result==1){ 
 
 							if($test->test_status == 2) { 
+								if($test->test_result!=NULL)
 								$result=$test->test_result." ".$test->lab_unit; 
+								else $result ="";
 							} 
 							else{	
 								$result="Test not done.";
@@ -518,7 +524,7 @@ pri.print();
 						}
 						echo $result;
 					 }
-								else echo "-"; ?>
+					else echo "-"; ?>
 					 </td>
 				</tr>
 			<?php }
@@ -754,7 +760,9 @@ pri.print();
 					<?php if($test['numeric_result']==1){ 
 
 							if($test['test_status'] == 2) { 
+								if($testp['test_result']!=NULL)
 								$result=$test['test_result']." ".$test['lab_unit']; 
+								else $result ="";
 							} 
 							else{	
 								$result="Test not done.";
@@ -811,7 +819,9 @@ pri.print();
 					<?php if($test['numeric_result']==1){ 
 
 							if($test['test_status'] == 2) { 
+								if($test['test_result']!=NULL)
 								$result=$test['test_result']." ".$test['lab_unit']; 
+								else $result ="";
 							} 
 							else{	
 								$result="Test not done.";
