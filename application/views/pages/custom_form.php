@@ -95,7 +95,7 @@ pri.print();
 		<?php } 
 		else if(isset($registered)){ ?>
 		<iframe id="ifmcontentstoprint" style="height: 0px; width: 0px; position: absolute;display:none"></iframe>
-		<div class="sr-only" id="print-div" style="width:100%;height:100%;"> 
+		<div id="print-div" class="sr-only" style="width:100%;height:100%;"> 
 		<?php $this->load->view($print_layout);?>
 		</div>
                 <!-- Script for printing MLC complaint -->
@@ -106,7 +106,7 @@ pri.print();
                     <?php $this->load->view("pages/print_layouts/MLC_complaint");
                         $offset=4;
                     ?>
-		</div>
+				</div>
                 <?php }
                 else $offset=5;?>
 		<!--we divide the form into panel-header,panel-body and panel-footer -->
@@ -268,7 +268,7 @@ pri.print();
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Address<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-						<textarea rows="1" cols="30" name="address" class="form-control" value="<?php if($patient) echo $patient->address;?>"  <?php if($mandatory) echo "required"; ?>></textarea>
+						<textarea rows="1" cols="30" name="address" class="form-control" <?php if($mandatory) echo "required"; ?>><?php if($patient) echo $patient->address;?></textarea>
 						</div> 
 					</div>
 				<?php 
@@ -397,8 +397,13 @@ pri.print();
 						<label class="control-label">Occupation<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<select name="occupation" class="form-control" <?php if($mandatory) echo "required"; ?>>
 						<option value="">--Select--</option>
-							<option value="private" <?php if($patient && $patient->occupation=="private") echo " selected ";?> >Non government</option>
-							<option value="government" <?php if($patient && $patient->occupation=="government") echo " selected ";?> >Government</option>
+						<?php 
+						foreach($occupations as $occupation){
+							echo "<option value='".$occupation->occupation_id."'";
+							if($patient) if($occupation->occupation_id==$patient->occupation_id) echo " selected ";
+							echo ">".$occupation->occupation."</option>";
+						}
+						?>
 						</select>
 						</div>
 					</div>
@@ -586,7 +591,7 @@ pri.print();
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Presenting Complaint<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-                                                <textarea rows="1" cols="30" name="presenting_complaints" class="form-control" value="<?php if($patient) echo $patient->presenting_complaints;?>" <?php if($mandatory) echo "required"; ?>></textarea>
+                            <textarea rows="1" cols="30" name="presenting_complaints" class="form-control" <?php if($mandatory) echo "required"; ?>><?php if($patient) echo $patient->presenting_complaints;?></textarea>
 						</div>
 					</div>
 				<?php 

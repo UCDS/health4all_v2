@@ -61,7 +61,6 @@ class Reports_model extends CI_Model{
 		 ->group_by('department');
 		  
 		$resource=$this->db->get();
-	//	echo $this->db->last_query();
 		return $resource->result();
 	}
 	function get_ip_summary(){
@@ -511,11 +510,15 @@ class Reports_model extends CI_Model{
 		}
 		$this->db->select('test.*,test.test_id,test_order.order_id,order_date_time,age_years,age_months,age_days,
 		test_sample.sample_id,test_method,test_name,department,patient.first_name, patient.last_name, unit_name, area_name,
-							binary_result,numeric_result,text_result,patient_visit.visit_id,,staff.first_name staff_name,hosp_file_no,visit_type,sample_code,specimen_type,sample_container_type,test_status')
+		binary_result,numeric_result,text_result,
+		test_result_binary,test_result_text,test_result,lab_unit,
+		patient_visit.visit_id,,staff.first_name staff_name,hosp_file_no,
+		visit_type,sample_code,specimen_type,sample_container_type,test_status,binary_positive,binary_negative')
 		->from('test_order')
 		->join('test','test_order.order_id=test.order_id')
 		->join('test_sample','test_order.order_id=test_sample.order_id')
 		->join('test_master','test.test_master_id=test_master.test_master_id')
+		->join('lab_unit','test_master.numeric_result_unit=lab_unit.lab_unit_id','left')
 		->join('test_method','test_master.test_method_id=test_method.test_method_id')
 		->join('test_area','test_master.test_area_id=test_area.test_area_id')
 		->join('staff','test_order.doctor_id=staff.staff_id','left')

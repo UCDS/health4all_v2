@@ -473,7 +473,7 @@ class Masters_model extends CI_Model{
 			$this->db->select("district_id,district")->from("district");
 		}
 		else if($type=="states"){
-			$this->db->select("state_id,state")->from("states");
+			$this->db->select("state_id,state")->from("state");
 		}
 		else if($type=="countries"){
 			$this->db->select("*")->from("countries")->order_by('country_name');;
@@ -1059,61 +1059,73 @@ else if($type=="dosage"){
                         $test_master_id = $this->db->insert_id();
                         $rangeItemsCount = $this->input->post('range_item_count');                        
                         $range_data = array();
-                        for($count =1; $count <= $rangeItemsCount;$count++){
-                            if($this->input->post('range'.$count)=='1'){
-                                $min = $this->input->post('range_low'.$count);
-                                $max = $this->input->post('range_high'.$count);
+                        if(in_array('2',$this->input->post('output_format'))){
+                            for($count =1; $count <= $rangeItemsCount;$count++){
+                                if($this->input->post('range'.$count)=='1'){
+                                    $min = $this->input->post('range_low'.$count);
+                                    $max = $this->input->post('range_high'.$count);
+                                }
+                                elseif($this->input->post('range'.$count)=='2'){
+                                    $max = $this->input->post('value_less_than'.$count);
+                                    $min = NULL;
+                                }elseif($this->input->post('range'.$count)=='3'){
+                                    $min = $this->input->post('value_greater_than'.$count);
+                                    $max=NULL;
+                                }else{
+                                    $min = NULL;
+                                    $max = NULL;
+                                }
+                                if($this->input->post('age'.$count)=='1'){
+                                    $from_year = $this->input->post('year_low'.$count);
+                                    $from_month = $this->input->post('month_low'.$count);
+                                    $from_day = $this->input->post('day_low'.$count);
+                                    $to_year = $this->input->post('year_high'.$count);
+                                    $to_month = $this->input->post('month_high'.$count);
+                                    $to_day = $this->input->post('day_high'.$count);
+                                }elseif($this->input->post('age'.$count)=='2'){
+                                    $to_year = $this->input->post('upper_age_limit_years'.$count);
+                                    $to_month = $this->input->post('upper_age_limit_months'.$count);
+                                    $to_day = $this->input->post('upper_age_limit_days'.$count);
+                                    $from_year = NULL;
+                                    $from_month = NULL;
+                                    $from_day = NULL;
+                                }elseif($this->input->post('age'.$count)=='3'){
+                                    $from_year = $this->input->post('lower_age_limit_years'.$count);
+                                    $from_month = $this->input->post('lower_age_limit_months'.$count);
+                                    $from_day = $this->input->post('lower_age_limit_days'.$count);
+                                    $to_year = NULL;
+                                    $to_month = NULL;
+                                    $to_day = NULL;                                  
+                                }else{
+                                    $from_year = NULL;
+                                    $from_month = NULL;
+                                    $from_day = NULL;
+                                    $to_year = NULL;
+                                    $to_month = NULL;
+                                    $to_day = NULL;
+                                }
+                                $range_data[]=array(
+                                    'test_master_id' => $test_master_id,
+                                    'range_type'=> $this->input->post('range'.$count),
+                                    'gender' => $this->input->post('gender'.$count),
+                                    'age_type' => $this->input->post('age'.$count), 
+                                    'min' => $min,
+                                    'max' => $max,
+                                    'from_year' => $from_year,
+                                    'from_month' => $from_month,
+                                    'from_day' => $from_day,
+                                    'to_year' => $to_year,
+                                    'to_month' => $to_month,
+                                    'to_day' => $to_day
+                                 );
                             }
-                            elseif($this->input->post('range'.$count)=='2'){
-                                $max = $this->input->post('value_less_than'.$count);
-                                $min = NULL;
-                            }elseif($this->input->post('range'.$count)=='3'){
-                                $min = $this->input->post('value_greater_than'.$count);
-                                $max=NULL;
-                            }
-                            if($this->input->post('age'.$count)=='1'){
-                                $from_year = $this->input->post('year_low'.$count);
-                                $from_month = $this->input->post('month_low'.$count);
-                                $from_day = $this->input->post('day_low'.$count);
-                                $to_year = $this->input->post('year_high'.$count);
-                                $to_month = $this->input->post('month_high'.$count);
-                                $to_day = $this->input->post('day_high'.$count);
-                            }elseif($this->input->post('age'.$count)=='2'){
-                                $to_year = $this->input->post('upper_age_limit_years'.$count);
-                                $to_month = $this->input->post('upper_age_limit_months'.$count);
-                                $to_day = $this->input->post('upper_age_limit_days'.$count);
-                                $from_year = NULL;
-                                $from_month = NULL;
-                                $from_day = NULL;
-                            }elseif($this->input->post('age'.$count)=='3'){
-                                $from_year = $this->input->post('lower_age_limit_years'.$count);
-                                $from_month = $this->input->post('lower_age_limit_months'.$count);
-                                $from_day = $this->input->post('lower_age_limit_days'.$count);
-                                $to_year = NULL;
-                                $to_month = NULL;
-                                $to_day = NULL;                                  
-                            }
-                            $range_data[]=array(
-                                'test_master_id' => $test_master_id,
-                                'range_type'=> $this->input->post('range'.$count),
-                                'gender' => $this->input->post('gender'.$count),
-                                'age_type' => $this->input->post('age'.$count), 
-                                'min' => $min,
-                                'max' => $max,
-                                'from_year' => $from_year,
-                                'from_month' => $from_month,
-                                'from_day' => $from_day,
-                                'to_year' => $to_year,
-                                'to_month' => $to_month,
-                                'to_day' => $to_day
-                             );
+                           $this->db->insert_batch('test_range', $range_data);
                         }
-                       $this->db->insert_batch('test_range', $range_data);
-                       $this->db->trans_complete();
+                        $this->db->trans_complete();
                        if($this->db->trans_status()===FALSE){
                            $this->db->trans_rollback();
                            return false;
-                       }
+                      }
                        else
                            return true;
                         
@@ -1243,7 +1255,7 @@ else if($type=="dosage"){
 					   'latitude'=>$this->input->post('latitude')
 			);
 
-		$table="states";
+		$table="state";
 		}
 		elseif($type=="vendor"){
 		echo "type = ".$this->input->post('vendor_type_id');
@@ -1314,6 +1326,8 @@ else if($type=="dosage"){
 		  return true;
 		}	
 	}
+        
+    
 
 }
 ?>
