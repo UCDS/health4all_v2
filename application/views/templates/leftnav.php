@@ -176,7 +176,7 @@
 		<li <?php if(preg_match("^add/test_group^",current_url())) echo 'class="active"';?> title="Standard grouping of tests or test panels - LFT, RFT, etc."><a href="<?php echo base_url();?>diagnostics/add/test_group">Test Group</a></li>
 		<li <?php if(preg_match("^add/test_status_type^",current_url())) echo 'class="active"';?> title="List of status types for a test - Ordered, Approved, etc."><a href="<?php echo base_url();?>diagnostics/add/test_status_type">Test Status Type</a></li>
 		<li <?php if(preg_match("^add/test_name^",current_url())) echo 'class="active"';?> title="List of tests perfored in the labs - ASO, CRP, Blood culture, etc."><a href="<?php echo base_url();?>diagnostics/add/test_name">Test Name</a></li>
-		<li  <?php if(preg_match("^add/test_area^",current_url())) echo 'class="active"';?> title="Areas where the tests are done - Pathology, Microbiology, etc."><a href="<?php echo base_url();?>diagnostics/add/test_area">Test Area</a></li>
+		<li <?php if(preg_match("^add/test_area^",current_url())) echo 'class="active"';?> title="Areas where the tests are done - Pathology, Microbiology, etc."><a href="<?php echo base_url();?>diagnostics/add/test_area">Test Area</a></li>
 		<li <?php if(preg_match("^add/antibiotic^",current_url())) echo 'class="active"';?> title="List of Antibodies"><a href="<?php echo base_url();?>diagnostics/add/antibiotic">antibiotic</a></li>
 		<li <?php if(preg_match("^add/micro_organism^",current_url())) echo 'class="active"';?> title="List of Micro Organisms"><a href="<?php echo base_url();?>diagnostics/add/micro_organism">Micro Organism</a></li>
 		<li <?php if(preg_match("^add/specimen_type^",current_url())) echo 'class="active"';?> title="List of Specimen types - Blood, Urine, etc."><a href="<?php echo base_url();?>diagnostics/add/specimen_type">Specimen Type</a></li>
@@ -192,7 +192,12 @@
 		<li <?php if(preg_match("^edit/micro_organism^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>diagnostics/edit/micro_organism">Micro Organism</a></li>
 		<li <?php if(preg_match("^edit/specimen_type^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>diagnostics/edit/specimen_type">Specimen Type</a></li>
 		<li <?php if(preg_match("^edit/sample_status^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>diagnostics/edit/sample_status">Sample Status</a></li>
-		<?php } 
+                
+                <li class="nav-header">View</li>
+                <li <?php if(preg_match("^view/master_tests^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/view/master_tests">Master Tests</a></li>
+		<?php 
+                
+                } 
 			} ?>
 	
 </ul>
