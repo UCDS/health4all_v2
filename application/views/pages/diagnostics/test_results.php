@@ -216,7 +216,8 @@ pri.print();
 						<?php 
 							if($test['test_status'] == 2) { 
 								if($test['test_result_binary'] == 1 ) $result=$test['binary_positive'] ; 
-								else $result=$test['binary_negative'] ; 
+								else if($test['test_result_binary']==0) $result=$test['binary_negative'] ; 
+								else $result = "";
 							} 
 							else{	
 								$result="Test not done.";
@@ -274,8 +275,9 @@ pri.print();
 					<?php if($test['binary_result']==1){ ?>
 						<?php 
 							if($test['test_status'] == 2) { 
-								if($test['test_result_binary'] == 1 ) $result=$test['binary_positive'] ; 
-								else $result=$test['binary_negative'] ; 
+								if($test['test_result_binary'] == 1 ) $result=$test['binary_positive'] ;
+								else if($test['test_result_binary']==0) $result=$test['binary_negative'];
+								else $result=""; 
 							} 
 							else{	
 								$result="Test not done.";
@@ -420,7 +422,8 @@ pri.print();
 						<?php 
 							if($test->test_status == 2) { 
 								if($test->test_result_binary == 1 ) $result=$test->binary_positive ; 
-								else $result=$test->binary_negative ; 
+								else if($test->test_result_binary == 0) $result=$test->binary_negative ; 
+								else $result = "";
 							} 
 							else{	
 								$result="Test not done.";
@@ -642,7 +645,8 @@ pri.print();
 								<?php 
 									if($test->test_status == 2) { 
 										if($test->test_result_binary == 1 ) $result=$test->binary_positive ; 
-										else $result=$test->binary_negative ; 
+										else if($test->test_result_binary == 0) $result=$test->binary_negative ; 
+										else $result = "";
 									} 
 									else{	
 										$result="Test not done.";
@@ -777,7 +781,8 @@ pri.print();
 						<?php 
 							if($test['test_status'] == 2) { 
 								if($test['test_result_binary'] == 1 ) $result=$test['binary_positive'] ; 
-								else $result=$test['binary_negative'] ; 
+								else if($test['test_result_binary']==0) $result = $test['binary_negative'];
+								else $result=""; 
 							} 
 							else{	
 								$result="Test not done.";
@@ -836,7 +841,8 @@ pri.print();
 						<?php 
 							if($test['test_status'] == 2) { 
 								if($test['test_result_binary'] == 1 ) $result=$test['binary_positive'] ; 
-								else $result=$test['binary_negative'] ; 
+								else if($test['test_result_binary']==0) $result = $test['binary_negative'];
+								else $result=""; 
 							} 
 							else{	
 								$result="Test not done.";
@@ -896,7 +902,8 @@ pri.print();
 								<?php 
 									if($test->test_status == 2) { 
 										if($test->test_result_binary == 1 ) $result=$test->binary_positive ; 
-										else $result=$test->binary_negative ; 
+										else if($test->test_result_binary == 0) $result=$test->binary_negative ; 
+										else $result = "";
 									} 
 									else{	
 										$result="Test not done.";

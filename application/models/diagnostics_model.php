@@ -337,7 +337,9 @@ class Diagnostics_model extends CI_Model{
 		if(!!$tests){
 		foreach($tests as $test){
 			if($this->input->post('binary_result_'.$test)!=NULL || $this->input->post('numeric_result_'.$test)!=NULL || $this->input->post('text_result_'.$test)!=NULL){
-				$binary_result=$this->input->post('binary_result_'.$test);
+				if($this->input->post('binary_result_'.$test)!=NULL) 
+					$binary_result=$this->input->post('binary_result_'.$test);
+				else $binary_result=NULL;
 				$numeric_result=$this->input->post('numeric_result_'.$test);
 				$text_result=$this->input->post('text_result_'.$test);
 				$data[]=array(

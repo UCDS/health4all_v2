@@ -138,7 +138,8 @@
 							} 
 							else{	
 								if($test->test_result_binary == 1 ) $result=$test->binary_positive ; 
-								else $result=$test->binary_negative ; 
+								else if($test->test_result_binary == 0) $result=$test->binary_negative ; 
+								else $result = "";
 							}
 						echo $result;
 						?>
