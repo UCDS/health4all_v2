@@ -217,6 +217,10 @@
 				<li <?php if(preg_match("^user_panel/create_user^",current_url())) echo 'class="active"';?> > 
 					<a href="<?php echo base_url()."user_panel/create_user";?>">Create New</a>
 				</li>
+				
+				<li <?php if(preg_match("^user_panel/edit_user^",current_url())) echo 'class="active"';?>> 
+				<a href="<?php echo base_url()."user_panel/edit_user";?>">Edit User</a>
+				</li>
 				</ul>
         </div>
 <?php } ?>

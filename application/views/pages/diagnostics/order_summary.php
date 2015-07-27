@@ -126,6 +126,7 @@ $(function(){
 							echo ">".$test_master->test_name."</option>";
 						}
 						?>
+						?>
 						</select>
 						<select name="department" id="department" class="form-control">
 						<option value="">Department</option>
