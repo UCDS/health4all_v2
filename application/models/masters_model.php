@@ -39,7 +39,23 @@ class Masters_model extends CI_Model{
 			$this->db->select("unit_id,unit_name,department_id")->from("unit");
 		}
 		else if($type=="user"){
-			$this->db->select("user_id,username")->from("user");
+			$this->db->select("user.user_id,username,password,user.staff_id,first_name,last_name,designation,phone,department")
+			->from("user")
+			->join('staff','user.staff_id=staff.staff_id')
+			->join('department','staff.department_id=department.department_id');
+			if($this->input->post('search'))
+			{
+				$user = strtolower($this->input->post('user'));
+				$this->db->like('LOWER(username)',$user,'after');
+			}
+			if($this->input->post('select') || $this->input->post('update'))
+			{
+				if($this->input->post('select')) $user_id = $this->input->post('user_id');
+				else if($this->input->post('update')) $user_id = $this->input->post('user');
+				$this->db->select('function_id,add,edit,view')->where('user.user_id',$user_id)
+				->join('user_function_link','user.user_id=user_function_link.user_id');
+				
+			}
 		}
 		else if($type=='staff')
 		{
@@ -558,6 +574,77 @@ function update_data($type){
 		
 		
 	}
+	else if($type=="user"){
+		
+		if(trim($this->input->post('password'))!=""){
+			$password=$this->input->post('password');
+		}
+		if(isset($password))
+			$data=array(
+			'username'=>$this->input->post('username'),
+			'password'=>md5($password),
+			'staff_id'=>$this->input->post('staff')
+			);
+		else
+			$data=array(
+			'username'=>$this->input->post('username'),
+			'staff_id'=>$this->input->post('staff')
+			);
+		$this->db->trans_start();
+		$this->db->where('user_id',$this->input->post('user'));
+		$this->db->update('user',$data);
+		$user_functions=$this->input->post('user_function');
+		$this->db->select('link_id,user_function.user_function_id')->from('user_function')
+		->join('user_function_link','user_function.user_function_id=user_function_link.function_id')
+		->where('user_id',$this->input->post('user'));
+		$query=$this->db->get();
+		$result=$query->result();
+		$existing_functions=array();
+		$user_functions_data=array();
+		$update_functions_data=array();
+		foreach($result as $row){
+			$add=0;$edit=0;$view=0;
+			if($this->input->post($row->user_function_id))
+				foreach($this->input->post($row->user_function_id) as $access){
+					if($access=="add") $add=1;
+					if($access=="edit") $edit=1;
+					if($access=="view") $view=1;
+				}
+				$update_functions_data[]=array(
+					'link_id'=>$row->link_id,
+					'add'=>$add,
+					'edit'=>$edit,
+					'view'=>$view
+				);
+			$existing_functions[]=$row->user_function_id;
+		}
+		foreach($user_functions as $u){
+			if(!in_array($u,$existing_functions)){
+				$add=0;
+				$edit=0;
+				$view=0;
+				if($this->input->post($u)){
+					foreach($this->input->post($u) as $access){
+						if($access=="add") $add=1;
+						if($access=="edit") $edit=1;
+						if($access=="view") $view=1;
+					}
+					$user_functions_data[]=array(
+						'user_id'=>$this->input->post('user'),
+						'function_id'=>$u,
+						'add'=>$add,
+						'edit'=>$edit,
+						'view'=>$view
+					);
+				}
+			}
+		}
+		if(count($update_functions_data)>0) $this->db->update_batch('user_function_link',$update_functions_data,'link_id');
+		if(count($user_functions_data)>0) $this->db->insert_batch('user_function_link',$user_functions_data);
+
+		$this->db->trans_complete();
+		if($this->db->trans_status()===TRUE) return true; else { $this->db->trans_rollback(); return false; }		
+		}
 	else if($type=="equipment_type"){
 			$data = array(
 					  'equipment_type'=>$this->input->post('equipment_type')
