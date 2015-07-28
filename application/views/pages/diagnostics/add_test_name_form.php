@@ -82,11 +82,11 @@
              $("#count_of_range_items").val("" + count_of_range_items);
              var field1 = '<div class="form_group test_range" id="range_' + count_of_range_items + '"><label class="col-md-4 range" >Value Range</label>' +
                              '<div class="col-md-8 range" id="value_range" >' +
-                                 '<label><input type="radio" id="range_type_between' + count_of_range_items + '" onclick="showRangeTypeBetween(' + count_of_range_items + ');" form="add_test_name" value="1" name="range' + count_of_range_items + '" />' +
+                                 '<label><input type="radio" id="range_type_between' + count_of_range_items + '" onclick="showRangeTypeBetween(' + count_of_range_items + ');" form="add_test_name" value="3" name="range' + count_of_range_items + '" />' +
                                  '[...]Between &nbsp;</label>' +
-                                 '<label><input type="radio" id="range_less_than' + count_of_range_items + '" onclick="showRangeLessThan(' + count_of_range_items + ');" form="add_test_name" value="2" name="range' + count_of_range_items + '" />' +
+                                 '<label><input type="radio" id="range_less_than' + count_of_range_items + '" onclick="showRangeLessThan(' + count_of_range_items + ');" form="add_test_name" value="1" name="range' + count_of_range_items + '" />' +
                                  '&lt Less than &nbsp; </label>' +
-                                 '<label><input type="radio" id="range_greater_than' + count_of_range_items + '" onclick="showRangeGreaterThan(' + count_of_range_items + ')" form="add_test_name" value="3" name="range' + count_of_range_items + '" />' +
+                                 '<label><input type="radio" id="range_greater_than' + count_of_range_items + '" onclick="showRangeGreaterThan(' + count_of_range_items + ')" form="add_test_name" value="2" name="range' + count_of_range_items + '" />' +
                                  '&gt Greater than</label>' +
                                  '&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +
                                  '<span class="glyphicon glyphicon-minus" aria-hidden="true" onclick="$(\'#range_' + count_of_range_items + '\').remove()"></span>' +
@@ -121,11 +121,11 @@
 
              var field4 = '<label class="col-md-4 range" >Age Range</label>' +
                           '<div class="col-md-8 range">' +
-                              '<label ><input type="radio" id="between_ages' + count_of_range_items + '" onclick="showAgeBetween(' + count_of_range_items + ');" form="add_test_name" value="1" name="age' + count_of_range_items + '" />' +
+                              '<label ><input type="radio" id="between_ages' + count_of_range_items + '" onclick="showAgeBetween(' + count_of_range_items + ');" form="add_test_name" value="3" name="age' + count_of_range_items + '" />' +
                               '[...]Age between &nbsp;</label>' +
-                              '<label ><input type="radio" id="age_less_than' + count_of_range_items + '" onclick="showAgeLessThan(' + count_of_range_items + ');" form="add_test_name" value="2" name="age' + count_of_range_items + '" />' +
+                              '<label ><input type="radio" id="age_less_than' + count_of_range_items + '" onclick="showAgeLessThan(' + count_of_range_items + ');" form="add_test_name" value="1" name="age' + count_of_range_items + '" />' +
                               ' &ltAge less than &nbsp;</label>' +
-                              '<label ><input type="radio" id="age_greater_than' + count_of_range_items + '" onclick="showAgeGreaterThan(' + count_of_range_items + ');" form="add_test_name" value="3" name="age' + count_of_range_items + '" />' +
+                              '<label ><input type="radio" id="age_greater_than' + count_of_range_items + '" onclick="showAgeGreaterThan(' + count_of_range_items + ');" form="add_test_name" value="2" name="age' + count_of_range_items + '" />' +
                               ' &gtAge greater than</label>' +
                               '<input type="radio" id="all_ages' + count_of_range_items + '" form="add_test_name" value="4" name="age' + count_of_range_items + '" />'+
                               '<label for="all_ages1"> &gtAll ages</label>'
@@ -364,11 +364,11 @@
                 <div class='test_range'>
                 <label for="value_range" class="col-md-4 range" hidden>Value Range</label>
                 <div class="col-md-8 range" id="value_range" hidden>
-                    <input type="radio" id="range_type_between1" onclick="showRangeTypeBetween('1');" form="add_test_name" value="1" name="range1" />
+                    <input type="radio" id="range_type_between1" onclick="showRangeTypeBetween('1');" form="add_test_name" value="3" name="range1" />
                     <label for="range_type_between1">[...]Between</label>
-                    <input type="radio" id="range_less_than1" onclick="showRangeLessThan('1');" form="add_test_name" value="2" name="range1" />
+                    <input type="radio" id="range_less_than1" onclick="showRangeLessThan('1');" form="add_test_name" value="1" name="range1" />
                     <label for="range_less_than1"> &lt Less than</label>
-                    <input type="radio" id="range_greater_than1" onclick="showRangeGreaterThan('1')" form="add_test_name" value="3" name="range1" />
+                    <input type="radio" id="range_greater_than1" onclick="showRangeGreaterThan('1')" form="add_test_name" value="2" name="range1" />
                     <label for="range_greater_than1"> &gt Greater than</label>
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <span class="glyphicon glyphicon-plus" id="add_range" aria-hidden="true"></span>
@@ -402,11 +402,11 @@
                 
                 <label for="age_range" class="col-md-4 range" hidden>Age Range</label>
                 <div class="col-md-8 range" id="age_range" hidden>
-                    <input type="radio" id="between_ages1" onclick="showAgeBetween('1');" form="add_test_name" value="1" name="age1" />
+                    <input type="radio" id="between_ages1" onclick="showAgeBetween('1');" form="add_test_name" value="3" name="age1" />
                     <label for="between_ages">[...]Age between</label>
-                    <input type="radio" id="age_less_than1" onclick="showAgeLessThan('1');" form="add_test_name" value="2" name="age1" />
+                    <input type="radio" id="age_less_than1" onclick="showAgeLessThan('1');" form="add_test_name" value="1" name="age1" />
                     <label for="age_less_than1"> &ltAge less than</label>
-                    <input type="radio" id="age_greater_than1" onclick="showAgeGreaterThan('1');" form="add_test_name" value="3" name="age1" />
+                    <input type="radio" id="age_greater_than1" onclick="showAgeGreaterThan('1');" form="add_test_name" value="2" name="age1" />
                     <label for="age_greater_than1"> &gtAge greater than</label>
                     <input type="radio" id="all_ages1" form="add_test_name" value="4" name="age1" />
                     <label for="all_ages1"> &gtAll ages</label>
