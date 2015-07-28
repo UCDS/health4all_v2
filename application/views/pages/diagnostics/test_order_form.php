@@ -244,7 +244,7 @@
 	<div class="panel-footer">
 		<div class="col-md-offset-4">
 		</br>
-		<button class="btn btn-lg btn-primary" type="submit" value="submit" name="ta_add">Order</button>
+		<button class="btn btn-lg btn-primary" type="submit" value="submit" name="submit">Order</button>
 		</div>
 	</div>
 </div>
