@@ -45,7 +45,7 @@ function test_order($departments=0){
 		$this->load->view($page,$this->data);
 	}
 	else{	
-		if(($this->input->post('submit'))||($this->diagnostics_model->order_test())){
+		if(($this->input->post('submit'))&&($this->diagnostics_model->order_test())){
 		$this->data['msg']="Order has been placed successfully";
 		$this->load->view($page,$this->data);
 		}

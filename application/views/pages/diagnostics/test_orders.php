@@ -172,7 +172,7 @@
                                                             else if($test['range_type']==2)
                                                                 echo "(Normal range: > ".$test['min'].")".$test['lab_unit'];
                                                             else if($test['range_type']==3)
-                                                                echo "(Normal range: > ".$test['min']." - ".$test['max'].")".$test['lab_unit'];
+                                                                echo "(Normal range: ".$test['min']." - ".$test['max'].")".$test['lab_unit'];
                                                             else
                                                                 echo $test->lab_unit;
                                                         ?>
@@ -224,7 +224,7 @@
                                                             else if($test['range_type']==2)
                                                                 echo "(Normal range: > ".$test['min'].")".$test['lab_unit'];
                                                             else if($test['range_type']==3)
-                                                                echo "(Normal range: > ".$test['min']." - ".$test['max'].")".$test['lab_unit'];
+                                                                echo "(Normal range: ".$test['min']." - ".$test['max'].")".$test['lab_unit'];
                                                             else
                                                                 echo $test['lab_unit'];
                                                         ?></label>
@@ -401,7 +401,7 @@
                                                             else if($test->range_type==2)
                                                                 echo "(Normal range: > ".$test->min.")".$test->lab_unit;
                                                             else if($test->range_type==3)
-                                                                echo "(Normal range: > ".$test->min." - ".$test->max.")".$test->lab_unit;
+                                                                echo "(Normal range: ".$test->min." - ".$test->max.")".$test->lab_unit;
                                                             else
                                                                 echo $test->lab_unit;
                                                         ?></label>
