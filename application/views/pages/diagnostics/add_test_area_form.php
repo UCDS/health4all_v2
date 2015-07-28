@@ -15,6 +15,6 @@
 </div>
 <div class="col-md-3 col-md-offset-4">
 </br>
-<button class="btn btn-lg btn-primary btn-block" type="submit" value="submit" name="ta_add">Submit</button>
+<button class="btn btn-lg btn-primary btn-block" type="submit" value="submit" name="submit">Submit</button>
 </div>
 </div>

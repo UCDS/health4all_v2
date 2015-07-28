@@ -164,6 +164,9 @@ class User_panel extends CI_Controller {
 		$this->load->helper('form');
 		$this->data['title']="Donations detailed report";
 		$this->data['userdata']=$this->session->userdata('logged_in');
+		$this->data['camps']=$this->register_model->get_camps();
+		$this->data['from_date']=$from_date;
+		$this->data['to_date']=$to_date;
 		$this->data['donated']=$this->reports_model->get_donated_blood($camp,$blood_group,$sex,$donation_date,$from_date,$to_date);
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/reports_nav',$this->data);

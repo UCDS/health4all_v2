@@ -41,36 +41,36 @@
 		<?php
 		echo form_open('bloodbank/inventory/issue',array('id'=>'issue_form'));
 		foreach($request as $request){
-				echo "<input type='text' value='$request[request_id]' hidden name='request_id' />";
-				echo "Request ID: ".$request['request_id']."<br />Requested for ";
-				echo "Blood Group: <b>$request[blood_group] ";
-				if($request['whole_blood_units']!=0){
-					echo "| WB: ".$request['whole_blood_units'];
-					echo "<input type='text' value='WB' hidden name='components[]' /> | ";
+				echo "<input type='text' value='$request->request_id' hidden name='request_id' />";
+				echo "Request ID: ".$request->request_id."<br />Requested for ";
+				echo "Blood Group: <label class='label label-default'><b>$request->blood_group</b></label> ";
+				if($request->whole_blood_units!=0){
+					echo "<label class='label label-success'><b>WB: ".$request->whole_blood_units;
+					echo "</b><input type='text' value='WB' hidden name='components[]' /></label> ";
 				}
-				if($request['packed_cell_units']!=0){
-					echo "| PC: ".$request['packed_cell_units'];
-					echo "<input type='text' value='PC' hidden name='components[]' /> | ";
+				if($request->packed_cell_units!=0){
+					echo "<label class='label label-info'>PC: ".$request->packed_cell_units;
+					echo "</b><input type='text' value='PC' hidden name='components[]' /></label> ";
 				}
-				if($request['fp_units']!=0){
-					echo "| FP: ".$request['fp_units'];
-					echo "<input type='text' value='FP' hidden name='components[]' /> | ";
+				if($request->fp_units!=0){
+					echo "<label class='label label-warning'>FP: ".$request->fp_units;
+					echo "</b><input type='text' value='FP' hidden name='components[]' /></label> ";
 				}
-				if($request['ffp_units']!=0){
-					echo "| FFP: ".$request['ffp_units'];
-					echo "<input type='text' value='FFP' hidden name='components[]' /> | ";
+				if($request->ffp_units!=0){
+					echo "<label class='label label-warning'>FFP: ".$request->ffp_units;
+					echo "</b><input type='text' value='FFP' hidden name='components[]' /></label> ";
 				}
-				if($request['prp_units']!=0){
-					echo "| PRP : ".$request['prp_units'];
-					echo "<input type='text' value='PRP' hidden name='components[]' /> | ";
+				if($request->prp_units!=0){
+					echo "<label class='label label-warning'>PRP : ".$request->prp_units;
+					echo "</b><input type='text' value='PRP' hidden name='components[]' /></label> ";
 				}
-				if($request['platelet_concentrate_units']!=0){
-					echo "| Platelet Concentrate: ".$request['platelet_concentrate_units'];
-					echo "<input type='text' value='Platelet Concentrate' hidden name='components[]' /> | ";
+				if($request->platelet_concentrate_units!=0){
+					echo "<label class='label label-warning'>Platelet Concentrate: ".$request->platelet_concentrate_units;
+					echo "</b><input type='text' value='Platelet Concentrate' hidden name='components[]' /></label> ";
 				}
-				if($request['cryoprecipitate_units']!=0){
-					echo "| Cryo: ".$request['cryoprecipitate_units'];
-					echo "<input type='text' value='Cryo' hidden name='components[]' /> | ";
+				if($request->cryoprecipitate_units!=0){
+					echo "<label class='label label-warning'>Cryo: ".$request->cryoprecipitate_units;
+					echo "</b><input type='text' value='Cryo' hidden name='components[]' /></label> ";
 				}
 				echo "</b><br />";
 		}
@@ -88,11 +88,11 @@
 	foreach($inv as $i){
 	?>
 		<tr class="universal">
-			<td><?php echo $i['blood_unit_num'];?></td>
-			<td><?php echo $i['component_type'];?></td>
-			<td><?php echo $i['blood_group'];?></td>
-			<td><?php echo date("d-M-Y",strtotime($i['expiry_date']));;?></td>
-			<td><input type="checkbox" value="<?php echo $i['inventory_id'];?>" name="inventory_id[]" class="select_component" /></td>
+			<td><?php echo $i->blood_unit_num;?></td>
+			<td><?php echo $i->component_type;?></td>
+			<td><?php echo $i->blood_group;?></td>
+			<td><?php echo date("d-M-Y",strtotime($i->expiry_date));;?></td>
+			<td><input type="checkbox" value="<?php echo $i->inventory_id;?>" name="inventory_id[]" class="select_component" /></td>
 		</tr>
 	<?php
 	}
@@ -155,5 +155,6 @@
 	?>
 	</div>
 	</div>
+</div>
 </div>
 

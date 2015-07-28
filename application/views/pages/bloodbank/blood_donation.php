@@ -22,12 +22,12 @@
 		<tr>
 		<form>
 			<td><?php echo $i;?></td>
-			<td><?php echo $donor['name'];?></td>
-			<td><?php echo $donor['age'];?></td>
-			<td><?php echo $donor['blood_group'];?></td>
-			<td><?php echo $donor['phone'];?></td>
+			<td><?php echo $donor->name;?></td>
+			<td><?php echo $donor->age;?></td>
+			<td><?php echo $donor->blood_group;?></td>
+			<td><?php echo $donor->phone;?></td>
 			<td>
-				<input type="submit" value="Update" formaction="<?php echo base_url();?>register/medical_checkup/<?php echo $donor['donation_id'];?>" />
+				<input type="submit" value="Update" formaction="<?php echo base_url();?>register/medical_checkup/<?php echo $donor->donation_id;?>" />
 				<input type="submit" value="X" formaction="<?php echo base_url();?>register/delete_donor/$donation_id"/></td>
 		</form>
 		</tr>
