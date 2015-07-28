@@ -4,7 +4,7 @@ class Diagnostics_model extends CI_Model{
 		parent::__construct();
 	}
 	function order_test(){
-		$this->db->select('visit_id, patient_id')->from('patient_visit')
+      	$this->db->select('visit_id, patient_id')->from('patient_visit')
 		->where('hosp_file_no',$this->input->post('visit_id'))
 		->where('visit_type',$this->input->post('patient_type'))
 		->where('YEAR(admit_date)',$this->input->post('year'),false); 
@@ -59,7 +59,7 @@ class Diagnostics_model extends CI_Model{
                         ->join('patient_visit', 'patient_visit.patient_id=patient.patient_id')
                         ->group_by('patient.patient_id');
                         $patient_row = $this->db->get()->row();
-                        //echo $this->db->last_query();
+                        
                         $dob = strtotime($patient_row->dob);
                         $admit_date = strtotime($patient_row->admit_date);
                         $gender='';
@@ -68,11 +68,12 @@ class Diagnostics_model extends CI_Model{
                         else
                             $gender = 2;
                         $range_id = "";
+                        
 			if($this->input->post('test_master'))
 				foreach($this->input->post('test_master') as $test_master){
                                         
                                         //Retrieving range from test ranges table if range is active.
-                                        $this->db->select('test_range_id, range_type, gender, from_year, to_year, from_month, to_month, from_day, to_day')
+                                        $this->db->select('test_range_id, age_type, gender, from_year, to_year, from_month, to_month, from_day, to_day')
                                                 ->from('test_range')
                                                 ->where('test_master_id', $test_master)
                                                 ->where('range_active', 1);
@@ -89,12 +90,12 @@ class Diagnostics_model extends CI_Model{
                                             foreach($ranges as $range){
                                                 if($gender == $range->gender || $range->gender == 3){
                                                     //All ages
-                                                    if($range->range_type==4){
+                                                    if($range->age_type == 4){
                                                         $range_id = $range->test_range_id;
                                                         break;
                                                     }
                                                     //Age less than
-                                                    else if ($range->range_type == 1){
+                                                    else if ($range->age_type == 1){
                                                        if($age_years < $range->to_year){
                                                             $range_id = $range->test_range_id;
                                                             break;
@@ -111,7 +112,7 @@ class Diagnostics_model extends CI_Model{
                                                                }
                                                        }
                                                     }//Age greater than.
-                                                    else if($range->range_type == 2){
+                                                    else if($range->age_type == 2){
                                                         if($age_years > $range->from_year){
                                                            $range_id = $range->test_range_id;
                                                            break;
@@ -128,7 +129,7 @@ class Diagnostics_model extends CI_Model{
                                                                }
                                                        }
                                                     }//Age in a given range.
-                                                    else if($range->range_type == 3){
+                                                    else if($range->age_type == 3){
                                                         if($age_years >= $range->from_year && $age_years <= $range->to_year){
                                                             if($age_years == $range->from_year){
                                                                 if($age_months > $range->from_month){
@@ -172,11 +173,11 @@ class Diagnostics_model extends CI_Model{
                                             foreach($ranges as $range){
                                                 if($gender == $range->gender || $range->gender == 3){
                                                     //All ages
-                                                    if($range->range_type==4){
+                                                    if($range->age_type==4){
                                                         $range_id = $range->test_range_id;
                                                         break;
                                                     }//Age less than
-                                                    else if ($range->range_type == 1){
+                                                    else if ($range->age_type == 1){
                                                        if($age_years < $range->to_year){
                                                             $range_id = $range->test_range_id;
                                                             break;
@@ -193,7 +194,7 @@ class Diagnostics_model extends CI_Model{
                                                                }
                                                        }
                                                     }//Age greater than.
-                                                    else if($range->range_type == 2){
+                                                    else if($range->age_type == 2){
                                                         if($age_years > $range->from_year){
                                                            $range_id = $range->test_range_id;
                                                            break;
@@ -210,7 +211,7 @@ class Diagnostics_model extends CI_Model{
                                                                }
                                                        }
                                                     }//Age in a given range.
-                                                    else if($range->range_type == 3){
+                                                    else if($range->age_type == 3){
                                                         if($age_years >= $range->from_year && $age_years <= $range->to_year){
                                                             if($age_years == $range->from_year){
                                                                 if($age_months > $range->from_month){
@@ -236,7 +237,6 @@ class Diagnostics_model extends CI_Model{
                                                                 }
                                                             }else{ 
                                                                 $range_id = $range->test_range_id;
-                                                                echo $range_id;
                                                                 break;
                                                             }
                                                         }
@@ -265,14 +265,13 @@ class Diagnostics_model extends CI_Model{
                                 
 					foreach($result as $row){
                                             //Retrieving range from test ranges table.
-                                            $this->db->select('test_range_id, range_type, gender, from_year, to_year, from_month, to_month, from_day, to_day')
+                                            $this->db->select('test_range_id, age_type, gender, from_year, to_year, from_month, to_month, from_day, to_day')
                                                     ->from('test_range')
                                                     ->where('test_master_id', $row->test_master_id);
                                             $query = $this->db->get();
                                             $ranges = $query->result();
 
                                             if($dob != strtotime(0)){
-                                                echo "DOB is set";
                                                 $now = strtotime(date("D M d, Y G:i"));
                                                 $diff = abs($now - $dob);
                                                 $age_years = floor($diff / (365*60*60*24));
@@ -281,12 +280,12 @@ class Diagnostics_model extends CI_Model{
                                                 foreach($ranges as $range){
                                                     if($gender == $range->gender || $range->gender == 3){
                                                         //All ages
-                                                        if($range->range_type==4){
+                                                        if($range->age_type==4){
                                                             $range_id = $range->test_range_id;
                                                             break;
                                                         }
                                                         //Age less than
-                                                        else if ($range->range_type == 1){
+                                                        else if ($range->age_type == 1){
                                                            if($age_years < $range->to_year){
                                                                 $range_id = $range->test_range_id;
                                                                 break;
@@ -303,7 +302,7 @@ class Diagnostics_model extends CI_Model{
                                                                    }
                                                            }
                                                         }//Age greater than.
-                                                        else if($range->range_type == 2){
+                                                        else if($range->age_type == 2){
                                                             if($age_years > $range->from_year){
                                                                $range_id = $range->test_range_id;
                                                                break;
@@ -320,7 +319,7 @@ class Diagnostics_model extends CI_Model{
                                                                    }
                                                            }
                                                         }//Age in a given range.
-                                                        else if($range->range_type == 3){
+                                                        else if($range->age_type == 3){
                                                             if($age_years >= $range->from_year && $age_years <= $range->to_year){
                                                                 if($age_years == $range->from_year){
                                                                     if($age_months > $range->from_month){
@@ -364,12 +363,12 @@ class Diagnostics_model extends CI_Model{
                                                 foreach($ranges as $range){
                                                     if($gender == $range->gender || $range->gender == 3){
                                                         //All ages
-                                                        if($range->range_type==4){
+                                                        if($range->age_type == 4){
                                                             $range_id = $range->test_range_id;
                                                             break;
                                                         }
                                                         //Age less than
-                                                        else if ($range->range_type == 1){
+                                                        else if ($range->age_type == 1){
                                                            if($age_years < $range->to_year){
                                                                 $range_id = $range->test_range_id;
                                                                 break;
@@ -386,7 +385,7 @@ class Diagnostics_model extends CI_Model{
                                                                    }
                                                            }
                                                         }//Age greater than.
-                                                        else if($range->range_type == 2){
+                                                        else if($range->age_type == 2){
                                                             if($age_years > $range->from_year){
                                                                $range_id = $range->test_range_id;
                                                                break;
@@ -403,7 +402,7 @@ class Diagnostics_model extends CI_Model{
                                                                    }
                                                            }
                                                         }//Age in a given range.
-                                                        else if($range->range_type == 3){
+                                                        else if($range->age_type == 3){
                                                             if($age_years >= $range->from_year && $age_years <= $range->to_year){
                                                                 if($age_years == $range->from_year){
                                                                     if($age_months > $range->from_month){
