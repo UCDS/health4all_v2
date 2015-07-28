@@ -1148,35 +1148,36 @@ else if($type=="dosage"){
                         $range_data = array();
                         if(in_array('2',$this->input->post('output_format'))){
                             for($count =1; $count <= $rangeItemsCount;$count++){
-                                if($this->input->post('range'.$count)=='1'){
+                                if($this->input->post('range'.$count)=='3'){
                                     $min = $this->input->post('range_low'.$count);
                                     $max = $this->input->post('range_high'.$count);
                                 }
-                                elseif($this->input->post('range'.$count)=='2'){
+                                elseif($this->input->post('range'.$count)=='1'){
                                     $max = $this->input->post('value_less_than'.$count);
                                     $min = NULL;
-                                }elseif($this->input->post('range'.$count)=='3'){
+                                }elseif($this->input->post('range'.$count)=='2'){
                                     $min = $this->input->post('value_greater_than'.$count);
                                     $max=NULL;
                                 }else{
                                     $min = NULL;
                                     $max = NULL;
                                 }
-                                if($this->input->post('age'.$count)=='1'){
+                                if($this->input->post('age'.$count)=='3'){
                                     $from_year = $this->input->post('year_low'.$count);
                                     $from_month = $this->input->post('month_low'.$count);
                                     $from_day = $this->input->post('day_low'.$count);
                                     $to_year = $this->input->post('year_high'.$count);
                                     $to_month = $this->input->post('month_high'.$count);
                                     $to_day = $this->input->post('day_high'.$count);
-                                }elseif($this->input->post('age'.$count)=='2'){
+                                    echo $from_year;
+                                }elseif($this->input->post('age'.$count)=='1'){
                                     $to_year = $this->input->post('upper_age_limit_years'.$count);
                                     $to_month = $this->input->post('upper_age_limit_months'.$count);
                                     $to_day = $this->input->post('upper_age_limit_days'.$count);
                                     $from_year = NULL;
                                     $from_month = NULL;
                                     $from_day = NULL;
-                                }elseif($this->input->post('age'.$count)=='3'){
+                                }elseif($this->input->post('age'.$count)=='2'){
                                     $from_year = $this->input->post('lower_age_limit_years'.$count);
                                     $from_month = $this->input->post('lower_age_limit_months'.$count);
                                     $from_day = $this->input->post('lower_age_limit_days'.$count);
@@ -1206,10 +1207,12 @@ else if($type=="dosage"){
                                     'to_day' => $to_day
                                  );
                             }
+                            echo $test_master_id;
                            $this->db->insert_batch('test_range', $range_data);
                         }
                         $this->db->trans_complete();
                        if($this->db->trans_status()===FALSE){
+                           echo "Transaction failed";
                            $this->db->trans_rollback();
                            return false;
                       }
