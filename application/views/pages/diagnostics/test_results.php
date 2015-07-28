@@ -81,6 +81,8 @@ pri.print();
 		$district=$order[0]->district;
 		$state = $order[0]->state;
 		$specimen_type = $order[0]->specimen_type;
+        $specimen_source = $order[0]->specimen_source;
+        $sample_id = $order[0]->sample_id;
 		$test_method = $order[0]->test_method;
 		$first_name = $order[0]->first_name;
 		$last_name = $order[0]->last_name;
@@ -143,6 +145,16 @@ pri.print();
 					<?php echo $order[0]->unit_name." / ".$order[0]->area_name;?>
 				</div>
 			</div>
+            <div class="row col-md-12">
+                <div class="col-md-6">
+                    <b>Sample :</b>
+                    <?php echo $specimen_type; if(!!$specimen_source) echo " - ".$specimen_source;?>
+                </div>
+                <div class="col-md-6">
+                    <b>Sample ID :</b>
+                    <?php echo $sample_id; ?>
+                </div>
+            </div>
 			<br />
 			<br />
 			<br />
@@ -644,7 +656,7 @@ pri.print();
 			<th style="text-align:center" colspan="10"><?php echo $hospital;?>, <?php echo $place;?>, <?php echo $district;?>, <?php echo $state;?><br /></th>
 			</tr>
 			<tr>
-			<th style="text-align:center" colspan="10"><u><?php echo $specimen_type." Sample - ".$test_method;?> Results</u><br /></th>
+			<th style="text-align:center" colspan="10"><u><?php echo $test_method;?> Report</u><br /></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -677,6 +689,16 @@ pri.print();
 					<?php echo $unit_name." / ".$area_name;?>
 				</td>
 				</tr>
+                <tr>
+                    <td colspan="3">
+                        <b>Sample :</b>
+                        <?php echo $specimen_type; if(!!$specimen_source) echo " - ".$specimen_source;?>
+                    </td>
+                    <td colspan="2">
+                        <b>Sample ID :</b>
+                        <?php echo $sample_id; ?>
+                    </td>
+                </tr>
 			<tr>
 				<td colspan="10" align="center">
 					<?php if(preg_match("^Culture*^",$order[0]->test_method)){ ?>  <!-- this condition checks if the test method is Culture and Sensitivity-->
