@@ -267,16 +267,10 @@ pri.print();
 							else
                                                             $result="<td colspan='2'>";
 							if($test['test_status'] == 2) { 
-<<<<<<< HEAD
-								if($test['test_result_binary'] == 1 ) $result=$test['binary_positive'] ; 
-								else if($test['test_result_binary']==0) $result=$test['binary_negative'] ; 
-								else $result = "";
-=======
 								if($test['test_result_binary'] == 1 ) 
                                                                     $result.=$test['binary_positive'] ; 
 								else 
                                                                     $result.=$test['binary_negative'] ; 
->>>>>>> 023a578ef87115f268b5e9cf8e91802d10f85b1c
 							} 
 							else{	
 								$result.="Test not done.";
@@ -356,15 +350,9 @@ pri.print();
 							else
                                 $result="<td colspan='2'>";
 							if($test['test_status'] == 2) { 
-<<<<<<< HEAD
-								if($test['test_result_binary'] == 1 ) $result=$test['binary_positive'] ;
-								else if($test['test_result_binary']==0) $result=$test['binary_negative'];
-								else $result=""; 
-=======
 								if($test['test_result_binary'] == 1 ) 
                                     $result.=$test['binary_positive'] ; 
 								else $result.=$test['binary_negative'] ; 
->>>>>>> 023a578ef87115f268b5e9cf8e91802d10f85b1c
 							} 
 							else{	
 								$result.="Test not done.";
@@ -526,16 +514,6 @@ pri.print();
 						    echo "<td></td><td></td>";
 						}
 					 ?>
-<<<<<<< HEAD
-					</td>
-					<td>
-					<?php if($test->binary_result==1){ ?>
-						<?php 
-							if($test->test_status == 2) { 
-								if($test->test_result_binary == 1 ) $result=$test->binary_positive ; 
-								else if($test->test_result_binary == 0) $result=$test->binary_negative ; 
-								else $result = "";
-=======
 					<?php 
                                             if($binary_flag==1)
                                             if($test->binary_result==1){ 
@@ -547,7 +525,6 @@ pri.print();
 							}
 							if($test->test_status != 2) { 
 								$result.="Test not done.</td>";
->>>>>>> 023a578ef87115f268b5e9cf8e91802d10f85b1c
 							} 
 							else if($test->test_status==2){	
 								if($test->test_result_binary == 1 ) $result.=$test->binary_positive ; 
@@ -893,14 +870,8 @@ pri.print();
 							else
                                                             $result="<td colspan='2'>";
 							if($test['test_status'] == 2) { 
-<<<<<<< HEAD
-								if($test['test_result_binary'] == 1 ) $result=$test['binary_positive'] ; 
-								else if($test['test_result_binary']==0) $result = $test['binary_negative'];
-								else $result=""; 
-=======
 								if($test['test_result_binary'] == 1 ) $result.=$test['binary_positive'] ; 
 								else $result.=$test['binary_negative'] ; 
->>>>>>> 023a578ef87115f268b5e9cf8e91802d10f85b1c
 							} 
 							else{	
 								$result.="Test not done.";
@@ -978,14 +949,8 @@ pri.print();
 							else
                                                             $result="<td colspan='2'>";
 							if($test['test_status'] == 2) { 
-<<<<<<< HEAD
-								if($test['test_result_binary'] == 1 ) $result=$test['binary_positive'] ; 
-								else if($test['test_result_binary']==0) $result = $test['binary_negative'];
-								else $result=""; 
-=======
 								if($test['test_result_binary'] == 1 ) $result.=$test['binary_positive'] ; 
 								else $result.=$test['binary_negative'] ; 
->>>>>>> 023a578ef87115f268b5e9cf8e91802d10f85b1c
 							} 
 							else{	
 								$result.="Test not done.";
@@ -1039,51 +1004,6 @@ pri.print();
 								<td>
 								<?php echo $test->test_name;?>
 								</td>
-<<<<<<< HEAD
-								<td>
-							<?php if($test->numeric_result==1){ 
-
-									if($test->test_status == 2) { 
-										$test->test_result?$result=$test->test_result." ".$test->lab_unit : $result=""; 
-									} 
-									else{
-										$result="Test not done.";
-									}
-									echo $result;
-								}
-								else echo "-";
-							 ?>
-								</td>
-								<td>
-							<?php if($test->binary_result==1){ ?>
-								<?php 
-									if($test->test_status == 2) { 
-										if($test->test_result_binary == 1 ) $result=$test->binary_positive ; 
-										else if($test->test_result_binary == 0) $result=$test->binary_negative ; 
-										else $result = "";
-									} 
-									else{	
-										$result="Test not done.";
-									}
-								echo $result;
-								?>
-							<?php } ?>
-						</td>
-							<td>
-							<?php 
-							if($test->text_result==1){ 
-
-								if($test->test_status == 2) { 
-									$result = $test->test_result_text;
-								} 
-								else{	
-									$result="Test not done.";
-								}
-								echo $result;
-							 }
-								else echo "-"; ?>
-							</td>
-=======
 								<?php  if($numeric_flag==1)
                                             if($test->numeric_result==1){ 
 							$result="<td>";
@@ -1152,7 +1072,6 @@ pri.print();
                                                 $result="<td colspan='2'></td>";
                                             echo $result;
                                          } ?>
->>>>>>> 023a578ef87115f268b5e9cf8e91802d10f85b1c
 						</tr>
 					<?php } ?>
 					</table>

@@ -190,14 +190,8 @@
 								$result="Test not done.</td>";
 							} 
 							else{	
-<<<<<<< HEAD
-								if($test->test_result_binary == 1 ) $result=$test->binary_positive ; 
-								else if($test->test_result_binary == 0) $result=$test->binary_negative ; 
-								else $result = "";
-=======
 								if($test->test_result_binary == 1 ) $result.=$test->binary_positive ; 
 								else $result.=$test->binary_negative ; 
->>>>>>> 023a578ef87115f268b5e9cf8e91802d10f85b1c
 							}
 						?>
 					
