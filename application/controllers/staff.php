@@ -16,6 +16,17 @@ class Staff extends CI_Controller {
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 	}
 	function add($type=""){
+        if($this->session->userdata('logged_in'))
+		    $this->data['userdata']=$this->session->userdata('logged_in');
+        else
+            show_404();
+		$access=0;
+		foreach($this->data['functions'] as $function){
+			if($function->user_function=="HR"){
+				$access=1;
+			}
+		}
+		if($access==1){
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
 		$user=$this->session->userdata('logged_in');
@@ -87,9 +98,23 @@ class Staff extends CI_Controller {
 				}
 		}
 		$this->load->view('templates/footer');
+        }else{
+            show_404();
+        }
   	}	
   	
 	function edit($type=""){
+        if($this->session->userdata('logged_in'))
+		    $this->data['userdata']=$this->session->userdata('logged_in');
+        else
+            show_404();
+		$access=0;
+		foreach($this->data['functions'] as $function){
+			if($function->user_function=="HR"){
+				$access=1;
+			}
+		}
+		if($access==1){
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
 		$user=$this->session->userdata('logged_in');
@@ -143,6 +168,7 @@ class Staff extends CI_Controller {
 			);
 			
 		}
+        
 		// if none of the options is selected (i.e. any invalid url modifications) 404 error is shown
 		else
 		{
@@ -209,10 +235,113 @@ class Staff extends CI_Controller {
 			}
 		}
 		
-		$this->load->view('templates/footer');
+		$this->load->view('templates/footer');}
+        else{
+            show_404();
+        }
 	}
 
+    function add_transaction(){
+        if($this->session->userdata('logged_in'))
+		    $this->data['userdata']=$this->session->userdata('logged_in');
+        else
+            show_404();
+		$access=0;
+		foreach($this->data['functions'] as $function){
+			if($function->user_function=="HR"){
+				$access=1;
+			}
+		}
+		if($access==1){
+        $this->load->helper('form');
+		$this->load->library('form_validation');
+		$user=$this->session->userdata('logged_in');
+		$this->data['user_id']=$user['user_id'];
+		$this->data['type']='staff_transaction';
+        $title = 'Edit Transaction Category';
+        $type = 'staff_transaction';
+        $config = array(
+            array(
+                'field' => 'staff_id',
+                'label' => 'Staff Name',
+                'rules' => 'trim|xss_clean'
+            ),
+            array(
+                'field' => 'hr_transaction_type_id',
+                'label' => 'Transaction type',
+                'rules' => 'trim|xss_clean'
+            )   
+         );
+         $this->data['hr_transaction_types'] = $this->masters_model->get_transaction_type();
+
+        $page="pages/staff/add_".$type."_form";
+		$this->data['title']=$title;
+		$this->load->view('templates/header',$this->data);
+      	$this->load->view('templates/leftnav',$this->data);
+		//form configuration is set based on the option selected from the menu
+		$this->form_validation->set_rules($config);
+
+		//if the form contains any invalid data same page along with error msg is shown.
+		if ($this->form_validation->run() === FALSE)
+		{
+			$this->data['mode'] = 'mode';
+			$this->load->view($page,$this->data);
+		}
+        else
+		{
+		    //Data from the input fields are retrieved from view and updates into database
+			if($this->staff_model->add_data('transaction_type'))
+			{
+			    $this->data['msg']="Updated Successfully";
+				$this->data['mode'] = 'update';
+				$this->load->view($page,$this->data);
+			}
+			//if any failures occurs Failed msg is shown
+			else
+			{
+				$this->data['msg']="Failed";
+				$this->load->view($page,$this->data);
+			}
+		}}else{
+		    show_404();
+		}
+    }
+
+    function search_staff(){
+        if($this->session->userdata('logged_in'))
+		    $this->data['userdata']=$this->session->userdata('logged_in');
+        else
+            show_404();
+		$access=0;
+		foreach($this->data['functions'] as $function){
+			if($function->user_function=="HR"){
+				$access=1;
+			}
+		}
+		if($access==1){
+	    if($doctors = $this->staff_model->search_staff()){
+		    $list=array(
+			    'doctors'=>$doctors
+		    );		
+			echo json_encode($list);
+	    }
+	    else return false;}else{
+	        show_404();
+	    }
+    }
+
 	function view($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=0){	
+        if($this->session->userdata('logged_in'))
+		    $this->data['userdata']=$this->session->userdata('logged_in');
+        else
+            show_404();
+		$access=0;
+		foreach($this->data['functions'] as $function){
+			if($function->user_function=="HR"){
+				$access=1;
+			}
+		}
+		if($access==1){
 		$this->load->helper('form_helper');
 		switch($type){
 			case "staff" : 
@@ -232,7 +361,9 @@ class Staff extends CI_Controller {
 		$this->load->view('templates/leftnav',$this->data);
 		$this->load->view("pages/inventory/report_$type",$this->data);
 		$this->load->view('templates/footer');
+	}else {
+	    show_404();
 	}
-	
+}
 }
 

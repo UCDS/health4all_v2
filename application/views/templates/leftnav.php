@@ -63,6 +63,7 @@
 				<li <?php if(preg_match("^edit/staff$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/edit/staff">Staff</a></li>
 				<li <?php if(preg_match("^edit/staff_role^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/edit/staff_role">Staff Role</a></li>
 				<li <?php if(preg_match("^edit/staff_category^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/edit/staff_category">Staff Category</a></li>
+                <li <?php if(preg_match("^edit/add_transaction^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/add_transaction">HR Transaction</a></li>
 	<ul>
 </div>
 <?php } ?>
