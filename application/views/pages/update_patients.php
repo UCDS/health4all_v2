@@ -365,8 +365,8 @@ pri.print();
 				<input type="text" name="address" class="form-control" value="<?php if($patient) echo $patient->address;?>" required />
 			</div>
 			<div class="col-md-4 col-xs-6">
-				<label class="control-label">Place<span class="mandatory" >*</span></label>
-				<input type="text" name="place" class="form-control" value="<?php if($patient) echo $patient->place;?>" required />
+				<label class="control-label">Place</label>
+				<input type="text" name="place" class="form-control" value="<?php if($patient) echo $patient->place;?>"/>
 			</div>
 			</div>
 			<div class="row alt">
