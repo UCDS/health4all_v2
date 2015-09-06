@@ -925,6 +925,14 @@ else if($type=="dosage"){
 
 		$table="dosage";
 		}
+		elseif($type=="item_type"){
+			// Getting item_type value from form and setting it to 'item_type' column and assigning to variable $data  
+			$data = array('item_type'=>$this->input->post('item_type'));
+
+			// Setting table name
+			$table = "item_type";
+		}
+
 		elseif($type=="generic"){
 		$data = array(
 					  'generic_name'=>$this->input->post('generic_name'),
