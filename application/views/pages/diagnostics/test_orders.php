@@ -103,6 +103,18 @@
 					<?php echo $order[0]->unit_name." / ".$order[0]->area_name;?>
 				</div>
 			</div>
+            <div class="row col-md-12">
+                <div class="col-md-4">
+                    <b>Sample :</b>
+                    <?php echo $order[0]->specimen_type; if(!!$order[0]->specimen_source) echo " - ".$order[0]->specimen_source;?>
+                </div>
+                <div class="col-md-4">
+                    <b>Sample ID :</b>
+                    <?php echo $order[0]->sample_code; ?>
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
 			<br />
 			<br />
 			<br />
