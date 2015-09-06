@@ -39,13 +39,11 @@
 <div class="col-sm-3 col-md-2 sidebar-left">
     <ul class="nav nav-sidebar">
     			<li class="nav-header">Add</li>
-				<li <?php if(preg_match("^add/dosages^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>consumables/add/dosages">Dosages</a></li>
+				<li <?php if(preg_match("^add/dosages^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>consumables/add/dosages">Dosage</a></li>
 				<li <?php if(preg_match("^add/generic^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>consumables/add/generic">Generic Item</a></li>
-				<li <?php if(preg_match("^add/drug_type^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>consumables/add/drug_type"> Drug Type Details</a></li>
-				<li class="nav-header">Edit</li>
-			<li <?php if(preg_match("^edit/drug_type^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>consumables/edit/drug_type">Drug Type Details</a></li>
-				<li <?php if(preg_match("^edit/generics^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>consumables/edit/generics">Generic Item</a></li>
-				<li <?php if(preg_match("^edit/dosages^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>consumables/edit/dosages">Dosage Details</a></li>
+				<li <?php if(preg_match("^add/drug_type^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>consumables/add/drug_type"> Drug Type </a></li>
+				
+			
 			
 
 			<ul>

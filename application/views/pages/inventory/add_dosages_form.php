@@ -12,23 +12,23 @@ $(function(){
 });
 </script>
 
-		<div class="col-md-8 col-md-offset-2">
+	    <div class="col-md-8 col-md-offset-2">
 		<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
-		<h3>Add Dosage Details</h3></center><br>
+		<h3>Add Dosage</h3></center><br>
 	<center><?php echo validation_errors(); echo form_open('consumables/add/dosages',array('role'=>'form')); ?></center>
-	<div class="form-group">
+	    <div class="form-group"> 
 		<label for="dosages" class="col-md-4">Dosage<font color='red'>*</font></label>
 		<div  class="col-md-8">
 		<input type="text" class="form-control" placeholder=" Dosage" id="dosage" name="dosage" />
 		</div>
-	</div>
-	<div class="form-group">
-		<label for="dosage_unit" class="col-md-4"> Dosage Unit</label>
+	</div><br/><br />
+	    <div class="form-group">
+	    <label for="dosage_unit" class="col-md-4"> Dosage Unit</label>
 		<div  class="col-md-8">
 		<input type="text" class="form-control" placeholder=" Dosage unit" id="dosage_unit" name="dosage_unit" />
 		</div>
-	</div>
+	</div><br /><br />
 	
 		
    	<div class="col-md-3 col-md-offset-4">
