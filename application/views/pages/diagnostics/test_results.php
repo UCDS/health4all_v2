@@ -49,7 +49,7 @@
 	</script>
 <script>
 
-<!-- Scripts for printing output table -->
+// Scripts for printing output table
 function printDiv(i)
 {
 var content = document.getElementById(i);
@@ -81,6 +81,8 @@ pri.print();
 		$district=$order[0]->district;
 		$state = $order[0]->state;
 		$specimen_type = $order[0]->specimen_type;
+        $specimen_source = $order[0]->specimen_source;
+        $sample_code = $order[0]->sample_code;
 		$test_method = $order[0]->test_method;
 		$first_name = $order[0]->first_name;
 		$last_name = $order[0]->last_name;
@@ -143,15 +145,64 @@ pri.print();
 					<?php echo $order[0]->unit_name." / ".$order[0]->area_name;?>
 				</div>
 			</div>
+            <div class="row col-md-12">
+                <div class="col-md-6">
+                    <b>Sample :</b>
+                    <?php echo $specimen_type; if(!!$specimen_source) echo " - ".$specimen_source;?>
+                </div>
+                <div class="col-md-6">
+                    <b>Sample ID :</b>
+                    <?php echo $sample_code; ?>
+                </div>
+            </div>
 			<br />
 			<br />
 			<br />
 			<table class="table table-bordered">
 			<!-- patient test results-->
+			
+			<?php
+       
+                // The following flags are set to display only the coloums that have atleast one value.
+                //Binary coloumn is shown only if there is atleast one binary result, similarly numeric and text.
+				$binary_flag=0;
+				$numeric_flag=0;
+				$text_flag=0;
+				foreach($order as $test){
+					if($test->binary_result==1){
+						$binary_flag = 1;
+						break;
+					}
+				}
+				foreach($order as $test){
+					if($test->numeric_result==1){
+						$numeric_flag = 1;
+						break;
+					}
+				}
+				foreach($order as $test){
+					if($test->text_result==1){
+						$text_flag = 1;
+						break;
+					}
+				}
+			?>
+                <tr>
 				<th>#</th>
 				<th>Test</th>
+				<?php 
+					if($numeric_flag==1){
+				?>
 				<th>Value</th>
-				<th colspan="4">Report</th>
+				<th>Normal Range</th>
+                <?php } ?>
+				<?php
+					if($binary_flag==1 || $text_flag==1){
+				?>
+				<th colspan="2">Report</th>
+				<?php }
+				?>
+                </tr>
 			<?php 
 			$groups=array();
 			$group_tests=array();
@@ -175,7 +226,10 @@ pri.print();
 						'test_result_text'=>$test->test_result_text,
 						'binary_positive'=>$test->binary_positive,
 						'binary_negative'=>$test->binary_negative,
-						'lab_unit'=>$test->lab_unit
+						'lab_unit'=>$test->lab_unit,
+						'min'=>$test->min,
+						'max'=>$test->max,
+						'range_type'=>$test->range_type
 					);
 					array_splice($order,$i,1);
 					$i--;
@@ -195,52 +249,78 @@ pri.print();
 					<td>
 						<?php echo $test['test_name'];?>
 					</td>
-					<td>
-					<?php if($test['numeric_result']==1){ 
-
+					<?php 
+                                        if($numeric_flag==1)
+                                            if($test['numeric_result']==1){ 
+							$result="<td>";
+							
 							if($test['test_status'] == 2) { 
-								if($test['test_result']!=NULL)
-								$result=$test['test_result']." ".$test['lab_unit']; 
-								else $result ="";
+								$result.=$test['test_result']." ".$test['lab_unit']."</td>";
+                                                                if($test['test_result']!=NULL && $test['range_type']==1)
+                                                                    $result.="<td> < ".$test['max'].$test['lab_unit']."</td>";
+                                                                else if($test['test_result']!=NULL && $test['range_type']==2)
+                                                                    $result.="<td> > ".$test['min'].$test['lab_unit']."</td>";
+                                                                else if($test['test_result']!=NULL && $test['range_type']==3)
+                                                                    $result.="<td> ".$test['min']." - ".$test['max'].$test['lab_unit']."</td>";
+                                                                else 
+                                                                    $result .="<td></td>";
 							} 
 							else{	
-								$result="Test not done.";
+								$result.="Test not done.</td>";
 							}
 							echo $result;
-						}
-								else echo "-";
+                                                }else{
+                                                    echo "<td></td><td></td>";
+                                                }
 					 ?>
-					</td>
-					<td>
-					<?php if($test['binary_result']==1){ ?>
-						<?php 
+					<?php
+                                        if($binary_flag==1)
+                                            if($test['binary_result']==1){
+							if($text_flag == 1){
+								$result="<td>";
+							}
+							else
+                                                            $result="<td colspan='2'>";
 							if($test['test_status'] == 2) { 
-								if($test['test_result_binary'] == 1 ) $result=$test['binary_positive'] ; 
-								else $result=$test['binary_negative'] ; 
+								if($test['test_result_binary'] == 1 ) 
+                                                                    $result.=$test['binary_positive'] ; 
+								else 
+                                                                    $result.=$test['binary_negative'] ; 
 							} 
 							else{	
-								$result="Test not done.";
+								$result.="Test not done.";
 							}
-						echo $result;
-						?>
-					<?php 
-					}
-						else echo "-";
+						echo $result."</td>";
+					 
+                                        } else{
+                                            if($text_flag==1)
+                                                echo "<td></td>";
+                                            else
+                                                echo "<td colspan='2'></td>";
+                                        }
+                                            
 					?>
-					 </td>
-					 <td>
-					<?php if($test['text_result']==1){ 
-
+					<?php 
+                                        if($text_flag==1)
+                                            if($test['text_result']==1){ 
+						if($binary_flag==1)
+							$result="<td>";
+						else
+							$result="<td colspan='2'>";
 						if($test['test_status'] == 2) { 
-							$result = $test['test_result_text']; 
+							$result.= $test['test_result_text']; 
 						} 
 						else{	
-							$result="Test not done.";
+							$result.="Test not done.";
 						}
-						echo $result;
-					 }
-								else echo "-"; ?>
-					 </td>
+						echo $result."</td>";
+                                         }else{
+                                             if($binary_flag==1)
+                                                 echo "<td></td>";
+                                             else
+                                                 echo"<td colspan='2'></td>";
+                                         }
+					 ?>
 				</tr>
 			<?php }
 			}
@@ -254,40 +334,45 @@ pri.print();
 					<td>
 						<?php echo $test['test_name'];?>
 					</td>
-					<td>
-					<?php if($test['numeric_result']==1){ 
-
+					<?php
+                     if($numeric_flag==1)
+                        if($test['numeric_result']==1){ 
+							$result="<td>";
 							if($test['test_status'] == 2) { 
-								if($test['test_result']!=NULL)
-								$result=$test['test_result']." ".$test['lab_unit']; 
-								else $result ="";
+								$result.=$test['test_result']." ".$test['lab_unit']."</td>";
+								if($test['test_result']!=NULL && $test['range_type']==1)
+										$result.="<td> < ".$test['max'].$test['lab_unit']."</td>";
+									else if($test['test_result']!=NULL && $test['range_type']==2)
+										$result.="<td> > ".$test['min'].$test['lab_unit']."</td>";
+									else if($test['test_result']!=NULL && $test['range_type']==3)
+										$result.="<td> ".$test['min']." - ".$test['max'].$test['lab_unit']."</td>";
+									else $result .="<td></td>";
 							} 
 							else{	
-								$result="Test not done.";
+								$result.="Test not done.</td>";
 							}
 							echo $result;
-						}
-								else echo "-";
+                                                }else{
+                                                    echo "<td></td><td></td>";
+                                                }
 					 ?>
-					</td>
-					<td>
-					<?php if($test['binary_result']==1){ ?>
-						<?php 
+					<?php 
+                     if($binary_flag==1)
+                            if($test['binary_result']==1){ 
+							if($text_flag == 1){
+								$result="<td>";
+							}
+							else
+                                $result="<td colspan='2'>";
 							if($test['test_status'] == 2) { 
-								if($test['test_result_binary'] == 1 ) $result=$test['binary_positive'] ; 
-								else $result=$test['binary_negative'] ; 
+								if($test['test_result_binary'] == 1 ) 
+                                    $result.=$test['binary_positive'] ; 
+								else $result.=$test['binary_negative'] ; 
 							} 
 							else{	
-								$result="Test not done.";
+								$result.="Test not done.";
 							}
-						echo $result;
-						?>
-					<?php 
-					}
-						else echo "-";
-					?>
-						
-						<?php 
+							
 						if($test['test_result_binary']==1 && preg_match("^Culture*^",$test['test_method'])) {   //if the test has a binary result and the test method is Culture & Sensitivity 
 						$micro_organism_test_ids = array();
 						$res = explode("^",trim($test['micro_organism_test'],"^")); 
@@ -366,25 +451,45 @@ pri.print();
 								echo "</table></div></div>"; //in the last iteration, close the table tags and div tags.
 							}
 							
-						} ?>
-					 </td>
-					 <td>
-					<?php if($test['text_result']==1){ 
-
+						} 
+						echo $result."</td>";
+                                            }
+                                            else{
+                                                if($text_flag == 1){
+                                                    $result="<td></td>";
+                                                }
+                                                else
+                                                    $result="<td colspan='2'></td>";
+                                                echo $result;
+                                            }
+						?>
+					<?php 
+                                        if($text_flag==1)        
+                                            if($test['text_result']==1){ 
+						if($binary_flag==1)
+							$result="<td>";
+						else
+							$result="<td colspan='2'>";
 						if($test['test_status'] == 2) { 
-							$result = $test['test_result_text']; 
+							$result .= $test['test_result_text']; 
 						} 
 						else{	
-							$result="Test not done.";
+							$result.="Test not done.";
 						}
-						echo $result;
-					 }
-								else echo "-"; ?>
-					 </td>
+						echo $result."</td>";
+                                         }
+                                            else{
+                                            if($binary_flag==1)
+                                                $result="<td></td>";
+                                            else
+                                                $result="<td colspan='2'></td>";
+                                            echo $result;
+                                         }
+					 ?>
 				</tr>
 			<?php $sub_no++;
-				}
 			}
+		}
 			$sno++;
 		}
 		?>	
@@ -399,133 +504,115 @@ pri.print();
 					<td>
 						<?php echo $test->test_name;?>
 					</td>
-					<td>
-					<?php if($test->numeric_result==1){ 
-
-							if($test->test_status == 2) { 
-								if($test->test_result!=NULL)
-								$result=$test->test_result." ".$test->lab_unit; 
-								else $result ="";
+                    
+					<?php 
+                    if($numeric_flag==1)
+                        if($test->numeric_result==1){ 
+                            $result="";
+							if($test->test_status != 2) { 
+								$result="<td colspan='2'>Test not done</td>";
 							} 
-							else{	
-								$result="Test not done.";
+							else if($test->test_status==2){
+									$result="<td>".$test->test_result." ".$test->lab_unit."</td>";
+								if($test->test_result!=NULL && $test->range_type==1){
+									$result.="<td>"." < ".$test->max.$test->lab_unit."</td>";                                                                
+								}
+								else if($test->test_result!=NULL && $test->range_type==2)
+									$result.="<td> > ".$test->min.$test->lab_unit."</td>";
+								else if($test->test_result!=NULL && $test->range_type==3)
+									$result.="<td> ".$test->min." - ".$test->max.$test->lab_unit."</td>";
+                                else $result.="<td></td>";
 							}
 							echo $result;
 						}
-								else echo "-";
+                        else{
+						    echo "<td></td><td></td>";
+						}
 					 ?>
-					</td>
-					<td>
-					<?php if($test->binary_result==1){ ?>
-						<?php 
-							if($test->test_status == 2) { 
-								if($test->test_result_binary == 1 ) $result=$test->binary_positive ; 
-								else $result=$test->binary_negative ; 
-							} 
-							else{	
-								$result="Test not done.";
-							}
-						echo $result;
-						?>
 					<?php 
-					}
-						else echo "-";
-					?>
-
-						<?php 
-						if($test->test_result_binary==1 && preg_match("^Culture*^",$test->test_method)) {   //if the test has a binary result and the test method is Culture & Sensitivity 
-						$micro_organism_test_ids = array();
-						$res = explode("^",trim($test->micro_organism_test,"^")); 
-						$k=0;
-						//to group all sensitive and resistive antibiotics separately
-						//creating arrays to store sensitive and resistant values separately
-							$sensitive=array();
-							$resistive=array();
+                                            if($binary_flag==1)
+                                            if($test->binary_result==1){ 
+							if($text_flag==1){
+								$result = "<td>";
+							}
+							else{
+							   $result="<td colspan='2'>";
+							}
+							if($test->test_status != 2) { 
+								$result.="Test not done.</td>";
+							} 
+							else if($test->test_status==2){	
+								if($test->test_result_binary == 1 ) $result.=$test->binary_positive ; 
+								else $result.=$test->binary_negative ; 
+							}
+						?>
 					
+						<?php if($test->test_result_binary==1 && preg_match("^Culture*^",$test->test_method)) { 
+						$micro_organism_test_ids = array();
+						$res = explode("^",trim($test->micro_organism_test,"^"));
+						$k=0;
 						foreach($res as $r) {
-							// Break the strings contaning the micro organism test details 
-							//and store them into an array: using explode() function
-							$temp=explode(",",trim($r," ,")); 
-								if($temp[3]==1){
-								//Storing all the antibiotics that are sensitive into the $sensitive variable.
-								$sensitive[]=array(
-									'micro_organism_test_id'=>$temp[0], 
-									'antibiotic'=>$temp[2]
-								);
-								}
-							if($temp[3]==0){
-								//Storing all the antibiotics that are resistant into the $resistant variable.
-								$resistive[]=array(
-								'micro_organism_test_id'=>$temp[0],//storing resistives in same variables as in sensitive array
-								'antibiotic'=>$temp[2]
-							);}
-							}	
-							
-						foreach($res as $r) {
-							$temp=explode(",",trim($r," ,"));//Break tne strings and store them into an array: using explode() function, to get an array of test results.
-							$temp[3]==1?$temp[3]="Sensitive":$temp[3]="Resistant"; //$temp[3] contains the antibiotic result.
-						
-							if(!in_array($temp[0],$micro_organism_test_ids)){ //in_array Searches for the currrent micro organism test ID in the array of all micro_organism_test_ids encountered so far.
-								
-								if(count($micro_organism_test_ids)>0) echo "</table></div></div>"; //except for the first time, close the div tags and table tag that are opened in the previous iteration.
+							$temp=explode(",",trim($r," ,"));
+							$temp[3]==1?$temp[3]="<b>Sensitive</b>":$temp[3]="Resistant";
+							if(!in_array($temp[0],$micro_organism_test_ids)){
+								if(count($micro_organism_test_ids)>0) echo "</tr></tbody></table>"
 								?>
-							
-								
-								<div class="well well-sm" style="background:white;font-size:0.5em;">
-								
-								
-									<div style="font-size:1.5em;">
-										<h5><b><?php echo $temp[1]; //prnit the micro organism name.?></b></h5>
-								<!--displaying the antibiotic results in a table-->	
-								<table class="table">
-								<tr><th style="width:400px;">Sensitive</th><th>Resistant</th></tr>	
-								<div class="col-md-2">
+								<table class='table table-bordered table-striped'><thead><th colspan="2" style="text-align:center"><?php echo $temp[1];?></th></thead>
+								<tbody>
+								<tr>
+									<td><?php echo $temp[2]." - ".$temp[3];?>	</td>
 							<?php 
-								$micro_organism_test_ids[]=$temp[0]; //add the current micro organism test to the array.
-							?>
-										
-									<tr>
-										<td>
-											 <!--display all the sensitive antibiotics in series if they belong to their corresponding test-->
-										<ol type=1> <?php foreach($sensitive as $se){      
-											if($se['micro_organism_test_id']==$temp[0]){
-												echo "<li>$se[antibiotic]</li>";
-											}
-										}
-										?></ol>
-										</td>
-		
-										<td>
-											<!--display all the resistive antibiotics in series if they belong to their crresponding test-->
-										 <ol type=1> <?php foreach($resistive as $re){		
-											if($re['micro_organism_test_id']==$temp[0]){       
-											echo "<li>$re[antibiotic]</li>";
-											}
-										}
-										?> </ol>
-										</td>
-									</tr>
-							<?php }
+								foreach($temp as $t){?>
+							<?php 
+								}
+								$micro_organism_test_ids[]=$temp[0];
+							}
+							else echo "<td>$temp[2] - $temp[3]</td>";
+							if($k%2==1) echo "</tr>";
 							$k++;
 							if($k==count($res))
-								echo "</table></div></div>"; //in the last iteration, close the table tags and div tags.
+								echo "</tr></tbody></table>";													
 							}
-							
-						} ?>
-					 </td>
-					 <td>
-					<?php if($test->text_result==1){ 
+						}
+                                            $result.="</td>";
+						echo $result;
+                                            }else{
+                                                if($text_flag==1){
+                                                    echo "<td></td>";
+                                                }
+                                                else{
+                                                    echo "<td colspan='2'></td>";
+                                                }
+                                            }
+                                            ?>
+					<?php
+                                        if($text_flag==1)
+                                            if($test->text_result==1){ 
+						if($binary_flag==1){
+						$result = "<td>";
+						}
+						else{
+						   $result="<td colspan='2'>";
+						}
 
-						if($test->test_status == 2) { 
-							$result = $test->test_result_text; 
+						if($test->test_status!=2) { 
+							$result.="Test not done</td>";
 						} 
-						else{	
-							$result="Test not done.";
+						else if($test->test_status==2){	
+							$result.= $test->test_result_text."</td>";
 						}
 						echo $result;
-					 }
-					else echo "-"; ?>
-					 </td>
+                                         }
+                                         else{
+                                             if($binary_flag==1){
+						$result = "<td>";
+						}
+						else{
+						   $result="<td colspan='2'>";
+						}
+                        echo $result;
+                                         }
+					?>
 				</tr>
 			<?php }
 			?>
@@ -572,7 +659,7 @@ pri.print();
 			<th style="text-align:center" colspan="10"><?php echo $hospital;?>, <?php echo $place;?>, <?php echo $district;?>, <?php echo $state;?><br /></th>
 			</tr>
 			<tr>
-			<th style="text-align:center" colspan="10"><u><?php echo $specimen_type." Sample - ".$test_method;?> Results</u><br /></th>
+			<th style="text-align:center" colspan="10"><u><?php echo $test_method;?> Report</u><br /></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -605,6 +692,16 @@ pri.print();
 					<?php echo $unit_name." / ".$area_name;?>
 				</td>
 				</tr>
+                <tr>
+                    <td colspan="3">
+                        <b>Sample :</b>
+                        <?php echo $specimen_type; if(!!$specimen_source) echo " - ".$specimen_source;?>
+                    </td>
+                    <td colspan="2">
+                        <b>Sample ID :</b>
+                        <?php echo $sample_code; ?>
+                    </td>
+                </tr>
 			<tr>
 				<td colspan="10" align="center">
 					<?php if(preg_match("^Culture*^",$order[0]->test_method)){ ?>  <!-- this condition checks if the test method is Culture and Sensitivity-->
@@ -642,7 +739,8 @@ pri.print();
 								<?php 
 									if($test->test_status == 2) { 
 										if($test->test_result_binary == 1 ) $result=$test->binary_positive ; 
-										else $result=$test->binary_negative ; 
+										else if($test->test_result_binary == 0) $result=$test->binary_negative ; 
+										else $result = "";
 									} 
 									else{	
 										$result="Test not done.";
@@ -740,8 +838,19 @@ pri.print();
 					<thead>
 						<th>#</th>
 						<th>Test</th>
+						<?php 
+                                                    if($numeric_flag==1){
+						?>
 						<th>Value</th>
+						<th>Normal Range</th>
+						<?php } ?>
+						<?php
+                                                    if($binary_flag==1 || $text_flag==1){
+						?>
 						<th colspan="2">Report</th>
+						<?php }
+						?>
+                        </tr>
 			<?php
 			$sno=1;
 			foreach($groups as $group){
@@ -756,52 +865,72 @@ pri.print();
 					<td>
 						<?php echo $test['test_name'];?>
 					</td>
-					<td>
-					<?php if($test['numeric_result']==1){ 
-
+					<?php  if($numeric_flag==1)
+                                            if($test['numeric_result']==1){ 
+							$result="<td>";
 							if($test['test_status'] == 2) { 
-								if($testp['test_result']!=NULL)
-								$result=$test['test_result']." ".$test['lab_unit']; 
-								else $result ="";
+								$result.=$test['test_result']." ".$test['lab_unit']."</td>";
+								if($test['test_result']!=NULL && $test['range_type']==1)
+										$result.="<td> < ".$test['max'].$test['lab_unit']."</td>";
+									else if($test['test_result']!=NULL && $test['range_type']==2)
+										$result.="<td> > ".$test['min'].$test['lab_unit']."</td>";
+									else if($test['test_result']!=NULL && $test['range_type']==3)
+										$result.="<td> ".$test['min']." - ".$test['max'].$test['lab_unit']."</td>";
+									else $result .="<td></td>";
 							} 
 							else{	
-								$result="Test not done.";
+								$result.="Test not done.</td>";
 							}
 							echo $result;
-						}
-								else echo "-";
+                                                }
+                                                else{
+                                                    echo "<td></td><td></td>";
+                                                }
 					 ?>
-					</td>
-					<td>
-					<?php if($test['binary_result']==1){ ?>
-						<?php 
+					<?php if($binary_flag==1)
+                             if($test['binary_result']==1){ 
+							if($text_flag == 1){
+								$result="<td>";
+							}
+							else
+                                                            $result="<td colspan='2'>";
 							if($test['test_status'] == 2) { 
-								if($test['test_result_binary'] == 1 ) $result=$test['binary_positive'] ; 
-								else $result=$test['binary_negative'] ; 
+								if($test['test_result_binary'] == 1 ) $result.=$test['binary_positive'] ; 
+								else $result.=$test['binary_negative'] ; 
 							} 
 							else{	
-								$result="Test not done.";
+								$result.="Test not done.";
 							}
-						echo $result;
-						?>
-					<?php 
-					}
-						else echo "-";
-					?>
-					 </td>
-					 <td>
-					<?php if($test['text_result']==1){ 
-
+						echo $result."</td>";
+						
+                                        } else {
+                                            if($text_flag == 1)
+						$result="<td></td>";
+                                            else
+                                                $result="<td colspan='2'></td>";
+                                                echo $result;
+                                        }
+					?>				
+					  <?php if($text_flag==1)
+                                            if($test['text_result']==1){ 
+						if($binary_flag==1)
+							$result="<td>";
+						else
+							$result="<td colspan='2'>";
 						if($test['test_status'] == 2) { 
-							$result = $test['test_result_text']; 
+							$result .= $test['test_result_text']; 
 						} 
 						else{	
-							$result="Test not done.";
+							$result.="Test not done.";
 						}
-						echo $result;
-					 }
-								else echo "-"; ?>
-					 </td>
+						echo $result."</td>";
+                                         }else{
+                                            if($binary_flag==1)
+                                                $result="<td></td>";
+                                            else
+                                                $result="<td colspan='2'></td>";
+                                            echo $result;
+                                         } ?>
 				</tr>
 			<?php }
 			}
@@ -815,52 +944,75 @@ pri.print();
 					<td>
 						<?php echo $test['test_name'];?>
 					</td>
-					<td>
-					<?php if($test['numeric_result']==1){ 
-
+					
+					<?php  if($numeric_flag==1)
+                                            if($test['numeric_result']==1){ 
+							$result="<td>";
 							if($test['test_status'] == 2) { 
-								if($test['test_result']!=NULL)
-								$result=$test['test_result']." ".$test['lab_unit']; 
-								else $result ="";
+								$result.=$test['test_result']." ".$test['lab_unit']."</td>";
+								if($test['test_result']!=NULL && $test['range_type']==1)
+										$result.="<td> < ".$test['max'].$test['lab_unit']."</td>";
+									else if($test['test_result']!=NULL && $test['range_type']==2)
+										$result.="<td> > ".$test['min'].$test['lab_unit']."</td>";
+									else if($test['test_result']!=NULL && $test['range_type']==3)
+										$result.="<td> ".$test['min']." - ".$test['max'].$test['lab_unit']."</td>";
+									else $result .="<td></td>";
 							} 
 							else{	
-								$result="Test not done.";
+								$result.="Test not done.</td>";
 							}
 							echo $result;
-						}
-								else echo "-";
+                                                }else{
+                                                    echo "<td></td><td></td>";
+                                                }
 					 ?>
-					</td>
-					<td>
-					<?php if($test['binary_result']==1){ ?>
-						<?php 
+					<?php if($binary_flag==1)
+                             if($test['binary_result']==1){ 
+							if($text_flag == 1){
+								$result="<td>";
+							}
+							else
+                                                            $result="<td colspan='2'>";
 							if($test['test_status'] == 2) { 
-								if($test['test_result_binary'] == 1 ) $result=$test['binary_positive'] ; 
-								else $result=$test['binary_negative'] ; 
+								if($test['test_result_binary'] == 1 ) $result.=$test['binary_positive'] ; 
+								else $result.=$test['binary_negative'] ; 
 							} 
 							else{	
-								$result="Test not done.";
+								$result.="Test not done.";
 							}
-						echo $result;
-						?>
-					<?php 
-					}
-						else echo "-";
+						echo $result."</td>";
+						
+                                        } else {
+                                            if($text_flag == 1)
+						$result="<td></td>";
+                                            else
+                                                $result="<td colspan='2'></td>";
+                                                echo $result;
+                                        }
 					?>
-					 </td>
-					 <td>
-					<?php if($test['text_result']==1){ 
-
+					 
+					 
+					
+					  <?php if($text_flag==1)
+                                            if($test['text_result']==1){ 
+						if($binary_flag==1)
+							$result="<td>";
+						else
+							$result="<td colspan='2'>";
 						if($test['test_status'] == 2) { 
-							$result = $test['test_result_text']; 
+							$result .= $test['test_result_text']; 
 						} 
 						else{	
-							$result="Test not done.";
+							$result.="Test not done.";
 						}
-						echo $result;
-					 }
-								else echo "-"; ?>
-					 </td>
+						echo $result."</td>";
+                                         }else{
+                                            if($binary_flag==1)
+                                                $result="<td></td>";
+                                            else
+                                                $result="<td colspan='2'></td>";
+                                            echo $result;
+                                         } ?>
 				</tr>
 			<?php $sub_no++;
 				}
@@ -877,48 +1029,74 @@ pri.print();
 								<td>
 								<?php echo $test->test_name;?>
 								</td>
-								<td>
-							<?php if($test->numeric_result==1){ 
-
-									if($test->test_status == 2) { 
-										$test->test_result?$result=$test->test_result." ".$test->lab_unit : $result=""; 
-									} 
-									else{
-										$result="Test not done.";
-									}
-									echo $result;
-								}
-								else echo "-";
-							 ?>
-								</td>
-								<td>
-							<?php if($test->binary_result==1){ ?>
-								<?php 
-									if($test->test_status == 2) { 
-										if($test->test_result_binary == 1 ) $result=$test->binary_positive ; 
-										else $result=$test->binary_negative ; 
-									} 
-									else{	
-										$result="Test not done.";
-									}
-								echo $result;
-								?>
-							<?php } ?>
-						</td>
-							<td>
-							<?php 
-							if($test->text_result==1){ 
-
-								if($test->test_status == 2) { 
-									$result = $test->test_result_text;
-								} 
-								else{	
-									$result="Test not done.";
-								}
-								echo $result;
-							 }
-								else echo "-"; ?>
-							</td>
+								<?php  if($numeric_flag==1)
+                                            if($test->numeric_result==1){ 
+							$result="<td>";
+							if($test->test_status == 2) { 
+								$result.=$test->test_result." ".$test->lab_unit."</td>";
+								if($test->test_result!=NULL && $test->range_type==1)
+										$result.="<td> < ".$test->max.$test->lab_unit."</td>";
+									else if($test->test_result!=NULL && $test->range_type==2)
+										$result.="<td> > ".$test->min.$test->lab_unit."</td>";
+									else if($test->test_result!=NULL && $test->range_type==3)
+										$result.="<td> ".$test->min." - ".$test->max.$test->lab_unit."</td>";
+									else $result .="<td></td>";
+							} 
+							else{	
+								$result.="Test not done.</td>";
+							}
+							echo $result;
+                                                }else{
+                                                    echo "<td></td><td></td>";
+                                                }
+					 ?>
+					<?php if($binary_flag==1)
+                             if($test->binary_result==1){ 
+							if($text_flag == 1){
+								$result="<td>";
+							}
+							else
+                                                            $result="<td colspan='2'>";
+							if($test->test_status == 2) { 
+								if($test->test_result_binary == 1 ) $result.=$test->binary_positive ; 
+								else $result.=$test->binary_negative ; 
+							} 
+							else{	
+								$result.="Test not done.";
+							}
+						echo $result."</td>";
+						
+                                        } else {
+                                            if($text_flag == 1)
+						                        $result="<td></td>";
+                                            else
+                                                $result="<td colspan='2'></td>";
+                                                echo $result;
+                                        }
+					?>
+					 
+					 
+					
+					  <?php if($text_flag==1)
+                                            if($test->text_result==1){ 
+						if($binary_flag==1)
+							$result="<td>";
+						else
+							$result="<td colspan='2'>";
+						if($test->test_status == 2) { 
+							$result .= $test->test_result_text; 
+						} 
+						else{	
+							$result.="Test not done.";
+						}
+						echo $result."</td>";
+                                         }else{
+                                            if($binary_flag==1)
+                                                $result="<td></td>";
+                                            else
+                                                $result="<td colspan='2'></td>";
+                                            echo $result;
+                                         } ?>
 						</tr>
 					<?php } ?>
 					</table>
@@ -931,10 +1109,11 @@ pri.print();
 		</tbody>
 	</table>
 	</div>
-		
+
+<!-- End of print_div-->
 <?php	
 	}
-	else{
+	else {
 ?>
 <?php echo form_open('diagnostics/view_results',array('role'=>'form','class'=>'form-custom'));
 if(isset($orders)){ ?>
@@ -1051,8 +1230,8 @@ if(count($orders)>0){ ?>
 </div>
 <?php 
 	}
-	else if(count($orders)==0){
-		echo "No orders to update";
+		else if(count($orders)==0){
+			echo "No orders to update";
 		}
 	}
 	else if(count($test_areas)>1){ ?> 
@@ -1071,6 +1250,6 @@ if(count($orders)>0){ ?>
 	</form>
 <?php 
 	}
-} 
+}
 ?>
 </div>

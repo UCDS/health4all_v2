@@ -235,7 +235,8 @@
 												if($order->binary_result==1){ 
 													if($order->test_status == 2) { 
 														if($order->test_result_binary == 1 ) $result=$order->binary_positive ; 
-														else $result=$order->binary_negative ; 
+														else if($order->test_result_binary == 0) $result=$order->binary_negative ; 
+														else $result="";
 														if($order->numeric_result==1 || $order->text_result == 1)
 															$result.=" | ";
 													} 

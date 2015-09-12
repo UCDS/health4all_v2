@@ -71,7 +71,7 @@
 		
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h4>Order #<?php $order_id = $order[0]->order_id; echo $order_id;?>
+			<h4>Update Order #<?php $order_id = $order[0]->order_id; echo $order_id;?>
 			<small>
 					<b>Order placed at : </b>
 					<?php echo date("g:ia, d-M-Y",strtotime($order[0]->order_date_time));?>
@@ -103,6 +103,18 @@
 					<?php echo $order[0]->unit_name." / ".$order[0]->area_name;?>
 				</div>
 			</div>
+            <div class="row col-md-12">
+                <div class="col-md-4">
+                    <b>Sample :</b>
+                    <?php echo $order[0]->specimen_type; if(!!$order[0]->specimen_source) echo " - ".$order[0]->specimen_source;?>
+                </div>
+                <div class="col-md-4">
+                    <b>Sample ID :</b>
+                    <?php echo $order[0]->sample_code; ?>
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
 			<br />
 			<br />
 			<br />
@@ -129,7 +141,10 @@
 						'test_result_text'=>$test->test_result_text,
 						'binary_positive'=>$test->binary_positive,
 						'binary_negative'=>$test->binary_negative,
-						'lab_unit'=>$test->lab_unit
+						'lab_unit'=>$test->lab_unit,
+						'min'=>$test->min,
+						'max'=>$test->max,
+                                                'range_type'=>$test->range_type
 					);
 					array_splice($order,$i,1);
 					$i--;
@@ -160,9 +175,20 @@
 					</div>
 					<?php } ?>
 					<?php if($test['numeric_result']==1){ ?>
-					<div class="col-md-4" class="form-group">
+					<div class="col-md-6" class="form-group">
 							<input type="number" class="form-control" placeholder="Numeric" style="width:100px" form='order_submit' name="numeric_result_<?php echo $test['test_id'];?>" step="any" value="<?php echo $test['test_result'];?>" <?php echo $readonly;?> />
-							<label class="control-label"><?php echo $test['lab_unit'];?></label>
+							<label class="control-label">
+                                                            <?php 
+                                                            if($test['range_type']==1)
+                                                                echo "(Normal range: < ".$test['max'].")".$test['lab_unit'];
+                                                            else if($test['range_type']==2)
+                                                                echo "(Normal range: > ".$test['min'].")".$test['lab_unit'];
+                                                            else if($test['range_type']==3)
+                                                                echo "(Normal range: ".$test['min']." - ".$test['max'].")".$test['lab_unit'];
+                                                            else
+                                                                echo $test->lab_unit;
+                                                        ?>
+                                                        </label>
 					</div>
 					<?php } ?>
 					<?php if($test['text_result']==1){ ?>
@@ -202,9 +228,18 @@
 					</div>
 					<?php } ?>
 					<?php if($test['numeric_result']==1){ ?>
-					<div class="col-md-3" class="form-group">
+					<div class="col-md-6" class="form-group">
 							<input type="number" class="form-control" placeholder="Numeric" style="width:100px" form='order_submit' name="numeric_result_<?php echo $test['test_id'];?>" step="any" value="<?php echo $test['test_result'];?>" <?php echo $readonly;?> />
-							<label class="control-label"><?php echo $test['lab_unit'];?></label>
+							<label class="control-label"><?php 
+                                                            if($test['range_type']==1)
+                                                                echo "(Normal range: < ".$test['max'].")".$test['lab_unit'];
+                                                            else if($test['range_type']==2)
+                                                                echo "(Normal range: > ".$test['min'].")".$test['lab_unit'];
+                                                            else if($test['range_type']==3)
+                                                                echo "(Normal range: ".$test['min']." - ".$test['max'].")".$test['lab_unit'];
+                                                            else
+                                                                echo $test['lab_unit'];
+                                                        ?></label>
 					</div>
 					<?php } ?>
 					<?php if($test['text_result']==1){ ?>
@@ -370,9 +405,18 @@
 						<?php } ?>
 					<?php } ?>
 					<?php if($test->numeric_result==1){ ?>
-					<div class="col-md-3" class="form-group">
+					<div class="col-md-6" class="form-group">
 							<input type="number" class="form-control" placeholder="Numeric" style="width:100px" form='order_submit' name="numeric_result_<?php echo $test->test_id;?>" step="any" value="<?php echo $test->test_result;?>" <?php echo $readonly;?> />
-							<label class="control-label"><?php echo $test->lab_unit;?></label>
+							<label class="control-label"><?php 
+                                                            if($test->range_type==1)
+                                                                echo "(Normal range: < ".$test->max.")".$test->lab_unit;
+                                                            else if($test->range_type==2)
+                                                                echo "(Normal range: > ".$test->min.")".$test->lab_unit;
+                                                            else if($test->range_type==3)
+                                                                echo "(Normal range: ".$test->min." - ".$test->max.")".$test->lab_unit;
+                                                            else
+                                                                echo $test->lab_unit;
+                                                        ?></label>
 					</div>
 					<?php } ?>
 					<?php if($test->text_result==1){ ?>

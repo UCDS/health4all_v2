@@ -361,18 +361,18 @@ pri.print();
 				<input type="text" name="spouse_name" class="form-control" value="<?php if($patient) echo $patient->spouse_name;?>" />				
 			</div>
 			<div class="col-md-4 col-xs-6">
-				<label class="control-label">Address <span class="mandatory" >*</span></label>
-				<input type="text" name="address" class="form-control" value="<?php if($patient) echo $patient->address;?>" required />
+				<label class="control-label">Address</span></label>
+				<input type="text" name="address" class="form-control" value="<?php if($patient) echo $patient->address;?>"/>
 			</div>
 			<div class="col-md-4 col-xs-6">
-				<label class="control-label">Place<span class="mandatory" >*</span></label>
-				<input type="text" name="place" class="form-control" value="<?php if($patient) echo $patient->place;?>" required />
+				<label class="control-label">Place</label>
+				<input type="text" name="place" class="form-control" value="<?php if($patient) echo $patient->place;?>"/>
 			</div>
 			</div>
 			<div class="row alt">
 			<div class="col-md-4 col-xs-6">
-				<label class="control-label">District<span class="mandatory" >*</span></label>
-				<select name="district" class="form-control" required>
+				<label class="control-label">District</span></label>
+				<select name="district" class="form-control">
 				<option value="">--Select--</option>
 				<?php  						
 				foreach($districts as $district){
@@ -384,8 +384,8 @@ pri.print();
 				</select>
 			</div>
 			<div class="col-md-4 col-xs-6">
-				<label class="control-label">Phone<span class="mandatory" >*</span></label>
-				<input type="text" name="phone" class="form-control" value="<?php if($patient) echo $patient->phone;?>" required />
+				<label class="control-label">Phone</span></label>
+				<input type="text" name="phone" class="form-control" value="<?php if($patient) echo $patient->phone;?>"/>
 			</div>
 			<div class="col-md-4 col-xs-6">
 				<label class="control-label">MLC</label>

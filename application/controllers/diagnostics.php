@@ -45,7 +45,7 @@ function test_order($departments=0){
 		$this->load->view($page,$this->data);
 	}
 	else{	
-		if(($this->input->post('submit'))||($this->diagnostics_model->order_test())){
+		if(($this->input->post('submit'))&&($this->diagnostics_model->order_test())){
 		$this->data['msg']="Order has been placed successfully";
 		$this->load->view($page,$this->data);
 		}
@@ -163,6 +163,7 @@ function view_results(){
 		}	
 		else{
 			$this->data['orders']=$this->diagnostics_model->get_tests_approved($this->data['test_areas']);
+	echo $this->db->last_query();
 			$this->load->view($page,$this->data);
 		}
 	}
@@ -389,7 +390,7 @@ function add($type=""){
 			$config=array(array('field' => 'antibiotic','label'=>'antibiotic','rules'=>'required|trim|xss_clean' ));
 
 		}
-		if($type=="micro_organism"){
+        if($type=="micro_organism"){
 			$title="micro_organism";
 			$config=array(array('field' => 'micro_organism','label'=>'Micro_Organism','rules'=>'required|trim|xss_clean' ));
 
@@ -419,7 +420,7 @@ function add($type=""){
 	$this->load->view($page,$this->data);
 	}
 	else{	
-	if(($this->input->post('submit'))||($this->masters_model->insert_data($type))){
+	if(($this->input->post('submit'))&&($this->masters_model->insert_data($type))){
 	$this->data['msg']=" Inserted Successfully";
 	$this->load->view($page,$this->data);
 	}
@@ -437,6 +438,9 @@ function add($type=""){
 //************************************************************************************//
 function edit($type="")
 {
+    if(!$this->session->userdata('logged_in')){
+	show_404();
+	}
 	$this->load->helper('form');
 	$this->load->library('form_validation');
 	$user=$this->session->userdata('logged_in');
@@ -594,5 +598,20 @@ function edit($type="")
 	}
 	$this->load->view('templates/footer');
 	}
+
+    function view($type=""){
+        if(!$this->session->userdata('logged_in')){
+            show_404();
+        }
+        $this->data['title']="Master Tests";
+        $this->load->view('templates/header',$this->data);
+        $this->load->view('templates/leftnav',$this->data);
+        $this->data['tests'] = $this->diagnostics_model->tests_info($type);
+        $this->data['test_ranges'] = $this->diagnostics_model->test_range_info($type);
+        $this->load->view('pages/diagnostics/view_'.$type,$this->data);
+        
+    }       
 }
+
+
 ?>

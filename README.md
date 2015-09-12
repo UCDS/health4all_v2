@@ -9,7 +9,7 @@ CONTENTS
 ***********************************************************************************************************
 #1. DEMO
 
-Visit http://182.50.154.124/health4all_v2_test
+Visit http://code4community/health4all_test
 Username : admin
 Password : password
 
