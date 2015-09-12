@@ -1,12 +1,18 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <script type="text/javascript"
  src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+ <script type="text/javascript"
+ src="<?php echo base_url();?>assets/js/jquery.timeentry.min.js"></script>
+ <script type="text/javascript"
+ src="<?php echo base_url();?>assets/js/jquery.mousewheel.js"></script>
 <script>
 	$(function(){
 		var rowcount=1;
 		$("#donation_date").Zebra_DatePicker({
 			direction:false
+			
 		});
+		$(".time").timeEntry();
 	});
 </script>
 <div class="col-md-10 col-sm-9">
@@ -53,13 +59,17 @@
 		<input type="text" placeholder="SBP" class="form-control" id="sbp" name="sbp" required />/
 		<input type="text" placeholder="DBP" id="dbp" class="form-control"name="dbp" required />
 	</div><br />
-		<label class="col-md-4" >Temperature: </label> 
+		<label class="col-md-4" >Temperature(Farheit)</label> 
 	<div class="form-group col-md-8" style="margin-top:5px;margin-bottom:5px;">
 		<input type="text" placeholder="Temperature" class="form-control" id="temperature" name="temperature" required />
 	</div><br />
 	<label class="col-md-4" >Date of Donation: </label> 
 	<div class="form-group col-md-8" style="margin-top:5px;margin-bottom:5px;">
 		<input type="text" placeholder="Date of Donation" class="form-control" id="donation_date" name="donation_date" required />
+	</div><br />
+	<label class="col-md-4" >Donation time: </label> 
+	<div class="form-group col-md-8" style="margin-top:5px;margin-bottom:5px;">
+		<input type="text" placeholder="Donation time" class="time form-control"  id="donation_time" name="donation_time" required />
 	</div><br />
 	</div>
 	<div class="panel-footer" style="margin-top:5px;margin-bottom:5px;">

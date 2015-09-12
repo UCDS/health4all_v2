@@ -34,6 +34,7 @@
 		Address : <input type="text" class="form-control" name="location" size="40" required />
 		<input type="submit" value="Add Camp" name="add_camp" />
 		</form>
+			
 		<hr>
 		<h4>Add Hospital</h4>
 		<?php echo form_open('bloodbank/staff/set_place',array('class'=>'form-custom')); ?>

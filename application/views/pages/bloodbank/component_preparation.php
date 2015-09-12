@@ -1,11 +1,16 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <script type="text/javascript"
  src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+  <script type="text/javascript"
+ src="<?php echo base_url();?>assets/js/jquery.timeentry.min.js"></script>
+ <script type="text/javascript"
+ src="<?php echo base_url();?>assets/js/jquery.mousewheel.js"></script>
 <script>
 	$(function(){
 		$("#preparation_date").Zebra_DatePicker({
 			direction:false
 		});
+		$(".time").timeEntry();
 	});
 </script>
 
@@ -40,7 +45,7 @@
 
 		<table id="header-fixed" class="table-2 table table-striped table-bordered"></table>
 		<table class="table-2 table table-striped table-bordered" id="table-1">
-		<thead><th>S.No</th><th>Blood Unit No.</th><th>PC</th><th>FP</th><th>FFP</th><th>PRP</th><th>Platelet Conc.</th><th>Cryo</th><th>Prepared</th></thead>
+		<thead><th>S.No</th><th>Blood Unit No.</th><th>PC</th><th>FP</th><th>FFP</th><th>PRP</th><th>Platelet Conc.</th><th>Cryo</th><th>Component preparation time</th><th>Prepared</th></thead>
 		<?php echo form_open('bloodbank/inventory/prepare_components',array('id'=>'prepare_components'));?>
 		<?php 
 		$i=1;
@@ -77,6 +82,8 @@
 				<td></td>
 				<?php } } ?>
 			</td>
+				<td>
+			<input type="text" placeholder="Component preparation time" class="time form-control" id="com_pre_time" name="<?php echo $blood['donation_id'].'com_prep_time';?>" required /></td>
 			<td>
 				<input type="checkbox" value="<?php echo $blood->donation_id;?>" name="donation_id[]"   /></td>
 		</tr>
@@ -93,7 +100,11 @@
 				?>
 			</select></div>
 		</td>
-		<td colspan="3" ><div class="form-group col-lg-7"> <input type="text" class="form-control" placeholder="Date" name="preparation_date" id="preparation_date" form="prepare_components" required /></div></td>
+		<td colspan="6" ><div class="form-group col-lg-7"> <input type="text" class="form-control" placeholder="Date" name="preparation_date" id="preparation_date" form="prepare_components" required />
+		
+		
+		</div></td>
+		
 		<td colspan="3" align="right" ><div class="form-group"><input type="submit" class="btn btn-primary" name="Update" value="Update" /></div></td></tr>
 		</form>
 		<?php

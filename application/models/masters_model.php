@@ -69,7 +69,10 @@ class Masters_model extends CI_Model{
 				$staff_id = $this->input->post('staff_id');
 				$this->db->where('staff_id',$staff_id);
 			}
-			$this->db->select("staff_id,first_name,last_name,gender,date_of_birth,department_id,unit_id,area_id,staff_role_id,staff_category_id,designation,email,phone,specialisation,research,research_area")->from("staff");
+			$this->db->select("staff_id,first_name,last_name,gender,date_of_birth,staff.department_id,department,unit_id,area_id,staff_role_id,
+			staff_category_id,designation,email,phone,specialisation,research,research_area")
+			->from("staff")
+			->join('department','staff.department_id = department.department_id');
 			
 		}
 		else if($type=="staff_category")

@@ -248,6 +248,9 @@
 				<?php	} 
 					if($f->user_function=="Bloodbank"){ ?>
 						  <li><a href="<?php echo base_url()."bloodbank/user_panel/donation_summary";?>">Bloodbank Reports</a></li>
+				<?php	} 
+					if($f->user_function=="Bloodbank"){ ?>
+						  <li><a href="<?php echo base_url()."reports/audiology_summary";?>">Audiology Report</a></li>
 				<?php	}
 					if($f->user_function=="Masters - Sanitation" || $f->user_function == "Sanitation Summary"){ ?>
 						<li><a href="<?php echo base_url()."sanitation/view_summary";?>">Sanitation Evaluation</a></li>
