@@ -134,6 +134,7 @@
 						<input type="text" size="12" name="issue_date" class="form-control" placeholder="Date" id="issue_date" form="issue_form" required /><br />
 						<input type="text" size="12" name="issue_time" class="form-control" placeholder="Time" id="issue_time" form="issue_form" required />
 						</td>
+						<td>Sign</td>
 					</tr>
 					<tr>
 						<td colspan="3" align="middle">

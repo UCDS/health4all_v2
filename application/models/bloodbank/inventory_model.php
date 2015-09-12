@@ -202,9 +202,11 @@ class Inventory_model extends CI_Model{
 			'component_type'=>$component,
 			'status_id'=>7,
 			'donation_id'=>$inventory['donation_id'],
+			
 			'volume'=>$volume,
 			'created_by'=>$this->input->post('staff'),
 			'expiry_date'=>$expiry_date,
+			'component_perparation_time'=>$this->input->post($inventory['donation_id'].'com_prep_time'),
 			'datetime'=>date("Y-m-d",strtotime($this->input->post('preparation_date')))
 			);
 			$update_data[]=array(

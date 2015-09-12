@@ -172,6 +172,7 @@ class Register_model extends CI_Model{
 		'sbp'=>$this->input->post('sbp'),
 		'dbp'=>$this->input->post('dbp'),
 		'temperature'=>$this->input->post('temperature'),
+		'donation_time'=>$this->input->post('donation_time'),
 		'donation_date'=>date("Y-m-d",strtotime($this->input->post('donation_date'))),
 		'status_id'=>2
 		);
