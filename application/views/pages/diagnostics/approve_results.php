@@ -106,7 +106,7 @@
                 </div>
                 <div class="col-md-4">
                     <b>Sample ID :</b>
-                    <?php echo $order[0]->sample_id; ?>
+                    <?php echo $order[0]->sample_code; ?>
                 </div>
                 <div class="col-md-4">
                 </div>
@@ -115,6 +115,9 @@
 			<br />
 			<br />
                         <?php
+                            
+                            // The following flags are set to display only the coloums that have atleast one value.
+                            //Binary coloumn is shown only if there is atleast one binary result, similarly numeric and text.
                             $binary_flag=0;
                             $numeric_flag=0;
                             $text_flag=0;
@@ -173,12 +176,12 @@
 							else{
 									$result="<td>".$test->test_result." ".$test->lab_unit."</td>";
 								if($test->test_result!=NULL && $test->range_type==1){
-									$result.="<td>"."(< ".$test->max.$test->lab_unit.")"."</td>";                                                                
+									$result.="<td>"."< ".$test->max.$test->lab_unit."</td>";                                                                
 								}
 								else if($test->test_result!=NULL && $test->range_type==2)
-									$result.="<td>(> ".$test->min.$test->lab_unit.")</td>";
+									$result.="<td> > ".$test->min.$test->lab_unit."</td>";
 								else if($test->test_result!=NULL && $test->range_type==3)
-									$result.="<td>(".$test->min." - ".$test->max.$test->lab_unit.")</td>";
+									$result.="<td> ".$test->min." - ".$test->max.$test->lab_unit."</td>";
 								else $result.="<td></td>";
 							}
 							echo $result;

@@ -3,7 +3,7 @@
 class Consumables extends CI_Controller {
 	function __construct(){
 		parent::__construct();
-		$this->load->model('projects_model');
+		//$this->load->model('projects_model');
 		$this->load->model('masters_model');
 		$this->load->model('staff_model');
 		if($this->session->userdata('logged_in')){
@@ -23,7 +23,7 @@ class Consumables extends CI_Controller {
 		$this->data['user_id']=$user['user_id'];
 		$access=0;
 		foreach($this->data['functions'] as $function){
-			if($function['user_function']=="Consumables" && $function['add']==1){
+			if($function->user_function=="Consumables" && $function->add==1){
 				$access=1;
 			}
 		}
@@ -190,7 +190,19 @@ $this->data['user']=$this->masters_model->get_data("user");
                   )
 			);
 		}
-			
+		else if($type="item_type"){
+			// Setting title to page
+			$title = "Add Item Type";
+
+			// Adding input fields to variable $config for validation
+			$config=array(
+               array(
+                     'field'   => 'item_type',
+                     'label'   => 'Item Type',
+                     'rules'   => 'required|trim|xss_clean'
+                  )
+			);
+		}
 		else{
 			show_404();
 		}
