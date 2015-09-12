@@ -14,7 +14,7 @@ class Register_model extends CI_Model{
 		->like(strtolower($search_type),strtolower($search))
 		->where('hospital_id',$hospital);
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	function donor_register(){
 		$place=$this->session->userdata('place');
@@ -99,7 +99,7 @@ class Register_model extends CI_Model{
 		->where('status_id',1)
 		->where('hospital_id',$hospital);
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	function get_appointments(){
 		$userdata=$this->session->userdata('hospital');
@@ -123,7 +123,7 @@ class Register_model extends CI_Model{
 		->where('status','pending')
 		->where('hospital_id',$hospital);
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	
 	function register_donation($donor_id){
@@ -161,7 +161,7 @@ class Register_model extends CI_Model{
 		->where('status_id',2)
 		->where('hospital_id',$hospital);
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	
 	function update_medical($donation_id){
@@ -231,7 +231,7 @@ class Register_model extends CI_Model{
 		$query=$this->db->get();
 		$this->db->trans_complete();
 		if($this->db->trans_status()==TRUE){
-		return $query->result_array();
+		return $query->result();
 		}
 		else{
 			return false;
@@ -242,13 +242,20 @@ class Register_model extends CI_Model{
 		$staff_id=$userdata['user_id'];
 		$hospitaldata=$this->session->userdata('hospital');
 		$bloodbank_id = $hospitaldata['hospital_id'];
-		$this->db->select('visit_id')->from('patient_visit')
-		->where('hosp_file_no',$this->input->post('hosp_file_no'))
-		->where('visit_type',$this->input->post('patient_type'))
-		->where('YEAR(admit_date)',$this->input->post('year'),false); 
-		$query=$this->db->get();
-		$row=$query->row();
-		$visit_id=$row->visit_id;
+		$patient_type = $this->input->post('patient_type');
+		if($patient_type=='Internal'){
+			$this->db->select('visit_id')->from('patient_visit')
+			->where('hosp_file_no',$this->input->post('hosp_file_no'))
+			->where('visit_type',$this->input->post('visit_type'))
+			->where('YEAR(admit_date)',$this->input->post('year'),false); 
+			$query=$this->db->get();
+			echo $this->db->last_query();
+			$row=$query->row();
+			$visit_id=$row->visit_id;
+		}
+		else if($patient_type=='External'){
+			$visit_id = $this->input->post('hosp_file_no');
+		}
 		$blood_transfusion_required=$this->input->post('blood_transfusion');
 		$blood_groups=$this->input->post('blood_group');
 		$whole_blood_units=$this->input->post('whole_blood_units');
@@ -275,7 +282,8 @@ class Register_model extends CI_Model{
 		'platelet_concentrate_units'=>$platelet_concentrate_units[$i],
 		'cryoprecipitate_units'=>$cryoprecipitate_units[$i],
 		'request_date'=>$request_date,
-		'request_status'=>"Pending"
+		'request_status'=>"Pending",
+		'patient_type'=>$patient_type
 		);
 		$i++;
 		}

@@ -4,17 +4,24 @@ class Diagnostics_model extends CI_Model{
 		parent::__construct();
 	}
 	function order_test(){
-		$this->db->select('visit_id')->from('patient_visit')
+      	$this->db->select('visit_id, patient_id')->from('patient_visit')
 		->where('hosp_file_no',$this->input->post('visit_id'))
 		->where('visit_type',$this->input->post('patient_type'))
 		->where('YEAR(admit_date)',$this->input->post('year'),false); 
 		$query=$this->db->get();
 		$row=$query->row();
-		$visit_id=$row->visit_id;
+		
+                $visit_id=$row->visit_id;
+                $patient_id = $row->patient_id;         //Getting patient ID to retrive patient DOB and gender.
+                
 		$doctor_id=$this->input->post('order_by');
 		$test_area_id=$this->input->post('test_area');
 		$order_date_time=date("Y-m-d H:i:s",strtotime($this->input->post('order_date')." ".$this->input->post('order_time')));
 		$order_status=0;
+                
+                
+                
+                
 		$this->db->trans_start();
 			$data=array(
 				'visit_id'=>$visit_id,
@@ -25,6 +32,7 @@ class Diagnostics_model extends CI_Model{
 			);
 			$this->db->insert('test_order',$data);
 			$order_id=$this->db->insert_id();
+                        
 			$sample_code=$this->input->post('sample_id');
 			$sample_date_time = date("Y-m-d H:i:s");
 			$specimen_type_id=$this->input->post('specimen_type');
@@ -43,35 +51,405 @@ class Diagnostics_model extends CI_Model{
 			$this->db->insert('test_sample',$data);
 			$sample_id=$this->db->insert_id();
 			$data=array();
+                        
+                        //Retrieveing gender and DOB from patient table.
+                        $this->db->select('gender, dob, age_years, age_months, age_days, MIN(admit_date) admit_date')
+                        ->from('patient')
+                        ->where('patient.patient_id', $patient_id)
+                        ->join('patient_visit', 'patient_visit.patient_id=patient.patient_id')
+                        ->group_by('patient.patient_id');
+                        $patient_row = $this->db->get()->row();
+                        
+                        $dob = strtotime($patient_row->dob);
+                        $admit_date = strtotime($patient_row->admit_date);
+                        $gender='';
+                        if($patient_row->gender=='M')
+                            $gender = 1;
+                        else
+                            $gender = 2;
+                        $range_id = "";
+                        
 			if($this->input->post('test_master'))
 				foreach($this->input->post('test_master') as $test_master){
+                                        
+                                        //Retrieving range from test ranges table if range is active.
+                                        $this->db->select('test_range_id, age_type, gender, from_year, to_year, from_month, to_month, from_day, to_day')
+                                                ->from('test_range')
+                                                ->where('test_master_id', $test_master)
+                                                ->where('range_active', 1);
+                                        $query = $this->db->get();
+                                        $ranges = $query->result();
+                                        
+                                        if($dob != strtotime(0)){
+                                         
+                                            $now = strtotime(date("D M d, Y G:i"));
+                                            $diff = abs($now - $dob);
+                                            $age_years = floor($diff / (365*60*60*24));
+                                            $age_months = floor(($diff - $age_years * 365*60*60*24) / (30*60*60*24));
+                                            $age_days = floor(($diff - $age_years * 365*60*60*24 - $age_months*30*60*60*24)/ (60*60*24));
+                                            foreach($ranges as $range){
+                                                if($gender == $range->gender || $range->gender == 3){
+                                                    //All ages
+                                                    if($range->age_type == 4){
+                                                        $range_id = $range->test_range_id;
+                                                        break;
+                                                    }
+                                                    //Age less than
+                                                    else if ($range->age_type == 1){
+                                                       if($age_years < $range->to_year){
+                                                            $range_id = $range->test_range_id;
+                                                            break;
+                                                       }
+                                                       else if($age_years == $range->to_year){
+                                                           if($age_months < $range->to_month){
+                                                                $range_id = $range->test_range_id;
+                                                                break;
+                                                           }
+                                                           else if($age_months == $range->to_month)
+                                                               if($age_days <= $range->to_day){
+                                                                   $range_id = $range->test_range_id;
+                                                                   break;
+                                                               }
+                                                       }
+                                                    }//Age greater than.
+                                                    else if($range->age_type == 2){
+                                                        if($age_years > $range->from_year){
+                                                           $range_id = $range->test_range_id;
+                                                           break;
+                                                        }
+                                                       else if($age_years == $range->from_year){
+                                                           if($age_months > $range->from_month){
+                                                               $range_id = $range->test_range_id;
+                                                               break;
+                                                           }
+                                                           else if($age_months == $range->from_month)
+                                                               if($age_days >= $range->from_day){
+                                                                    $range_id = $range->test_range_id;                                                               
+                                                                    break;
+                                                               }
+                                                       }
+                                                    }//Age in a given range.
+                                                    else if($range->age_type == 3){
+                                                        if($age_years >= $range->from_year && $age_years <= $range->to_year){
+                                                            if($age_years == $range->from_year){
+                                                                if($age_months > $range->from_month){
+                                                                    $range_id = $range->test_range_id;
+                                                                    break;
+                                                                }else if($age_months == $range->age_months){
+                                                                    if($age_days >= $range->from_days){
+                                                                        $range_id = $range->test_range_id;
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }else if($age_years == $range->to_year){
+                                                                if($age_years <= $range->to_year){
+                                                                    if($age_months < $range->to_month){
+                                                                        $range_id = $range->test_range_id;
+                                                                        break; 
+                                                                    }else if($age_months == $range->to_month){
+                                                                        if($age_days <= $range->to_day){
+                                                                            $range_id = $range->test_range_id;
+                                                                            break;
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }else{ 
+                                                                $range_id = $range->test_range_id;
+                                                                break;
+                                                            }
+                                                        }
+                                                    }                                                    
+                                                }                                            
+                                            } //Looping through ranges ends here.
+                                        }//If date of birth is not set. Calculate the age from years, months, and days field along with first visit date.
+                                        else{
+                                         
+                                            $now = strtotime(date("D M d, Y G:i"));
+                                            $diff = abs($now - $admit_date);
+                                            $age_years = $patient_row->age_years + floor($diff / (365*60*60*24));
+                                            $age_months = $patient_row->age_months + floor(($diff - $age_years * 365*60*60*24) / (30*60*60*24));
+                                            $age_days = $patient_row->age_days + floor(($diff - $age_years * 365*60*60*24 - $age_months*30*60*60*24)/ (60*60*24));
+                                           
+                                            foreach($ranges as $range){
+                                                if($gender == $range->gender || $range->gender == 3){
+                                                    //All ages
+                                                    if($range->age_type==4){
+                                                        $range_id = $range->test_range_id;
+                                                        break;
+                                                    }//Age less than
+                                                    else if ($range->age_type == 1){
+                                                       if($age_years < $range->to_year){
+                                                            $range_id = $range->test_range_id;
+                                                            break;
+                                                       }
+                                                       else if($age_years == $range->to_year){
+                                                           if($age_months < $range->to_month){
+                                                                $range_id = $range->test_range_id;
+                                                                break;
+                                                           }
+                                                           else if($age_months == $range->to_month)
+                                                               if($age_days <= $range->to_day){
+                                                                   $range_id = $range->test_range_id;
+                                                                   break;
+                                                               }
+                                                       }
+                                                    }//Age greater than.
+                                                    else if($range->age_type == 2){
+                                                        if($age_years > $range->from_year){
+                                                           $range_id = $range->test_range_id;
+                                                           break;
+                                                        }
+                                                       else if($age_years == $range->from_year){
+                                                           if($age_months > $range->from_month){
+                                                               $range_id = $range->test_range_id;
+                                                               break;
+                                                           }
+                                                           else if($age_months == $range->from_month)
+                                                               if($age_days >= $range->from_day){
+                                                                    $range_id = $range->test_range_id;                                                               
+                                                                    break;
+                                                               }
+                                                       }
+                                                    }//Age in a given range.
+                                                    else if($range->age_type == 3){
+                                                        if($age_years >= $range->from_year && $age_years <= $range->to_year){
+                                                            if($age_years == $range->from_year){
+                                                                if($age_months > $range->from_month){
+                                                                    $range_id = $range->test_range_id;
+                                                                    break;
+                                                                }else if($age_months == $range->age_months){
+                                                                    if($age_days >= $range->from_days){
+                                                                        $range_id = $range->test_range_id;
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }else if($age_years == $range->to_year){
+                                                                if($age_years <= $range->to_year){
+                                                                    if($age_months < $range->to_month){
+                                                                        $range_id = $range->test_range_id;
+                                                                        break; 
+                                                                    }else if($age_months == $range->to_month){
+                                                                        if($age_days <= $range->to_day){
+                                                                            $range_id = $range->test_range_id;
+                                                                            break;
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }else{ 
+                                                                $range_id = $range->test_range_id;
+                                                                break;
+                                                            }
+                                                        }
+                                                    }                                                    
+                                                }                                            
+                                            } //Looping through ranges ends here.
+                                        } //Setting the range_id ends here.                      
+                                                
 					$data[]=array(
 						'order_id'=>$order_id,
 						'sample_id'=>$sample_id,
 						'test_master_id'=>$test_master,
-						'group_id'=>0
+						'group_id'=>0,
+                                                'test_range_id'=>$range_id
 					);
 				}
 			if($this->input->post('test_group')){
 				foreach($this->input->post('test_group') as $test_group){
-					$this->db->select('test_master.test_master_id,has_result')->from('test_master')->join('test_group_link','test_master.test_master_id=test_group_link.test_master_id')
+                                    	$this->db->select('test_master.test_master_id,has_result')->from('test_master')
+                                        ->join('test_group_link','test_master.test_master_id=test_group_link.test_master_id')
 					->join('test_group','test_group_link.group_id=test_group.group_id')
 					->where('test_group.group_id',$test_group);
 					$query=$this->db->get();
 					$result=$query->result();
-					foreach($result as $row){						
+                                        
+                                
+					foreach($result as $row){
+                                            //Retrieving range from test ranges table.
+                                            $this->db->select('test_range_id, age_type, gender, from_year, to_year, from_month, to_month, from_day, to_day')
+                                                    ->from('test_range')
+                                                    ->where('test_master_id', $row->test_master_id);
+                                            $query = $this->db->get();
+                                            $ranges = $query->result();
+
+                                            if($dob != strtotime(0)){
+                                                $now = strtotime(date("D M d, Y G:i"));
+                                                $diff = abs($now - $dob);
+                                                $age_years = floor($diff / (365*60*60*24));
+                                                $age_months = floor(($diff - $age_years1 * 365*60*60*24) / (30*60*60*24));
+                                                $age_days = floor(($diff - $age_years1 * 365*60*60*24 - $age_months1*30*60*60*24)/ (60*60*24));
+                                                foreach($ranges as $range){
+                                                    if($gender == $range->gender || $range->gender == 3){
+                                                        //All ages
+                                                        if($range->age_type==4){
+                                                            $range_id = $range->test_range_id;
+                                                            break;
+                                                        }
+                                                        //Age less than
+                                                        else if ($range->age_type == 1){
+                                                           if($age_years < $range->to_year){
+                                                                $range_id = $range->test_range_id;
+                                                                break;
+                                                           }
+                                                           else if($age_years == $range->to_year){
+                                                               if($age_months < $range->to_month){
+                                                                    $range_id = $range->test_range_id;
+                                                                    break;
+                                                               }
+                                                               else if($age_months == $range->to_month)
+                                                                   if($age_days <= $range->to_day){
+                                                                       $range_id = $range->test_range_id;
+                                                                       break;
+                                                                   }
+                                                           }
+                                                        }//Age greater than.
+                                                        else if($range->age_type == 2){
+                                                            if($age_years > $range->from_year){
+                                                               $range_id = $range->test_range_id;
+                                                               break;
+                                                            }
+                                                           else if($age_years == $range->from_year){
+                                                               if($age_months > $range->from_month){
+                                                                   $range_id = $range->test_range_id;
+                                                                   break;
+                                                               }
+                                                               else if($age_months == $range->from_month)
+                                                                   if($age_days >= $range->from_day){
+                                                                        $range_id = $range->test_range_id;                                                               
+                                                                        break;
+                                                                   }
+                                                           }
+                                                        }//Age in a given range.
+                                                        else if($range->age_type == 3){
+                                                            if($age_years >= $range->from_year && $age_years <= $range->to_year){
+                                                                if($age_years == $range->from_year){
+                                                                    if($age_months > $range->from_month){
+                                                                        $range_id = $range->test_range_id;
+                                                                        break;
+                                                                    }else if($age_months == $range->age_months){
+                                                                        if($age_days >= $range->from_days){
+                                                                            $range_id = $range->test_range_id;
+                                                                            break;
+                                                                        }
+                                                                    }
+                                                                }else if($age_years == $range->to_year){
+                                                                    if($age_years <= $range->to_year){
+                                                                        if($age_months < $range->to_month){
+                                                                            $range_id = $range->test_range_id;
+                                                                            break; 
+                                                                        }else if($age_months == $range->to_month){
+                                                                            if($age_days <= $range->to_day){
+                                                                                $range_id = $range->test_range_id;
+                                                                                break;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }else{ 
+                                                                    $range_id = $range->test_range_id;
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }                                                    
+                                                    }                                            
+                                                } //Looping through ranges ends here.
+                                            }//If date of birth is not set. Calculate the age from years, months, and days field along with first visit date.
+                                            else{
+                                                
+                                                $now = strtotime(date("D M d, Y G:i"));
+                                                $diff = abs($now - $admit_date);                                                
+                                                $age_years = $patient_row->age_years + floor($diff / (365*60*60*24));
+                                                $age_months = $patient_row->age_months + floor(($diff - $age_years * 365*60*60*24) / (30*60*60*24));
+                                                $age_days = $patient_row->age_days + floor(($diff - $age_years * 365*60*60*24 - $age_months*30*60*60*24)/ (60*60*24));
+
+                                                foreach($ranges as $range){
+                                                    if($gender == $range->gender || $range->gender == 3){
+                                                        //All ages
+                                                        if($range->age_type == 4){
+                                                            $range_id = $range->test_range_id;
+                                                            break;
+                                                        }
+                                                        //Age less than
+                                                        else if ($range->age_type == 1){
+                                                           if($age_years < $range->to_year){
+                                                                $range_id = $range->test_range_id;
+                                                                break;
+                                                           }
+                                                           else if($age_years == $range->to_year){
+                                                               if($age_months < $range->to_month){
+                                                                    $range_id = $range->test_range_id;
+                                                                    break;
+                                                               }
+                                                               else if($age_months == $range->to_month)
+                                                                   if($age_days <= $range->to_day){
+                                                                       $range_id = $range->test_range_id;
+                                                                       break;
+                                                                   }
+                                                           }
+                                                        }//Age greater than.
+                                                        else if($range->age_type == 2){
+                                                            if($age_years > $range->from_year){
+                                                               $range_id = $range->test_range_id;
+                                                               break;
+                                                            }
+                                                           else if($age_years == $range->from_year){
+                                                               if($age_months > $range->from_month){
+                                                                   $range_id = $range->test_range_id;
+                                                                   break;
+                                                               }
+                                                               else if($age_months == $range->from_month)
+                                                                   if($age_days >= $range->from_day){
+                                                                        $range_id = $range->test_range_id;                                                               
+                                                                        break;
+                                                                   }
+                                                           }
+                                                        }//Age in a given range.
+                                                        else if($range->age_type == 3){
+                                                            if($age_years >= $range->from_year && $age_years <= $range->to_year){
+                                                                if($age_years == $range->from_year){
+                                                                    if($age_months > $range->from_month){
+                                                                        $range_id = $range->test_range_id;
+                                                                        break;
+                                                                    }else if($age_months == $range->age_months){
+                                                                        if($age_days >= $range->from_days){
+                                                                            $range_id = $range->test_range_id;
+                                                                            break;
+                                                                        }
+                                                                    }
+                                                                }else if($age_years == $range->to_year){
+                                                                    if($age_years <= $range->to_year){
+                                                                        if($age_months < $range->to_month){
+                                                                            $range_id = $range->test_range_id;
+                                                                            break; 
+                                                                        }else if($age_months == $range->to_month){
+                                                                            if($age_days <= $range->to_day){
+                                                                                $range_id = $range->test_range_id;
+                                                                                break;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }else{ 
+                                                                    $range_id = $range->test_range_id;
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }                                                    
+                                                    }                                            
+                                                } //Looping through ranges ends here.
+                                            } //Setting the range_id ends here.
+
 						$data[]=array(
 							'order_id'=>$order_id,
 							'sample_id'=>$sample_id,
 							'group_id'=>$test_group,
-							'test_master_id'=>$row->test_master_id
+							'test_master_id'=>$row->test_master_id,
+                            'test_range_id'=>$range_id                                                        
 						);
 					}					
 						$data[]=array(
 							'order_id'=>$order_id,
 							'sample_id'=>$sample_id,
 							'group_id'=>$test_group,
-							'test_master_id'=>0
+							'test_master_id'=>0,
+                            'test_range_id'=>$range_id
 						);
 				}
 			}
@@ -110,7 +488,8 @@ class Diagnostics_model extends CI_Model{
 		}
 		$this->db->select('test_id,test_order.order_id,test_sample.sample_id,test_method,
 		test_name,department,visit_type,patient.first_name, patient.last_name,
-		staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,specimen_source,sample_container_type,test_status',false)//including the specimen source in update tests
+		staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,
+		specimen_source,sample_container_type,test_status',false)
 		->from('test_order')
 		->join('test','test_order.order_id=test.order_id')
 		->join('test_sample','test_order.order_id=test_sample.order_id')
@@ -295,10 +674,11 @@ class Diagnostics_model extends CI_Model{
 		test_result_text,hospital,hospital.logo,hospital.place,district,state,test_area,provisional_diagnosis,
 		IF(micro_organism_test.micro_organism_test_id!="",GROUP_CONCAT(DISTINCT CONCAT(micro_organism_test.micro_organism_test_id,",",micro_organism,",",antibiotic),",",antibiotic_result,"^"),0) micro_organism_test,
 		approved_by.first_name approved_first,approved_by.last_name approved_last,approved_by.designation approved_by_designation,
-		done_by.first_name done_first,done_by.last_name done_last,done_by.designation done_by_designation',false)
+		done_by.first_name done_first,done_by.last_name done_last,done_by.designation done_by_designation,test_range.min,test_range.max,test_range.range_type, test_sample.specimen_source, test_sample.sample_code',false)
 		->from('test_order')->join('test','test_order.order_id=test.order_id')->join('test_sample','test_order.order_id=test_sample.order_id')
 		->join('test_group','test.group_id=test_group.group_id','left')
 		->join('test_master as ts','test.test_master_id=ts.test_master_id','left')
+		->join('test_range','test.test_range_id=test_range.test_range_id','left')
 		->join('lab_unit lus','ts.numeric_result_unit=lus.lab_unit_id','left')
 		->join('lab_unit lug','test_group.numeric_result_unit=lug.lab_unit_id','left')
 		->join('test_method tms','ts.test_method_id=tms.test_method_id','left')
@@ -337,7 +717,9 @@ class Diagnostics_model extends CI_Model{
 		if(!!$tests){
 		foreach($tests as $test){
 			if($this->input->post('binary_result_'.$test)!=NULL || $this->input->post('numeric_result_'.$test)!=NULL || $this->input->post('text_result_'.$test)!=NULL){
-				$binary_result=$this->input->post('binary_result_'.$test);
+				if($this->input->post('binary_result_'.$test)!=NULL) 
+					$binary_result=$this->input->post('binary_result_'.$test);
+				else $binary_result=NULL;
 				$numeric_result=$this->input->post('numeric_result_'.$test);
 				$text_result=$this->input->post('text_result_'.$test);
 				$data[]=array(
@@ -503,7 +885,7 @@ class Diagnostics_model extends CI_Model{
 							text_result')
 		->from('test_order')
 		->join('test','test_order.order_id=test.order_id')
-		->join('test_sample','test_order.order_id=test_sample.order_id')
+		->join('test_sample','test.sample_id=test_sample.sample_id')
 		->join('test_master','test.test_master_id=test_master.test_master_id')
 		->join('lab_unit','test_master.numeric_result_unit=lab_unit.lab_unit_id','left')
 		->join('test_method','test_master.test_method_id=test_method.test_method_id')
@@ -517,5 +899,28 @@ class Diagnostics_model extends CI_Model{
 		$query=$this->db->get();
 		return $query->result();
 	}
+        
+    function tests_info($type){
+        if($type=='master_tests'){
+            $this->db->select("test_master.test_master_id,test_method,test_name, binary_result, numeric_result, text_result,test_area,comments,COUNT(test_range_id) ranges_count, lab_unit")
+                    ->from("test_master")
+                    ->join('test_area','test_master.test_area_id=test_area.test_area_id')
+                    ->join('test_method','test_master.test_method_id=test_method.test_method_id','left')
+                    ->join('test_range','test_master.test_master_id = test_range.test_master_id','left')
+                    ->join('lab_unit','test_master.numeric_result_unit=lab_unit.lab_unit_id')
+                    ->group_by('test_master.test_master_id');
+            $query = $this->db->get();
+            return $query->result();
+        }
+    }
+    
+    function test_range_info($type){
+        if($type=='master_tests'){
+            $this->db->select("test_master_id,gender, min, max, from_year, to_year, from_month, to_month, from_day, to_day, age_type, range_type")
+                     ->from("test_range");
+            $query = $this->db->get();
+            return $query->result();
+        }
+    }
 }
 ?>

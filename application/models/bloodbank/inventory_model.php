@@ -23,7 +23,7 @@ class Inventory_model extends CI_Model{
 		->where('bb_donation.hospital_id',$hospital)
 		->order_by('blood_unit_num');
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	function group_blood(){
 		$donation_ids=$this->input->post('donation_id');
@@ -110,7 +110,7 @@ class Inventory_model extends CI_Model{
 		->where('bb_donation.hospital_id',$hospital)
 		->order_by('blood_unit_num');
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}	
 	
 	function prepare_components(){
@@ -130,79 +130,78 @@ class Inventory_model extends CI_Model{
 		->join('bb_donation','blood_inventory.donation_id=bb_donation.donation_id')
 		->where('bb_donation.donation_id',$donation_id);
 		$query=$this->db->get();
-		$result=$query->result_array();
+		$result=$query->result();
 		$inventory=$result[0];
 		
 		foreach($components as $component){
 			if($component=="WB"){
-				$volume=$inventory['volume'];
-				$expiry_date=$inventory['expiry_35'];
+				$volume=$inventory->volume;
+				$expiry_date=$inventory->expiry_35;
 			}
 			else if($component=='PC'){
-				if($inventory['volume']==350){
+				if($inventory->volume==350){
 					$volume='100';
 				}
 				else{
 					$volume='150';
 				}
-				if($inventory['bag_type']==5){
-					$expiry_date=$inventory['expiry_42'];
+				if($inventory->bag_type==5){
+					$expiry_date=$inventory->expiry_42;
 				}
 				else{
-					$expiry_date=$inventory['expiry_35'];
+					$expiry_date=$inventory->expiry_35;
 				}
 			}
 			else if($component=='FFP'){
-				if($inventory['volume']==350){
+				if($inventory->volume==350){
 					$volume='40';
 				}
 				else{
 					$volume='60';
 				}
-				$expiry_date=$inventory['expiry_365'];
+				$expiry_date=$inventory->expiry_365;
 			}
 			else if($component=='FP'){
-				if($inventory['volume']==350){
+				if($inventory->volume==350){
 					$volume='40';
 				}
 				else{
 					$volume='60';
 				}
-					$expiry_date=$inventory['expiry_1825'];
+					$expiry_date=$inventory->expiry_1825;
 			}
 			else if($component=='PRP'){
-				if($inventory['volume']==350){
+				if($inventory->volume==350){
 					$volume='100';
 				}
 				else{
 					$volume='120';
 				}
-					$expiry_date=$inventory['expiry_5'];
+					$expiry_date=$inventory->expiry_5;
 			}
 			else if($component=='Platelet Concentrate'){
-				if($inventory['volume']==350){
+				if($inventory->volume==350){
 					$volume='100';
 				}
 				else{
 					$volume='120';
 				}
-				$expiry_date=$inventory['expiry_5'];
+				$expiry_date=$inventory->expiry_5;
 			}
 			else if($component=='Cryo'){
-				if($inventory['volume']==350){
+				if($inventory->volume==350){
 					$volume='80';
 				}
 				else{
 					$volume='100';
 				}
-				$expiry_date=$inventory['expiry_5'];
+				$expiry_date=$inventory->expiry_5;
 			}
 			$userdata=$this->session->userdata('hospital');
 			$data[]=array(
 			'component_type'=>$component,
 			'status_id'=>7,
-			'donation_id'=>$inventory['donation_id'],
-			
+			'donation_id'=>$inventory->donation_id,
 			'volume'=>$volume,
 			'created_by'=>$this->input->post('staff'),
 			'expiry_date'=>$expiry_date,
@@ -210,7 +209,7 @@ class Inventory_model extends CI_Model{
 			'datetime'=>date("Y-m-d",strtotime($this->input->post('preparation_date')))
 			);
 			$update_data[]=array(
-			'inventory_id'=>$inventory['inventory_id'],
+			'inventory_id'=>$inventory->inventory_id,
 			'status_id'=>10,
 			'component_type'=>'Components Prepared'
 			);
@@ -244,7 +243,7 @@ class Inventory_model extends CI_Model{
 		->group_by('blood_inventory.donation_id')
 		->order_by('blood_unit_num');
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	
 	function blood_screening(){
@@ -310,7 +309,7 @@ class Inventory_model extends CI_Model{
 		->where('blood_request.bloodbank_id',$hospital)
 		->order_by('blood_transfusion_required desc,request_id asc');
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	
 	function get_inventory(){
@@ -332,7 +331,7 @@ class Inventory_model extends CI_Model{
 		->where('bb_donation.hospital_id',$hospital)
 		->order_by('component_type');
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	
 	function discard_inventory(){
@@ -374,7 +373,7 @@ class Inventory_model extends CI_Model{
 		AND bb_donation.status_id=6  AND screening_result=1 AND bb_donation.hospital_id='.$hospital.' AND blood_inventory.status_id=7
 		ORDER BY component_type,blood_unit_num ASC,expiry_date ASC
 		');
-		$data[]=$result->result_array();
+		$data[]=$result->result();
 		$data[]=$result->num_rows();
 		return $data;
 	}
@@ -417,7 +416,7 @@ class Inventory_model extends CI_Model{
 			->where_in('blood_inventory.inventory_id',$inventory)
 			->group_by('blood_donor.donor_id');
 			$query=$this->db->get();
-			return $query->result_array();
+			return $query->result();
 		}
 	}
 }

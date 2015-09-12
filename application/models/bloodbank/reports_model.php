@@ -30,14 +30,14 @@ class Reports_model extends CI_Model{
 	 SUM(CASE WHEN sex="m" THEN 1 ELSE 0 END) "male",
 	 SUM(CASE WHEN sex="f" THEN 1 ELSE 0 END) "female",
 	 SUM(CASE WHEN 1 THEN 1 ELSE 0 END) "total",
-	 SUM(CASE WHEN blood_group="A+" THEN 1 ELSE 0 END) "A+",
-	 SUM(CASE WHEN blood_group="A-" THEN 1 ELSE 0 END) "A-",
-	 SUM(CASE WHEN blood_group="B+" THEN 1 ELSE 0 END) "B+",
-	 SUM(CASE WHEN blood_group="B-" THEN 1 ELSE 0 END) "B-",
-	 SUM(CASE WHEN blood_group="AB+" THEN 1 ELSE 0 END) "AB+",
-	 SUM(CASE WHEN blood_group="AB-" THEN 1 ELSE 0 END) "AB-",
-	 SUM(CASE WHEN blood_group="O+" THEN 1 ELSE 0 END) "O+",
-	 SUM(CASE WHEN blood_group="O-" THEN 1 ELSE 0 END) "O-"
+	 SUM(CASE WHEN blood_group="Apos" THEN 1 ELSE 0 END) "Apos",
+	 SUM(CASE WHEN blood_group="Aneg" THEN 1 ELSE 0 END) "Aneg",
+	 SUM(CASE WHEN blood_group="Bpos" THEN 1 ELSE 0 END) "Bpos",
+	 SUM(CASE WHEN blood_group="Bneg" THEN 1 ELSE 0 END) "Bneg",
+	 SUM(CASE WHEN blood_group="ABpos" THEN 1 ELSE 0 END) "ABpos",
+	 SUM(CASE WHEN blood_group="ABneg" THEN 1 ELSE 0 END) "ABneg",
+	 SUM(CASE WHEN blood_group="Opos" THEN 1 ELSE 0 END) "Opos",
+	 SUM(CASE WHEN blood_group="Oneg" THEN 1 ELSE 0 END) "Oneg"
 	 ')
 	 ->from('blood_donor')
 	 ->join('bb_donation','blood_donor.donor_id=bb_donation.donor_id')
@@ -46,7 +46,7 @@ class Reports_model extends CI_Model{
 	 ->group_by('donation_date,bb_donation.camp_id')
 	 ->order_by('donation_date','desc');
 	  if($query=$this->db->get()){
-			return $query->result_array();
+			return $query->result();
 		}
 		
 	   else
@@ -76,14 +76,14 @@ class Reports_model extends CI_Model{
 	 $this->db->select('
 	 issue_date,issue_time,
 	 SUM(CASE WHEN 1 THEN 1 ELSE 0 END) "total",
-	 SUM(CASE WHEN blood_group="A+" THEN 1 ELSE 0 END) "A+",
-	 SUM(CASE WHEN blood_group="A-" THEN 1 ELSE 0 END) "A-",
-	 SUM(CASE WHEN blood_group="B+" THEN 1 ELSE 0 END) "B+",
-	 SUM(CASE WHEN blood_group="B-" THEN 1 ELSE 0 END) "B-",
-	 SUM(CASE WHEN blood_group="AB+" THEN 1 ELSE 0 END) "AB+",
-	 SUM(CASE WHEN blood_group="AB-" THEN 1 ELSE 0 END) "AB-",
-	 SUM(CASE WHEN blood_group="O+" THEN 1 ELSE 0 END) "O+",
-	 SUM(CASE WHEN blood_group="O-" THEN 1 ELSE 0 END) "O-"
+	 SUM(CASE WHEN blood_group="Apos" THEN 1 ELSE 0 END) "Apos",
+	 SUM(CASE WHEN blood_group="Aneg" THEN 1 ELSE 0 END) "Aneg",
+	 SUM(CASE WHEN blood_group="Bpos" THEN 1 ELSE 0 END) "Bpos",
+	 SUM(CASE WHEN blood_group="Bneg" THEN 1 ELSE 0 END) "Bneg",
+	 SUM(CASE WHEN blood_group="ABpos" THEN 1 ELSE 0 END) "ABpos",
+	 SUM(CASE WHEN blood_group="ABneg" THEN 1 ELSE 0 END) "ABneg",
+	 SUM(CASE WHEN blood_group="Opos" THEN 1 ELSE 0 END) "Opos",
+	 SUM(CASE WHEN blood_group="Oneg" THEN 1 ELSE 0 END) "Oneg"
 	 ')
 	 ->from('blood_donor')
 	 ->join('bb_donation','blood_donor.donor_id=bb_donation.donor_id')
@@ -95,7 +95,7 @@ class Reports_model extends CI_Model{
 	 ->group_by('issue_date')
 	 ->order_by('issue_date','desc');
 	  if($query=$this->db->get()){
-			return $query->result_array();
+			return $query->result();
 		}
 		
 	   else
@@ -130,7 +130,7 @@ class Reports_model extends CI_Model{
 	 ->where('expiry_date>=',date("Y-m-d"),false)
 	 ->group_by('blood_group');
 	  if($query=$this->db->get()){
-			return $query->result_array();
+			return $query->result();
 		}
 		
 	   else
@@ -176,7 +176,7 @@ class Reports_model extends CI_Model{
 	 ->group_by('bb_donation.donation_id')
 	 ->order_by('donation_date DESC,blood_unit_num ASC');
 	  if($query=$this->db->get()){
-			return $query->result_array();
+			return $query->result();
 		}
 		
 	   else
@@ -212,7 +212,7 @@ class Reports_model extends CI_Model{
 		->where('bb_appointment.hospital_id',$hospital)
 		->order_by('bb_slot.date');
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	
 	/* get_donated_blood() : Generate the detailed report of the donations made in a given period of time. Defaults to last 30 days. */
@@ -246,8 +246,8 @@ class Reports_model extends CI_Model{
 		 }
 		if($this->input->post('from_num') && $this->input->post('to_num')){
 			$from_num=trim($this->input->post('from_num'));
-			$to_num=trim($this->input->post('to_date'));
-			$this->db->where("blood_unit_num BETWEEN '$from_num' AND '$to_num')");
+			$to_num=trim($this->input->post('to_num'));
+			$this->db->where("(blood_unit_num BETWEEN '$from_num' AND '$to_num')");
 		}
 		else if($this->input->post('from_num') || $this->input->post('to_num')){
 		 $this->input->post('from_num')==""?$num=$this->input->post('to_num'):$num=$this->input->post('from_num');
@@ -260,6 +260,9 @@ class Reports_model extends CI_Model{
 			else{
 			$this->db->where('bb_donation.camp_id',$camp);
 			}
+		}
+		if($this->input->post('camp')){
+			$this->db->where('bb_donation.camp_id',$this->input->post('camp'));
 		}
 		if($blood_group!="0"){
 			$blood_group=str_replace("pos","+",$blood_group);
@@ -284,7 +287,7 @@ class Reports_model extends CI_Model{
 		->group_by('bb_donation.donation_id')
 		->order_by('blood_unit_num','desc');
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	
 	/* get_inventory() : Generate the report of the inventory at a given period of time or a range of donor numbers. */
@@ -342,7 +345,7 @@ class Reports_model extends CI_Model{
 		->group_by('blood_inventory.inventory_id')
 		->order_by('blood_unit_num');
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 
 	/* get_screened_blood() : Generate the report of the screening done in a given period of time or a donor number range. */
@@ -381,7 +384,7 @@ class Reports_model extends CI_Model{
 		->where('bb_donation.hospital_id',$hospital)
 		->order_by('screening_datetime','desc');
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	
 	/* get_issues() : Generate the report of the issues made in a given period of time. Defaults to last 10 days. */
@@ -450,7 +453,7 @@ class Reports_model extends CI_Model{
 		->where('bb_donation.hospital_id',$hospital)
 		->order_by('issue_date DESC,issue_time DESC');
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	
 	/* get_grouped_blood() : Generate the report of the blood grouping done in a given period of time or a range of donor numbers.*/
@@ -490,7 +493,7 @@ class Reports_model extends CI_Model{
 		->where('bb_donation.hospital_id',$hospital)
 		->order_by('grouping_date','desc');
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	
 	/* get_hospital_issue_summary() : Generate the summary report of the issues made to different hospital in a given period of time. Defaults to last 30 days. */
@@ -519,14 +522,14 @@ class Reports_model extends CI_Model{
 	 SUM(CASE WHEN sex="m" THEN 1 ELSE 0 END) "male",
 	 SUM(CASE WHEN sex="f" THEN 1 ELSE 0 END) "female",
 	 SUM(CASE WHEN 1 THEN 1 ELSE 0 END) "total",
-	 SUM(CASE WHEN blood_donor.blood_group="A+" THEN 1 ELSE 0 END) "A+",
-	 SUM(CASE WHEN blood_donor.blood_group="A-" THEN 1 ELSE 0 END) "A-",
-	 SUM(CASE WHEN blood_donor.blood_group="B+" THEN 1 ELSE 0 END) "B+",
-	 SUM(CASE WHEN blood_donor.blood_group="B-" THEN 1 ELSE 0 END) "B-",
-	 SUM(CASE WHEN blood_donor.blood_group="AB+" THEN 1 ELSE 0 END) "AB+",
-	 SUM(CASE WHEN blood_donor.blood_group="AB-" THEN 1 ELSE 0 END) "AB-",
-	 SUM(CASE WHEN blood_donor.blood_group="O+" THEN 1 ELSE 0 END) "O+",
-	 SUM(CASE WHEN blood_donor.blood_group="O-" THEN 1 ELSE 0 END) "O-"
+	 SUM(CASE WHEN blood_donor.blood_group="Apos" THEN 1 ELSE 0 END) "Apos",
+	 SUM(CASE WHEN blood_donor.blood_group="Aneg" THEN 1 ELSE 0 END) "Aneg",
+	 SUM(CASE WHEN blood_donor.blood_group="Bpos" THEN 1 ELSE 0 END) "Bpos",
+	 SUM(CASE WHEN blood_donor.blood_group="Bneg" THEN 1 ELSE 0 END) "Bneg",
+	 SUM(CASE WHEN blood_donor.blood_group="ABpos" THEN 1 ELSE 0 END) "ABpos",
+	 SUM(CASE WHEN blood_donor.blood_group="ABneg" THEN 1 ELSE 0 END) "ABneg",
+	 SUM(CASE WHEN blood_donor.blood_group="Opos" THEN 1 ELSE 0 END) "Opos",
+	 SUM(CASE WHEN blood_donor.blood_group="Oneg" THEN 1 ELSE 0 END) "Oneg"
 	 ')
 	 ->from('blood_donor')
 	 ->join('bb_donation','blood_donor.donor_id=bb_donation.donor_id')
@@ -540,7 +543,7 @@ class Reports_model extends CI_Model{
 	 ->group_by('hospital_id')
 	 ->order_by('hospital','asc');
 	  if($query=$this->db->get()){
-			return $query->result_array();
+			return $query->result();
 		}
 		
 	   else

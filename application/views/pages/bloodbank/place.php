@@ -29,38 +29,20 @@
 		</div>
 		<hr>
 		<h4>Add Camp</h4>
-		<?php echo form_open('bloodbank/staff/set_place'); ?>
-		<div class="col-md-3">
+		<?php echo form_open('bloodbank/staff/set_place',array('class'=>'form-custom')); ?>
 		Camp name : <input type="text" class="form-control" name="camp" required />
-		</div>
-		<div class="col-md-3">
 		Address : <input type="text" class="form-control" name="location" size="40" required />
-		</div>
-		
-		<br>
-		<input type="submit" value="Add Camp"  class="btn btn-primary btn-sm"name="add_camp" />
-		
+		<input type="submit" value="Add Camp" name="add_camp" />
 		</form>
 			
 		<hr>
 		<h4>Add Hospital</h4>
-		<?php echo form_open('bloodbank/staff/set_place'); ?>
-		<div class="col-md-3">
-		Hospital name : <input type="text"  class="form-control" name="hospital" required />
-		</div>
-		<div class="col-md-3">
-		Place : <input type="text" name="location"  class="form-control" size="20" required />
-		</div>
-		<div class="col-md-3">
-		District : <input type="text" name="district"   class="form-control" size="20" required />
-		</div>
-		<div class="col-md-3">
-		State : <input type="text" name="state"  class="form-control" size="20" required />
-		</div>
-		<br><br><br>
-		<div class="col-md-3 offset-12">
-		<input type="submit" value="Add Hospital"  class="btn btn-primary btn-sm" name="add_hospital" />
-		</div>
+		<?php echo form_open('bloodbank/staff/set_place',array('class'=>'form-custom')); ?>
+		Hospital name : <input type="text" class="form-control" name="hospital" required />
+		Place : <input type="text" class="form-control" name="location" size="20" required />
+		District : <input type="text" class="form-control" name="district" size="20" required />
+		State : <input type="text" class="form-control"  name="state" size="20" required />
+		<input type="submit" value="Add Hospital" name="add_hospital" />
 		</form>
 		<?php if(isset($msg)) echo $msg; ?>
 	</div>

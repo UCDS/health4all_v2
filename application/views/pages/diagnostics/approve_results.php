@@ -99,13 +99,66 @@
 					<?php echo $order[0]->provisional_diagnosis;?>
 				</div>
 			</div>
+            <div class="row col-md-12">
+                <div class="col-md-4">
+                    <b>Sample :</b>
+                    <?php echo $order[0]->specimen_type; if(!!$order[0]->specimen_source) echo " - ".$order[0]->specimen_source;?>
+                </div>
+                <div class="col-md-4">
+                    <b>Sample ID :</b>
+                    <?php echo $order[0]->sample_code; ?>
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
 			<br />
 			<br />
 			<br />
+                        <?php
+                            
+                            // The following flags are set to display only the coloums that have atleast one value.
+                            //Binary coloumn is shown only if there is atleast one binary result, similarly numeric and text.
+                            $binary_flag=0;
+                            $numeric_flag=0;
+                            $text_flag=0;
+                            foreach($order as $test){
+                                if($test->binary_result==1 ){
+                                    $binary_flag = 1;
+                                    break;
+                                }
+                            }
+                            foreach($order as $test){
+                                if($test->numeric_result==1){
+                                    $numeric_flag = 1;
+                                    break;
+                                }
+                            }
+                            foreach($order as $test){
+                                if($test->text_result==1){
+                                    $text_flag = 1;
+                                    break;
+                                }
+                            }
+                        ?>
 			<table class="table table-bordered">
+                            <tr>
 				<th>Test</th>
+				<?php 
+					if($numeric_flag==1){
+				?>
 				<th>Value</th>
-				<th colspan="2">Report</th>				
+				<th>Normal Range</th>
+					<?php } ?>
+				<?php
+				if($binary_flag==1 && $text_flag==1){
+				?>
+				<th colspan="2">Report</th>
+                <?php } 
+				else if($binary_flag==1 || $text_flag==1){
+				?>
+				<th>Report</th>
+                <?php } ?>
+                </tr>
 			<?php foreach($order as $test){ 
 					$positive="";$negative="";
 				 if($test->test_status==1){ $readonly = "disabled"; }else $readonly="";
@@ -114,36 +167,48 @@
 					<td>
 						<?php echo $test->test_name;?>
 					</td>
-					<td>
-					<?php if($test->numeric_result==1){ 
-
+					<?php 
+						if($numeric_flag==1){
+							if($test->numeric_result==1){ 
 							if($test->test_status == 0) { 
-								$result="Test not done";
+								$result="<td colspan='2'>Test not done</td>";
 							} 
-							else{	
-								$result=$test->test_result." ".$test->lab_unit; 
+							else{
+									$result="<td>".$test->test_result." ".$test->lab_unit."</td>";
+								if($test->test_result!=NULL && $test->range_type==1){
+									$result.="<td>"."< ".$test->max.$test->lab_unit."</td>";                                                                
+								}
+								else if($test->test_result!=NULL && $test->range_type==2)
+									$result.="<td> > ".$test->min.$test->lab_unit."</td>";
+								else if($test->test_result!=NULL && $test->range_type==3)
+									$result.="<td> ".$test->min." - ".$test->max.$test->lab_unit."</td>";
+								else $result.="<td></td>";
 							}
 							echo $result;
+							}
+							else{
+								echo "<td></td><td></td>";
+							}
 						}
-								else echo "-";
 					 ?>
-					</td>
-					<td>
-					<?php if($test->binary_result==1){ ?>
+					<?php 
+						if($binary_flag==1){
+						if($test->binary_result==1){ ?>
 						<?php 
+                                                        if($text_flag==1){
+                                                        $result = "<td>";
+                                                        }
+                                                        else{
+                                                           $result="<td colspan='2'>";
+                                                        }
 							if($test->test_status == 0) { 
-								$result="Test not done.";
+								$result="Test not done.</td>";
 							} 
 							else{	
-								if($test->test_result_binary == 1 ) $result=$test->binary_positive ; 
-								else $result=$test->binary_negative ; 
+								if($test->test_result_binary == 1 ) $result.=$test->binary_positive ; 
+								else $result.=$test->binary_negative ; 
 							}
-						echo $result;
 						?>
-					<?php 
-					}						
-					else echo "-";
-					?>
 					
 						<?php if($test->test_status == 1 && $test->test_result_binary==1 && preg_match("^Culture*^",$test->test_method)) { 
 						$micro_organism_test_ids = array();
@@ -171,21 +236,44 @@
 							if($k==count($res))
 								echo "</tr></tbody></table>";													
 							}
-						} ?>
-					 </td>
-					 <td>
-					<?php if($test->text_result==1){ 
-
-						if($test->test_status == 0) { 
-							$result="Test not done";
-						} 
-						else{	
-							$result = $test->test_result_text;
 						}
+                                            $result.="</td>";
 						echo $result;
-					 }
-								else echo "-"; ?>
-					 </td>
+							}
+							else {
+								if($text_flag==1)
+									echo "<td></td>";
+								else 
+									echo "<td colspan='2'></td>";
+							}
+						}
+						?>
+					<?php 
+					if($text_flag==1){
+						if($test->text_result==1){ 
+							if($binary_flag==1){
+							$result = "<td>";
+							}
+							else{
+							   $result="<td colspan='2'>";
+							}
+
+							if($test->test_status == 0) { 
+								$result.="Test not done</td>";
+							} 
+							else{	
+								$result .= $test->test_result_text."</td>";
+							}
+							echo $result;
+						}
+						else{
+							if($binary_flag==1)
+								echo "<td></td>";
+							else 
+								echo "<td colspan='2'></td>";
+						}
+					}
+                    ?>
 					 <td>
 					<?php if($test->test_status == 2){ ?>
 						<label class="label label-success">Approved</label>

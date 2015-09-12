@@ -178,7 +178,6 @@
 			<th>Department/Unit/Area</th>
 			<th>Specimen</th>
 			<th>Test(s)</th>
-			<th>Received By</th>
 		</thead>
 		<tbody>
 			<?php 
@@ -226,18 +225,54 @@
 							<?php 
 							$x=0;
 							foreach($report as $order){
-										if($order->order_id == $ord) {
-											if($order->test_status==1)
-												$label="label-warning";
-											else if($order->test_status == 3){ $label = "label-danger";}
-											else if($order->test_status == 2){ $label = "label-success";}
-											else if($order->test_status == 0){ $label = "label-default";}
-											echo $order->test_name."<br />";
-										}
-									} 
+										if($order->order_id == $ord) { ?>
+											<div class="panel panel-default" style="padding:5px;">
+												<?php echo $order->test_name;?>  
+												<?php
+												if($order->test_status == 2) 
+													echo " : ";
+												else echo " - Pending";
+												if($order->binary_result==1){ 
+													if($order->test_status == 2) { 
+														if($order->test_result_binary == 1 ) $result=$order->binary_positive ; 
+														else if($order->test_result_binary == 0) $result=$order->binary_negative ; 
+														else $result="";
+														if($order->numeric_result==1 || $order->text_result == 1)
+															$result.=" | ";
+													} 
+													else{
+														$result="";
+													}
+													echo $result;
+												}
+												if($order->numeric_result==1){
+													if($order->test_status == 2) { 
+														if($order->test_result!=NULL){
+														$result=$order->test_result." ".$order->lab_unit; 
+														if($order->text_result == 1)
+															$result .= " | ";
+														}
+														else $result ="";
+													}
+													else{
+														$result="";
+													}
+													echo $result;
+												}
+													 if($order->text_result==1){
+														if($order->test_status == 2) {
+															$result = $order->test_result_text; 
+														} 
+														else{
+															$result="";
+														}
+														echo $result;
+													 }
+													 ?>
+											</div>
+									<?php	}
+									}
 							?>
-						</td>
-						<td>
 						</td>
 				<?php break;
 					}

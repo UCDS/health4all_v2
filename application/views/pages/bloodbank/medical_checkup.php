@@ -24,21 +24,21 @@
 		echo "<br />";
 	}
 	?>
-	<table class="table-2 table table-striped table-bordered">
+	<div class="alert alert-info">
 	<?php
 	foreach($donor_details as $donor){
-		echo "Donation ID: ".$donor['donation_id'];
-		echo " | Name: ".$donor['name'];
-		echo " | Age: ".$donor['age'];
-		echo " | Blood Group: ".$donor['blood_group'];
-		$donation_id=$donor['donation_id'];
+		echo "Donation ID: ".$donor->donation_id;
+		echo " | Name: ".$donor->name;
+		echo " | Age: ".$donor->age;
+		echo " | Blood Group: ".$donor->blood_group;
+		$donation_id=$donor->donation_id;
 	}
 	?>
-	</table>
+	</div>
 
 	<div class="panel panel-default">
 	<div class="panel panel-heading">
-	<h3>Register Blood Donation</h3>
+	<h4>Register Blood Donation</h4>
 	</div>
 	<?php echo form_open("bloodbank/register/medical_checkup/0/$donation_id",array('class'=>'form-custom'));?>
 	<div class="panel-body" >

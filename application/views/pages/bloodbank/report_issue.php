@@ -60,16 +60,16 @@
 		?>
 		<tr>
 			<td><?php echo $i++;?></td>
-			<td><?php echo date("d-M-Y",strtotime($row['issue_date']));?></td>
-			<td><?php echo date("g:ia",strtotime($row['issue_time']));?></td>
-			<td><?php echo $row['blood_unit_num'];?></td>
-			<td><?php echo $row['component_type'];?></td>
-			<td><?php echo $row['patient_name'];?></td>
-			<td><?php echo $row['blood_group'];?></td>
-			<td><?php echo $row['diagnosis'];?></td>
-			<td><?php echo $row['hospital'];?></td>
-			<td><?php echo $row['issued_staff_name'];?></td>
-			<td><?php echo $row['cross_matched_staff_name'];?></td>
+			<td><?php echo date("d-M-Y",strtotime($row->issue_date));?></td>
+			<td><?php echo date("g:ia",strtotime($row->issue_time));?></td>
+			<td><?php echo $row->blood_unit_num;?></td>
+			<td><?php echo $row->component_type;?></td>
+			<td><?php echo $row->patient_name;?></td>
+			<td><?php echo $row->blood_group;?></td>
+			<td><?php echo $row->diagnosis;?></td>
+			<td><?php echo $row->hospital;?></td>
+			<td><?php echo $row->issued_staff_name;?></td>
+			<td><?php echo $row->cross_matched_staff_name;?></td>
 			</tr>
 		<?php 
 		}
