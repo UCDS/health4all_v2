@@ -801,7 +801,6 @@ else if($type=="dosage"){
 		{
 			$date = $this->input->post('date_of_birth');
 			$date = date("Y-m-d",strtotime($date));
-			//echo $date;
 			$data = array(
 					  'first_name'=>$this->input->post('first_name'),
 					  'last_name'=>$this->input->post('last_name'),
@@ -1169,7 +1168,6 @@ else if($type=="dosage"){
                                     $to_year = $this->input->post('year_high'.$count);
                                     $to_month = $this->input->post('month_high'.$count);
                                     $to_day = $this->input->post('day_high'.$count);
-                                    echo $from_year;
                                 }elseif($this->input->post('age'.$count)=='1'){
                                     $to_year = $this->input->post('upper_age_limit_years'.$count);
                                     $to_month = $this->input->post('upper_age_limit_months'.$count);
@@ -1207,12 +1205,10 @@ else if($type=="dosage"){
                                     'to_day' => $to_day
                                  );
                             }
-                            echo $test_master_id;
                            $this->db->insert_batch('test_range', $range_data);
                         }
                         $this->db->trans_complete();
                        if($this->db->trans_status()===FALSE){
-                           echo "Transaction failed";
                            $this->db->trans_rollback();
                            return false;
                       }
@@ -1348,8 +1344,6 @@ else if($type=="dosage"){
 		$table="state";
 		}
 		elseif($type=="vendor"){
-		echo "type = ".$this->input->post('vendor_type_id');
-		echo "contry - ".$this->input->post('vendor_country_id');
 		$data = array(
 					  'vendor_name'=>$this->input->post('vendor_name'),
 					  'vendor_type_id'=>$this->input->post('vendor_type_id'),

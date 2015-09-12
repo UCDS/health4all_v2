@@ -7,9 +7,9 @@ parent::__construct();
 
 function index(){
 			$this->load->library('email');
-			$this->email->from('microbiology@gandhihospital.in', 'MicroBiology - Gandhi Hospital');
-			$this->email->to("vivek.chintalapati@gmail.com");
-			$this->email->bcc("contact@yousee.in");
+			$this->email->from('mail@vivekc.in', 'Vivek C');
+			$this->email->to("mail@vivekc.in");
+			$this->email->bcc("contact@vivekc.in");
 			$this->email->subject("Test");
 			$this->email->message("TEst");
 			if ( ! $this->email->send()) {

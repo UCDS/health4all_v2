@@ -885,7 +885,7 @@ class Diagnostics_model extends CI_Model{
 							text_result')
 		->from('test_order')
 		->join('test','test_order.order_id=test.order_id')
-		->join('test_sample','test_order.order_id=test_sample.order_id')
+		->join('test_sample','test.sample_id=test_sample.sample_id')
 		->join('test_master','test.test_master_id=test_master.test_master_id')
 		->join('lab_unit','test_master.numeric_result_unit=lab_unit.lab_unit_id','left')
 		->join('test_method','test_master.test_method_id=test_method.test_method_id')
