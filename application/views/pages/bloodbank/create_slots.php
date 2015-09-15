@@ -35,7 +35,7 @@
 	?>
 	<h4>Create Slots for Blood Donation</h4>
 	<?php echo validation_errors(); ?>
-	<?php echo form_open("create_slots"); ?>
+    <?php echo form_open("bloodbank/create_slots",array('role'=>'form','class'=>'form-custom')); ?>
 	<hr>
 	<b>Select a period: </b>
 	<br /><label for="from_date">From Date: </label>

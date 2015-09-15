@@ -23,7 +23,7 @@
 				}
 				?>
 				</select>
-				<input type="submit" value="Select Camp" class="btn btn-primary btn-sm" />
+				<input type="submit" value="Select Camp" name="set_camp"class="btn btn-primary btn-sm" />
 				<input type="submit" value="BloodBank" name="reset" class="btn btn-primary btn-sm" />
 		</form>
 		</div>

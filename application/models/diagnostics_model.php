@@ -918,6 +918,12 @@ class Diagnostics_model extends CI_Model{
                      ->from("test_range");
             $query = $this->db->get();
             return $query->result();
+        }if($type=='test_name'){
+            $this->db->select("test_master_id,test_range_id, gender, min, max, from_year, to_year, from_month, to_month, from_day, to_day, age_type, range_type, range_active")
+                     ->from("test_range")
+                     ->where("test_range.test_master_id", $this->input->post('test_master_id'));
+            $query = $this->db->get();
+            return $query->result();                    
         }
     }
 }

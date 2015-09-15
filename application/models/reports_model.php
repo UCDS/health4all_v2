@@ -6,7 +6,7 @@ class Reports_model extends CI_Model{
 	function get_op_summary(){
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
-			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));           
 		}
 		else if($this->input->post('from_date') || $this->input->post('to_date')){
 			$this->input->post('from_date')?$from_date=$this->input->post('from_date'):$from_date=$this->input->post('to_date');
@@ -14,7 +14,7 @@ class Reports_model extends CI_Model{
 		}
 		else{
 			$from_date=date("Y-m-d");
-			$to_date=$from_date;
+			$to_date=$from_date;           
 		}
 		if($this->input->post('visit_name')){
 			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
@@ -77,7 +77,8 @@ class Reports_model extends CI_Model{
 			$to_date=$from_date;
 		}
 		if($this->input->post('visit_name')){
-			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
+            $this->db->join('patient_visit pv','patient_visit.patient_id = pv.patient_id');
+			$this->db->where('pv.visit_name_id',$this->input->post('visit_name'));
 		}
 		if($this->input->post('department')){
 			$this->db->where('patient_visit.department_id',$this->input->post('department'));
@@ -117,8 +118,8 @@ class Reports_model extends CI_Model{
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
 		 ->join('visit_name','patient_visit.visit_name_id=visit_name.visit_name_id','left')
-		 ->where('visit_type','IP')
-		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')")
+		 ->where('patient_visit.visit_type','IP')         
+		 ->where("(patient_visit.admit_date BETWEEN '$from_date' AND '$to_date')")
 		 ->group_by('department');
 		  
 		$resource=$this->db->get();
@@ -172,7 +173,12 @@ class Reports_model extends CI_Model{
 		icd_block.chapter_id, chapter_title, patient_visit.visit_name_id, department 'department',
           SUM(CASE WHEN 1  THEN 1 ELSE 0 END) 'total',
 		SUM(CASE WHEN gender = 'F'  THEN 1 ELSE 0 END) 'female',
-		SUM(CASE WHEN gender = 'M'  THEN 1 ELSE 0 END) 'male'");
+		SUM(CASE WHEN gender = 'M'  THEN 1 ELSE 0 END) 'male',
+        SUM(CASE WHEN outcome = 'Discharge' THEN 1 ELSE 0 END) 'total_discharge',
+        SUM(CASE WHEN outcome = 'LAMA' THEN 1 ELSE 0 END) 'total_lama',
+        SUM(CASE WHEN outcome = 'Absconded' THEN 1 ELSE 0 END) 'total_absconded',
+        SUM(CASE WHEN outcome = 'Death' THEN 1 ELSE 0 END) 'total_death',
+        SUM(CASE WHEN outcome!='Discharge' AND outcome!='LAMA' AND outcome!='Absconded' AND outcome!= 'Death' THEN 1 ELSE 0 END) 'total_unupdated'");
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
 		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
@@ -444,8 +450,12 @@ class Reports_model extends CI_Model{
 		$resource=$this->db->get();
 		return $resource->result();
 	}
+
+    function get_icd_outcome_detail($icd_10,$department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date,$visit_name,$visit_type){
+        
+    }
 	
-	function get_order_detail($test_master,$department,$unit,$area,$test_area,$specimen_type,$test_method,$visit_type,$from_date,$to_date,$status,$type,$number,$antibiotic_id,$micro_organism_id,$sensitive){
+	function get_order_detail($test_master,$department,$unit,$area,$test_area,$specimen_type,$test_method,$visit_type,$from_date,$to_date,$status,$type,$number,$antibiotic_id,$micro_organism_id,$sensitive,$outcome_type=0){
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -512,7 +522,7 @@ class Reports_model extends CI_Model{
 		test_sample.sample_id,test_method,test_name,department,patient.first_name, patient.last_name, unit_name, area_name,
 		binary_result,numeric_result,text_result,
 		test_result_binary,test_result_text,test_result,lab_unit,
-		patient_visit.visit_id,,staff.first_name staff_name,hosp_file_no,
+		patient_visit.visit_id,staff.first_name staff_name,hosp_file_no,
 		visit_type,sample_code,specimen_type,sample_container_type,test_status,binary_positive,binary_negative')
 		->from('test_order')
 		->join('test','test_order.order_id=test.order_id')
@@ -644,7 +654,7 @@ class Reports_model extends CI_Model{
         // This function is used to build a query from the form sent by ip_op_trend page, and retrive data accordingly.
         // This function is used to get number of OP/IP patients during a specified period, in days, months and years.
         // This function returns an array of objects containing the records from the database.
-        function get_ip_op_trends(){
+    function get_ip_op_trends(){
             //First time ip_op_trends page is opened all records for today will be opened.
             /*Query is being built from the data input from the user*/
             
@@ -724,5 +734,74 @@ class Reports_model extends CI_Model{
 		$resource=$this->db->get();
 		return $resource->result();
         }
+
+
+    function get_outcome_summary(){
+        if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));            
+		}
+		else if($this->input->post('from_date') || $this->input->post('to_date')){
+			$this->input->post('from_date')?$from_date=$this->input->post('from_date'):$from_date=$this->input->post('to_date');
+			$to_date=$from_date;
+		}
+		else{
+			$from_date=date("Y-m-d");
+			$to_date=$from_date;          
+		}
+         if($this->input->post('date_type_selection')=='outcome_date'){
+            $this->db->where("(outcome_date BETWEEN '$from_date' AND '$to_date')");
+        }else{
+            $this->db->where("(admit_date BETWEEN '$from_date' AND '$to_date')");
+        }
+		if($this->input->post('visit_name')){
+			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
+		}
+		if($this->input->post('department')){
+			$this->db->where('patient_visit.department_id',$this->input->post('department'));
+		}
+		if($this->input->post('unit')){
+			$this->db->select('IF(unit!="",unit,0) unit',false);
+			$this->db->where('patient_visit.unit',$this->input->post('unit'));
+		}
+		else{
+			$this->db->select('"0" as unit',false);
+		}
+		if($this->input->post('area')){
+			$this->db->select('IF(area!="",area,0) area',false);
+			$this->db->where('patient_visit.area',$this->input->post('area'));
+		}
+		else{
+			$this->db->select('"0" as area',false);
+		}
+		$this->db->select("department 'department',
+        SUM(CASE WHEN 1  THEN 1 ELSE 0 END) 'outcome',
+        SUM(CASE WHEN gender = 'F'  THEN 1 ELSE 0 END) 'outcome_female',
+		SUM(CASE WHEN gender = 'M'  THEN 1 ELSE 0 END) 'outcome_male',	
+		SUM(CASE WHEN gender = 'F' AND outcome = 'Discharge' THEN 1 ELSE 0 END) 'female_discharge',
+        SUM(CASE WHEN gender = 'M' AND outcome = 'Discharge' THEN 1 ELSE 0 END) 'male_discharge',
+        SUM(CASE WHEN outcome = 'Discharge' THEN 1 ELSE 0 END) 'total_discharge',
+        SUM(CASE WHEN gender = 'F' AND outcome = 'LAMA' THEN 1 ELSE 0 END) 'female_lama',
+        SUM(CASE WHEN gender = 'M' AND outcome = 'LAMA' THEN 1 ELSE 0 END) 'male_lama',
+        SUM(CASE WHEN outcome = 'LAMA' THEN 1 ELSE 0 END) 'total_lama',
+        SUM(CASE WHEN gender = 'F' AND outcome = 'Absconded' THEN 1 ELSE 0 END) 'female_absconded',
+        SUM(CASE WHEN gender = 'M' AND outcome = 'Absconded' THEN 1 ELSE 0 END) 'male_absconded',
+        SUM(CASE WHEN outcome = 'Absconded' THEN 1 ELSE 0 END) 'total_absconded',
+        SUM(CASE WHEN gender = 'F' AND outcome = 'Death' THEN 1 ELSE 0 END) 'female_death',
+        SUM(CASE WHEN gender = 'M' AND outcome = 'Death' THEN 1 ELSE 0 END) 'male_death',
+        SUM(CASE WHEN outcome = 'Death' THEN 1 ELSE 0 END) 'total_death',
+        SUM(CASE WHEN gender = 'F' AND outcome!='Discharge' AND outcome!='LAMA' AND outcome!='Absconded' AND outcome!= 'Death' THEN 1 ELSE 0 END) 'female_unupdated',
+        SUM(CASE WHEN gender = 'M' AND outcome!='Discharge' AND outcome!='LAMA' AND outcome!='Absconded' AND outcome!= 'Death' THEN 1 ELSE 0 END) 'male_unupdated',
+        SUM(CASE WHEN outcome!='Discharge' AND outcome!='LAMA' AND outcome!='Absconded' AND outcome!= 'Death' THEN 1 ELSE 0 END) 'total_unupdated'");
+		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
+		 ->join('department','patient_visit.department_id=department.department_id')
+		 ->join('unit','patient_visit.unit=unit.unit_id','left')
+		 ->join('area','patient_visit.area=area.area_id','left')
+         ->where('visit_type','IP')		 
+		 ->group_by('department');
+		  
+		$resource=$this->db->get();
+		return $resource->result();
+    }
 }
 ?>

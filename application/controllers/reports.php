@@ -259,7 +259,40 @@ class Reports extends CI_Controller {
 		show_404();
 		}
 	}
-
+    public function icd_outcome_detail($icd_10=0,$department=-1,$unit=0,$area=0,$gender=0,$from_age=0,$to_age=0,$from_date=0,$to_date=0,$visit_name=-1,$visit_type=0,$outcome_type=0)
+	{
+	    if($this->session->userdata('logged_in')){
+		$this->data['userdata']=$this->session->userdata('logged_in');
+		$access=0;
+		foreach($this->data['functions'] as $function){
+			if($function->user_function=="IP Detail"){
+				$access1=1;
+			}
+            if($function->user_function=="Outcome Summary"){
+                $access2=1;
+            }
+		}
+		if($access1==1&&$access2==1){
+		if($from_date == 0 && $to_date==0) {$from_date=date("Y-m-d");$to_date=$from_date;}
+		$this->data['title']="In-Patient Detailed Report";
+		$this->data['all_departments']=$this->staff_model->get_department();
+		$this->data['units']=$this->staff_model->get_unit();
+		$this->data['areas']=$this->staff_model->get_area();
+		$this->data['visit_names']=$this->staff_model->get_visit_name();
+		$this->load->view('templates/header',$this->data);
+		$this->load->helper('form');
+		$this->data['report']=$this->reports_model->get_icd_outcome_detail($icd_10,$department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date,$visit_name,$visit_type,$outcome_type);
+		$this->load->view('pages/icd_detailed',$this->data);
+		$this->load->view('templates/footer');
+		}
+		else{
+		show_404();
+		}
+		}
+		else{
+		show_404();
+		}
+	}
 	public function order_detail($test_master=-1,$department=-1,$unit=-1,$area=-1,$test_area=-1,$specimen_type=-1,$test_method=-1,$visit_type=0,$from_date=0,$to_date=0,$status=-1,$type="",$number=0,$antibiotic_id=0,$micro_organism_id=0,$sensitive=0)
 	{
 		if($this->session->userdata('logged_in')){
@@ -506,4 +539,47 @@ class Reports extends CI_Controller {
         }
 	
 }
+
+    public function outcome_summary(){
+        if($this->session->userdata('logged_in')){
+                $this->data['userdata']=$this->session->userdata('logged_in');
+                $access=0;
+                foreach($this->data['functions'] as $function){
+                    if($function->user_function=="Outcome Summary"){
+                            $access=1;
+                    }
+                }
+                if($access==1){
+                    $this->data['title']="Outcome Summary Report";
+                    $this->data['all_departments']=$this->staff_model->get_department();
+                    $this->data['units']=$this->staff_model->get_unit();
+                    $this->data['areas']=$this->staff_model->get_area();
+                    $this->data['visit_names']=$this->staff_model->get_visit_name();
+                    $this->load->view('templates/header',$this->data);
+                    $this->load->helper('form');
+                    $this->load->library('form_validation');
+                    $this->data['report']=$this->reports_model->get_outcome_summary();
+                    $this->form_validation->set_rules('from_date', 'From Date',
+                    'trim|required|xss_clean');
+                    $this->form_validation->set_rules('to_date', 'To Date', 
+                    'trim|required|xss_clean');
+                    $this->form_validation->set_rules('date_type_selection','Date type selection', 
+                    'trim|required|xss_clean');
+                    if ($this->form_validation->run() === FALSE)
+                    {
+                        $this->load->view('pages/outcome_summary',$this->data);
+                    }
+                    else{
+                        $this->load->view('pages/outcome_summary',$this->data);
+                    }
+                    $this->load->view('templates/footer');
+                }
+                else{
+                    show_404();
+                }
+            }
+        else{
+            show_404();
+        }
+    }
 }
