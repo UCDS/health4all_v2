@@ -494,7 +494,7 @@ function edit($type="")
 			//load model and execute select query in order to populate search results
 			$this->data['test_names']=$this->masters_model->get_data("test_name");
 			$this->data['test_methods']=$this->masters_model->get_data("test_method");
-
+            $this->data['test_ranges'] = $this->diagnostics_model->test_range_info($type);
 
 		}
 		if ($type=="test_area") {
