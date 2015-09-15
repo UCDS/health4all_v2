@@ -163,6 +163,7 @@ function view_results(){
 		}	
 		else{
 			$this->data['orders']=$this->diagnostics_model->get_tests_approved($this->data['test_areas']);
+	echo $this->db->last_query();
 			$this->load->view($page,$this->data);
 		}
 	}

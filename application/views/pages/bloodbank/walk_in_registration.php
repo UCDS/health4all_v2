@@ -65,16 +65,22 @@
 	<div style="color:red;padding:5px;font-size:14px;">
 	<?php echo validation_errors(); ?></div>
 	<?php 
-	if(isset($msg)) {
-		echo $msg;
-		echo "<br />";
-		echo "<br />";
+	if(isset($msg)) { ?>
+		<div class="alert alert-info">
+			<b><?php echo $msg; ?></b>
+		</div>
+	<?php 
 	}
 	?>
 
 	<div class="panel panel-default">
 	<div class="panel-heading">
-	<h4>Register Blood Donation</h4>
+	<h4>Register Blood Donation at 	
+		<?php 
+			$place=$this->session->userdata('place');
+			echo $place['name'];
+		?>
+	</h4>
 	</div>
 	<div class="panel-body">
 	<div class="text-right"><b><small>fields marked with * are mandatory.</small></b></div>
@@ -140,7 +146,7 @@
 		<input type="radio" name="donation_type" id="replacement" value="replacement" required /><label for="replacement">Replacement</label>&nbsp;&nbsp;
 		<input type="radio" name="donation_type" id="voluntary" value="voluntary" required />	<label for="voluntary">Voluntary</label>
 	</div><br />
-	<div id="patient_details" hidden>
+	<div id="patient_details" class="col-md-offset-4 form-group col-md-8" hidden>
 		<div class="form-group"><input type="text" placeholder="Patient Name" class="form-control" name="patient_name" /></div><br /><br />
 		<div class="form-group"><input type="text" placeholder="IP Number" class="form-control" name="ip_no" /></div><br /><br />
 		<div class="form-group"><input type="text" placeholder="Ward / Unit" class="form-control" name="ward_unit" /></div><br /><br />
@@ -158,7 +164,9 @@
 	</div>
 	
 	</div>
+	<div class="col-md-12">
 	<?php include "med_counselling_table.php"; ?>
+	</div>
 	<div class="form-group" style="text-align:center;">
 	<input type="submit" value="Submit" class="btn btn-lg btn-primary" id="submit" name="submit" />
 	</div>

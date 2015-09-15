@@ -4,7 +4,8 @@ class User_panel extends CI_Controller {
 	function __construct(){
 		parent::__construct();
 		$this->load->model('bloodbank/reports_model');		
-		$this->load->model('bloodbank/register_model');		
+		$this->load->model('bloodbank/register_model');	
+        $this->load->model('bloodbank/inventory_model');		
 		$this->load->model('staff_model');	
 		if($this->session->userdata('logged_in')){
 		$userdata=$this->session->userdata('logged_in');
@@ -164,6 +165,9 @@ class User_panel extends CI_Controller {
 		$this->load->helper('form');
 		$this->data['title']="Donations detailed report";
 		$this->data['userdata']=$this->session->userdata('logged_in');
+		$this->data['camps']=$this->register_model->get_camps();
+		$this->data['from_date']=$from_date;
+		$this->data['to_date']=$to_date;
 		$this->data['donated']=$this->reports_model->get_donated_blood($camp,$blood_group,$sex,$donation_date,$from_date,$to_date);
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/reports_nav',$this->data);
@@ -237,7 +241,21 @@ class User_panel extends CI_Controller {
 			show_404();
 		}
 	}
-	
+	function discard_report(){
+		if($this->session->userdata('logged_in')){
+		$this->load->helper('form');
+		$this->data['title']="User Panel";
+		$this->data['userdata']=$this->session->userdata('logged_in');
+		$this->data['inventory']=$this->reports_model->get_discard_report();
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('templates/reports_nav',$this->data);
+		$this->load->view('pages/bloodbank/discard_report',$this->data);
+		$this->load->view('templates/footer');	
+		}
+		else{
+			show_404();
+		}
+	}
 	function print_certificates(){
 		if($this->session->userdata('logged_in')){
 		$this->load->helper('form');

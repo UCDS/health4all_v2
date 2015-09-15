@@ -92,6 +92,22 @@
 			$(".bulk").show();
 		});
 		$("#request_date").Zebra_DatePicker();
+		$("#patient_type").change(function(){
+			if($(this).val()=="External"){
+				$("#select-patient").attr("name","");
+				$(".select-patient").addClass('sr-only');
+				$(".enter-patient input").attr("name","hosp_file_no");
+				$(".enter-patient input").attr("form","request_form");
+				$(".enter-patient").removeClass('sr-only');
+			}
+			else{
+				$(".enter-patient input").attr("name","")
+				$(".enter-patient").addClass('sr-only');
+				$("#select-patient").attr("name","hosp_file_no");
+				$("#select-patient").attr("form","request_form");
+				$(".select-patient").removeClass('sr-only');
+			}
+		});
 	});
 	function delete_row(i){
 		$("#row_"+i).remove();
@@ -101,33 +117,47 @@
 	<?php
 	if(isset($msg)) {
 		if($msg='success'){
-		echo "Your request has been submitted.";
-		echo "<br />";
+		echo "<div class='alert alert-info'>Your request has been submitted.</div>";
 		echo "<br />";
 		}
 		else{
-		echo "There was an error in registering your request. Please retry.";
-		echo "<br />";
+		echo "<div class='alert alert-danger'>There was an error in registering your request. Please retry.</div>";
 		echo "<br />";
 		}
 	}
 	?>
 	<div>
-		<?php echo form_open('bloodbank/register/request',array('role'=>'form','class'=>'form-custom'));
-		echo validation_errors();?>
-		<h3>Request Form</h3>
-		<table class="table-2 table table-striped table-bordered">
-			<tr><td>Request Type : </td><td>
-					<label><input type="radio" value="0" name="request_type" id="patient" />Patient</label>
+		<?php echo form_open('bloodbank/register/request',array('role'=>'form','class'=>'form-custom','id'=>'request_form'));
+		if(validation_errors()) echo "<div class='alert alert-info'>".validation_errors()."</div>";?>
+		<h4>Request Form</h4>
+		<table class="table table-striped table-bordered">
+			<tr><td>Request Type : </td>
+			<td>
+					<label><input type="radio" value="0" name="request_type" id="patient" checked />Patient</label>
 					<label><input type="radio" value="1" name="request_type" id="bulk" />Bulk</label>
 			</td>
+			</tr>
+			<tr class="patient">
+				<td> Patient Type : </td>
+				<td>
+				<div class="col-md-12">
+					<div class="col-md-12">
+						<select class="form-control" id="patient_type" name="patient_type">
+							<option value="" disabled>Select Patient Type</option>
+							<option value="Internal" selected>Internal</option>
+							<option value="External">External</option>
+						</select>
+						<font color='red'>*</font>
+					</div>
+				</div>
+				</td>
 			</tr>
 			<tr class="patient">
 				<td> Patient : </td>
 				<td>
 				<div class="col-md-12">
 					<div class="col-md-12">
-					<select class="form-control" id="visit_type" name="patient_type">
+					<select class="form-control" id="visit_type" name="visit_type">
 						<option value="" disabled>Select Patient Type</option>
 						<option value="OP">OP</option>
 						<option value="IP" selected>IP</option>
@@ -139,15 +169,19 @@
 					</select>
 					<font color='red'>*</font>
 					</div>
-					<div class="col-md-6">
-					<select id="select-patient" class="repositories" placeholder="Select a Patient..." name="hosp_file_no" ></select>
+					<div class="col-md-6 select-patient">
+						<select id="select-patient" class="repositories" placeholder="Select a Patient..." name="hosp_file_no" ></select>
+					</div>
+					<div class="col-md-8 sr-only enter-patient">
+						<input class="form-control" placeholder="Enter Patient IP Number" size="50px" />
 					</div>
 				</div>
 				<div class='col-md-12 selected_patient'>
 				</div>
 				</td>
 			</tr>
-			<tr><td>Required : </td>
+			<tr>
+			<td>Required : </td>
 			<td>
 			<table class='required_blood'>
 				<tr>
@@ -186,7 +220,8 @@
 					</td>
 				</tr>
 			</table>
-			</td></tr>
+			</td>
+			</tr>
 			<tr><td> Request Date : </td><td><input type="text" name="request_date" id="request_date" required /></td>
 			<tr><td colspan="2" align="center"><input type="submit" value="Submit" /> </td></tr>
 		</table>

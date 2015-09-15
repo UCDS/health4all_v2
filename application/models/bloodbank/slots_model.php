@@ -52,7 +52,7 @@ class Slots_model extends CI_Model{
 		GROUP BY slot_id,date ) as tab",FALSE)
 		->group_by('date');
 		$query = $this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	function get_slots($slot_id,$hospital_id){
 		$this->db

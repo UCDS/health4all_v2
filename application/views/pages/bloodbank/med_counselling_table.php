@@ -2,21 +2,21 @@
 	<h3>Donor Questionaire</h3>
 	<p>(Questions that are faded are to be answered on the day of donation.)</p>
 	<table class="counselling-table">
-	<tr style="opacity:0.3">
+	<tr style="opacity:0.6">
 		<td >Do you feel well today? </td>
 		<td>
 		<input type="radio" value="Yes" name="question1" checked required readonly class="medical_yes" id="yes1" /><label for="yes1">Yes</label>
 		<input type="radio" value="No" name="question1" required id="no1" readonly class="medical_no" /><label for="no1">No</label>
 		</td>
 	</tr>
-	<tr style="opacity:0.3">
+	<tr style="opacity:0.6">
 		<td>Did you have anything to eat in the last 4 hours?  </td>
 		<td>
 		<input type="radio" value="Yes" name="question2" checked required readonly class="medical_yes" id="yes2" /><label for="yes2">Yes</label>
 		<input type="radio" value="No" name="question2" required id="no2" readonly class="medical_no" /><label for="no2">No</label>
 		</td>
 	</tr>
-	<tr style="opacity:0.3">
+	<tr style="opacity:0.6">
 		<td>Did you sleep well last night? </td>
 		<td>
 		<input type="radio" value="Yes" name="question3" checked required readonly class="medical_yes" id="yes3" /><label for="yes3">Yes</label>
@@ -31,7 +31,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td>Have you any reason to betdeve that you may be infected by either HIV / AIDS, Hepatitis, Malaria and / or Veneral disease? </td>
+		<td>Have you any reason to believe that you may be infected by either HIV / AIDS, Hepatitis, Malaria and / or Veneral disease? </td>
 		<td>
 		<input type="radio" value="Yes" name="question5" required class="medical_yes" id="yes5" /><label for="yes5">Yes</label>
 		<input type="radio" value="No" name="question5" checked required id="no5" class="medical_no" /><label for="no5">No</label>
@@ -106,7 +106,7 @@
 		<input type="radio" value="No" name="question9" checked required id="no9" class="medical_no" /><label for="no9">No</label>
 		</td>
 	</tr>
-	<tr  style="opacity:0.3">
+	<tr  style="opacity:0.6">
 		<td>Are you taking or have taken any of these in the past 72 hours?
 		<ul>
 			<li>Antibodies</li>
@@ -169,8 +169,8 @@
 	</table>
 	<hr>
 	<p>
-	<input type="checkbox" value="accept" name="accept" id="accept_risks" required />
 	<label for="accept_risks">
+	<input type="checkbox" value="accept" name="accept" id="accept_risks" required />
 		I have accurately answered all the questions and I voluntarily wish to donate blood, I accept the risks associated with this procedure.
 		I understand that Blood Donation is totally a voluntary act and no inducement or remuneration has been offered.
 		I prohibit any information provided by me or about my donation to be disclosed to any individual or government agency without my prior permission.
