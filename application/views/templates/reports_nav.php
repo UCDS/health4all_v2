@@ -11,6 +11,7 @@
 		<li <?php if(current_url()==base_url()."bloodbank/user_panel/blood_donors"){ echo "class='active'";}?>><a href='<?php echo base_url();?>bloodbank/user_panel/blood_donors'>Donors report</a></li> 
 		<li <?php if(current_url()==base_url()."bloodbank/user_panel/report_screening"){ echo "class='active'";}?>><a href='<?php echo base_url();?>bloodbank/user_panel/report_screening'>Screening Report</a></li> 
 		<li <?php if(current_url()==base_url()."bloodbank/user_panel/report_grouping"){ echo "class='active'";}?>><a href='<?php echo base_url();?>bloodbank/user_panel/report_grouping'>Grouping Report</a></li>
+		<li <?php if(current_url()==base_url()."bloodbank/user_panel/discard_report"){ echo "class='active'";}?>><a href='<?php echo base_url();?>bloodbank/user_panel/discard_report'>Discard Report</a></li>
 		<li <?php if(current_url()==base_url()."bloodbank/user_panel/print_certificates"){ echo "class='active'";}?>><a href='<?php echo base_url();?>bloodbank/user_panel/print_certificates'>Print Certificates</a></li>
 	</ul>
 </div>

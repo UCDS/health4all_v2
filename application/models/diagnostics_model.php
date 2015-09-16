@@ -718,7 +718,9 @@ class Diagnostics_model extends CI_Model{
 		if(!!$tests){
 		foreach($tests as $test){
 			if($this->input->post('binary_result_'.$test)!=NULL || $this->input->post('numeric_result_'.$test)!=NULL || $this->input->post('text_result_'.$test)!=NULL){
-				$binary_result=$this->input->post('binary_result_'.$test);
+				if($this->input->post('binary_result_'.$test)!=NULL) 
+					$binary_result=$this->input->post('binary_result_'.$test);
+				else $binary_result=NULL;
 				$numeric_result=$this->input->post('numeric_result_'.$test);
 				$text_result=$this->input->post('text_result_'.$test);
 				$data[]=array(
@@ -884,7 +886,7 @@ class Diagnostics_model extends CI_Model{
 							text_result')
 		->from('test_order')
 		->join('test','test_order.order_id=test.order_id')
-		->join('test_sample','test_order.order_id=test_sample.order_id')
+		->join('test_sample','test.sample_id=test_sample.sample_id')
 		->join('test_master','test.test_master_id=test_master.test_master_id')
 		->join('lab_unit','test_master.numeric_result_unit=lab_unit.lab_unit_id','left')
 		->join('test_method','test_master.test_method_id=test_method.test_method_id')

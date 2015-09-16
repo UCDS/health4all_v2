@@ -49,6 +49,7 @@ class Create_slots extends CI_Controller {
 		}
 		else {
             show_404();
+
 		}
 	}
 }

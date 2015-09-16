@@ -651,6 +651,50 @@ class Reports_model extends CI_Model{
 		return $query->result();
 	}
         
+	function get_audiology_summary(){
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+		}
+		else if($this->input->post('from_date') || $this->input->post('to_date')){
+			$this->input->post('from_date')?$from_date=$this->input->post('from_date'):$from_date=$this->input->post('to_date');
+			$to_date=$from_date;
+		}
+		else{
+			$from_date=date("Y-m-d");
+			$to_date=$from_date;
+		}
+		if($this->input->post('department')){
+			$this->db->where('patient_visit.department_id',$this->input->post('department'));
+		}
+		if($this->input->post('unit')){
+			$this->db->where('patient_visit.unit',$this->input->post('unit'));
+		}
+		if($this->input->post('area')){
+			$this->db->where('patient_visit.area',$this->input->post('area'));
+		}
+		if($this->input->post('date_type') == 'Order'){
+			$this->db->where('(DATE(test_order.order_date_time) BETWEEN "'.$from_date.'" AND "'.$to_date.'")');
+		}
+		else{
+			$this->db->where('(patient_visit.admit_date BETWEEN "'.$from_date.'" AND "'.$to_date.'")');
+		}
+		
+		$this->db->select('test_name,patient_visit.visit_id,test_master.test_master_id,department.department_id,area.area_id,unit.unit_id,area_name,unit.unit_name,test_result_binary',false)
+			->from('test')
+			->join('test_order','test.order_id = test_order.order_id')
+			->join('test_master','test.test_master_id = test_master.test_master_id')
+			->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
+			->join('patient','patient_visit.patient_id = patient.patient_id')
+			->join('department','patient_visit.department_id = department.department_id')
+			->join('area','patient_visit.area = area.area_id','left')
+			->join('unit','patient_visit.unit = unit.unit_id','left')
+			->where('test.test_status',2)
+			->where_in('test_name',array('Left OAE','Right OAE'));
+			$query=$this->db->get();
+		return $query->result();
+	}
+        
         // This function is used to build a query from the form sent by ip_op_trend page, and retrive data accordingly.
         // This function is used to get number of OP/IP patients during a specified period, in days, months and years.
         // This function returns an array of objects containing the records from the database.

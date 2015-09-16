@@ -12,24 +12,32 @@
 
 <div class="col-md-10 col-sm-9">
 	<?php
-	echo validation_errors();
+	if(validation_errors()){
+		echo "<div class='alert alert-danger'>".validation_errors()."</div>";
+	}
 	if(isset($msg)) {
-		echo $msg;
-		echo "<br />";
+		echo "<div class='alert alert-info'>$msg</div>";
 		echo "<br />";
 	}
 	?>
 	<div>
+		<?php echo form_open('bloodbank/inventory/screening',array('class'=>'form-custom'));?>
+		<div class="form-group">
+			<input type="text" id="from_id" placeholder="From Number"  value="<?php echo $this->input->post('from_id');?>" class="form-control" name="from_id" />
+		</div>
+		<div class="form-group">
+			<input type="text" id="to_id" class="form-control" value="<?php echo $this->input->post('to_id');?>" placeholder="To Number"  name="to_id" />
+		</div>
+		<div class="form-group">
+			<input type="submit" class="btn btn-primary" value="Filter" name="filter" />
+		</div>
+		<hr>
+		</form>
 		<?php if(count($inventory)==0){
-			echo "No samples available for screening.";
+			echo "<div class='alert alert-info'>No samples available for screening.</div>";
 		}
 		else{
 		?>
-		<?php echo form_open('bloodbank/inventory/screening',array('class'=>'form-custom'));?>
-		<div class="form-group"><input type="text" id="from_id" placeholder="From" class="form-control" name="from_id" /></div>
-		<div class="form-group"><input type="text" id="to_id" class="form-control" placeholder="To"  name="to_id" /></div>
-		<div class="form-group"><input type="submit" class="btn btn-primary" value="Filter" name="filter" /></div>
-		</form>
 		<h4>Available samples : </h4>
 
 		<table id="header-fixed" class="table-2 table table-striped table-bordered"></table>
@@ -52,14 +60,14 @@
 		?>
 		<tr>
 			<td><?php echo $j++; ?></td>
-			<td><?php echo $blood['blood_unit_num'];?></td>
-			<td><input type="checkbox" name="test_hiv_<?php echo $blood['donation_id'];?>" value="1" /></td>
-			<td><input type="checkbox" name="test_hbsag_<?php echo $blood['donation_id'];?>" value="1" /></td>
-			<td><input type="checkbox" name="test_hcv_<?php echo $blood['donation_id'];?>" value="1" /></td>
-			<td><input type="checkbox" name="test_vdrl_<?php echo $blood['donation_id'];?>" value="1" /></td>
-			<td><input type="checkbox" name="test_mp_<?php echo $blood['donation_id'];?>" value="1" /></td>
-			<td><input type="checkbox" name="test_irregular_ab_<?php echo $blood['donation_id'];?>" value="1" /></td>
-			<td><input type="checkbox" name="test[]" value="<?php echo $blood['donation_id'];?>" /></td>
+			<td><?php echo $blood->blood_unit_num;?></td>
+			<td><input type="checkbox" name="test_hiv_<?php echo $blood->donation_id;?>" value="1" /></td>
+			<td><input type="checkbox" name="test_hbsag_<?php echo $blood->donation_id;?>" value="1" /></td>
+			<td><input type="checkbox" name="test_hcv_<?php echo $blood->donation_id;?>" value="1" /></td>
+			<td><input type="checkbox" name="test_vdrl_<?php echo $blood->donation_id;?>" value="1" /></td>
+			<td><input type="checkbox" name="test_mp_<?php echo $blood->donation_id;?>" value="1" /></td>
+			<td><input type="checkbox" name="test_irregular_ab_<?php echo $blood->donation_id;?>" value="1" /></td>
+			<td><input type="checkbox" name="test[]" value="<?php echo $blood->donation_id;?>" /></td>
 				</tr>
 		<?php 
 		}
@@ -78,7 +86,7 @@
 				<div class="form-group col-lg-7"><input type="text" name="screened_date" class="form-control" placeholder="Screened Date" form='screening_form' id="screened_date" required /></div>
 			</td>
 			<td colspan="3" align="right">
-				<div class="form-group"><input type="submit"  class="btn btn-primary" value="Update"  /></div>
+				<div class="form-group"><input type="submit"  class="btn btn-primary" name="submit" value="Update"  /></div>
 			</td>
 		</tr>
 		</form>

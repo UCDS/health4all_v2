@@ -571,6 +571,24 @@ class Register_model extends CI_Model{
 		return $query->row();
 	}
 	
+	function get_visits($patient_id=0){
+		if($patient_id!=0) //if the visit_id is true, select the patient where visit_id equals the given visit id
+			$this->db->where('patient_visit.patient_id',$patient_id);
+		else return false; 
+		
+		$this->db->select('patient.*,patient_visit.*,department.department,unit.unit_id,unit.unit_name,area.area_id,area.area_name,mlc.mlc_number,mlc.ps_name')
+		->from('patient')->join('patient_visit','patient.patient_id=patient_visit.patient_id')
+		->join('department','patient_visit.department_id=department.department_id','left')
+		->join('unit','patient_visit.unit=unit.unit_id','left')
+		->join('area','patient_visit.area=area.area_id','left')
+		->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
+		->order_by('admit_date','desc')
+		->order_by('admit_time','desc');
+	    $query=$this->db->get();
+		//return the patient details in a single row.
+		return $query->result();
+	}
+	
 	function search_icd_codes(){
 		$this->db->select('icd_code, CONCAT(icd_code," ",code_title) as code_title',false)->from('icd_code')->order_by('code_title')->like('code_title',$this->input->post('query'),'both');
 		$query=$this->db->get();

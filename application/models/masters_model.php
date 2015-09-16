@@ -69,7 +69,10 @@ class Masters_model extends CI_Model{
 				$staff_id = $this->input->post('staff_id');
 				$this->db->where('staff_id',$staff_id);
 			}
-			$this->db->select("staff_id,first_name,last_name,gender,date_of_birth,department_id,unit_id,area_id,staff_role_id,staff_category_id,designation,email,phone,specialisation,research,research_area")->from("staff");
+			$this->db->select("staff_id,first_name,last_name,gender,date_of_birth,staff.department_id,department,unit_id,area_id,staff_role_id,
+			staff_category_id,designation,email,phone,specialisation,research,research_area")
+			->from("staff")
+			->join('department','staff.department_id = department.department_id');
 			
 		}
 		else if($type=="staff_category")
@@ -868,7 +871,6 @@ else if($type=="dosage"){
 		{
 			$date = $this->input->post('date_of_birth');
 			$date = date("Y-m-d",strtotime($date));
-			
 			$data = array(
 					  'first_name'=>$this->input->post('first_name'),
 					  'last_name'=>$this->input->post('last_name'),
@@ -992,6 +994,14 @@ else if($type=="dosage"){
 
 		$table="dosage";
 		}
+		elseif($type=="item_type"){
+			// Getting item_type value from form and setting it to 'item_type' column and assigning to variable $data  
+			$data = array('item_type'=>$this->input->post('item_type'));
+
+			// Setting table name
+			$table = "item_type";
+		}
+
 		elseif($type=="generic"){
 		$data = array(
 					  'generic_name'=>$this->input->post('generic_name'),
@@ -1236,7 +1246,6 @@ else if($type=="dosage"){
                                     $to_year = $this->input->post('year_high'.$count);
                                     $to_month = $this->input->post('month_high'.$count);
                                     $to_day = $this->input->post('day_high'.$count);
-                                   
                                 }elseif($this->input->post('age'.$count)=='1'){
                                     $to_year = $this->input->post('upper_age_limit_years'.$count);
                                     $to_month = $this->input->post('upper_age_limit_months'.$count);
@@ -1274,12 +1283,10 @@ else if($type=="dosage"){
                                     'to_day' => $to_day
                                  );
                             }
-                            
                            $this->db->insert_batch('test_range', $range_data);
                         }
                         $this->db->trans_complete();
                        if($this->db->trans_status()===FALSE){
-                           
                            $this->db->trans_rollback();
                            return false;
                       }
@@ -1415,8 +1422,6 @@ else if($type=="dosage"){
 		$table="state";
 		}
 		elseif($type=="vendor"){
-		echo "type = ".$this->input->post('vendor_type_id');
-		echo "contry - ".$this->input->post('vendor_country_id');
 		$data = array(
 					  'vendor_name'=>$this->input->post('vendor_name'),
 					  'vendor_type_id'=>$this->input->post('vendor_type_id'),

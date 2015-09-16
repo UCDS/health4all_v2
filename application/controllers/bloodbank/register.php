@@ -162,9 +162,6 @@ class Register extends CI_Controller {
 		{
 			$this->data['donors']=$donors;
 			$this->data['appointments']=$appointments;
-			if(count($this->data['appointments'])==0){
-				$this->data['msg']="No appointments booked for current slot.";
-			}
 			$this->load->view('pages/bloodbank/registered_donors',$this->data);
 		}
 		else if($this->input->post('search')) {
@@ -218,11 +215,12 @@ class Register extends CI_Controller {
 			if($this->register_model->update_medical($donation_id)){
 			$this->data['msg']="<font color='green'>Updated Successfully.</font>";
 			$this->data['donors']=$this->register_model->get_registered_donors();
-			$this->load->view('pages/bloodbank/blood_donation',$this->data);
+			$this->data['appointments']=$this->register_model->get_appointments();
+			$this->load->view('pages/bloodbank/registered_donors',$this->data);
 			}
 			else{
 			$this->data['msg']="<font color='red'>Update Failed.</font>";
-			$this->load->view('pages/bloodbank/blood_donation',$this->data);
+			$this->load->view('pages/bloodbank/registered_donors',$this->data);
 			}
 		}
 		$this->load->view('templates/footer');
