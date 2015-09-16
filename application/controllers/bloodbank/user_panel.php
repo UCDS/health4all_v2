@@ -43,7 +43,7 @@ class User_panel extends CI_Controller {
 				$this->load->view('templates/panel_nav',$this->data);
 				$this->load->view('pages/bloodbank/place');
 		}
-		else if($this->input->post('camp')){
+		else if($this->input->post('set_camp')){
 			$this->session->unset_userdata('place');
 			$camp=$this->register_model->get_camps($this->input->post('camp'));
 			$sess_array=array(
