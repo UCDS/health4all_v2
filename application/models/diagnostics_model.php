@@ -504,6 +504,7 @@ class Diagnostics_model extends CI_Model{
 		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')") 
 		->where('order_status <',2)
 		->where('test_order.test_area_id',$test_area);
+        
 		$query=$this->db->get();
 		return $query->result();
 	}
