@@ -418,7 +418,7 @@ $this->data['item_type']=$this->masters_model->get_data("item_type");
 			else if($this->input->post('select')){
             $this->data['mode']="select";
 			   $this->data[$type]=$this->masters_model->get_data($type);
-         
+
          	$this->load->view($page,$this->data);
 			}
 			else if($this->input->post('search')){
@@ -429,6 +429,28 @@ $this->data['item_type']=$this->masters_model->get_data("item_type");
 		}
 		$this->load->view('templates/footer');
 	}
-	
+
+	// This function is used to get records from database and forward it to views
+	function view($type="",$equipment_type=0,$department=0,$area=0,$unit=0,$status=0){
+		// Checking whether user is logged in or not and showing error if user is not logged in or session is expired
+		if(!$this->session->userdata('logged_in')){
+            show_404();
+        }
+
+		// Setting Form title
+		$this->data['title']="Items Type";
+
+		// Calling get_data() method in masters_model to query item types
+		$this->data['item_types']=$this->masters_model->get_data("item_type",$equipment_type,$department,$area,$unit,$status);
+        // Loading header
+		$this->load->view('templates/header',$this->data);
+        // Loading left navigation bar
+		$this->load->view('templates/leftnav',$this->data);
+		// Loading view
+		$this->load->view("pages/inventory/report_$type",$this->data);
+		//Loading footer
+		$this->load->view('templates/footer');
+        
+	}
 }
 
