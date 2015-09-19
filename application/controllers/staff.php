@@ -141,6 +141,7 @@ class Staff extends CI_Controller {
 			$this->data['area']=$this->masters_model->get_data("area");
 			$this->data['staff_category']=$this->masters_model->get_data("staff_category",$mode='all');
 			$this->data['staff_role']=$this->masters_model->get_data("staff_role",$mode='all');
+			$this->data[$type]=$this->masters_model->get_data($type);
 		}
 		else if($type == 'staff_role')
 		{

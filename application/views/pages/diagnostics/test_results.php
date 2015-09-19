@@ -151,7 +151,7 @@ pri.print();
                     <?php echo $specimen_type; if(!!$specimen_source) echo " - ".$specimen_source;?>
                 </div>
                 <div class="col-md-6">
-                    <b>Sample ID :</b>
+                    <b>Sample Code :</b>
                     <?php echo $sample_code; ?>
                 </div>
             </div>
@@ -698,7 +698,7 @@ pri.print();
                         <?php echo $specimen_type; if(!!$specimen_source) echo " - ".$specimen_source;?>
                     </td>
                     <td colspan="2">
-                        <b>Sample ID :</b>
+                        <b>Sample Code :</b>
                         <?php echo $sample_code; ?>
                     </td>
                 </tr>

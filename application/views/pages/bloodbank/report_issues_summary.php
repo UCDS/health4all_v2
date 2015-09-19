@@ -65,45 +65,45 @@
 	$Apos=0;$Aneg=0;$Bpos=0;$Bneg=0;$ABpos=0;$ABneg=0;$Opos=0;$Oneg=0;$total=0;
 	foreach($summary as $s){
 		$day_total=0;
-		$day_total+=$s['A+']+$s['A-']+$s['B+']+$s['B-']+$s['AB+']+$s['AB-']+$s['O+']+$s['O-'];
-		$s['issue_date']=date("Y-m-d",strtotime($s['issue_date']));
+		$day_total+=$s->Apos+$s->Aneg+$s->Bpos+$s->Bneg+$s->ABpos+$s->ABneg+$s->Opos+$s->Oneg;
+		$s->issue_date=date("Y-m-d",strtotime($s->issue_date));
 	?>
 	<tr>
-		<td><?php if($s['issue_date']!=0) echo date("d-M-Y",strtotime($s['issue_date']));?></td>
-		<th align="right"><a href="<?php echo base_url()."user_panel/report_issue/$s[issue_date]/0/$from_date/$to_date";?>"><?php echo $s['total'];?></a></th>
-		<td align="right"><a href="<?php echo base_url()."user_panel/report_issue/$s[issue_date]/Apos/$from_date/$to_date";?>"><?php echo $s['A+'];?></a></td>
-		<td align="right"><a href="<?php echo base_url()."user_panel/report_issue/$s[issue_date]/Aneg/$from_date/$to_date";?>"><?php echo $s['A-'];?></a></td>
-		<td align="right"><a href="<?php echo base_url()."user_panel/report_issue/$s[issue_date]/Bpos/$from_date/$to_date";?>"><?php echo $s['B+'];?></a></td>
-		<td align="right"><a href="<?php echo base_url()."user_panel/report_issue/$s[issue_date]/Bneg/$from_date/$to_date";?>"><?php echo $s['B-'];?></a></td>
-		<td align="right"><a href="<?php echo base_url()."user_panel/report_issue/$s[issue_date]/ABpos/$from_date/$to_date";?>"><?php echo $s['AB+'];?></a></td>
-		<td align="right"><a href="<?php echo base_url()."user_panel/report_issue/$s[issue_date]/ABneg/$from_date/$to_date";?>"><?php echo $s['AB-'];?></a></td>
-		<td align="right"><a href="<?php echo base_url()."user_panel/report_issue/$s[issue_date]/Opos/$from_date/$to_date";?>"><?php echo $s['O+'];?></a></td>
-		<td align="right"><a href="<?php echo base_url()."user_panel/report_issue/$s[issue_date]/Oneg/$from_date/$to_date";?>"><?php echo $s['O-'];?></a></td>
+		<td><?php if($s->issue_date!=0) echo date("d-M-Y",strtotime($s->issue_date));?></td>
+		<th align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/$s->issue_date/0/$from_date/$to_date";?>"><?php echo $s->total;?></a></th>
+		<td align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/$s->issue_date/Apos/$from_date/$to_date";?>"><?php echo $s->Apos;?></a></td>
+		<td align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/$s->issue_date/Aneg/$from_date/$to_date";?>"><?php echo $s->Aneg;?></a></td>
+		<td align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/$s->issue_date/Bpos/$from_date/$to_date";?>"><?php echo $s->Bpos;?></a></td>
+		<td align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/$s->issue_date/Bneg/$from_date/$to_date";?>"><?php echo $s->Bneg;?></a></td>
+		<td align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/$s->issue_date/ABpos/$from_date/$to_date";?>"><?php echo $s->ABpos;?></a></td>
+		<td align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/$s->issue_date/ABneg/$from_date/$to_date";?>"><?php echo $s->ABneg;?></a></td>
+		<td align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/$s->issue_date/Opos/$from_date/$to_date";?>"><?php echo $s->Opos;?></a></td>
+		<td align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/$s->issue_date/Oneg/$from_date/$to_date";?>"><?php echo $s->Oneg;?></a></td>
 	</tr>
 	<?php
-	$Apos+=$s['A+'];
-	$Aneg+=$s['A-'];
-	$Bpos+=$s['B+'];
-	$Bneg+=$s['B-'];
-	$ABpos+=$s['AB+'];
-	$ABneg+=$s['AB-'];
-	$Opos+=$s['O+'];
-	$Oneg+=$s['O-'];
+	$Apos+=$s->Apos;
+	$Aneg+=$s->Aneg;
+	$Bpos+=$s->Bpos;
+	$Bneg+=$s->Bneg;
+	$ABpos+=$s->ABpos;
+	$ABneg+=$s->ABneg;
+	$Opos+=$s->Opos;
+	$Oneg+=$s->Oneg;
 	$total+=$day_total;
 	}
 	?>
 	
 	<tr>
 		<th>Total </th>
-		<th align="right"><a href="<?php echo base_url()."user_panel/report_issue/0/0/$from_date/$to_date";?>"><?php echo $total;?></a></th>
-		<th align="right"><a href="<?php echo base_url()."user_panel/report_issue/0/Apos/$from_date/$to_date";?>"><?php echo $Apos;?></a></th>
-		<th align="right"><a href="<?php echo base_url()."user_panel/report_issue/0/Aneg/$from_date/$to_date";?>"><?php echo $Aneg;?></a></th>
-		<th align="right"><a href="<?php echo base_url()."user_panel/report_issue/0/Bpos/$from_date/$to_date";?>"><?php echo $Bpos;?></a></th>
-		<th align="right"><a href="<?php echo base_url()."user_panel/report_issue/0/Bneg/$from_date/$to_date";?>"><?php echo $Bneg;?></a></th>
-		<th align="right"><a href="<?php echo base_url()."user_panel/report_issue/0/ABpos/$from_date/$to_date";?>"><?php echo $ABpos;?></a></th>
-		<th align="right"><a href="<?php echo base_url()."user_panel/report_issue/0/ABneg/$from_date/$to_date";?>"><?php echo $ABneg;?></a></th>
-		<th align="right"><a href="<?php echo base_url()."user_panel/report_issue/0/Opos/$from_date/$to_date";?>"><?php echo $Opos;?></a></th>
-		<th align="right"><a href="<?php echo base_url()."user_panel/report_issue/0/Oneg/$from_date/$to_date";?>"><?php echo $Oneg;?></a></th>
+		<th align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/0/0/$from_date/$to_date";?>"><?php echo $total;?></a></th>
+		<th align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/0/Apos/$from_date/$to_date";?>"><?php echo $Apos;?></a></th>
+		<th align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/0/Aneg/$from_date/$to_date";?>"><?php echo $Aneg;?></a></th>
+		<th align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/0/Bpos/$from_date/$to_date";?>"><?php echo $Bpos;?></a></th>
+		<th align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/0/Bneg/$from_date/$to_date";?>"><?php echo $Bneg;?></a></th>
+		<th align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/0/ABpos/$from_date/$to_date";?>"><?php echo $ABpos;?></a></th>
+		<th align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/0/ABneg/$from_date/$to_date";?>"><?php echo $ABneg;?></a></th>
+		<th align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/0/Opos/$from_date/$to_date";?>"><?php echo $Opos;?></a></th>
+		<th align="right"><a href="<?php echo base_url()."bloodbank/user_panel/report_issue/0/Oneg/$from_date/$to_date";?>"><?php echo $Oneg;?></a></th>
 	</tr>
 	</table>
 	

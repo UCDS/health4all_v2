@@ -1,9 +1,68 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
 
-<div class="col-md-8 col-md-offset-2">
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
+	<script type="text/javascript">
+$(function(){
+		var options = {
+			widthFixed : true,
+			showProcessing: true,
+			headerTemplate : '{content} {icon}', // Add icon for jui theme; new in v2.7!
+
+			widgets: [ 'default', 'zebra', 'print', 'stickyHeaders','filter'],
+
+			widgetOptions: {
+
+		  print_title      : 'table',          // this option > caption > table id > "table"
+		  print_dataAttrib : 'data-name', // header attrib containing modified header name
+		  print_rows       : 'f',         // (a)ll, (v)isible or (f)iltered
+		  print_columns    : 's',         // (a)ll, (v)isible or (s)elected (columnSelector widget)
+		  print_extraCSS   : '.table{border:1px solid #ccc;} tr,td{background:white}',          // add any extra css definitions for the popup window here
+		  print_styleSheet : '', // add the url of your print stylesheet
+		  // callback executed when processing completes - default setting is null
+		  print_callback   : function(config, $table, printStyle){
+			// do something to the $table (jQuery object of table wrapped in a div)
+			// or add to the printStyle string, then...
+			// print the table using the following code
+			$.tablesorter.printTable.printOutput( config, $table.html(), printStyle );
+			},
+			// extra class name added to the sticky header row
+			  stickyHeaders : '',
+			  // number or jquery selector targeting the position:fixed element
+			  stickyHeaders_offset : 0,
+			  // added to table ID, if it exists
+			  stickyHeaders_cloneId : '-sticky',
+			  // trigger "resize" event on headers
+			  stickyHeaders_addResizeEvent : true,
+			  // if false and a caption exist, it won't be included in the sticky header
+			  stickyHeaders_includeCaption : false,
+			  // The zIndex of the stickyHeaders, allows the user to adjust this to their needs
+			  stickyHeaders_zIndex : 2,
+			  // jQuery selector or object to attach sticky header to
+			  stickyHeaders_attachTo : null,
+			  // scroll table top into view after filtering
+			  stickyHeaders_filteredToTop: true,
+
+			  // adding zebra striping, using content and default styles - the ui css removes the background from default
+			  // even and odd class names included for this demo to allow switching themes
+			  zebra   : ["ui-widget-content even", "ui-state-default odd"],
+			  // use uitheme widget to apply defauly jquery ui (jui) class names
+			  // see the uitheme demo for more details on how to change the class names
+			  uitheme : 'jui'
+			}
+		  };
+			$("#table-sort").tablesorter(options);
+		  $('.print').click(function(){
+			$('#table-sort').trigger('printTable');
+		  });
+});
+</script>
 	
-	
+
 	<script type="text/javascript">
 	$(function(){
 		$("#date_of_birth").Zebra_DatePicker();
@@ -14,23 +73,20 @@
 		});
 	});
 	</script>
-	<?php
-	 
-	 if((isset($mode))&&(($mode)=="select")){ 
-	 //var_dump($unit);
-	 //($area); ?>
+	
+<?php if(isset($mode)&& $mode=="select" || $this->input->post('update')){?>
 	<center>	<h3>Edit  Staff </h3></center><br>
-	
-<div class="col-md-8 col-md-offset-2">
-	
-	<center>
-		<?php echo validation_errors(); ?>
-	</center>
 	<?php 
-	//$staff = $staff[0]; 
-	//What is form_open ?
+    echo validation_errors();
 	echo form_open('staff/edit/staff',array('class'=>'form-horizontal','role'=>'form','id'=>'edit_staff')); 
 	?>
+<div class="col-md-8 col-md-offset-2">
+	<?php if(isset($msg)){ ?>
+		<div class="alert alert-info"><?php echo $msg;?></div>
+	<?php
+	}
+	?>
+	
 
 	<div class="form-group">
 		<input type='hidden' name='staff_id' value='<?php echo $staff[0]->staff_id; ?>' />
@@ -64,7 +120,7 @@
 				if($gender == 'M')
 				{
 					echo 'checked';
-				} ?> 
+				}?> 
 			/>Male
 			</label>
 			<label class="control-label">
@@ -73,7 +129,7 @@
 				if($gender == 'F')
 				{
 					echo 'checked';
-				} ?> 
+				}?> 
 				/>Female
 			</label>
 			<label class="control-label">
@@ -82,7 +138,7 @@
 				if($gender == '')
 				{
 					echo 'checked';
-				} ?> 
+				}?> 
 				/>Other
 			</label>
 		</div>
@@ -269,50 +325,53 @@
 		
    	<div class="col-md-3 col-md-offset-4">
 	<input class="btn btn-lg btn-primary btn-block" type="submit" value="Update" name="update">
-	</div>
-
-	
-   	
-	</form>
-	<?php } ?>
-	<h3><?php if(isset($msg)) echo $msg;?></h3>	
-	<div class="col-md-12">
-	<?php echo form_open('staff/edit/staff',array('role'=>'form','id'=>'search_form','class'=>'form-inline','name'=>'search_staff'));?>
-	<h3> Search Staff </h3>
-	<table class="table-bordered col-md-12">
-	<tbody>
-	<tr>
-		<td><input type="text" class="form-control" placeholder="Staff" id="staff" name="staff"> 
-		
-		
-				<td><input class="btn btn-lg btn-primary btn-block" name="search" value="Search" type="submit" /></td></tr>
-	</tbody>
-	</table>
-	</form>
-	<?php if(isset($mode)&&$mode=="search"){    ?>
-
-	<h3 class="col-md-12">List of Staff</h3>
-	<div class="col-md-12 ">
 	</div>	
-	<table class="table-hover table-bordered table-striped col-md-10">
+	</form>
+	</div>
+	
+	<?php } 
+	else{ ?>
+	<div class="col-md-10 col-md-offset-2">
+	<h3 class="col-md-12 ">List of Users</h3>
+	<div class="col-md-12 offset-3 ">
+	</div>	
+		<h3><?php if(isset($msg)) echo $msg;?></h3>	
+		<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
-	<th>S.No</th><th>Staff Name </th>
+		<th style="text-align:center">S.no</th>
+		<th style="text-align:center">Department</th>
+		<th style="text-align:center">Designation</th>
+		<th style="text-align:center">Name</th>
+		<th style="text-align:center">Gender</th>
+		<th style="text-align:center">Phone</th>
+		
 	</thead>
 	<tbody>
 	<?php 
 	$i=1;
 	foreach($staff as $a){ ?>
-	<?php echo form_open('staff/edit/staff',array('id'=>'select_staff_form_'.$a->staff_id,'role'=>'form')); ?>
 	<tr onclick="$('#select_staff_form_<?php echo $a->staff_id;?>').submit();" >
-		<td><?php echo $i++; ?></td>
-		<td><?php echo $a->first_name; ?>
+		<td>	
+			<?php echo form_open('staff/edit/staff',array('id'=>'select_staff_form_'.$a->staff_id,'role'=>'form')); ?>
+			<?php echo $i++; ?>
+		</td>
+		<td><?php echo $a->department;?></td>
+		<td><?php echo $a->designation;?> </td>
+		<td><?php echo  $a->first_name." ".$a->last_name;  ?></td>
+		<td> <?php echo $a->gender;?>
 		<input type="hidden" value="<?php echo $a->staff_id; ?>" name="staff_id" />
 		<input type="hidden" value="select" name="select" />
 		</td>
-			</tr>
-	</form>
+		<td>
+		<?php echo $a->phone;?>
+		
+			</form>
+		
+	</tr>
 	<?php } ?>
 	</tbody>
 	</table>
+	
 	<?php } ?>
+
 	</div></div>

@@ -217,13 +217,13 @@
 					$f->user_function=="OP Detail" || $f->user_function=="IP Detail" || 
 					$f->user_function=="Diagnostics - Detail" || $f->user_function=="Diagnostics - Summary" || 
 					($f->user_function == "Sanitation Evaluation" && $f->view==1) || 
-					$f->user_function == "Bloodbank"){ ?>
+					$f->user_function == "Bloodbank" || $f->user_function == "Outcome Summary"){ ?>
 					<li class="dropdown  <?php if(preg_match("^".base_url()."reports^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><i class="fa fa-line-chart"></i> Reports <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 			<?php	
 				foreach($functions as $f){
-					if($f->user_function=="OP Summary" || $f->user_function=="IP Summary" || $f->user_function == "Bloodbank"){ ?>
+					if($f->user_function=="OP Summary" || $f->user_function=="IP Summary" || $f->user_function == "Bloodbank" || $f->user_function == "Outcome Summary"){ ?>
 						  <li class="dropdown-header">Summary reports</li>
 			<?php
 				break;
@@ -239,15 +239,21 @@
 						  <li><a href="<?php echo base_url()."reports/ip_summary";?>">IP Summary</a></li>
 						  <li><a href="<?php echo base_url()."reports/ip_op_trends";?>">IP/OP Trends</a></li>
 						  <li><a href="<?php echo base_url()."reports/icd_summary";?>">ICD Code Summary</a></li>
+                   
 				<?php	} 
-                                }
+                      if($f->user_function=="Outcome Summary"){ ?>
+						  <li><a href="<?php echo base_url()."reports/outcome_summary";?>">Outcome Summary</a></li>
+				<?php                      }             }
 				foreach($functions as $f){
 					if($f->user_function=="Diagnostics - Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/order_summary/department";?>">Orders Summary</a></li>
 						  <li><a href="<?php echo base_url()."reports/sensitivity_summary";?>">Sensitivity Report</a></li>
-				<?php	} 
+				<?php	}                
 					if($f->user_function=="Bloodbank"){ ?>
 						  <li><a href="<?php echo base_url()."bloodbank/user_panel/donation_summary";?>">Bloodbank Reports</a></li>
+				<?php	} 
+					if($f->user_function=="Bloodbank"){ ?>
+						  <li><a href="<?php echo base_url()."reports/audiology_summary";?>">Audiology Report</a></li>
 				<?php	}
 					if($f->user_function=="Masters - Sanitation" || $f->user_function == "Sanitation Summary"){ ?>
 						<li><a href="<?php echo base_url()."sanitation/view_summary";?>">Sanitation Evaluation</a></li>
