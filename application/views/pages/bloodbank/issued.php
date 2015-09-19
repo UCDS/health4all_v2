@@ -1,8 +1,7 @@
 <div class="col-md-10 col-sm-9">
 	<?php
 	if(isset($msg)) {
-		echo $msg;
-		echo "<br />";
+		echo "<div class='alert alert-info'>$msg</div>";
 		echo "<br />";
 	}
 	?>
@@ -13,18 +12,18 @@
  		<?php 
  		$mail_count=0;
 		foreach($donors as $donor){
-				if($donor['request_type']==0){
-				if(filter_var($donor['email'], FILTER_VALIDATE_EMAIL)){
-								$donor['donation_date']=date('d-M-Y',strtotime($donor['donation_date']));
-								$donor['issue_date']=date('d-M-Y',strtotime($donor['issue_date']));
-								$to=$donor['email'];
+				if($donor->request_type==0){
+				if(filter_var($donor->email, FILTER_VALIDATE_EMAIL)){
+								$donor->donation_date=date('d-M-Y',strtotime($donor->donation_date));
+								$donor->issue_date=date('d-M-Y',strtotime($donor->issue_date));
+								$to=$donor->email;
 								if($to!=''){
 								$subject="Thank you for your blood donation!";
 								$body="
 								<div style='width:90%;padding:5px;margin:5px;font-style:\"Trebuchet MS\";border:1px solid #eee;'>
-								<p>Dear $donor[name],</p>
-								<p>This is to inform you that a component of blood you have donated on $donor[donation_date]
-								was issued on $donor[issue_date] to a patient with '$donor[diagnosis]'.</p>
+								<p>Dear $donor->name,</p>
+								<p>This is to inform you that a component of blood you have donated on $donor->donation_date
+								was issued on $donor->issue_date to a patient with '$donor->diagnosis'.</p>
 								<p>Thank you for your donation.</p>
 								<p>
 								</p>
@@ -42,7 +41,7 @@
 								$this->email->subject($subject);
 								$this->email->message($body);
 								if ( ! $this->email->send()) {
-									echo "<br />Email to $donor[email] failed";
+									echo "<div class='alert alert-danger'>Email to $donor->email failed</div>";
 								}
 								else{
 									$this->email->clear(TRUE);
@@ -51,8 +50,8 @@
 					}
 				}
 			?>
-			<td><?php echo $donor['name'];?></td>
-			<td><?php echo $donor['email'];?></td>
+			<td><?php echo $donor->name;?></td>
+			<td><?php echo $donor->email;?></td>
 		</tr>
 		<?php } ?>
 		</table>

@@ -82,7 +82,7 @@ pri.print();
 		$state = $order[0]->state;
 		$specimen_type = $order[0]->specimen_type;
         $specimen_source = $order[0]->specimen_source;
-        $sample_id = $order[0]->sample_id;
+        $sample_code = $order[0]->sample_code;
 		$test_method = $order[0]->test_method;
 		$first_name = $order[0]->first_name;
 		$last_name = $order[0]->last_name;
@@ -151,8 +151,8 @@ pri.print();
                     <?php echo $specimen_type; if(!!$specimen_source) echo " - ".$specimen_source;?>
                 </div>
                 <div class="col-md-6">
-                    <b>Sample ID :</b>
-                    <?php echo $sample_id; ?>
+                    <b>Sample Code :</b>
+                    <?php echo $sample_code; ?>
                 </div>
             </div>
 			<br />
@@ -162,6 +162,9 @@ pri.print();
 			<!-- patient test results-->
 			
 			<?php
+       
+                // The following flags are set to display only the coloums that have atleast one value.
+                //Binary coloumn is shown only if there is atleast one binary result, similarly numeric and text.
 				$binary_flag=0;
 				$numeric_flag=0;
 				$text_flag=0;
@@ -254,11 +257,11 @@ pri.print();
 							if($test['test_status'] == 2) { 
 								$result.=$test['test_result']." ".$test['lab_unit']."</td>";
                                                                 if($test['test_result']!=NULL && $test['range_type']==1)
-                                                                    $result.="<td>(< ".$test['max'].$test['lab_unit'].")</td>";
+                                                                    $result.="<td> < ".$test['max'].$test['lab_unit']."</td>";
                                                                 else if($test['test_result']!=NULL && $test['range_type']==2)
-                                                                    $result.="<td>(> ".$test['min'].$test['lab_unit'].")</td>";
+                                                                    $result.="<td> > ".$test['min'].$test['lab_unit']."</td>";
                                                                 else if($test['test_result']!=NULL && $test['range_type']==3)
-                                                                    $result.="<td>(> ".$test['min']." - ".$test['max'].$test['lab_unit'].")</td>";
+                                                                    $result.="<td> ".$test['min']." - ".$test['max'].$test['lab_unit']."</td>";
                                                                 else 
                                                                     $result .="<td></td>";
 							} 
@@ -338,11 +341,11 @@ pri.print();
 							if($test['test_status'] == 2) { 
 								$result.=$test['test_result']." ".$test['lab_unit']."</td>";
 								if($test['test_result']!=NULL && $test['range_type']==1)
-										$result.="<td>(< ".$test['max'].$test['lab_unit'].")</td>";
+										$result.="<td> < ".$test['max'].$test['lab_unit']."</td>";
 									else if($test['test_result']!=NULL && $test['range_type']==2)
-										$result.="<td>(> ".$test['min'].$test['lab_unit'].")</td>";
+										$result.="<td> > ".$test['min'].$test['lab_unit']."</td>";
 									else if($test['test_result']!=NULL && $test['range_type']==3)
-										$result.="<td>(> ".$test['min']." - ".$test['max'].$test['lab_unit'].")</td>";
+										$result.="<td> ".$test['min']." - ".$test['max'].$test['lab_unit']."</td>";
 									else $result .="<td></td>";
 							} 
 							else{	
@@ -512,12 +515,12 @@ pri.print();
 							else if($test->test_status==2){
 									$result="<td>".$test->test_result." ".$test->lab_unit."</td>";
 								if($test->test_result!=NULL && $test->range_type==1){
-									$result.="<td>"."(< ".$test->max.$test->lab_unit.")"."</td>";                                                                
+									$result.="<td>"." < ".$test->max.$test->lab_unit."</td>";                                                                
 								}
 								else if($test->test_result!=NULL && $test->range_type==2)
-									$result.="<td>(> ".$test->min.$test->lab_unit.")</td>";
+									$result.="<td> > ".$test->min.$test->lab_unit."</td>";
 								else if($test->test_result!=NULL && $test->range_type==3)
-									$result.="<td>(".$test->min." - ".$test->max.$test->lab_unit.")</td>";
+									$result.="<td> ".$test->min." - ".$test->max.$test->lab_unit."</td>";
                                 else $result.="<td></td>";
 							}
 							echo $result;
@@ -695,8 +698,8 @@ pri.print();
                         <?php echo $specimen_type; if(!!$specimen_source) echo " - ".$specimen_source;?>
                     </td>
                     <td colspan="2">
-                        <b>Sample ID :</b>
-                        <?php echo $sample_id; ?>
+                        <b>Sample Code :</b>
+                        <?php echo $sample_code; ?>
                     </td>
                 </tr>
 			<tr>
@@ -868,11 +871,11 @@ pri.print();
 							if($test['test_status'] == 2) { 
 								$result.=$test['test_result']." ".$test['lab_unit']."</td>";
 								if($test['test_result']!=NULL && $test['range_type']==1)
-										$result.="<td>(< ".$test['max'].$test['lab_unit'].")</td>";
+										$result.="<td> < ".$test['max'].$test['lab_unit']."</td>";
 									else if($test['test_result']!=NULL && $test['range_type']==2)
-										$result.="<td>(> ".$test['min'].$test['lab_unit'].")</td>";
+										$result.="<td> > ".$test['min'].$test['lab_unit']."</td>";
 									else if($test['test_result']!=NULL && $test['range_type']==3)
-										$result.="<td>(> ".$test['min']." - ".$test['max'].$test['lab_unit'].")</td>";
+										$result.="<td> ".$test['min']." - ".$test['max'].$test['lab_unit']."</td>";
 									else $result .="<td></td>";
 							} 
 							else{	
@@ -948,11 +951,11 @@ pri.print();
 							if($test['test_status'] == 2) { 
 								$result.=$test['test_result']." ".$test['lab_unit']."</td>";
 								if($test['test_result']!=NULL && $test['range_type']==1)
-										$result.="<td>(< ".$test['max'].$test['lab_unit'].")</td>";
+										$result.="<td> < ".$test['max'].$test['lab_unit']."</td>";
 									else if($test['test_result']!=NULL && $test['range_type']==2)
-										$result.="<td>(> ".$test['min'].$test['lab_unit'].")</td>";
+										$result.="<td> > ".$test['min'].$test['lab_unit']."</td>";
 									else if($test['test_result']!=NULL && $test['range_type']==3)
-										$result.="<td>(> ".$test['min']." - ".$test['max'].$test['lab_unit'].")</td>";
+										$result.="<td> ".$test['min']." - ".$test['max'].$test['lab_unit']."</td>";
 									else $result .="<td></td>";
 							} 
 							else{	
@@ -1032,11 +1035,11 @@ pri.print();
 							if($test->test_status == 2) { 
 								$result.=$test->test_result." ".$test->lab_unit."</td>";
 								if($test->test_result!=NULL && $test->range_type==1)
-										$result.="<td>(< ".$test->max.$test->lab_unit.")</td>";
+										$result.="<td> < ".$test->max.$test->lab_unit."</td>";
 									else if($test->test_result!=NULL && $test->range_type==2)
-										$result.="<td>(> ".$test->min.$test->lab_unit.")</td>";
+										$result.="<td> > ".$test->min.$test->lab_unit."</td>";
 									else if($test->test_result!=NULL && $test->range_type==3)
-										$result.="<td>(> ".$test->min." - ".$test->max.$test->lab_unit.")</td>";
+										$result.="<td> ".$test->min." - ".$test->max.$test->lab_unit."</td>";
 									else $result .="<td></td>";
 							} 
 							else{	

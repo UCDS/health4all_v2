@@ -78,6 +78,7 @@ class User_panel extends CI_Controller {
 			$this->load->view('pages/edit_user',$this->data);
 		}
 		else{
+
 			if($this->input->post('update')){
 				if($this->masters_model->update_data("user")){
 					$this->data['msg']="Updated Successfully";

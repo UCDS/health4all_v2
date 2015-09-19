@@ -24,6 +24,7 @@
              }
          });
 
+         //If the user selects numeric input, then display the options for numeric input.
          $(".numeric_output").click(function () {
              if ($(this).is(":checked")) {
                  $(".numeric_output_units").show();
@@ -33,6 +34,7 @@
 
              }
              else {
+
                  $(".numeric_output_units").hide();
                  $(".numeric_output_range").hide();
                  $(".range").hide();
@@ -74,9 +76,10 @@
              });
          });
 
-         //Function to display the range text boxes to gather input from the user.
-         //If the user selects value type as between.
-
+         //This function dynamically adds a new range input fields to the form
+         //to dynamically let the user choose the number of different types of ranges
+         //that can be there for a given test.
+         //This function adds range fields to the end of range_fields_container div.
          $("#add_range").click(function () {
              var count_of_range_items = parseInt($("#count_of_range_items").val()) + 1;
              $("#count_of_range_items").val("" + count_of_range_items);
@@ -127,9 +130,9 @@
                               ' &ltAge less than &nbsp;</label>' +
                               '<label ><input type="radio" id="age_greater_than' + count_of_range_items + '" onclick="showAgeGreaterThan(' + count_of_range_items + ');" form="add_test_name" value="2" name="age' + count_of_range_items + '" />' +
                               ' &gtAge greater than</label>' +
-                              '<input type="radio" id="all_ages' + count_of_range_items + '" form="add_test_name" value="4" name="age' + count_of_range_items + '" />'+
-                              '<label for="all_ages1"> &gtAll ages</label>'
-                          '</div>' +
+                              '<input type="radio" id="all_ages' + count_of_range_items + '" onclick="allAges('+ count_of_range_items +')" form="add_test_name" value="4" name="age' + count_of_range_items + '" />' +
+                              '<label for="all_ages1"> &gtAll ages</label>' +
+                                '</div>' +
                           '<label for="age_between_years_low' + count_of_range_items + '" id="age_between_years_low_label' + count_of_range_items + '" class="col-md-4 age_between" hidden>Lower age limit</label>' +
                           '<div class="col-md-2 age_between" id="age_between_years_low' + count_of_range_items + '" hidden>' +
                              '<input type="text" class="form-control" form="add_test_name" name="year_low' + count_of_range_items + '" placeholder="Years" />' +
@@ -286,6 +289,28 @@
          }
      }
 
+     function allAges(rangeNumber) { 
+        if (document.getElementById("all_ages" + rangeNumber).checked) {
+             $("#age_greater_than_years_label" + rangeNumber).hide();
+             $("#age_greater_than_years" + rangeNumber).hide();
+             $("#age_greater_than_months" + rangeNumber).hide();
+             $("#age_greater_than_days" + rangeNumber).hide();
+
+             $("#age_between_years_low_label" + rangeNumber).hide();
+             $("#age_between_years_low" + rangeNumber).hide();
+             $("#age_between_months_low" + rangeNumber).hide();
+             $("#age_between_days_low" + rangeNumber).hide();
+             $("#age_between_years_high_label" + rangeNumber).hide();
+             $("#age_between_years_high" + rangeNumber).hide();
+             $("#age_between_months_high" + rangeNumber).hide();
+             $("#age_between_days_high" + rangeNumber).hide();
+
+             $("#age_less_than_years_label" + rangeNumber).hide();
+             $("#age_less_than_years" + rangeNumber).hide();
+             $("#age_less_than_months" + rangeNumber).hide();
+             $("#age_less_than_days" + rangeNumber).hide();
+         }
+     }
 </script>
 <div class="col-md-8 col-md-offset-2">
 	<center>
@@ -360,6 +385,7 @@
 		</div>
                 
                 <!--Fields to input values of the range. All of them are having class range, so that they can be hidden and shown. -->
+                <!--The glyphicon lets dynamically add more range fields.-->
                 <div class="form_group" id="range_fields_container" >
                 <div class='test_range'>
                 <label for="value_range" class="col-md-4 range" hidden>Value Range</label>
@@ -408,7 +434,7 @@
                     <label for="age_less_than1"> &ltAge less than</label>
                     <input type="radio" id="age_greater_than1" onclick="showAgeGreaterThan('1');" form="add_test_name" value="2" name="age1" />
                     <label for="age_greater_than1"> &gtAge greater than</label>
-                    <input type="radio" id="all_ages1" form="add_test_name" value="4" name="age1" />
+                    <input type="radio" id="all_ages1" onclick="allAges('1');"form="add_test_name" value="4" name="age1" />
                     <label for="all_ages1"> &gtAll ages</label>
                 </div>
                 <label for="age_between_years_low1" id="age_between_years_low_label1" class="col-md-4 age_between" hidden>Lower age limit</label>

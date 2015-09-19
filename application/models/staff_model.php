@@ -298,6 +298,42 @@ class Staff_model extends CI_Model{
 		else return true;
 	}
 	
+    function add_data($type=''){
+        if($type = 'transaction_type'){
+            $data = array(
+                'staff_id' => $this->input->post('staff_id'),
+                'hr_transaction_type_id' => $this->input->post('hr_transaction_type_id'),
+                'hr_transaction_date' => date("Y-m-d",strtotime($this->input->post('hr_transaction_date')))
+            );
+            $table = 'hr_transaction';
+        }
+        $this->db->trans_start();
+		$this->db->insert($table,$data);
+		$this->db->trans_complete();
+		if($this->db->trans_status()===FALSE){
+			return false;
+		}
+		else{
+		  return true;
+		}
+    }
+
+    function search_staff(){
+        $name = array(
+                   'LOWER(first_name)'=>strtolower($this->input->post('query')), 
+                   'LOWER(last_name)'=>strtolower($this->input->post('query'))                           
+        );
+       
+        $this->db->select('staff_id, first_name, last_name')
+            ->from('staff')
+            ->or_like($name,'both');
+        $query=$this->db->get();
+		if($query->num_rows()>0){
+		    return $query->result_array();
+		}
+		else
+            return false;
+    }
 			
 }
 ?>

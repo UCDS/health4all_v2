@@ -152,13 +152,14 @@ class Inventory extends CI_Controller {
 		$this->load->view('templates/panel_nav',$this->data);
 		
 		$this->form_validation->set_rules('test[]', 'Blood Sample',
-		'required|xss_clean');
+		'xss_clean');
 		if ($this->form_validation->run() === FALSE)
 		{
 			$this->data['inventory']=$this->inventory_model->get_unscreened_blood();
 			$this->load->view('pages/bloodbank/blood_screening',$this->data);
 		}
 		else{
+			if($this->input->post('submit')){
 			if($this->inventory_model->blood_screening()){
 				$this->data['msg']="Updated Successfully. ";
 				$this->data['inventory']=$this->inventory_model->get_unscreened_blood();
@@ -166,6 +167,11 @@ class Inventory extends CI_Controller {
 			}
 			else{
 				$this->data['msg']="Error in storing data. Please retry. ";		
+				$this->data['inventory']=$this->inventory_model->get_unscreened_blood();
+				$this->load->view('pages/bloodbank/blood_screening',$this->data);
+			}
+			}
+			else{
 				$this->data['inventory']=$this->inventory_model->get_unscreened_blood();
 				$this->load->view('pages/bloodbank/blood_screening',$this->data);
 			}

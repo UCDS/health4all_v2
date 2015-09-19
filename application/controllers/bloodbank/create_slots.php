@@ -48,7 +48,8 @@ class Create_slots extends CI_Controller {
 		$this->load->view('templates/footer');
 		}
 		else {
-			show_404();
+            show_404();
+
 		}
 	}
 }
