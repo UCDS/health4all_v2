@@ -69,21 +69,19 @@ $(function(){
 	if($this->input->post('to_date')) $to_date=date("Y-m-d",strtotime($this->input->post('to_date'))); else $to_date = date("Y-m-d");
 	?>
 	<div class="row">
-		<h2>Hearing Screening Detailed report</h2>	
+		<h3>Hearing Screening Summary report</h3>	
 		<?php echo form_open("reports/audiology_summary",array('role'=>'form','class'=>'form-custom')); ?> 
-		           <h3>Filter by Dates </h3>
+		           <h4>Filter by Dates </h4>
 				
 				    <label><input type ="radio" name="date_type" class ="form-control" value="Admit" checked >  Admit/Visit date </label>
                <label><input type="radio" name="date_type" class ="form-control" value="Order" <?php if($this->input->post('date_type') == "Order") echo " checked "; ?> >   Order Date  </label><br>
 					From Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y",strtotime($from_date)); ?>" name="from_date" id="from_date" size="15" />
 					To Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y",strtotime($to_date)); ?>" name="to_date" id="to_date" size="15" />
+					<?php if($this->input->post('oae_count')) $oae_count=$this->input->post('oae_count');?>
 					<select name="oae_count" id="department" class="form-control">
-					<option value="">One</option>
-					<option value="">Two</option>
-					<option value="">Three</option>
-					<option value="">Four</option>
-					<option value="">Five</option>
-					
+					<option value="1" <?php if($oae_count == 1) echo "selected";?> >First</option>
+					<option value="2" <?php if($oae_count == 2) echo "selected";?> >Second</option>
+					<option value="3" <?php if($oae_count == 3) echo "selected";?> >Third</option>
 					</select>
 					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
 		</form>
@@ -141,8 +139,8 @@ $(function(){
 		<td><?php echo $right_refer;?></td>
 	</tr>
 	<tr>
-		<td>Total Tested</td>
-		<td><?php echo $total;?></td>
+		<th>Total Tested</th>
+		<th><?php echo $total+$bilateral;?></th>
 	</tr>
 	</tbody>
 	</table>
