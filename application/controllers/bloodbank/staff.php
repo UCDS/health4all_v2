@@ -70,23 +70,6 @@ class Staff extends CI_Controller {
 		}
 		else{
 			$hospital_id=$this->data['userdata']['hospital_id'];
-			if($this->input->post('add_camp')){
-				if($this->staff_model->add_camp($hospital_id)){
-					$this->data['camps']=$this->register_model->get_camps();
-					$this->data['msg']="Camp added successfully";
-					$this->load->view('pages/bloodbank/place',$this->data);
-				}
-			}
-			else if($this->input->post('add_hospital')){
-				if($this->staff_model->add_hospital($hospital_id)){
-					$this->data['camps']=$this->register_model->get_camps();
-					$this->data['msg']="Hospital added successfully";
-					$this->load->view('pages/bloodbank/place',$this->data);
-				}
-				else{
-				}
-			}
-			else{	
 			$this->session->unset_userdata('place');
 			$sess_array=array(
 				'camp_id'=>$this->input->post('camp'),
@@ -95,6 +78,103 @@ class Staff extends CI_Controller {
 			);
 			$this->session->set_userdata('place',$sess_array);
 			redirect('bloodbank/user_panel/place', 'refresh');
+		}
+		
+		$this->load->view('templates/footer');
+		}
+		else {
+			show_404();
+		}
+	}
+
+	function add_camp() {
+		if($this->session->userdata('logged_in')){
+
+		$this->data['title']="Add Camp";
+
+		$this->data['userdata']=$this->session->userdata('hospital');
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('templates/panel_nav');
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+		// Adding input fields to variable $config for validation
+			$config=array(
+               array(
+                     'field'   => 'camp',
+                     'label'   => 'Camp Name',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+				 array(
+					'field'   => 'location',
+                    'label'   => 'Address',
+                    'rules'   => 'required|trim|xss_clean'
+				 )
+			);
+		$this->form_validation->set_rules($config);
+		if ($this->form_validation->run() === FALSE)
+		{
+			$this->load->view('pages/bloodbank/add_camp');
+		}
+		else{
+			if($this->input->post('add_camp')){
+				if($this->staff_model->add_camp()){
+					$this->data['msg']="Camp added successfully";
+					$this->load->view('pages/bloodbank/add_camp',$this->data);
+				}
+			}
+		}
+		
+		$this->load->view('templates/footer');
+		}
+		else {
+			show_404();
+		}
+	}// add_camp
+
+	function add_hospital() {
+		if($this->session->userdata('logged_in')){
+			
+		$this->data['title']="Add Hospital";
+
+		$this->data['userdata']=$this->session->userdata('hospital');
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('templates/panel_nav');
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+		// Adding input fields to variable $config for validation
+			$config=array(
+               array(
+                     'field'   => 'hospital',
+                     'label'   => 'Hospital Name',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+				 array(
+					'field'   => 'location',
+                    'label'   => 'Place',
+                    'rules'   => 'required|trim|xss_clean'
+				 ),
+				 array(
+					'field'   => 'district',
+                    'label'   => 'District',
+                    'rules'   => 'required|trim|xss_clean'
+				 ),
+				 array(
+					'field'   => 'state',
+                    'label'   => 'State',
+                    'rules'   => 'required|trim|xss_clean'
+				 )
+			);
+		$this->form_validation->set_rules($config);
+		if ($this->form_validation->run() === FALSE)
+		{
+			$this->load->view('pages/bloodbank/add_hospital');
+		}
+		else{
+			if($this->input->post('add_hospital')){
+				if($this->staff_model->add_hospital()){
+					$this->data['msg']="Hospital added successfully";
+					$this->load->view('pages/bloodbank/add_hospital',$this->data);
+				}
 			}
 		}
 		
@@ -104,7 +184,7 @@ class Staff extends CI_Controller {
 			show_404();
 		}
 	}
-	
+
 	function check_database($password){
 	   //Field validation succeeded.  Validate against database
 	   $username = $this->input->post('username');
