@@ -7,15 +7,17 @@ class Create_slots extends CI_Controller {
 		if($this->session->userdata('logged_in')){
 		$this->data['userdata']=$this->session->userdata('logged_in');
 		$user_id=$this->data['userdata']['user_id'];
-		$this->data['doctor']=$this->staff_model->user_hospital($user_id);
-		
+		$this->data['hospitals']=$this->staff_model->user_hospital($user_id);
+		$this->data['functions']=$this->staff_model->user_function($user_id);
+		$this->data['departments']=$this->staff_model->user_department($user_id);
 		}
-		
+		$this->data['op_forms']=$this->staff_model->get_forms("OP");
+		$this->data['ip_forms']=$this->staff_model->get_forms("IP");	
 	}
 	public function index()
 	{
 		if($this->session->userdata('logged_in')){
-		$this->data['userdata']=$this->session->userdata('doctor');
+		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 		$this->data['title']="Create Slots";
@@ -46,7 +48,8 @@ class Create_slots extends CI_Controller {
 		$this->load->view('templates/footer');
 		}
 		else {
-			show_404();
+            show_404();
+
 		}
 	}
 }
