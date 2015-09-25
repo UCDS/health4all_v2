@@ -243,7 +243,11 @@
 				<?php	} 
                       if($f->user_function=="Outcome Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/outcome_summary";?>">Outcome Summary</a></li>
-				<?php                      }             }
+				<?php                      } 
+                      if($f->user_function=="Audiology Reports"){ ?>
+						  <li><a href="<?php echo base_url()."reports/audiology_summary";?>">Audiology Summary</a></li>
+				<?php   }             
+				}
 				foreach($functions as $f){
 					if($f->user_function=="Diagnostics - Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/order_summary/department";?>">Orders Summary</a></li>
@@ -252,9 +256,6 @@
 					if($f->user_function=="Bloodbank"){ ?>
 						  <li><a href="<?php echo base_url()."bloodbank/user_panel/donation_summary";?>">Bloodbank Reports</a></li>
 				<?php	} 
-					if($f->user_function=="Bloodbank"){ ?>
-						  <li><a href="<?php echo base_url()."reports/audiology_summary";?>">Audiology Report</a></li>
-				<?php	}
 					if($f->user_function=="Masters - Sanitation" || $f->user_function == "Sanitation Summary"){ ?>
 						<li><a href="<?php echo base_url()."sanitation/view_summary";?>">Sanitation Evaluation</a></li>
 				<?php	
@@ -280,6 +281,9 @@
 			<?php }
 			if($f->user_function=="Sanitation Evaluation"){ ?>
 								<li><a href="<?php echo base_url()."sanitation/view_scores";?>">Sanitation Evaluation</a></li>
+					<?php	}  
+			if($f->user_function=="Audiology Reports"){ ?>
+								<li><a href="<?php echo base_url()."reports/audiology_detail";?>">Audiology Detail</a></li>
 					<?php	}  
 					
 			} ?>

@@ -508,7 +508,7 @@ class Reports extends CI_Controller {
 		$this->data['userdata']=$this->session->userdata('logged_in');
 		$access=0;
 		foreach($this->data['functions'] as $function){
-			if($function->user_function=="Diagnostics - Summary"){
+			if($function->user_function=="Audiology Reports"){
 				$access=1;
 			}
 		}
@@ -528,6 +528,45 @@ class Reports extends CI_Controller {
 		else{
 			$this->data['report']=$this->reports_model->get_audiology_summary();
 			$this->load->view('pages/audiology_report',$this->data);
+		}
+		$this->load->view('templates/footer');
+		}
+		else{
+		show_404();
+		}
+		}
+		else{
+		show_404();
+		}
+	}
+        
+	// This function is used to get number of audiology tests during a specified period.
+    public function audiology_detail()
+	{
+		if($this->session->userdata('logged_in')){
+		$this->data['userdata']=$this->session->userdata('logged_in');
+		$access=0;
+		foreach($this->data['functions'] as $function){
+			if($function->user_function=="Audiology Reports"){
+				$access=1;
+			}
+		}
+		if($access==1){
+		$this->data['title']="Audiology Detailed Report";
+		$this->load->view('templates/header',$this->data);
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules('from_date', 'From Date',
+		'trim|required|xss_clean');
+	    $this->form_validation->set_rules('to_date', 'To Date', 
+	    'trim|required|xss_clean');
+		if ($this->form_validation->run() === FALSE)
+		{
+			$this->load->view('pages/audiology_detail',$this->data);
+		}
+		else{
+			$this->data['report']=$this->reports_model->get_audiology_detail();
+			$this->load->view('pages/audiology_detail',$this->data);
 		}
 		$this->load->view('templates/footer');
 		}
