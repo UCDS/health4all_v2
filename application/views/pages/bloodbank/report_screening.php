@@ -1,10 +1,14 @@
+<script  type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-ui.js"></script>
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<script type="text/javascript"
- src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script>
-	$(function(){
-		$("#from_date,#to_date").Zebra_DatePicker();
-	});
+	$(document).ready(function(){$("#from_date").datepicker({
+		dateFormat:"dd/mm/yy",changeYear:1,changeMonth:1,onSelect:function(sdt)
+		{$("#to_date").datepicker({dateFormat:"dd/mm/yy",changeYear:1,changeMonth:1})
+		$("#to_date").datepicker("option","minDate",sdt)}})})
+		
 </script>
 
 <div class="col-md-10 col-sm-9">
@@ -12,8 +16,8 @@
 	<div>
 		<?php echo form_open('bloodbank/user_panel/report_screening'); ?>
 		<div>
-			<input type="text" placeholder="From date" size="10" name="from_date" id="from_date" />
-			<input type="text" placeholder="To date" size="10" name="to_date" id="to_date" />
+			<input type="text" placeholder="From date..." size="10" name="from_date" id="from_date" />
+			<input type="text" placeholder="To date..." size="10" name="to_date" id="to_date" />
 			<select name="screened_by">
 					<option value="" disabled selected>Done By</option>
 					<?php foreach($staff as $s){
@@ -60,17 +64,17 @@
 		?>
 		<tr>
 			<td><?php echo $i++;?></td>
-			<td><?php echo date("d-M-Y",strtotime($row['screening_datetime']));?></td>
-			<td><?php echo $row['blood_unit_num'];?></td>
-			<td><?php echo $row['name'];?></td>
-			<td><?php echo $row['blood_group'];?></td>
-			<td><?php if($row['test_hiv']==1) echo "Yes"; else echo "NR";?></td>
-			<td><?php if($row['test_hbsag']==1) echo "Yes"; else echo "Neg";?></td>
-			<td><?php if($row['test_hcv']==1) echo "Yes"; else echo "NR";?></td>
-			<td><?php if($row['test_vdrl']==1) echo "Yes"; else echo "NR";?></td>
-			<td><?php if($row['test_mp']==1) echo "Yes"; else echo "NF";?></td>
-			<td><?php if($row['test_irregular_ab']==1) echo "Yes"; else echo "Neg";?></td>
-			<td><?php echo $row['staff_name'];?></td>
+			<td><?php echo date("d-M-Y",strtotime($row->screening_datetime));?></td>
+			<td><?php echo $row->blood_unit_num;?></td>
+			<td><?php echo $row->name;?></td>
+			<td><?php echo $row->blood_group;?></td>
+			<td><?php if($row->test_hiv==1) echo "Yes"; else echo "NR";?></td>
+			<td><?php if($row->test_hbsag==1) echo "Yes"; else echo "Neg";?></td>
+			<td><?php if($row->test_hcv==1) echo "Yes"; else echo "NR";?></td>
+			<td><?php if($row->test_vdrl==1) echo "Yes"; else echo "NR";?></td>
+			<td><?php if($row->test_mp==1) echo "Yes"; else echo "NF";?></td>
+			<td><?php if($row->test_irregular_ab==1) echo "Yes"; else echo "Neg";?></td>
+			<td><?php echo $row->staff_name;?></td>
 			</tr>
 		<?php 
 		}

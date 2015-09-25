@@ -1,4 +1,9 @@
+<script  type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-ui.js"></script>
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
+
 <style>
 .table-2 a{
 	color:black;
@@ -8,11 +13,11 @@
 <script type="text/javascript"
  src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <script>
-	$(function(){
-		$(".date").Zebra_DatePicker({
-			direction:false
-		});
-	});
+	$(document).ready(function(){$("#from_date").datepicker({
+		dateFormat:"dd/mm/yy",changeYear:1,changeMonth:1,onSelect:function(sdt)
+		{$("#to_date").datepicker({dateFormat:"dd/mm/yy",changeYear:1,changeMonth:1,})
+		$("#to_date").datepicker("option","minDate",sdt)}})})
+		
 </script>
 
 <div class="col-md-10 col-sm-9">
@@ -20,8 +25,8 @@
 	<h4>Report of Issues to hospitals by Indian Red Cross Society Bloodbank - Vidyanagar</h4>
 	<?php echo form_open('bloodbank/user_panel/hospital_issues'); ?>
 	<div>
-		<input type="text" class="date" size="12" id="from_date" name="from_date" />
-		<input type="text" class="date" size="12" name="to_date" />
+		<input type="date" name="from_date" placeholder="From date..." id="from_date" required readonly>
+       <input type="date" name="to_date" placeholder="To date..." id="to_date" required readonly>
 		<input type="submit" name="submit" value="Search" />
 	</div>
 	<br />
@@ -42,8 +47,8 @@
 		}
 	 }
 	 else{
-		$from_date=date("Y-m-d",strtotime("-30 Days"));
-		$to_date=date("Y-m-d");
+		$from_date=date("d-m-y",strtotime("-30 Days"));
+		$to_date=date("d-m-y");
 		$date= "Last 30 days issues";
 	 }
 	 ?>
