@@ -1,11 +1,23 @@
+<script  type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-ui.js"></script>
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<script type="text/javascript"
- src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
+
+
 <script>
-	$(function(){
-		$("#from_date,#to_date").Zebra_DatePicker();
-	});
+$(document).ready(function(){$("#from_date").datepicker({
+		dateFormat:"dd/mm/yy",changeYear:1,changeMonth:1,onSelect:function(sdt)
+		{$("#to_date").datepicker({dateFormat:"dd/mm/yy",changeYear:1,changeMonth:1})
+		$("#to_date").datepicker("option","minDate",sdt)}})})
+		
+		
 </script>
+<style>
+
+</style>
+
+
 
 <div class="col-md-10 col-sm-9">
 <?php
@@ -44,8 +56,10 @@
 	<div>
 		<?php echo form_open('bloodbank/user_panel/report_donations',array('role'=>'form','class'=>'form-custom')); ?>
 		<div>
-			<input type="text" placeholder="From date" size="10" class="form-control" name="from_date" value="<?php echo $from_date;?>" id="from_date" />
-			<input type="text" placeholder="To date" size="10" class="form-control" value="<?php echo $to_date;?>" name="to_date" id="to_date" />
+			<input type="date" name="from_date" placeholder="From date..." id="from_date" required readonly>
+            <input type="date" name="to_date" placeholder="To date..." id="to_date" required readonly>
+
+
 			<input type="text" placeholder="From Num" size="10" class="form-control" value="<?php echo $from_num;?>" name="from_num" id="from_num" />
 			<input type="text" placeholder="To Num" size="10" class="form-control" value="<?php echo $to_num;?>" name="to_num" id="to_num" />
 			<select name="camp" class="form-control">

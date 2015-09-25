@@ -1,12 +1,14 @@
+<script  type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-ui.js"></script>
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<script type="text/javascript"
- src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script>
-	$(function(){
-		$(".date").Zebra_DatePicker({
-			direction:false
-		});
-	});
+	$(document).ready(function(){$("#from_date").datepicker({
+		dateFormat:"dd/mm/yy",changeYear:1,changeMonth:1,onSelect:function(sdt)
+		{$("#to_date").datepicker({dateFormat:"dd/mm/yy",changeYear:1,changeMonth:1})
+		$("#to_date").datepicker("option","minDate",sdt)}})})
+		
 	<!-- Scripts for printing output table -->
 	function printDiv(i)
 	{
@@ -46,8 +48,8 @@
 				}
 				?>
 		</select>
-		<input type="text" placeholder="From" name="from_num" size=4 />
-		<input type="text" placeholder="To" name="to_num" size=4 />
+		<input type="date" name="from_date" placeholder="From date..." id="from_date" required readonly>
+<input type="date" name="to_date" placeholder="To date..." id="to_date" required readonly>
 		<input type="submit" name="submit" value="Search" />
 	</form>
 	<input type="button" value="Print" onclick="printDiv('print_div')" />
@@ -73,11 +75,11 @@
 	?>
 	<tr>
 		<td><?php echo $i++;?></td>
-		<td><?php echo $s['blood_unit_num'];?></td>
-		<td><?php echo $s['name'];?></td>
-		<td><?php if($s['donation_date']!=0) echo date("d-M-y",strtotime($s['donation_date']));?></td>
-		<td><?php echo $s['camp_name'];?></td>
-		<td><?php echo $s['location'];?></td>
+		<td><?php echo $s->blood_unit_num;?></td>
+		<td><?php echo $s->name;?></td>
+		<td><?php if($s->donation_date!=0) echo date("d-M-y",strtotime($s->donation_date));?></td>
+		<td><?php echo $s->camp_name;?></td>
+		<td><?php echo $s->location;?></td>
 	</tr>
 	<?php
 	}
@@ -89,13 +91,13 @@
 	?>
 	<div style="min-width:100%;width:100%;min-height:100%;height:100%;font-size:1.4em;font-family:'Trebuchet MS'">
 		<div style="left:20%;top:18%;position:relative;">
-			<?php echo strtoupper($d['name']); ?>
+			<?php echo strtoupper($d->name); ?>
 		</div>
 		<div style="left:75%;top:14%;position:relative;">
-			<?php echo date('d-M-Y',strtotime($d['donation_date'])); ?>
+			<?php echo date('d-M-Y',strtotime($d->donation_date)); ?>
 		</div>
 		<div style="left:22%;top:65%;position:relative;width:25%;">
-			<?php echo strtoupper($d['camp_name'])."<br />".strtoupper($d['location']); ?>
+			<?php echo strtoupper($d->camp_name)."<br />".strtoupper($d->location); ?>
 		</div>
 	</div>
 	<?php 

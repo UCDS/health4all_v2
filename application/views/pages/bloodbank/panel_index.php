@@ -1,30 +1,33 @@
+<script  type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-ui.js"></script>
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <style>
 .table-2 a{
 	color:black;
 	text-decoration:none;
 }
 </style>
-<script type="text/javascript"
- src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <script>
-	$(function(){
-		$(".date").Zebra_DatePicker({
-			direction:false
-		});
-	});
+$(document).ready(function(){$("#from_date").datepicker({
+		dateFormat:"dd/mm/yy",changeYear:1,changeMonth:1,onSelect:function(sdt)
+		{$("#to_date").datepicker({dateFormat:"dd/mm/yy",changeYear:1,changeMonth:1})
+		$("#to_date").datepicker("option","minDate",sdt)}})})
+		
+		
 </script>
 
-<div class="col-md-10 col-sm-9">
-	
+
+    <div class="col-md-10 col-sm-9">
 	<h4>Report of Blood Donations at <?php echo $hospitaldata['hospital'];?></h4>
 	<?php echo form_open('bloodbank/user_panel/donation_summary'); ?>
-	<div>
-		<input type="text" class="date" size="12" id="from_date" name="from_date" />
-		<input type="text" class="date" size="12" name="to_date" />
+	   <input type="date" name="from_date" placeholder="From date..." id="from_date" required readonly>
+<input type="date" name="to_date" placeholder="To date..." id="to_date" required readonly>
 		<input type="submit" name="submit" value="Search" />
-	</div>
+
 	<br />
+	<br>
 	<?php
 	 if($this->input->post('from_date') && $this->input->post('to_date')){
 		$from_date=$this->input->post('from_date');

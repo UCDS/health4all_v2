@@ -1,14 +1,19 @@
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
-<script type="text/javascript">
-$(function(){
-	$("#from_date,#to_date").Zebra_DatePicker();
-		var options = {
+<script  type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-ui.js"></script>
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.css">
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
+
+<script>
+$(document).ready(function(){$("#from_date").datepicker({
+		dateFormat:"yy/mm/dd",changeYear:1,changeMonth:1,onSelect:function(sdt)
+		{$("#to_date").datepicker({dateFormat:"yy/mm/dd",changeYear:1,changeMonth:1})
+		$("#to_date").datepicker("option","minDate",sdt)}})
+ var options = {
 			widthFixed : true,
 			showProcessing: true,
 			headerTemplate : '{content} {icon}', // Add icon for jui theme; new in v2.7!
@@ -60,9 +65,9 @@ $(function(){
 			$('#table-sort').trigger('printTable');
 		  });
 });
+		
 </script>
-
-	<?php 
+<?php 
 	$from_date=0;$to_date=0;
 	if($this->input->post('from_date')) $from_date=date("Y-m-d",strtotime($this->input->post('from_date'))); else $from_date = date("Y-m-d");
 	if($this->input->post('to_date')) $to_date=date("Y-m-d",strtotime($this->input->post('to_date'))); else $to_date = date("Y-m-d");
@@ -70,8 +75,8 @@ $(function(){
 	<div class="row">
 		<h4>ICD Code - Detailed report</h4>	
 		<?php echo form_open("reports/icd_detail",array('role'=>'form','class'=>'form-custom')); ?> 
-					From Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y",strtotime($from_date)); ?>" name="from_date" id="from_date" size="15" />
-					To Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y",strtotime($to_date)); ?>" name="to_date" id="to_date" size="15" />
+						<input type="date" name="from_date" placeholder="From date..." id="from_date" required readonly>
+                        <input type="date" name="to_date" placeholder="To date..." id="to_date" required readonly>
 					<select name="department" id="department" class="form-control">
 					<option value="">Department</option>
 					<?php 
