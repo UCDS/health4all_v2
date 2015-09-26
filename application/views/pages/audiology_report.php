@@ -73,21 +73,19 @@ $(document).ready(function(){$("#from_date").datepicker({
 	if($this->input->post('to_date')) $to_date=date("Y-m-d",strtotime($this->input->post('to_date'))); else $to_date = date("Y-m-d");
 	?>
 	<div class="row">
-		<h2>Hearing Screening Detailed report</h2>	
+		<h3>Hearing Screening Summary report</h3>	
 		<?php echo form_open("reports/audiology_summary",array('role'=>'form','class'=>'form-custom')); ?> 
-		           <h3>Filter by Dates </h3>
+		           <h4>Filter by Dates </h4>
 				
 				    <label><input type ="radio" name="date_type" class ="form-control" value="Admit" checked >  Admit/Visit date </label>
                <label><input type="radio" name="date_type" class ="form-control" value="Order" <?php if($this->input->post('date_type') == "Order") echo " checked "; ?> >   Order Date  </label><br>
-					<input type="date" name="from_date" placeholder="From date..." id="from_date" required readonly>
-<input type="date" name="to_date" placeholder="To date..." id="to_date" required readonly>
+					<?php if($this->input->post('oae_count')) $oae_count=$this->input->post('oae_count');?>
+					<input type="date" name="from_date" placeholder="From date" value="<?php echo date("d-M-Y",strtotime($from_date)); ?>" id="from_date" required readonly />
+					<input type="date" name="to_date" placeholder="To date" value="<?php echo date("d-M-Y",strtotime($to_date)); ?>" id="to_date" required readonly />
 					<select name="oae_count" id="department" class="form-control">
-					<option value="">One</option>
-					<option value="">Two</option>
-					<option value="">Three</option>
-					<option value="">Four</option>
-					<option value="">Five</option>
-					
+					<option value="1" <?php if($oae_count == 1) echo "selected";?> >First</option>
+					<option value="2" <?php if($oae_count == 2) echo "selected";?> >Second</option>
+					<option value="3" <?php if($oae_count == 3) echo "selected";?> >Third</option>
 					</select>
 					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
 		</form>
@@ -102,18 +100,24 @@ $(document).ready(function(){$("#from_date").datepicker({
 			$pass=0;
 			foreach($report as $r){
 				if($r->visit_id == $visit_id){
-					if($outcome==1 && $r->test_result_binary==0) $bilateral++;
+					if($outcome==1 && $r->test_result_binary==0) { 
+						$bilateral++;
+						if($left_outcome == 1) $left_refer--;
+						if($right_outcome == 1) $right_refer--;
+					}
 					else if($r->test_name == "Left OAE" && $r->test_result_binary == 0) { $left_refer++; $outcome = 1;}
 					else if($r->test_name == "Right OAE" && $r->test_result_binary == 0) { $right_refer++; $outcome = 1; }
 					if($outcome==0) $pass++;
 					$total++;
 					$outcome="";
+					$left_outcome="";
+					$right_outcome="";
 					$visit_id=0;
 				}
 				else{
 					$visit_id = $r->visit_id;
-					if($r->test_name == "Left OAE" && $r->test_result_binary == 0) { $left_refer++; $outcome = 1;}
-					else if($r->test_name == "Right OAE" && $r->test_result_binary == 0) { $right_refer++; $outcome = 1; }
+					if($r->test_name == "Left OAE" && $r->test_result_binary == 0) { $left_refer++; $left_outcome=1; $outcome = 1;}
+					else if($r->test_name == "Right OAE" && $r->test_result_binary == 0) { $right_refer++; $right_outcome=1; $outcome = 1; }
 					else { $outcome=0;}
 				}
 			}
@@ -145,8 +149,8 @@ $(document).ready(function(){$("#from_date").datepicker({
 		<td><?php echo $right_refer;?></td>
 	</tr>
 	<tr>
-		<td>Total Tested</td>
-		<td><?php echo $total;?></td>
+		<th>Total Tested</th>
+		<th><?php echo $total;?></th>
 	</tr>
 	</tbody>
 	</table>

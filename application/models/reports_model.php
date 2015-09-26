@@ -680,7 +680,8 @@ class Reports_model extends CI_Model{
 			$this->db->where('(patient_visit.admit_date BETWEEN "'.$from_date.'" AND "'.$to_date.'")');
 		}
 		
-		$this->db->select('test_name,patient_visit.visit_id,test_master.test_master_id,department.department_id,area.area_id,unit.unit_id,area_name,unit.unit_name,test_result_binary',false)
+		$this->db->select('test_name,patient_visit.visit_id,test_master.test_master_id,department.department_id,area.area_id,unit.unit_id,
+		area_name,unit.unit_name,test_result_binary,count_visit',false)
 			->from('test')
 			->join('test_order','test.order_id = test_order.order_id')
 			->join('test_master','test.test_master_id = test_master.test_master_id')
@@ -691,7 +692,26 @@ class Reports_model extends CI_Model{
 			->join('unit','patient_visit.unit = unit.unit_id','left')
 			->where('test.test_status',2)
 			->where_in('test_name',array('Left OAE','Right OAE'));
-			$query=$this->db->get();
+
+		if($this->input->post('oae_count') == 2){
+			$this->db->join('(SELECT MAX(order_date_time) max_date, visit_id,COUNT(visit_id) count_visit FROM test_order 
+			JOIN test USING(order_id) JOIN test_master USING(test_master_id) 
+			WHERE test_name IN ("LEFT OAE","Right OAE") GROUP BY visit_id) testo','patient_visit.visit_id = testo.visit_id');
+			$this->db->where('count_visit',4); 
+		}
+		if($this->input->post('oae_count') == 3){
+			$this->db->join('(SELECT MAX(order_date_time) max_date, visit_id,COUNT(visit_id) count_visit FROM test_order 
+			JOIN test USING(order_id) JOIN test_master USING(test_master_id) 
+			WHERE test_name IN ("LEFT OAE","Right OAE") GROUP BY visit_id) testo','patient_visit.visit_id = testo.visit_id');
+			$this->db->where('count_visit',6); 
+		}
+		if($this->input->post('oae_count') == 1){
+			$this->db->join('(SELECT MAX(order_date_time) max_date, visit_id,COUNT(visit_id) count_visit FROM test_order 
+			JOIN test USING(order_id) JOIN test_master USING(test_master_id) 
+			WHERE test_name IN ("LEFT OAE","Right OAE") GROUP BY visit_id) testo','patient_visit.visit_id = testo.visit_id');
+			$this->db->where('count_visit',2); 
+		}
+		$query=$this->db->get();
 		return $query->result();
 	}
         
@@ -778,7 +798,88 @@ class Reports_model extends CI_Model{
 		$resource=$this->db->get();
 		return $resource->result();
         }
+    
+	function get_audiology_detail(){
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+		}
+		else if($this->input->post('from_date') || $this->input->post('to_date')){
+			$this->input->post('from_date')?$from_date=$this->input->post('from_date'):$from_date=$this->input->post('to_date');
+			$to_date=$from_date;
+		}
+		else{
+			$from_date=date("Y-m-d");
+			$to_date=$from_date;
+		}
+		if($this->input->post('department')){
+			$this->db->where('patient_visit.department_id',$this->input->post('department'));
+		}
+		if($this->input->post('unit')){
+			$this->db->where('patient_visit.unit',$this->input->post('unit'));
+		}
+		if($this->input->post('area')){
+			$this->db->where('patient_visit.area',$this->input->post('area'));
+		}
+		if($this->input->post('outcome_type')=="Left"){
+			$this->db->where('test_master.test_name',"Left OAE");
+			$this->db->where('test.test_result_binary',0);
+		}
+		if($this->input->post('outcome_type')=="Right"){
+			$this->db->where('test_master.test_name',"Right OAE");
+			$this->db->where('test.test_result_binary',0);
+		}
+		if($this->input->post('outcome_type')=="Bilateral"){
+			$this->db->where('test.test_result_binary',0);
+			$this->db->where('(count_visit%2)',0,false);
+		}
+		if($this->input->post('date_type') == 'Order'){
+			$this->db->where('(DATE(test_order.order_date_time) BETWEEN "'.$from_date.'" AND "'.$to_date.'")');
+		}
+		else{
+			$this->db->where('(patient_visit.admit_date BETWEEN "'.$from_date.'" AND "'.$to_date.'")');
+		}
+		
+		$this->db->select('test_name,patient_visit.visit_id,patient_visit.hosp_file_no,
+		test_master.test_master_id,patient.age_years,patient.age_months,patient.age_days,patient_visit.visit_type,
+		patient.first_name,patient.last_name,test_order.order_id,test_status,
+		binary_positive,binary_negative,numeric_result,text_result,
+		test_result,test_result_text,binary_result,numeric_result,text_result,
+		patient.mother_name,patient.father_name,patient.dob,
+		patient.gender,patient.address,patient.phone,order_date_time,department.department_id,area.area_id,unit.unit_id,
+		department,area_name,unit.unit_name,test_result_binary,count_visit',false)
+			->from('test')
+			->join('test_order','test.order_id = test_order.order_id')
+			->join('test_master','test.test_master_id = test_master.test_master_id')
+			->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
+			->join('patient','patient_visit.patient_id = patient.patient_id')
+			->join('department','patient_visit.department_id = department.department_id')
+			->join('area','patient_visit.area = area.area_id','left')
+			->join('unit','patient_visit.unit = unit.unit_id','left')
+			->where('test.test_status',2)
+			->where_in('test_name',array('Left OAE','Right OAE'));
 
+		if($this->input->post('oae_count') == 2){
+			$this->db->join('(SELECT MAX(order_date_time) max_date, visit_id,COUNT(visit_id) count_visit FROM test_order 
+			JOIN test USING(order_id) JOIN test_master USING(test_master_id) 
+			WHERE test_name IN ("LEFT OAE","Right OAE") GROUP BY visit_id) testo','patient_visit.visit_id = testo.visit_id');
+			$this->db->where('count_visit',4); 
+		}
+		if($this->input->post('oae_count') == 3){
+			$this->db->join('(SELECT MAX(order_date_time) max_date, visit_id,COUNT(visit_id) count_visit FROM test_order 
+			JOIN test USING(order_id) JOIN test_master USING(test_master_id) 
+			WHERE test_name IN ("LEFT OAE","Right OAE") GROUP BY visit_id) testo','patient_visit.visit_id = testo.visit_id');
+			$this->db->where('count_visit',6); 
+		}
+		if($this->input->post('oae_count') == 1){
+			$this->db->join('(SELECT MAX(order_date_time) max_date, visit_id,COUNT(visit_id) count_visit FROM test_order 
+			JOIN test USING(order_id) JOIN test_master USING(test_master_id) 
+			WHERE test_name IN ("LEFT OAE","Right OAE") GROUP BY visit_id) testo','patient_visit.visit_id = testo.visit_id');
+			$this->db->where('count_visit',2); 
+		}
+		$query=$this->db->get();
+		return $query->result();
+	}
 
     function get_outcome_summary(){
         if($this->input->post('from_date') && $this->input->post('to_date')){
