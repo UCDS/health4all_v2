@@ -15,7 +15,7 @@ class Register extends CI_Controller {
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");	
 	}
-	public function index()
+	public function index($donor_id="")
 	{
 		if($this->session->userdata('logged_in')){
 		$this->data['userdata']=$this->session->userdata('hospital');
@@ -126,6 +126,11 @@ class Register extends CI_Controller {
 		if ($this->form_validation->run() === FALSE)
 		{
 			$this->data['camps']=$this->register_model->get_camps();
+			/**
+			* If donor id is available, query donor details form db
+			*/
+			if(strlen($donor_id)>0)
+				$this->data['donor_details']=$this->register_model->get_donor_details($donor_id);	
 			$this->load->view('pages/bloodbank/walk_in_registration',$this->data);
 		}
 		else{
@@ -137,6 +142,59 @@ class Register extends CI_Controller {
 				$this->data['msg']="Error in storing data. Please retry. ";
 				$this->load->view('pages/bloodbank/walk_in_registration.php',$this->data);
 			}
+		}
+		
+		$this->load->view('templates/footer');
+		}
+		else {
+			show_404();
+		}
+	}
+	public function repeat_donor()
+	{
+		if($this->session->userdata('logged_in')){
+		$this->data['userdata']=$this->session->userdata('hospital');
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+		$this->data['title']="Repeat Blood Donation";
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('templates/panel_nav',$this->data);
+		$validations=array(
+			array(
+				'field'=>'donor_id',
+				'label'=>'donor_id',
+				'rules'=>'trim|xss_clean'
+			),
+			array(
+				'field'=>'donor_name',
+				'label'=>'donor_name',
+				'rules'=>'trim|xss_clean'
+			),
+			array(
+				'field'=>'donor_email',
+				'label'=>'donor_email',
+				'rules'=>'trim|xss_clean'
+			),
+			array(
+				'field'=>'blood_group',
+				'label'=>'blood_group',
+				'rules'=>'trim|xss_clean'
+			),
+			array(
+				'field'=>'donor_mobile',
+				'label'=>'donor_mobile',
+				'rules'=>'trim|xss_clean'
+			)
+		);
+		$this->form_validation->set_rules($validations);
+		if ($this->form_validation->run() === FALSE)
+		{
+			//$this->data['camps']=$this->register_model->get_camps();
+			$this->load->view('pages/bloodbank/repeat_donor',$this->data);
+		}
+		else{
+			$this->data['donors']=$this->register_model->get_donors();
+			$this->load->view('pages/bloodbank/repeat_donor.php',$this->data);
 		}
 		
 		$this->load->view('templates/footer');

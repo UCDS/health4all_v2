@@ -41,24 +41,47 @@
 			$("#women").show();
 		});
 		$flags=[];
-			$(".medical_no,.medical_yes").each(function(){
-				$(this).on('change',function(){
-				if($(this).hasClass('medical_no')){
-					if($.inArray($flags,$(this).attr('id').replace('no',''))!== -1){
-						console.log("found");
-					}
-					else{
-						$flags.push($(this).attr('id').replace('no',''));
-					}
-					console.log($flags[1]);
+		$(".medical_no,.medical_yes").each(function(){
+			$(this).on('change',function(){
+			if($(this).hasClass('medical_no')){
+				if($.inArray($flags,$(this).attr('id').replace('no',''))!== -1){
+					console.log("found");
 				}
-				if($(this).hasClass('medical_yes')){
-					$flags.push($(this).attr('id').replace('yes',''));
-					console.log($flags[0]);
+				else{
+					$flags.push($(this).attr('id').replace('no',''));
 				}
-				});
+				console.log($flags[1]);
+			}
+			if($(this).hasClass('medical_yes')){
+				$flags.push($(this).attr('id').replace('yes',''));
+				console.log($flags[0]);
+			}
 			});
+		});
+		setRepeatDonorValues();
 	});
+	function setRepeatDonorValues()
+	{
+		<?php
+		if( isset($donor_details) && sizeof($donor_details)>0) { ?>
+			$("#donor_id").val(unescape("<?php echo rawurlencode($donor_details[0]->donor_id)?>"));
+			$("#name").val(unescape("<?php echo rawurlencode($donor_details[0]->name)?>"));
+			$("#dob").val(unescape("<?php echo date("d-M-Y",strtotime(rawurlencode($donor_details[0]->dob)));?>"));
+			$("#age").val(unescape("<?php echo rawurlencode($donor_details[0]->age)?>"));
+			$('input[name="gender"][value="<?=$donor_details[0]->sex=='m'?'male' : 'female'?>"]').prop('checked', true);
+			$('input[name="maritial_status"][value="<?=$donor_details[0]->maritial_status?>"]').prop('checked', true);
+			$("#parent_spouse").val(unescape("<?php echo rawurlencode($donor_details[0]->parent_spouse)?>"));
+			$("#occupation").val(unescape("<?php echo rawurlencode($donor_details[0]->occupation)?>"));
+			$("#address").val(unescape("<?php echo rawurlencode($donor_details[0]->address)?>"));
+			$("#blood_group").val(unescape("<?php echo rawurlencode($donor_details[0]->blood_group)?>"));
+			$("#phone").val(unescape("<?php echo rawurlencode($donor_details[0]->phone)?>"));
+			$("#email").val(unescape("<?php echo rawurlencode($donor_details[0]->email)?>"));
+			$("#name").prop('readOnly',true);
+			$("#donor_id").prop('readOnly',true);
+		<?php
+		}
+		?>
+	}
 </script>
 
 <div class="col-md-10 col-sm-9">
@@ -85,11 +108,23 @@
 	<div class="panel-body">
 	<div class="text-right"><b><small>fields marked with * are mandatory.</small></b></div>
 	<?php echo form_open("bloodbank/register",array('class'=>'form-custom')); ?>
+	<?php
+		if( isset($donor_details) && sizeof($donor_details)>0) { 
+	?>
+		<label class="col-md-4" for="full name">Donor ID</label>
+		<div class="form-group col-md-8">
+			<input name="donor_id" id="donor_id" type="text" class="form-control"  />
+		</div>
+		<br />
+		<br />
+	<?php
+		}
+	?>
 	<label class="col-md-4" for="full name">Full Name<font color='red'>*</font></label>
 	<div class="form-group col-md-8">
 		<input type="text" placeholder="Full Name" class="form-control" id="name" name="name" required />
 	</div><br />
-	<label class="col-md-4" for="dob">DOB : </label>
+	<label class="col-md-4" for="dob">DOB  </label>
 	<div class="form-group col-md-8" style="margin-top:5px;margin-bottom:5px;">
 		<input type="text" placeholder="Date of Birth" class="form-control" id="dob" name="dob" />
 	</div><br />
@@ -107,21 +142,21 @@
 		<input type="radio" name="maritial_status" id="single" value="single" /><label for="single">Single</label>&nbsp;&nbsp;
 		<input type="radio" name="maritial_status" id="married" value="married" /><label for="married">Married</label>
 	</div><br />
-	<label class="col-md-4" for="Parentorspousename">Parent (or) Spouse name :</label>
+	<label class="col-md-4" for="Parentorspousename">Parent (or) Spouse name </label>
 	<div class="form-group col-md-8"  style="margin-top:5px;margin-bottom:5px;">
 		<input type="text" placeholder="Parent or Spouse Name" class="form-control" name="parent_spouse" /><br />
 	</div><br />
-	<label class="col-md-4">Occupation :</label>
+	<label class="col-md-4">Occupation </label>
 	<div class="form-group col-md-8"  style="margin-top:5px;margin-bottom:5px;">
 		<input type="text" name="occupation" placeholder="Occupation" class="form-control" id="occupation" /><br />
 	</div><br>
-	<label class=col-md-4	for="address">Address :</label>
+	<label class=col-md-4	for="address">Address </label>
 	<div class="form-group col-md-8"  style="margin-top:5px;margin-bottom:5px;">
 		<textarea placeholder="Address" cols="60" class="form-control" id="address" name="address" rows="4"></textarea><br />
 	</div><br />
-	<label class="col-md-4">Blood Group :</label>
+	<label class="col-md-4">Blood Group </label>
 	<div class="form-group col-md-8"  style="margin-top:5px;margin-bottom:5px;">
-		<select class="form-control" name="blood_group">
+		<select class="form-control" name="blood_group" id="blood_group">
 			<option value="" disabled selected>Blood Group</option>
 			<option value="A+">A+</option>
 			<option value="B+">B+</option>
@@ -133,15 +168,15 @@
 			<option value="AB-">AB-</option>
 		</select>
 	</div><br>
-	<label class="col-md-4">Phone.no : </label>
+	<label class="col-md-4">Phone.no  </label>
 	<div class="form-group col-md-8"  style="margin-top:5px;margin-bottom:5px;">
 		<input type="text" placeholder="Phone Number" class="form-control" id="phone" name="mobile" />
 	</div><br />
-	<label class="col-md-4">Email Id : </label>
+	<label class="col-md-4">Email Id  </label>
 	<div class="form-group col-md-8"  style="margin-top:5px;margin-bottom:5px;">
 		<input type="email" placeholder="Email" class="form-control" id="email" name="email" />
 	</div><br />
-	<label class="col-md-4">Donation Type :</label>
+	<label class="col-md-4">Donation Type <font color='red'>*</font></label>
 	<div class="form-group col-md-8"  style="margin-top:5px;margin-bottom:5px;">
 		<input type="radio" name="donation_type" id="replacement" value="replacement" required /><label for="replacement">Replacement</label>&nbsp;&nbsp;
 		<input type="radio" name="donation_type" id="voluntary" value="voluntary" required />	<label for="voluntary">Voluntary</label>
