@@ -15,7 +15,8 @@ class Register_model extends CI_Model{
 		->where('hospital_id',$hospital);
 		$query=$this->db->get();
 		return $query->result();
-	}
+	}// search
+
 	function donor_register(){
 		$place=$this->session->userdata('place');
 		$userdata=$this->session->userdata('hospital');
@@ -62,10 +63,19 @@ class Register_model extends CI_Model{
 				);
 				$this->db->insert('bb_replacement_patient',$patient_data);
 				$replacement_patient_id=$this->db->insert_id();
-			}		
+			}
 		}
-		$this->db->insert('blood_donor',$data);
-		$donor_id=$this->db->insert_id();
+		if(strlen($this->input->post('donor_id'))>0)
+		{
+			$this->db->where('donor_id',$this->input->post('donor_id'));
+			$this->db->update('blood_donor',$data);
+			$donor_id=$this->input->post('donor_id');
+		}
+		else
+		{
+			$this->db->insert('blood_donor',$data);
+			$donor_id=$this->db->insert_id();
+		}
 		$data=array(
 			'donor_id'=>$donor_id,
 			'replacement_patient_id'=>$replacement_patient_id,
@@ -81,8 +91,8 @@ class Register_model extends CI_Model{
 		else{
 			return true;
 		}
-		
-	}
+	}// donor_register
+
 	function get_registered_donors(){
 		$args=func_get_args();
 		$place=$this->session->userdata('place');
@@ -100,7 +110,8 @@ class Register_model extends CI_Model{
 		->where('hospital_id',$hospital);
 		$query=$this->db->get();
 		return $query->result();
-	}
+	}// get_registered_donors
+
 	function get_appointments(){
 		$userdata=$this->session->userdata('hospital');
 		$hospital=$userdata['hospital_id'];
@@ -124,8 +135,8 @@ class Register_model extends CI_Model{
 		->where('hospital_id',$hospital);
 		$query=$this->db->get();
 		return $query->result();
-	}
-	
+	}//get_appointments
+
 	function register_donation($donor_id){
 
 		$userdata=$this->session->userdata('hospital');
@@ -142,9 +153,59 @@ class Register_model extends CI_Model{
 		return $donation_id;
 		}
 		else return FALSE;
-	}
-		
-		
+	}// register_donation
+
+	/**
+	* Search for donors
+	*/
+	function get_donors(){
+		if($this->input->post('donor_id')){
+			$this->db->like('LOWER(blood_donor.donor_id)',strtolower($this->input->post('donor_id')));
+		}
+		if($this->input->post('donor_name')){
+			$this->db->like('LOWER(blood_donor.name)',strtolower($this->input->post('donor_name')));
+		}
+		if($this->input->post('donor_email')){
+			$this->db->like('LOWER(blood_donor.email)',strtolower($this->input->post('donor_email')));
+		}
+		if($this->input->post('donor_mobile')){
+			$this->db->like('blood_donor.phone',$this->input->post('donor_mobile'));
+		}
+		if($this->input->post('blood_group')){
+			$this->db->where('blood_donor.blood_group',$this->input->post('blood_group'));
+		}
+		if($this->input->post('gender')){
+			$this->db->where('blood_donor.sex',$this->input->post('gender'));
+		}
+		$this->db->select("donor_id, name, parent_spouse,
+		occupation,	
+		dob, sex, blood_group, phone, email, address");
+		 $this->db->from('blood_donor');
+
+		$resource=$this->db->get();
+		return $resource->result();
+	}// get_donors
+
+	/**
+	* Get donor details form db
+	*/
+	function get_donor_details($donor_id=""){
+		/**
+		* Check for valid donor id
+		*/
+		if(strlen($donor_id) > 0)
+		{
+			$this->db->where('blood_donor.donor_id',$donor_id);
+			$this->db->select("donor_id,name,parent_spouse,
+			maritial_status,
+			occupation,
+			dob,age,sex,blood_group,phone,email,address");
+			 $this->db->from('blood_donor');
+
+			$resource=$this->db->get();
+			return $resource->result();
+		}//if
+	}//get_donor_details
 	function get_checked_donors(){
 		$args=func_get_args();
 		$place=$this->session->userdata('place');
@@ -162,8 +223,8 @@ class Register_model extends CI_Model{
 		->where('hospital_id',$hospital);
 		$query=$this->db->get();
 		return $query->result();
-	}
-	
+	}// get_checked_donors
+
 	function update_medical($donation_id){
 		$data=array(
 		'weight'=>$this->input->post('weight'),
@@ -181,8 +242,8 @@ class Register_model extends CI_Model{
 		$this->db->update('bb_donation',$data);
 		$this->db->trans_complete();
 		return $this->db->trans_status();
-	}
-	
+	}// update_medical
+
 	function update_bleeding($donation_id){
 		if($this->input->post('incomplete')){
 			$status_id=3;
@@ -236,7 +297,8 @@ class Register_model extends CI_Model{
 		else{
 			return false;
 		}
-	}
+	}//update_bleeding
+
 	function make_request(){
 		$userdata=$this->session->userdata('logged_in');
 		$staff_id=$userdata['user_id'];
@@ -291,10 +353,9 @@ class Register_model extends CI_Model{
 		$this->db->insert_batch('blood_request',$data);
 		$this->db->trans_complete();
 		return $this->db->trans_status();
-	}
-	
-	function get_camps($camp=''){
+	}// make_request
 
+	function get_camps($camp=''){
 		$userdata=$this->session->userdata('hospital');
 		$hospital=$userdata['hospital_id'];
 		if($camp!=''){
@@ -305,8 +366,8 @@ class Register_model extends CI_Model{
 		->where('hospital_id',$hospital);
 		$query=$this->db->get();
 		return $query->result();
-	}
-	
+	}// get_camps
+
 	function check_unique($blood_unit_num){
 		$userdata=$this->session->userdata('hospital');
 		$hospital=$userdata['hospital_id'];
@@ -322,7 +383,7 @@ class Register_model extends CI_Model{
 		->where('hospital_id',$hospital);
 		$query=$this->db->get();
 		return $query;
-	}
-		
+	}// check_unique
+
 }
 ?>
