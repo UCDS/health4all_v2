@@ -17,10 +17,20 @@ class User_panel extends CI_Controller {
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");	
 	}
 	function form_layout(){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+			show_404();
+		}
+		$this->data['userdata']=$this->session->userdata('logged_in');
+		foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Masters - Application"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();	
 		$this->load->helper('form');
 		$this->data['title']="User Panel";
-		$this->data['userdata']=$this->session->userdata('logged_in');
+		
 		$this->data['print_layouts']=$this->staff_model->get_print_layouts();
                 $this->load->library('dummy_data');
                 $this->data['registered']=new Dummy_data();
@@ -28,12 +38,17 @@ class User_panel extends CI_Controller {
 		$this->load->view('pages/form_layout',$this->data);
 		$this->load->view('templates/footer');	
 		}
-		else{
+	function create_user(){
+		if(!$this->session->userdata('logged_in')){
 			show_404();
 		}
-	}
-	function create_user(){
-		if($this->session->userdata('logged_in')){
+		foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Masters - Application"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->data['title']="Create User";
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -58,13 +73,21 @@ class User_panel extends CI_Controller {
 			}
 		}
 		$this->load->view('templates/footer');	
-		}
-		else{
-			show_404();
-		}
+		
+		
 	}
 		function edit_user(){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+			show_404();
+		}
+		$this->data['userdata']=$this->session->userdata('logged_in');
+		foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Masters - Application"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->data['title']="Edit User";
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -100,19 +123,39 @@ class User_panel extends CI_Controller {
 			$this->load->view('pages/edit_user',$this->data);	
 			}
 		 $this->load->view('templates/footer');	
-		}
+		
 	}
 
 	function create_form(){
-		if($this->session->userdata('logged_in')){
-				if($this->staff_model->upload_form()){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	}
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Masters - Application"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
+	    if($this->staff_model->upload_form()){
 					echo 1;
 				}
 				else echo 0;
-		}
+		
 	}
 	function settings(){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	   }
+	  $this->data['userdata']=$this->session->userdata('logged_in');
+	  foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Masters - Application"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->data['title']="User Panel";
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -120,13 +163,8 @@ class User_panel extends CI_Controller {
 		$this->load->view('templates/leftnav',$this->data);
 		$this->load->view('pages/settings',$this->data);
 		$this->load->view('templates/footer');	
-		}
-		else{
-			show_404();
-		}
+		
 	}
-	
-	
 	function change_password(){
 		if($this->session->userdata('logged_in')){
 		$this->load->helper('form');

@@ -18,7 +18,18 @@ class User_panel extends CI_Controller {
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");	
 	}
 	function place(){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in'))
+			{
+				show_404();
+			}
+			$this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 		$this->data['title']="Places";
@@ -63,13 +74,21 @@ class User_panel extends CI_Controller {
 			$this->load->view('pages/bloodbank/place',$this->data);
 		}
 		$this->load->view('templates/footer');	
-		}
-		else{
-			show_404();
-		}
+		
+		
 	}
 	function blood_donors(){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+			show_404();
+		}
+		$this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->data['title']="Blood Donors";
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -79,12 +98,18 @@ class User_panel extends CI_Controller {
 		$this->load->view('pages/bloodbank/blood_donors_report',$this->data);
 		$this->load->view('templates/footer');	
 		}
-		else{
+	function blood_components(){
+	if(!$this->session->userdata('logged_in')){
 			show_404();
 		}
-	}
-	function blood_components(){
-		if($this->session->userdata('logged_in')){
+		$this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->data['title']="Blood & Components";
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -93,13 +118,20 @@ class User_panel extends CI_Controller {
 		$this->load->view('templates/reports_nav',$this->data);
 		$this->load->view('pages/bloodbank/blood_components_report',$this->data);
 		$this->load->view('templates/footer');	
-		}
-		else{
-			show_404();
-		}
+		
 	}
 	function donation_summary(){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+			show_404();
+		}
+		$this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->data['title']="Donations Summary";
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -110,12 +142,18 @@ class User_panel extends CI_Controller {
 		$this->load->view('pages/bloodbank/panel_index',$this->data);
 		$this->load->view('templates/footer');	
 		}
-		else{
+	function issue_summary(){
+		if(!$this->session->userdata('logged_in')){
 			show_404();
 		}
-	}
-	function issue_summary(){
-		if($this->session->userdata('logged_in')){
+		$this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->data['title']="Issues Summary";
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -124,13 +162,20 @@ class User_panel extends CI_Controller {
 		$this->load->view('templates/reports_nav',$this->data);
 		$this->load->view('pages/bloodbank/report_issues_summary',$this->data);
 		$this->load->view('templates/footer');	
-		}
-		else{
-			show_404();
-		}
+		
 	}
 	function available_blood(){
-		if($this->session->userdata('logged_in')){
+    if(!$this->session->userdata('logged_in')){
+			show_404();
+		}
+		$this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->data['title']="Available Blood";
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -140,12 +185,18 @@ class User_panel extends CI_Controller {
 		$this->load->view('pages/bloodbank/available_blood_report',$this->data);
 		$this->load->view('templates/footer');	
 		}
-		else{
+	function appointment_bookings(){
+		if(!$this->session->userdata('logged_in')){
 			show_404();
 		}
-	}
-	function appointment_bookings(){
-		if($this->session->userdata('logged_in')){
+		$this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->data['title']="User Panel";
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -154,14 +205,19 @@ class User_panel extends CI_Controller {
 		$this->load->view('templates/reports_nav',$this->data);
 		$this->load->view('pages/bloodbank/appointment_bookings',$this->data);
 		$this->load->view('templates/footer');	
-		}
-		else{
+	}
+function report_donations($camp="t",$blood_group=0,$sex=0,$donation_date=0,$from_date=0,$to_date=0){
+	if(!$this->session->userdata('logged_in')){
 			show_404();
 		}
-	}
-
-	function report_donations($camp="t",$blood_group=0,$sex=0,$donation_date=0,$from_date=0,$to_date=0){
-		if($this->session->userdata('logged_in')){
+		$this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->data['title']="Donations detailed report";
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -173,13 +229,20 @@ class User_panel extends CI_Controller {
 		$this->load->view('templates/reports_nav',$this->data);
 		$this->load->view('pages/bloodbank/report_donations',$this->data);
 		$this->load->view('templates/footer');	
-		}
-		else{
-			show_404();
-		}
+		
 	}
 	function report_inventory($blood_group=0,$component_type=0){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+			show_404();
+		}
+		$this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->data['title']="Inventory detailed report";
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -189,12 +252,18 @@ class User_panel extends CI_Controller {
 		$this->load->view('pages/bloodbank/report_inventory',$this->data);
 		$this->load->view('templates/footer');	
 		}
-		else{
+	function report_screening(){
+	if(!$this->session->userdata('logged_in')){
 			show_404();
 		}
-	}
-	function report_screening(){
-		if($this->session->userdata('logged_in')){
+		$this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->data['staff']=$this->staff_model->staff_list();
 		$this->data['title']="User Panel";
@@ -204,13 +273,20 @@ class User_panel extends CI_Controller {
 		$this->load->view('templates/reports_nav',$this->data);
 		$this->load->view('pages/bloodbank/report_screening',$this->data);
 		$this->load->view('templates/footer');	
-		}
-		else{
-			show_404();
-		}
+		
 	}
 	function report_issue($issue_date=0,$blood_group=0,$from_date=0,$to_date=0,$hospital=0){
-		if($this->session->userdata('logged_in')){
+     if(!$this->session->userdata('logged_in')){
+			show_404();
+		}
+		$this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->data['staff']=$this->staff_model->staff_list();
 		$this->data['title']="Issue Report";
@@ -220,13 +296,19 @@ class User_panel extends CI_Controller {
 		$this->load->view('templates/reports_nav',$this->data);
 		$this->load->view('pages/bloodbank/report_issue',$this->data);
 		$this->load->view('templates/footer');	
-		}
-		else{
-			show_404();
-		}
 	}
 	function report_grouping(){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+			show_404();
+		}
+		$this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->data['staff']=$this->staff_model->staff_list();
 		$this->data['title']="User Panel";
@@ -237,27 +319,40 @@ class User_panel extends CI_Controller {
 		$this->load->view('pages/bloodbank/report_grouping',$this->data);
 		$this->load->view('templates/footer');	
 		}
-		else{
+	function discard_report(){
+		if(!$this->session->userdata('logged_in')){
 			show_404();
 		}
-	}
-	function discard_report(){
-		if($this->session->userdata('logged_in')){
+		$this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->data['title']="User Panel";
 		$this->data['userdata']=$this->session->userdata('logged_in');
-		$this->data['inventory']=$this->reports_model->get_discard_report();
+	    $this->data['inventory']=$this->reports_model->get_discard_report();
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/reports_nav',$this->data);
 		$this->load->view('pages/bloodbank/discard_report',$this->data);
 		$this->load->view('templates/footer');	
-		}
-		else{
-			show_404();
-		}
+		
 	}
 	function print_certificates(){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+			show_404();
+		}
+		$this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->data['title']="User Panel";
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -267,14 +362,21 @@ class User_panel extends CI_Controller {
 		$this->load->view('templates/reports_nav',$this->data);
 		$this->load->view('pages/bloodbank/print_certificates',$this->data);
 		$this->load->view('templates/footer');	
-		}
-		else{
-			show_404();
-		}
+		
 	}
 	
 	function hospital_issues(){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+			show_404();
+		}
+		$this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->data['title']="Issues - Hospital wise";
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -283,9 +385,7 @@ class User_panel extends CI_Controller {
 		$this->load->view('templates/reports_nav',$this->data);
 		$this->load->view('pages/bloodbank/hospital_issues',$this->data);
 		$this->load->view('templates/footer');	
-		}
-		else{
-			show_404();
-		}
+		
 	}
-}
+	
+	}

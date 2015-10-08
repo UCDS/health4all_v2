@@ -17,6 +17,17 @@ class Vendor extends CI_Controller {
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 	}
 	function add($type=""){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	   }
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Vendor"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
 		$user=$this->session->userdata('logged_in');
@@ -84,10 +95,28 @@ class Vendor extends CI_Controller {
 		$this->load->view('templates/footer');
   	}	
 function edit($type=""){
+	if(!$this->session->userdata('logged_in')){
+		show_404();
+	   }
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Vendor"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
 		$user=$this->session->userdata('logged_in');
 		$this->data['user_id']=$user['user_id'];
+		foreach($functions as $f){
+		if($f->user_function=="Vendor"){
+			$access=1;
+			}
+		}
+		if($access!=1)
+			show_404();
 		if($type=="contact_person"){
 		 	$title="Edit Contact Person";
 		
@@ -176,6 +205,17 @@ function edit($type=""){
 	}
 
 	function view($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=0){	
+	if(!$this->session->userdata('logged_in')){
+		show_404();
+	   }
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Vendor"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form_helper');
 		switch($type){
 			case "equipments_detailed" : 

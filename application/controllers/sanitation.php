@@ -20,8 +20,11 @@ class Sanitation extends CI_Controller {
 // Function to score and update the sanitation activities
 //************************************************************************************//
 	function evaluate(){
-		$access=0;
-		foreach($this->data['functions'] as $f){
+		if(!$this->session->userdata('logged_in')){
+			show_404();
+		}
+		$this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach($this->data['functions'] as $f){
 			if($f->user_function=="Sanitation Evaluation" && ($f->add ==1 || $f->edit ==1)){
 				$access=1;
 			}
@@ -60,8 +63,11 @@ class Sanitation extends CI_Controller {
 				
 	}
 	function view_scores(){
-		$access=0;
-		foreach($this->data['functions'] as $f){
+		if(!$this->session->userdata('logged_in')){
+			show_404();
+		}
+			$this->data['userdata']=$this->session->userdata('logged_in');
+		   foreach($this->data['functions'] as $f){
 			if($f->user_function=="Sanitation Evaluation" && $f->view ==1){
 				$access=1;
 			}
@@ -84,8 +90,12 @@ class Sanitation extends CI_Controller {
 		}		
 	}
 	function view_summary(){
-		$access=0;
-		foreach($this->data['functions'] as $f){
+		if(!$this->session->userdata('logged_in'))
+		{
+			show_404();
+		}
+			$this->data['userdata']=$this->session->userdata('logged_in');
+		    foreach($this->data['functions'] as $f){
 			if(($f->user_function=="Masters - Sanitation" && $f->view ==1) || ($f->user_function=="Sanitation Summary" && $f->view ==1)){
 				$access=1;
 			}

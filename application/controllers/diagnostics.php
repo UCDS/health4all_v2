@@ -19,8 +19,16 @@ parent::__construct();
 
 function test_order($departments=0){
 	if(!$this->session->userdata('logged_in')){
-		show_404();
+	show_404();
 	}
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach($this->data['functions'] as $f){
+		if($f->user_function=="Diagnostics - Order"){
+			$access=1;
+			}
+		}
+	if($access!=1)
+		show_404();
 	$this->load->helper('form');
 	$this->load->library('form_validation');
 	$user=$this->session->userdata('logged_in');
@@ -63,6 +71,15 @@ function view_orders($access=1){
 	if(!$this->session->userdata('logged_in')){
 		show_404();
 	}
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach($this->data['functions'] as $f){
+	if($f->user_function=="Diagnostics"){
+	$access=1;
+	}
+  }	
+   if($access!=1)						
+		show_404();
+	
 	if($access!="1" && $access != '0') show_404();
 	if($access=='0') 
 		$this->data['update'] = 0;
@@ -134,13 +151,21 @@ function view_orders($access=1){
 	}
 		
 	$this->load->view('templates/footer');
-}
 
+}
 
 function view_results(){
 	if(!$this->session->userdata('logged_in')){
 		show_404();
 	}
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach($this->data['functions'] as $f){
+	if($f->user_function=="Diagnostics"){
+	$access=1;
+	}
+  }	
+   if($access!=1)						
+		show_404();	
 	$this->load->helper('form');
 	$this->load->library('form_validation');
 	$user=$this->session->userdata('logged_in');
@@ -186,6 +211,14 @@ function approve_results(){
 	if(!$this->session->userdata('logged_in')){
 		show_404();
 	}
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Diagnostics - Approve"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 	$this->load->library('email');
 	$this->load->helper('form');
 	$this->load->library('form_validation');
@@ -268,6 +301,14 @@ function edit_order(){
 	if(!$this->session->userdata('logged_in')){
 		show_404();
 	}
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Diagnostics"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 	$this->load->helper('form');
 	$this->load->library('form_validation');
 	$user=$this->session->userdata('logged_in');
@@ -313,9 +354,19 @@ function edit_order(){
 	
 	$this->load->view('templates/footer');
 }
-
 function search_patients(){
-	if($patients = $this->diagnostics_model->search_patients()){
+	if(!$this->session->userdata('logged_in')){
+		show_404();
+	}
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Diagnostics - search_patients"){
+		$access=1;
+		}		
+		}
+		if($access!=1)
+			show_404();
+		if($patients = $this->diagnostics_model->search_patients()){
 		$list=array(
 			'patients'=>$patients
 		);
@@ -323,8 +374,8 @@ function search_patients(){
 			echo json_encode($list);
 	}
 	else return false;
+
 }
-	
 //************************************************************************************//  	
 // Function for Add Forms in Diagnostics Module commence here   	
 //************************************************************************************//	
@@ -332,6 +383,14 @@ function add($type=""){
 	if(!$this->session->userdata('logged_in')){
 	show_404();
 	}
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Masters - Diagnostics"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 	$this->load->helper('form');
 	$this->load->library('form_validation');
 	$user=$this->session->userdata('logged_in');
@@ -441,6 +500,14 @@ function edit($type="")
     if(!$this->session->userdata('logged_in')){
 	show_404();
 	}
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Masters - Diagnostics"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 	$this->load->helper('form');
 	$this->load->library('form_validation');
 	$user=$this->session->userdata('logged_in');
@@ -603,6 +670,14 @@ function edit($type="")
         if(!$this->session->userdata('logged_in')){
             show_404();
         }
+		 $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Masters - Diagnostics"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
         $this->data['title']="Master Tests";
         $this->load->view('templates/header',$this->data);
         $this->load->view('templates/leftnav',$this->data);
@@ -611,7 +686,7 @@ function edit($type="")
         $this->load->view('pages/diagnostics/view_'.$type,$this->data);
         
     }       
+
+
 }
-
-
 ?>
