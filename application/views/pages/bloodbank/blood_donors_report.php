@@ -52,16 +52,16 @@
 	?>
 	<tr>
 		<td><?php echo $i++;?></td>
-		<td><?php echo $s['blood_unit_num'];?></td>
-		<td><?php echo $s['name'];?></td>
-		<td><?php echo $s['age'];?></td>
-		<td><?php echo $s['sex'];?></td>
-		<td><?php echo $s['blood_group'];?></td>
-		<td><?php echo $s['email'];?></td>
-		<td><?php echo $s['phone'];?></td>
-		<td><?php echo $s['address'];?></td>
-		<td><?php if($s['donation_date']!=0) echo date("d-M-y",strtotime($s['donation_date']));?></td>
-		<td><?php echo $s['status'];?></td>
+		<td><?php echo $s->blood_unit_num;?></td>
+		<td><?php echo $s->name;?></td>
+		<td><?php echo $s->age;?></td>
+		<td><?php echo $s->sex;?></td>
+		<td><?php echo $s->blood_group;?></td>
+		<td><?php echo $s->email;?></td>
+		<td><?php echo $s->phone;?></td>
+		<td><?php echo $s->address;?></td>
+		<td><?php if($s->donation_date!=0) echo date("d-M-y",strtotime($s->donation_date));?></td>
+		<td><?php echo $s->status;?></td>
 	</tr>
 	<?php
 	}

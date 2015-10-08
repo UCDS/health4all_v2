@@ -60,17 +60,17 @@
 		?>
 		<tr>
 			<td><?php echo $i++;?></td>
-			<td><?php echo date("d-M-Y",strtotime($row['screening_datetime']));?></td>
-			<td><?php echo $row['blood_unit_num'];?></td>
-			<td><?php echo $row['name'];?></td>
-			<td><?php echo $row['blood_group'];?></td>
-			<td><?php if($row['test_hiv']==1) echo "Yes"; else echo "NR";?></td>
-			<td><?php if($row['test_hbsag']==1) echo "Yes"; else echo "Neg";?></td>
-			<td><?php if($row['test_hcv']==1) echo "Yes"; else echo "NR";?></td>
-			<td><?php if($row['test_vdrl']==1) echo "Yes"; else echo "NR";?></td>
-			<td><?php if($row['test_mp']==1) echo "Yes"; else echo "NF";?></td>
-			<td><?php if($row['test_irregular_ab']==1) echo "Yes"; else echo "Neg";?></td>
-			<td><?php echo $row['staff_name'];?></td>
+			<td><?php echo date("d-M-Y",strtotime($row->screening_datetime));?></td>
+			<td><?php echo $row->blood_unit_num;?></td>
+			<td><?php echo $row->name;?></td>
+			<td><?php echo $row->blood_group;?></td>
+			<td><?php if($row->test_hiv==1) echo "Yes"; else echo "NR";?></td>
+			<td><?php if($row->test_hbsag==1) echo "Yes"; else echo "Neg";?></td>
+			<td><?php if($row->test_hcv==1) echo "Yes"; else echo "NR";?></td>
+			<td><?php if($row->test_vdrl==1) echo "Yes"; else echo "NR";?></td>
+			<td><?php if($row->test_mp==1) echo "Yes"; else echo "NF";?></td>
+			<td><?php if($row->test_irregular_ab==1) echo "Yes"; else echo "Neg";?></td>
+			<td><?php echo $row->staff_name;?></td>
 			</tr>
 		<?php 
 		}

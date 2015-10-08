@@ -60,20 +60,20 @@
 		?>
 		<tr>
 			<td><?php echo $i++;?></td>
-			<td><?php echo date("d-M-Y",strtotime($row['grouping_date']));?></td>
-			<td><?php echo $row['blood_unit_num'];?></td>
-			<td><?php echo $row['name'];?></td>
-			<td><?php echo $row['blood_group'];?></td>
-			<td><?php echo $row['anti_a'];?></td>
-			<td><?php echo $row['anti_b'];?></td>
-			<td><?php echo $row['anti_ab'];?></td>
-			<td><?php echo $row['anti_d'];?></td>
-			<td><?php echo $row['a_cells'];?></td>
-			<td><?php echo $row['b_cells'];?></td>
-			<td><?php echo $row['o_cells'];?></td>
-			<td><?php echo $row['du'];?></td>
-			<td><?php echo $row['forward_done_by'];?></td>
-			<td><?php echo $row['reverse_done_by'];?></td>
+			<td><?php echo date("d-M-Y",strtotime($row->grouping_date));?></td>
+			<td><?php echo $row->blood_unit_num;?></td>
+			<td><?php echo $row->name;?></td>
+			<td><?php echo $row->blood_group;?></td>
+			<td><?php echo $row->anti_a;?></td>
+			<td><?php echo $row->anti_b;?></td>
+			<td><?php echo $row->anti_ab;?></td>
+			<td><?php echo $row->anti_d;?></td>
+			<td><?php echo $row->a_cells;?></td>
+			<td><?php echo $row->b_cells;?></td>
+			<td><?php echo $row->o_cells;?></td>
+			<td><?php echo $row->du;?></td>
+			<td><?php echo $row->forward_done_by;?></td>
+			<td><?php echo $row->reverse_done_by;?></td>
 			</tr>
 		<?php 
 		}

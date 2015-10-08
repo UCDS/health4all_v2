@@ -352,7 +352,14 @@ class Reports_model extends CI_Model{
         function get_discard_report(){
 		$userdata=$this->session->userdata('hospital');
 		$hospital=$userdata['hospital_id'];
-			if($this->input->post('from_date') && $this->input->post('to_date')){
+			
+		if($this->input->post('blood_unit_num')){
+			$this->db->where('blood_unit_num',$this->input->post('blood_unit_num'));
+		}
+		else{
+			$this->db->where('blood_inventory.status_id',7);
+		}
+		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from=date('Y-m-d',strtotime($this->input->post('from_date')));
 			$to=date('Y-m-d',strtotime($this->input->post('to_date')));
 			$this->db->where("(DATE(blood_inventory.expiry_date) BETWEEN '$from' AND '$to')");
@@ -360,12 +367,6 @@ class Reports_model extends CI_Model{
 		else if($this->input->post('from_date') || $this->input->post('to_date')){
 		 $this->input->post('from_date')==""?$date=date("Y-m-d",strtotime($this->input->post('to_date'))):$date=date("Y-m-d",strtotime($this->input->post('from_date')));
 		 $this->db->where('DATE(blood_inventory.expiry_date)',$date);
-		}
-		if($this->input->post('blood_unit_num')){
-			$this->db->where('blood_unit_num',$this->input->post('blood_unit_num'));
-		}
-		else{
-			$this->db->where('blood_inventory.status_id',7);
 		}
 		$this->db->select('blood_unit_num,component_type,blood_group,expiry_date,bb_donation.donation_id,blood_unit_num,bb_donation.status_id as donation_status,d_status.status as don_status,i_status.status as inv_status,screening_result,inventory_id')
 		->from('blood_inventory')

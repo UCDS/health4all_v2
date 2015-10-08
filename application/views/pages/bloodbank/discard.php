@@ -1,11 +1,10 @@
 
 
 <div class="col-md-10 col-sm-9">
-	<?php echo form_open('bloodbank/inventory/discard',array('role'=>'form','class'=>'form-custom'));?>
-	<input type="text" placeholder="Blood Unit Number" class="form-control" name="blood_unit_num" />
-	<input type="submit" value="Search" name="search" class="btn btn-primary btn-md" />
+	<?php echo form_open('bloodbank/inventory/discard');?>
+	<input type="text" placeholder="Blood Unit Number" name="blood_unit_num" />
+	<input type="submit" value="Search" name="search" />
 	</form>
-	<hr>
 	<?php
 	$search="";
 	$expired="";
@@ -13,17 +12,18 @@
 	$under_collection="";
 	$screening_failed="";
 	if(isset($msg)) {
-		echo "<div class='alert alert-info'>$msg</div>";
+		echo $msg;
+		echo "<br />";
 		echo "<br />";
 	}
 	?>
 	<div>
 		<?php if(count($inventory)==0){
-			echo "<div class='alert alert-danger'>Empty.</div>";
+			echo "Empty.";
 		}
 		else{
 		?>
-		<h4>Inventory : </h4>
+		<h3>Inventory : </h3>
 		<table id="header-fixed" class="table-2 table table-striped table-bordered"></table>
 		<table class="table-2 table table-striped table-bordered" id="table-1">
 		<thead><th>Blood Unit No.</th><th>Component Type</th><th>Blood Group</th><th>Expiry Date</th><th>Status</th><th>Notes</th><th></th></thead>
@@ -32,14 +32,14 @@
 			if($this->input->post('search')){
 				$search.="<tr>";
 				$search.=form_open('bloodbank/inventory/discard');
-				$search.="<input type='text' value='$inv[inventory_id]' readonly name='inventory_id' size='3' hidden />
-					<td>$inv[blood_unit_num]</td>		
-					<td>$inv[component_type]</td>
-					<td>$inv[blood_group]</td>		
+				$search.="<input type='text' value='$inv->inventory_id' readonly name='inventory_id' size='3' hidden />
+					<td>$inv->blood_unit_num</td>		
+					<td>$inv->component_type</td>
+					<td>$inv->blood_group</td>		
 					<td>".date('d-M-Y',strtotime($inv->expiry_date))."</td>";
-				$search.="<td>$inv[don_status] /<br /> $inv[inv_status]</td>";
-				$search.="<td><input type='text' name='notes' class='form-control' required /></td>
-					<td><input type='submit' value='Discard'  name='discard' class='btn btn-danger btn-md' /></td>
+				$search.="<td>$inv->don_status /<br /> $inv->inv_status</td>";
+				$search.="<td><input type='text' name='notes' required /></td>
+					<td><input type='submit' value='Discard'  name='discard' /></td>
 				</form>
 				</tr>";
 			}
@@ -47,28 +47,28 @@
 			if($inv->donation_status==3){
 				$under_collection.="<tr>";
 				$under_collection.=form_open('bloodbank/inventory/discard');
-				$under_collection.="<input type='text' value='$inv[inventory_id]' readonly name='inventory_id' size='3' hidden />
-					<td>$inv[blood_unit_num]</td>		
-					<td>$inv[component_type]</td>
-					<td>$inv[blood_group]</td>		
-					<td>".date('d-M-Y',strtotime($inv->expiry_date))."</td>";
-				$under_collection.="<td>$inv[don_status] /<br /> $inv[inv_status]</td>";
-				$under_collection.="<td><input type='text' value='Under Collection' class='form-control' name='notes' required /></td>
-					<td><input type='submit' value='Discard'  name='discard' class='btn btn-danger btn-md' /></td>
+				$under_collection.="<input type='text' value='$inv->inventory_id' readonly name='inventory_id' size='3' hidden />
+					<td>$inv->blood_unit_num</td>		
+					<td>$inv->component_type</td>
+					<td>$inv->blood_group</td>		
+					<td>".date('d-M-Y',strtotime($inv['expiry_date']))."</td>";
+				$under_collection.="<td>$inv->don_status /<br /> $inv->inv_status</td>";
+				$under_collection.="<td><input type='text' value='Under Collection' name='notes' required /></td>
+					<td><input type='submit' value='Discard'  name='discard' /></td>
 				</form>
 				</tr>";
 			}
 			else if($inv->donation_status==6 && $inv->screening_result==0){
 				$screening_failed.="<tr>";
 				$screening_failed.=form_open('bloodbank/inventory/discard');
-				$screening_failed.="<input type='text' value='$inv[inventory_id]' readonly name='inventory_id' size='3' hidden />
-					<td>$inv[blood_unit_num]</td>		
-					<td>$inv[component_type]</td>
-					<td>$inv[blood_group]</td>		
+				$screening_failed.="<input type='text' value='$inv->inventory_id' readonly name='inventory_id' size='3' hidden />
+					<td>$inv->blood_unit_num</td>		
+					<td>$inv->component_type</td>
+					<td>$inv->blood_group</td>		
 					<td>".date('d-M-Y',strtotime($inv->expiry_date))."</td>";
-				$screening_failed.="<td>$inv[don_status] /<br /> $inv[inv_status]</td>";
-				$screening_failed.="<td><input type='text' value='Screening failed.'  class='form-control' name='notes' required /></td>
-					<td><input type='submit' value='Discard'  name='discard' class='btn btn-danger btn-md' /></td>
+				$screening_failed.="<td>$inv->don_status /<br /> $inv->inv_status</td>";
+				$screening_failed.="<td><input type='text' value='Screening failed.' name='notes' required /></td>
+					<td><input type='submit' value='Discard'  name='discard' /></td>
 				</form>
 				</tr>";
 			}
@@ -78,28 +78,28 @@
 			else if($inv->expiry_date>=date('Y-m-d')){
 				$expiring.="<tr>";
 				$expiring.=form_open('bloodbank/inventory/discard');
-				$expiring.="<input type='text' value='$inv[inventory_id]' readonly name='inventory_id' size='3' hidden />
-					<td>$inv[blood_unit_num]</td>		
-					<td>$inv[component_type]</td>
-					<td>$inv[blood_group]</td>		
+				$expiring.="<input type='text' value='$inv->inventory_id' readonly name='inventory_id' size='3' hidden />
+					<td>$inv->blood_unit_num</td>		
+					<td>$inv->component_type</td>
+					<td>$inv->blood_group</td>		
 					<td>".date('d-M-Y',strtotime($inv->expiry_date))."</td>";
-				$expiring.="<td>$inv[don_status] /<br /> $inv[inv_status]</td>";
+				$expiring.="<td>$inv->don_status /<br /> $inv->inv_status</td>";
 				$expiring.="<td></td>
-					<td><input type='submit' value='Discard' name='discard' class='btn btn-danger btn-md'   /></td>
+					<td><input type='submit' value='Discard' name='discard'   /></td>
 				</form>
 				</tr>";			
 			}
 			else if($inv->expiry_date<date('Y-m-d')){
 				$expired.="<tr>";
 				$expired.=form_open('bloodbank/inventory/discard');
-				$expired.="<input type='text' value='$inv->inventory_id' readonly name='inventory_id' size='3' hidden />
+				$expired.="<input type='text' value='$inv->inventory_id readonly name='inventory_id' size='3' hidden />
 					<td>$inv->blood_unit_num</td>		
 					<td>$inv->component_type</td>
 					<td>$inv->blood_group</td>		
 					<td>".date('d-M-Y',strtotime($inv->expiry_date))."</td>";
 				$expired.="<td>$inv->don_status /<br /> $inv->inv_status</td>";
-				$expired.="<td><input type='text' value='Expired' class='form-control' name='notes' required /></td>
-					<td><input type='submit' value='Discard' name='discard' class='btn btn-danger btn-md'  /></td>
+				$expired.="<td><input type='text' value='Expired' name='notes' required /></td>
+					<td><input type='submit' value='Discard' name='discard'  /></td>
 				</form>
 				</tr>";
 			}

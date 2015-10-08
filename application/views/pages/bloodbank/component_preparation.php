@@ -13,7 +13,11 @@
 		$(".time").timeEntry();
 	});
 </script>
-
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+});
+</script>
 <div class="col-md-10 col-sm-9">
 	<?php
 	if(isset($msg)) {
@@ -45,7 +49,33 @@
 
 		<table id="header-fixed" class="table-2 table table-striped table-bordered"></table>
 		<table class="table-2 table table-striped table-bordered" id="table-1">
-		<thead><th>S.No</th><th>Blood Unit No.</th><th>PC</th><th>FP</th><th>FFP</th><th>PRP</th><th>Platelet Conc.</th><th>Cryo</th><th>Component preparation time</th><th>Prepared</th></thead>
+		<thead><th>S.No</th><th><div data-toggle="popover" data-placement="bottom" data-content="Blood Unit No.">
+																  
+				Blood Unit No.</div></th>
+		<th><div data-toggle="popover" data-placement="bottom" data-content=" Packed Cells">
+																  
+				PC</div></th>
+		<th><div data-toggle="popover" data-placement="bottom" data-content=" Frozen Plasma (Prepared for extraction of proteins like ImmunoGlobulins. Not meant for direct transfusion to patients)">
+																  
+				FP</div></th>
+		<th><div data-toggle="popover" data-placement="bottom" data-content=" Fresh Frozen Plasma ( Prepared within 6 hours from bleeding time and stored at -40C. Has a shelf life of 1year)">
+																  
+				FFP</div></th>
+		<th><div data-toggle="popover" data-placement="bottom" data-content="Platelet-rich plasma (Abbreviation: PRP) is blood plasma that has been enriched with platelets. As a concentrated source of autologous platelets, PRP contains (and releases through degranulation) several different growth factors and other cytokines that stimulate healing of bone and soft tissue">
+																  
+				PRP</div></th>
+		<th><div data-toggle="popover" data-placement="bottom" data-content="A normal whole blood donation contains a small number of platelets 
+which can be separated into a “platelet concentrate”. However, 4-8 times 
+as many platelets can be derived from just one platelet donation. An adult 
+patient typically requires 4 units of “platelet concentrates” for a single 
+treatment episode">
+																  
+				Platelet Conc.</div></th>
+		<th><div data-toggle="popover" data-placement="bottom" data-content="Cryoprecipitated Antihemophilic Factor (Cryo) is a portion of plasma rich in clotting factors, including Factor VIII and fibrinogen. It is prepared by freezing and then slowly thawing the frozen plasma.">
+																  
+				Cryo</div></th>
+		<th>Component preparation time</th>
+		<th>Prepared</th></thead>
 		<?php echo form_open('bloodbank/inventory/prepare_components',array('id'=>'prepare_components'));?>
 		<?php 
 		$i=1;
@@ -83,7 +113,7 @@
 				<?php } } ?>
 			</td>
 				<td>
-			<input type="text" placeholder="Component preparation time" class="time form-control" id="com_pre_time" name="<?php echo $blood['donation_id'].'com_prep_time';?>" required /></td>
+			<input type="text" placeholder="Component preparation time" class="time form-control" id="com_pre_time" name="<?php echo $blood->donation_id.'com_prep_time';?>" /></td>
 			<td>
 				<input type="checkbox" value="<?php echo $blood->donation_id;?>" name="donation_id[]"   /></td>
 		</tr>
