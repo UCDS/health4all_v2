@@ -311,7 +311,6 @@ class Register_model extends CI_Model{
 			->where('visit_type',$this->input->post('visit_type'))
 			->where('YEAR(admit_date)',$this->input->post('year'),false); 
 			$query=$this->db->get();
-			echo $this->db->last_query();
 			$row=$query->row();
 			$visit_id=$row->visit_id;
 		}

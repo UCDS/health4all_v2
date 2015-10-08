@@ -38,7 +38,7 @@
 
 	<div class="panel panel-default">
 	<div class="panel panel-heading">
-	<h4>Register Blood Donation</h4>
+	<h4>Medical checkup</h4>
 	</div>
 	<?php echo form_open("bloodbank/register/medical_checkup/0/$donation_id",array('class'=>'form-custom'));?>
 	<div class="panel-body" >

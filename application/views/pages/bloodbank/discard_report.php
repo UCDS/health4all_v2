@@ -60,10 +60,7 @@
 		 $this->input->post('from_date')==""?$date=$this->input->post('to_date'):$date=$this->input->post('from_date');
 		 echo "Blood grouped on $date";
 		}
-		else{
-			$from_date=date('d-M-Y',strtotime('-10 Days'));
-			$to_date=date('d-M-Y');	
-		}
+		
 		?>
 		</b>
          
@@ -72,7 +69,7 @@
 		<thead><th>Blood Unit number</th><th>Component Type</th><th>Blood Group</th><th>Date</th><th>Reason</th></thead>
 		<?php 
 		foreach($inventory as $inv){
-			if($this->input->post('search')){
+			if($this->input->post('from_date') && $this->input->post('to_date')){
 				$search.="<tr>";
 				$search.=form_open('bloodbank/inventory/discard');
 				$search.="<input type='text' value='$inv->inventory_id' readonly name='inventory_id' size='3' hidden />
@@ -87,21 +84,8 @@
 				</tr>";
 			}
 			else{
-			if($inv->donation_status==3){
-				$under_collection.="<tr>";
-				$under_collection.=form_open('bloodbank/inventory/discard');
-				$under_collection.="<input type='text' value='$inv->inventory_id' readonly name='inventory_id' size='3' hidden />
-					<td>$inv->blood_unit_num</td>		
-					<td>$inv->component_type</td>
-					<td>$inv->blood_group</td>		
-					<td>".date('d-M-Y',strtotime($inv['expiry_date']))."</td>";
-				
-				$under_collection.="<td><input type='text' value='Under Collection'  readonly name='notes' required /></td>
-					
-				</form>
-				</tr>";
-			}
-			else if($inv->donation_status==6 && $inv->screening_result==0){
+		
+			 if($inv->donation_status==6 && $inv->screening_result==0){
 				$screening_failed.="<tr>";
 				$screening_failed.=form_open('bloodbank/inventory/discard');
 				$screening_failed.="<input type='text' value='$inv->inventory_id' readonly name='inventory_id' size='3' hidden />
@@ -149,14 +133,7 @@
 			}
 		}?>
 		<?php
-		if($expiring!=""){
-			
-			?>
-			
-			<tr><th colspan="10" style="background-color:#333;color:white;"><font size="3">Expiring in the next 7 days</font></th></tr>
-			<?php
-				echo $expiring;
-			}
+		
 			if($expired!=""){
 			?>
 			
@@ -184,6 +161,7 @@
 			<tr><th colspan="10" style="background-color:#333;color:white;"><font size="3">Searched for..</font></th></tr>
 			<?php
 				echo $search;
+				
 			}
 		
 		?>

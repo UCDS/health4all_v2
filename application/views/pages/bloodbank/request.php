@@ -113,7 +113,7 @@
 		$("#row_"+i).remove();
 	}
 </script>
-<div class="col-md-10 col-sm-9">
+<div class="col-md-10 col-sm-9 header-shadow">
 	<?php
 	if(isset($msg)) {
 		if($msg='success'){
@@ -178,6 +178,22 @@
 				</div>
 				<div class='col-md-12 selected_patient'>
 				</div>
+				
+				</td>
+				
+			</tr>
+			<tr class="doctor">
+			
+			<td>Doctor</td>
+			<td>
+					 <div class="col-md-6">
+                <select id="select_doctor" class="repositories" placeholder="Select a Doctor..." name="staff_id" required ></select>
+            </div>
+            <div class="col-md-8 sr-only enter-patient">
+						<input class="form-control" placeholder="Enter Doctor Name" size="50px" />
+					</div>
+		    <div class='col-md-10 selected_doctor'>
+		    </div>
 				</td>
 			</tr>
 			<tr>
@@ -295,3 +311,52 @@
     }
 	});
 </script>
+
+<script>
+    
+    $(function(){
+		selectize = $("#select_doctor")[0].selectize;
+		selectize.on('change',function(){
+			var test = selectize.getOption(selectize.getValue());
+			test.find('.staff_id').text()!=""?$(".selected_doctor").text(test.find('.language').text()+", "+test.find('.staff_id').text()) :  $(".selected_doctor").text("").removeClass('well well-sm');
+			$(".selected_doctor").text()!=""?$(".selected_doctor").addClass('well well-sm') : $(".selected_doctor").removeClass('well well-sm');
+            
+		});
+	});
+
+    $('#select_doctor').selectize({
+    valueField: 'staff_id',
+    labelField: 'first_name',
+    searchField: 'first_name',
+    create: false,
+    render: {
+        option: function(item, escape) {
+
+            return '<div>' +                
+                '<ul class="meta">' +
+                    (item.first_name ? '<li class="language">' + escape(item.first_name) + ' ' : '') +
+                    (item.last_name ? '' + escape(item.last_name) + '</li>' : '') +                    
+                '</ul>' +
+                '<span class="title">' +
+                    '<span class="doctor_reg_no">' + escape(item.doctor_reg_no) + '</span>' +
+                '</span>' +
+            '</div>';
+        }
+    },
+    load: function(query, callback) {
+        if (!query.length) return callback();
+		$.ajax({
+            url: '<?php echo base_url();?>staff/search_doctor',
+            type: 'POST',            
+			dataType : 'json',
+            data : {query:query},			
+            error: function(res) {
+                callback();
+            },
+            success: function(res) {
+                callback(res.doctors.slice(0, 10));
+            }
+        });
+    }
+	});
+    </script>
