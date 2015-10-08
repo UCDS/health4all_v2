@@ -15,9 +15,18 @@ class Register extends CI_Controller {
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");	
 	}
-	public function index($donor_id="")
-	{
-		if($this->session->userdata('logged_in')){
+	public function index($donor_id=""){
+		if(!$this->session->userdata('logged_in')){
+		  show_404();
+	  }
+	  $this->data['userdata']=$this->session->userdata('logged_in');
+	  foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -145,15 +154,21 @@ class Register extends CI_Controller {
 		}
 		
 		$this->load->view('templates/footer');
-		}
-		else {
-			show_404();
-		}
 	}
 	public function repeat_donor()
 	{
-		if($this->session->userdata('logged_in')){
-		$this->data['userdata']=$this->session->userdata('hospital');
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	    }
+	    $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
+	    $this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 		$this->data['title']="Repeat Blood Donation";
@@ -198,14 +213,21 @@ class Register extends CI_Controller {
 		}
 		
 		$this->load->view('templates/footer');
-		}
-		else {
-			show_404();
-		}
+		
 	}
 	public function donation()
 	{
-		if($this->session->userdata('logged_in')){
+       if(!$this->session->userdata('logged_in')){
+		 show_404();
+	     }
+	     $this->data['userdata']=$this->session->userdata('logged_in');
+	     foreach ($this->data['functions'] as $f ){
+		 if($f->user_function=="Bloodbank"){
+		 $access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -232,28 +254,42 @@ class Register extends CI_Controller {
 		}
 		
 		$this->load->view('templates/footer');
-		}
-		else {
-			show_404();
-		}
+		
 	}
 	
 	function appointment_register($donor_id)
 	{
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	    }
+	   $this->data['userdata']=$this->session->userdata('logged_in');
+	   foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$donation_id=$this->register_model->register_donation($donor_id);
 		if($donation_id){
 			$this->medical_checkup($donation_id);
 		}
-		}		
-		else {
-			show_404();
-		}
+		
 	}
 	
 	public function medical_checkup($donor_id=0,$donation_id=""){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	     }
+	    $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -282,14 +318,20 @@ class Register extends CI_Controller {
 			}
 		}
 		$this->load->view('templates/footer');
-		}
-		else 
-		show_404();
-		
 	}
 	
 	public function bleeding(){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	    }
+	    $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -319,14 +361,21 @@ class Register extends CI_Controller {
 			}
 		}
 		$this->load->view('templates/footer');
-		}
-		else 
-		show_404();
 		
 	}		
 	
 	public function request(){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	    }
+	    $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -350,13 +399,21 @@ class Register extends CI_Controller {
 		}
 		$this->load->view('templates/footer');
 		}
-		}
-		else 
-		show_404();
 	}
 		
 	public function search()
 	{
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	    }
+	    $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 
@@ -364,14 +421,22 @@ class Register extends CI_Controller {
 		{
 			$this->load->view('pages/bloodbank/blood_donation');
 		}
-		else{
-
-		}	
+		
 	}
 	
 	function check_unique($blood_unit_num){
-	
-		$result=$this->register_model->check_unique($blood_unit_num);
+     if(!$this->session->userdata('logged_in')){
+		show_404();
+	    }
+	    $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
+	   $result=$this->register_model->check_unique($blood_unit_num);
 		if($result->num_rows()>0){
 	     $this->form_validation->set_message('check_unique','Number already exists in database.');
 	     return false;

@@ -16,11 +16,11 @@ class Staff extends CI_Controller {
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 	}
 	function add($type=""){
-        if($this->session->userdata('logged_in'))
-		    $this->data['userdata']=$this->session->userdata('logged_in');
-        else
+        if(!$this->session->userdata('logged_in'))
+		    {
             show_404();
-		$access=0;
+			}
+		$this->data['userdata']=$this->session->userdata('logged_in');
 		foreach($this->data['functions'] as $function){
 			if($function->user_function=="HR"){
 				$access=1;
@@ -104,11 +104,11 @@ class Staff extends CI_Controller {
   	}	
   	
 	function edit($type=""){
-        if($this->session->userdata('logged_in'))
-		    $this->data['userdata']=$this->session->userdata('logged_in');
-        else
-            show_404();
-		$access=0;
+        if(!$this->session->userdata('logged_in'))
+		{
+			 show_404();
+		}  
+       $this->data['userdata']=$this->session->userdata('logged_in');
 		foreach($this->data['functions'] as $function){
 			if($function->user_function=="HR"){
 				$access=1;
@@ -243,11 +243,12 @@ class Staff extends CI_Controller {
 	}
 
     function add_transaction(){
-        if($this->session->userdata('logged_in'))
-		    $this->data['userdata']=$this->session->userdata('logged_in');
-        else
-            show_404();
-		$access=0;
+        if(!$this->session->userdata('logged_in'))
+		{
+			show_404();
+		}
+       
+        $this->data['userdata']=$this->session->userdata('logged_in');
 		foreach($this->data['functions'] as $function){
 			if($function->user_function=="HR"){
 				$access=1;
@@ -309,11 +310,12 @@ class Staff extends CI_Controller {
     }
 
     function search_staff(){
-        if($this->session->userdata('logged_in'))
-		    $this->data['userdata']=$this->session->userdata('logged_in');
-        else
-            show_404();
-		$access=0;
+        if(!$this->session->userdata('logged_in'))
+		 {
+			   show_404();	
+	    }
+           
+		 $this->data['userdata']=$this->session->userdata('logged_in');
 		foreach($this->data['functions'] as $function){
 			if($function->user_function=="HR"){
 				$access=1;
@@ -332,12 +334,12 @@ class Staff extends CI_Controller {
     }
 
 	function view($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=0){	
-        if($this->session->userdata('logged_in'))
-		    $this->data['userdata']=$this->session->userdata('logged_in');
-        else
-            show_404();
-		$access=0;
-		foreach($this->data['functions'] as $function){
+        if(!$this->session->userdata('logged_in'))
+		 {
+				 show_404();
+			}
+          $this->data['userdata']=$this->session->userdata('logged_in');
+		  foreach($this->data['functions'] as $function){
 			if($function->user_function=="HR"){
 				$access=1;
 			}

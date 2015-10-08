@@ -16,7 +16,17 @@ class Create_slots extends CI_Controller {
 	}
 	public function index()
 	{
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	}
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -46,10 +56,6 @@ class Create_slots extends CI_Controller {
 		}
 		
 		$this->load->view('templates/footer');
-		}
-		else {
-            show_404();
-
-		}
+		
 	}
 }

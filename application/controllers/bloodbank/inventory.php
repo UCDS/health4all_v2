@@ -18,7 +18,17 @@ class Inventory extends CI_Controller {
 	}
 	
 	public function discard(){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	    }
+	    $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -53,13 +63,20 @@ class Inventory extends CI_Controller {
 		}
 		
 		$this->load->view('templates/footer');
-		}
-		else {
-			show_404();
-		}
+		
 	}
 	public function blood_grouping(){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	    }
+	    $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -94,14 +111,20 @@ class Inventory extends CI_Controller {
 		}
 		
 		$this->load->view('templates/footer');
-		}
-		else {
-			show_404();
-		}
 	}
 	
 	public function prepare_components(){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	    }
+	    $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -136,13 +159,19 @@ class Inventory extends CI_Controller {
 		}
 		
 		$this->load->view('templates/footer');
-		}
-		else {
-			show_404();
-		}
-	}
+    }
 	public function screening(){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	    }
+	    $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -178,17 +207,23 @@ class Inventory extends CI_Controller {
 		}
 		
 		$this->load->view('templates/footer');
-		}
-		else {
-			show_404();
-		}
 	}
 	
 	public function issue(){
 		if(count(func_get_args())>0){
 			$request_id=func_get_arg(0);
 		}
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	    }
+	    $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -228,10 +263,7 @@ class Inventory extends CI_Controller {
 		}
 		
 		$this->load->view('templates/footer');
-		}
-		else {
-			show_404();
-		}
+		
 	}
 
 }

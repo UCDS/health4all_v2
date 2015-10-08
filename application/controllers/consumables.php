@@ -17,6 +17,17 @@ class Consumables extends CI_Controller {
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 	}
 	function add($type=""){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	}
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Consumables"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
 		$user=$this->session->userdata('logged_in');
@@ -230,6 +241,17 @@ $this->data['user']=$this->masters_model->get_data("user");
 		else show_404();
   	}	
 function edit($type=""){
+	if(!$this->session->userdata('logged_in')){
+		show_404();
+	}
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Consumables"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
 		$user=$this->session->userdata('logged_in');
@@ -436,7 +458,14 @@ $this->data['item_type']=$this->masters_model->get_data("item_type");
 		if(!$this->session->userdata('logged_in')){
             show_404();
         }
-
+		$this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Consumables"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		// Setting Form title
 		$this->data['title']="Items Type";
 

@@ -24,9 +24,17 @@ class Register extends CI_Controller {
 	//and also an optional visit_id when a patient is selected.
 	public function custom_form($form_id="",$visit_id=0)
 	{
-		if(!$this->session->userdata('logged_in')){
-			show_404();
+	 if(!$this->session->userdata('logged_in')){
+            show_404();
+        }
+		 $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Out Patient Registration"){
+		$access=1;
+		}		
 		}
+		if($access==0)
+		show_404();
 		//Loading the form helper
 		$this->load->helper('form');
 		
@@ -116,8 +124,9 @@ class Register extends CI_Controller {
 	
 	function view_patients(){
 		if($this->session->userdata('logged_in')){
+			show_404();
+		}
 		$this->data['userdata']=$this->session->userdata('logged_in');
-		$access=0;
 		foreach($this->data['functions'] as $function){
 			if($function->user_function=="View Patients"){
 				$access=1;
@@ -154,10 +163,7 @@ class Register extends CI_Controller {
 		else{
 		show_404();
 		}
-		}
-		else{
-		show_404();
-		}
+		
 	}
 	function update_patients(){
 		if($this->session->userdata('logged_in')){
@@ -223,6 +229,17 @@ class Register extends CI_Controller {
 		}
 	}
 	function search_icd_codes(){
+		if($this->session->userdata('logged_in')){
+			show_404();
+		}
+		$this->data['userdata']=$this->session->userdata('logged_in');
+		foreach($this->data['functions'] as $function){
+			if($function->user_function=="IP Summary"){
+				$access=1;
+			}
+		}
+		if($access!=1)
+			show_404();
 		if($icd_codes = $this->register_model->search_icd_codes()){
 			$list=array(
 				'icd_codes'=>$icd_codes

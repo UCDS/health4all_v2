@@ -16,6 +16,17 @@ class Staff extends CI_Controller {
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");	
 	}
 	function detail($hospital_id){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	 }
+	 $this->data['userdata']=$this->session->userdata('logged_in');
+	 foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['title']="Staff List";
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/donate_nav');
@@ -25,6 +36,16 @@ class Staff extends CI_Controller {
 	function login()
 	{	
 		if(!$this->session->userdata('logged_in')){
+		show_404();
+	 }
+	 $this->data['userdata']=$this->session->userdata('logged_in');
+	 foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['title']="Staff Login";
 		
 		$this->load->view('templates/header',$this->data);
@@ -45,15 +66,21 @@ class Staff extends CI_Controller {
 		}
 		
 		$this->load->view('templates/footer');
-		}
-		else {
-			redirect('user_panel/place','refresh');
-		}
+		
 	}
 	
 	function set_place(){
-		if($this->session->userdata('logged_in')){
-			
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	  }
+	   $this->data['userdata']=$this->session->userdata('logged_in');
+	   foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['title']="Place";
 
 		$this->data['userdata']=$this->session->userdata('hospital');
@@ -81,16 +108,21 @@ class Staff extends CI_Controller {
 		}
 		
 		$this->load->view('templates/footer');
-		}
-		else {
-			show_404();
-		}
 	}
 
 	function add_camp() {
-		if($this->session->userdata('logged_in')){
-
-		$this->data['title']="Add Camp";
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	}
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
+       $this->data['title']="Add Camp";
 
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->view('templates/header',$this->data);
@@ -125,16 +157,22 @@ class Staff extends CI_Controller {
 		}
 		
 		$this->load->view('templates/footer');
-		}
-		else {
-			show_404();
-		}
+		
 	}// add_camp
 
 	function add_hospital() {
-		if($this->session->userdata('logged_in')){
-			
-		$this->data['title']="Add Hospital";
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	}
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
+	     $this->data['title']="Add Hospital";
 
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->view('templates/header',$this->data);
@@ -179,14 +217,12 @@ class Staff extends CI_Controller {
 		}
 		
 		$this->load->view('templates/footer');
-		}
-		else {
-			show_404();
-		}
+		
 	}
 
 	function check_database($password){
 	   //Field validation succeeded.  Validate against database
+	   
 	   $username = $this->input->post('username');
 	 
 	   //query the database
