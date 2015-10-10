@@ -17,13 +17,15 @@
 	  $('[data-toggle="popover"]').popover({trigger:'hover',html:true});
 		$("#unit").chained("#department");
 		$("#area").chained("#department");
+		$("body").css('padding-top',$(".container").height());
+		$("body").css('padding-bottom',$("#footer").height());
 	});
 	</script>
 </head>
 <body>
 <div id="wrap">
     <!-- Static navbar -->
-    <div class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
 		<!-- Bootstrap toggle menu for mobile devices, only visible on small screens --> 
