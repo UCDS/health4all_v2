@@ -1,4 +1,8 @@
-
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+});
+</script>
 <div class="col-md-10 col-sm-9">
 	<?php
 	if(isset($msg)) {
@@ -15,7 +19,27 @@
 
 		<table id="header-fixed" class="table-2 table table-striped table-bordered"></table>
 		<table class="table-2 table table-striped table-bordered" id="table-1">
-		<thead><th>Name</th><th>Blood Group</th><th>Blood Unit</th><th>Segment</th><th>Bag Type/ Volume</th><th>UC</th><th>Done By</th><th></th></thead>
+		<thead><th>Name</th>
+				<th><div data-toggle="popover" data-placement="bottom" data-content="Please enter  Blood group">
+																  
+				Blood Group</div></th>
+				<th><div data-toggle="popover" data-placement="bottom" data-content="Please enter  Blood Unit">
+																  
+				Blood Unit</div></th>
+				<th><div data-toggle="popover" data-placement="bottom" data-content="Please enter  Segment Number">
+																  
+				Segment</div></th>
+				<th><div data-toggle="popover" data-placement="bottom" data-content="Please enter  Bag Type/ Volume">
+																  
+				Bag Type/ Volume</div></th>
+				<th><div data-toggle="popover" data-placement="bottom" data-content="Under Collection ">
+																  
+				UC</div></th>
+				<th><div data-toggle="popover" data-placement="bottom" data-content="Staff Name ">
+																  
+				Done By</div></th>
+				<th></th>
+				</thead>
 		<?php 
 		$i=1;
 		foreach($donors as $donor){

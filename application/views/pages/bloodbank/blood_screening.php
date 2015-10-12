@@ -9,7 +9,11 @@
 	});
 </script>
 
-
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+});
+</script>
 <div class="col-md-10 col-sm-9">
 	<?php
 	if(validation_errors()){
@@ -44,13 +48,27 @@
 		<table class="table-2 table table-striped table-bordered" id="table-1">
 		<thead>
 			<th>S.No</th>
-			<th>Blood Unit</th>
-			<th>HIV</th>
-			<th>HBSAG</th>
-			<th>HCV</th>
-			<th>VDRL</th>
-			<th>MP</th>
-			<th>Irregular AB</th>
+			<th><div data-toggle="popover" data-placement="bottom" data-content="Blood Unit No.">
+																  
+				Blood Unit No.</div></th>
+			<th><div data-toggle="popover" data-placement="bottom" data-content="Human Immunodeficiency Virus">
+																  
+				HIV</div></th>	
+			<th><div data-toggle="popover" data-placement="bottom" data-content="Hepatitis B Surface Antigen">
+																  
+				HBSAG</div></th>
+			<th><div data-toggle="popover" data-placement="bottom" data-content="Hepatitis C Virus">
+																  
+				HCV</div></th>
+			<th><div data-toggle="popover" data-placement="bottom" data-content="Venereal Disease Research Laboratory">
+																  
+				VDRL</div></th>
+			<th><div data-toggle="popover" data-placement="bottom" data-content=" Metabolic panel">
+																  
+				MP</div></th> 
+			<th><div data-toggle="popover" data-placement="bottom" data-content=" Irregular Antibody Screening">
+																  
+				Irregular AB</div></th>
 			<th>Tested</th>
 		</thead>
 		<?php 
