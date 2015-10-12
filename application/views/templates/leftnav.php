@@ -3,6 +3,8 @@
 ?>
 <div class="col-sm-3 col-md-2 sidebar-left">
     <ul class="nav nav-sidebar">
+	<?php foreach($functions as $f){
+								if($f->user_function=="Equipment"){ ?>
     			<li class="nav-header">Add</li>
 				<li <?php if(preg_match("^add/equipment$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/add/equipment">Equipment</a></li>
 				<li <?php if(preg_match("^add/equipment_type^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>equipments/add/equipment_type">Equipment Type</a></li>
@@ -15,6 +17,11 @@
 				<li><a href="#">AMC/CMC</a></li>
 				<li class="nav-header">View</li>
 				<li <?php if(preg_match("^view/equipments_summary^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/view/equipments_summary">Equipments</a></li>
+	<?php
+									break;
+								}
+							}
+						?>
 	<ul>
 </div>
 <?php } ?>
@@ -23,6 +30,8 @@
 ?>
 <div class="col-sm-3 col-md-2 sidebar-left">
     <ul class="nav nav-sidebar">
+	<?php foreach($functions as $f){
+		  if($f->user_function=="Vendor"){ ?>
     			<li class="nav-header">Add</li>
 				<li <?php if(preg_match("^add/vendor^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>vendor/add/vendor">Vendor</a></li>
 				<li <?php if(preg_match("^add/contact_person^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>vendor/add/contact_person">Contact Person</a></li>
@@ -30,7 +39,11 @@
 				<li class="nav-header">Edit</li>
 				<li <?php if(preg_match("^edit/vendor^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>vendor/edit/vendor">Vendor</a></li>
 				<li <?php if(preg_match("^edit/contact_person^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>vendor/edit/contact_person">Contact Person</a></li>
-				
+	<?php
+				  break;
+				}
+		}
+	?>
 	<ul>
 </div>
 <?php } ?>
@@ -38,6 +51,8 @@
 
 <div class="col-sm-3 col-md-2 sidebar-left">
     <ul class="nav nav-sidebar">
+	<?php foreach($functions as $f){
+		if($f->user_function=="Consumables"){ ?>
     			<li class="nav-header">Add</li>
 				<li <?php if(preg_match("^add/dosages^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>consumables/add/dosages">Dosages</a></li>
 				<li <?php if(preg_match("^add/generic^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>consumables/add/generic">Generic Item</a></li>
@@ -49,7 +64,11 @@
 				<li <?php if(preg_match("^edit/dosages^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>consumables/edit/dosages">Dosage Details</a></li>
 				<li class="nav-header">View</li>
 				<li <?php if(preg_match("^view/item_type^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>consumables/view/item_type">Item Type</a></li>
-
+        <?php
+									break;
+								}
+							}
+						?>
 			<ul>
 </div>
 <?php } ?>
@@ -57,6 +76,8 @@
 
 <div class="col-sm-3 col-md-2 sidebar-left">
     <ul class="nav nav-sidebar">
+	<?php foreach($functions as $f){
+								if($f->user_function=="HR"){ ?>
     			<li class="nav-header">Add</li>
 				<li <?php if(preg_match("^add/staff$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/add/staff">Staff</a></li>
 				<li <?php if(preg_match("^add/staff_role^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/add/staff_role">Staff Role</a></li>
@@ -66,6 +87,11 @@
 				<li <?php if(preg_match("^edit/staff_role^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/edit/staff_role">Staff Role</a></li>
 				<li <?php if(preg_match("^edit/staff_category^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/edit/staff_category">Staff Category</a></li>
                 <li <?php if(preg_match("^edit/add_transaction^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/add_transaction">HR Transaction</a></li>
+	<?php
+									break;
+								}
+							}
+						?>	
 	<ul>
 </div>
 <?php } ?>
@@ -216,12 +242,21 @@
 				<ul class="nav nav-sidebar nav-stacked">
 				<li class="nav-divider"></li>
 				<li>Forms</li>
+				<?php foreach($functions as $f){
+								if($f->user_function=="Masters - Application"){ ?>
 				<li <?php if(preg_match("^user_panel/form_layout^",current_url())) echo 'class="active"';?> > 
 					<a href="<?php echo base_url()."user_panel/form_layout";?>">Create New</a>
 				</li>
+				<?php
+									break;
+								}
+							}
+						?>	
 				<li class="nav-divider"></li>
 
 				<li class="navbar-text">Users</li>
+				<?php foreach($functions as $f){
+								if($f->user_function=="Masters - Application"){ ?>
 				<li <?php if(preg_match("^user_panel/create_user^",current_url())) echo 'class="active"';?> > 
 					<a href="<?php echo base_url()."user_panel/create_user";?>">Create New</a>
 				</li>
@@ -229,6 +264,11 @@
 				<li <?php if(preg_match("^user_panel/edit_user^",current_url())) echo 'class="active"';?>> 
 				<a href="<?php echo base_url()."user_panel/edit_user";?>">Edit User</a>
 				</li>
+				<?php
+									break;
+								}
+							}
+						?>	
 				</ul>
         </div>
 <?php } ?>

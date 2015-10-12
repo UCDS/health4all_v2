@@ -130,6 +130,17 @@
 							}
 						}
 						?>	
+						
+						 <?php
+						$diagnostics=0;
+						foreach($functions as $f){
+								if($f->user_function=="Diagnostics - search_patients"){ ?>
+									<li><a href="<?php echo base_url()."diagnostics/search_patients";?>"><i class="glyph-icon flaticon-chemistry20"></i> Diagnostics</a></li>
+						<?php		$diagnostics=1;
+									break;
+								}
+							}
+						?>
 
 						<?php foreach($functions as $f){
 								if($f->user_function=="Bloodbank"){ ?>
