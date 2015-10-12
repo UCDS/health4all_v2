@@ -6010,7 +6010,7 @@ td.visible-print {
 
 /* Set the fixed height of the footer here */
 #footer {
-  height: 60px;
+  height: 25px;
   background-color: #f5f5f5;
 }
 
