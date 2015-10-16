@@ -1,13 +1,13 @@
 
 	<div class="col-md-10 col-sm-9">
 		<div class="well">
-			<h4>Blood Bank - <?php echo $hospitaldata['hospital'];?>!</h4>
+			<h4>Blood Bank - <?php echo $hospitaldata['hospital'];?></h4>
 			<br />
 			<br />
-			<p> Current place set to <b><?php 
+			<p> Current place set to <b> <?php 
 			$place=$this->session->userdata('place');
 			echo $place['name']; ?></b>
-			<br />
+			<br /></div>
 			<br />
 		<?php 
 		echo form_open('bloodbank/user_panel/place',array('class'=>'form-custom')); ?>

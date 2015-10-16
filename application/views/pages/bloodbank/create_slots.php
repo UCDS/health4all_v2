@@ -62,7 +62,7 @@
 		<tr>
 			<td><br><input type="text" class="time form-control" name="from_time[]" size="6" required /></td>
 			<td><br><input type="text" class="time form-control" name="to_time[]" size="6" required  /></td>
-			<td><input type="number" class="number form-control" name="max_app[]" size="6" maxlength='3' required /></td>
+			<td><input type="text" class="number form-control" name="max_app[]" size="6" maxlength='3' required /></td>
 			<td><input type="button" id="addbutton" class="btn btn-primary" value="Add+" /></td>
 		</tr>
 	</table>

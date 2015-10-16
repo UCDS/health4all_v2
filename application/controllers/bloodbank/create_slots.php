@@ -34,7 +34,7 @@ class Create_slots extends CI_Controller {
 		else{
 			$this->load->model('bloodbank/slots_model');
 			if($this->slots_model->create()){
-				$this->data['msg']="<b style='color:green'>Slots have been created.</b>";
+				$this->data['msg']="<b style='color:green'>Slots have been created.<a href='pages/bloodbank/appointment'>Click  to view Slots</a> </b>";
 				$this->load->view('pages/bloodbank/create_slots',$this->data);
 			}
 			else{

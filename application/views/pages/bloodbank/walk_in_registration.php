@@ -89,7 +89,7 @@
 	<div class="form-group col-md-8">
 		<input type="text" placeholder="Full Name" class="form-control" id="name" name="name" required />
 	</div><br />
-	<label class="col-md-4" for="dob">DOB : </label>
+	<label class="col-md-4" for="dob">Date of Birth : </label>
 	<div class="form-group col-md-8" style="margin-top:5px;margin-bottom:5px;">
 		<input type="text" placeholder="Date of Birth" class="form-control" id="dob" name="dob" />
 	</div><br />
@@ -99,13 +99,23 @@
 	</div><br>
 		<label class="col-md-4" for="gender">Gender  <font color='red'>*</font></label>
 	<div class="form-group col-md-8" style="margin-top:5px;margin-bottom:5px;">
-		<input type="radio" name="gender" id="male" value="male" required /><label for="male">Male</label>&nbsp;&nbsp;
-		<input type="radio" name="gender" id="female" value="female" required /><label for="female">Female</label>
+		<input type="radio" name="gender" id="male" value="male" required /><label for="male">&nbsp;Male</label>&nbsp;&nbsp;
+		<input type="radio" name="gender" id="female" value="female" required /><label for="female">&nbsp;Female</label>
+		<input type="radio" name="gender" id="other" value="other" required /><label for="other">&nbsp;Other</label>
 	</div><br />
 	<label class="col-md-4" for="maritulstatus">Marital Status</label>
 	<div class="form-group col-md-8"  style="margin-top:5px;margin-bottom:5px;">
-		<input type="radio" name="maritial_status" id="single" value="single" /><label for="single">Single</label>&nbsp;&nbsp;
-		<input type="radio" name="maritial_status" id="married" value="married" /><label for="married">Married</label>
+			
+		<select name="maritial_status" class="form-control">
+				<option value="">Select  Marital Status</option>
+			<option value="single">Single</option>
+			<option value="married">Married</option>
+			<option value="divorced">Divorced</option>
+			<option value="separated">Separated</option>
+			<option value="widowed">Widowed</option>
+		</select>
+	
+		
 	</div><br />
 	<label class="col-md-4" for="Parentorspousename">Parent (or) Spouse name :</label>
 	<div class="form-group col-md-8"  style="margin-top:5px;margin-bottom:5px;">
