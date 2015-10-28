@@ -1,11 +1,26 @@
-
+<style>
+.sousMenu:hover ul
+{
+    display:inherit;
+}
+.sousMenu ul
+{
+    top: 40px;
+    display: none;
+    list-style-type: none;
+}
+</style>
     <link href="<?php echo base_url();?>assets/css/simple-sidebar.css" rel="stylesheet">
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 
-	<li <?php if(current_url()==base_url()."bloodbank/user_panel/place"){ echo "class='active'";}?>><a href="<?php echo base_url();?>bloodbank/user_panel/place"><i class="fa fa-map-marker " style="color:#E84F4F"></i>  Place</a></li>
+	<li class ="sousMenu"<?php if(current_url()==base_url()."bloodbank/user_panel/place"){ echo "class='active'";}?>><a href="<?php echo base_url();?>bloodbank/user_panel/place"><i class="fa fa-map-marker " style="color:#E84F4F"></i>  Place</a></li>
+	  <ul  id="submenu"> 
+                 <li><a href=""> Add Camp</li>
+                 <li><a href=""> Add Hospital</li>
+            </ul></li>
 	<li <?php if(current_url()==base_url()."bloodbank/create_slots"){ echo "class='active'";}?>><a href="<?php echo base_url();?>bloodbank/create_slots"><i class="fa fa-calendar " style="color:#E84F4F"></i>  Create Slots</a></li>
 	<li <?php if(current_url()==base_url()."bloodbank/register"){ echo "class='active'";}?>><a href="<?php echo base_url();?>bloodbank/register"><i class="fa fa-user " style="color:#E84F4F"></i>  Walk In</a></li>
 	<li <?php if(current_url()==base_url()."bloodbank/register/donation"){ echo "class='active'";}?>><a href="<?php echo base_url();?>bloodbank/register/donation"><i class="fa fa-stethoscope " style="color:#E84F4F"></i>  Medical Checkup</a></li>

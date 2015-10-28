@@ -15,7 +15,8 @@
 		<li <?php if(current_url()==base_url()."bloodbank/user_panel/blood_donors"){ echo "class='active'";}?>><a href='<?php echo base_url();?>bloodbank/user_panel/blood_donors'><i class="fa fa-file-text " style="color:#E84F4F"></i> Donors report</a></li> 
 		<li <?php if(current_url()==base_url()."bloodbank/user_panel/report_screening"){ echo "class='active'";}?>><a href='<?php echo base_url();?>bloodbank/user_panel/report_screening'><i class="fa fa-search  " style="color:#E84F4F"></i> Screening Report</a></li> 
 		<li <?php if(current_url()==base_url()."bloodbank/user_panel/report_grouping"){ echo "class='active'";}?>><a href='<?php echo base_url();?>bloodbank/user_panel/report_grouping'><i class="fa fa-spinner " style="color:#E84F4F"></i> Grouping Report</a></li>
-		<li <?php if(current_url()==base_url()."bloodbank/user_panel/discard_report"){ echo "class='active'";}?>><a href='<?php echo base_url();?>bloodbank/user_panel/discard_report'><i class="fa fa-times-circle " style="color:#E84F4F"></i> Discard Report</a></li>
+		<li <?php if(current_url()==base_url()."bloodbank/user_panel/discard_report"){ echo "class='active'";}?>><a href='<?php echo base_url();?>bloodbank/user_panel/discard_report'><i class="fa fa-times-circle " style="color:#E84F4F"></i> Discard Detail</a></li>
+				<li <?php if(current_url()==base_url().""){ echo "class='active'";}?>><a href='<?php echo base_url();?>'><i class="fa fa-times-circle " style="color:#E84F4F"></i> Discard Summary</a></li>
 		<li <?php if(current_url()==base_url()."bloodbank/user_panel/print_certificates"){ echo "class='active'";}?>><a href='<?php echo base_url();?>bloodbank/user_panel/print_certificates'><i class="fa fa-print " style="color:#E84F4F"></i> Print Certificates</a></li>
 	  </ul>
         </div>

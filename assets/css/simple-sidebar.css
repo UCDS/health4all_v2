@@ -77,12 +77,11 @@
 	font-weight:bold;
     background: rgba(0,0,0,0.1);
 }
-
-.sidebar-nav li a:active {
-    color: #DA1B1B;
-	
-   
+.sidebar-nav > .active > a {
+  color: #fff;
+  background-color: #4781A5;
 }
+
 .sidebar-nav li a:focus {
     text-decoration: none;
 }
