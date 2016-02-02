@@ -4,7 +4,8 @@ class User_panel extends CI_Controller {
 	function __construct(){
 		parent::__construct();
 		$this->load->model('bloodbank/reports_model');		
-		$this->load->model('bloodbank/register_model');		
+		$this->load->model('bloodbank/register_model');	
+        $this->load->model('bloodbank/inventory_model');		
 		$this->load->model('staff_model');	
 		if($this->session->userdata('logged_in')){
 		$userdata=$this->session->userdata('logged_in');
@@ -22,6 +23,7 @@ class User_panel extends CI_Controller {
 		$this->load->library('form_validation');
 		$this->data['title']="Places";
 		$this->data['userdata']=$this->session->userdata('logged_in');
+		$this->data['hospitaldata']=$this->session->userdata('hospital');
 		$this->data['camps']=$this->register_model->get_camps();
 		if($this->input->post('add_camp')){
 				if($this->staff_model->add_camp()){
@@ -35,13 +37,13 @@ class User_panel extends CI_Controller {
 		}
 		else if($this->input->post('reset')){
 			$this->session->unset_userdata('place');
-				$this->session->set_userdata('place',array('camp_id'=>0,'name'=>'Warangal Blood Bank - Indian Red Cross Society'));
+				$this->session->set_userdata('place',array('camp_id'=>0,'name'=>'Blood Bank'));
 
 				$this->load->view('templates/header',$this->data);
 				$this->load->view('templates/panel_nav',$this->data);
 				$this->load->view('pages/bloodbank/place');
 		}
-		else if($this->input->post('camp')){
+		else if($this->input->post('set_camp')){
 			$this->session->unset_userdata('place');
 			$camp=$this->register_model->get_camps($this->input->post('camp'));
 			$sess_array=array(
@@ -118,6 +120,7 @@ class User_panel extends CI_Controller {
 		$this->data['title']="Issues Summary";
 		$this->data['userdata']=$this->session->userdata('logged_in');
 		$this->data['summary']=$this->reports_model->get_issue_summary();
+		$this->data['staff']=$this->staff_model->staff_list();
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/reports_nav',$this->data);
 		$this->load->view('pages/bloodbank/report_issues_summary',$this->data);
@@ -126,6 +129,29 @@ class User_panel extends CI_Controller {
 		else{
 			show_404();
 		}
+	}
+		function invite_donor(){
+		if($this->session->userdata('logged_in')){
+		$this->load->helper('form');
+		$this->load->library('email');
+		$this->data['title']="Invite Donor";
+		$this->data['userdata']=$this->session->userdata('logged_in');
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('templates/panel_nav',$this->data);
+		$this->data['camps']=$this->register_model->get_camps();
+		if($this->input->post('submit')){
+			$this->data['donors']=$this->reports_model->send_sms_email_invite();
+          $this->data['msg']="Sms Sent.";			
+		}
+		$this->data['donors']=$this->reports_model->get_invite_donors();
+		$this->load->view('pages/bloodbank/invite_donor',$this->data);
+		$this->load->view('templates/footer');	
+		}
+		
+		else {
+			show_404();
+		}
+		
 	}
 	function available_blood(){
 		if($this->session->userdata('logged_in')){
@@ -163,6 +189,9 @@ class User_panel extends CI_Controller {
 		$this->load->helper('form');
 		$this->data['title']="Donations detailed report";
 		$this->data['userdata']=$this->session->userdata('logged_in');
+		$this->data['camps']=$this->register_model->get_camps();
+		$this->data['from_date']=$from_date;
+		$this->data['to_date']=$to_date;
 		$this->data['donated']=$this->reports_model->get_donated_blood($camp,$blood_group,$sex,$donation_date,$from_date,$to_date);
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/reports_nav',$this->data);
@@ -208,6 +237,7 @@ class User_panel extends CI_Controller {
 		if($this->session->userdata('logged_in')){
 		$this->load->helper('form');
 		$this->data['staff']=$this->staff_model->staff_list();
+		$this->data['staff']=$this->staff_model->staff_list();
 		$this->data['title']="Issue Report";
 		$this->data['userdata']=$this->session->userdata('logged_in');
 		$this->data['issued']=$this->reports_model->get_issues($issue_date,$blood_group,$from_date,$to_date,$hospital);
@@ -236,7 +266,21 @@ class User_panel extends CI_Controller {
 			show_404();
 		}
 	}
-	
+	function discard_report(){
+		if($this->session->userdata('logged_in')){
+		$this->load->helper('form');
+		$this->data['title']="User Panel";
+		$this->data['userdata']=$this->session->userdata('logged_in');
+		$this->data['inventory']=$this->reports_model->get_discard_report();
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('templates/reports_nav',$this->data);
+		$this->load->view('pages/bloodbank/discard_report',$this->data);
+		$this->load->view('templates/footer');	
+		}
+		else{
+			show_404();
+		}
+	}
 	function print_certificates(){
 		if($this->session->userdata('logged_in')){
 		$this->load->helper('form');

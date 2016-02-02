@@ -86,68 +86,153 @@
 			$("tr.bulk").remove();
 			$(".bulk").hide();
 			$(".patient").show();
+                         $(".enter-hospital").addClass('sr-only');
 		});
-		$("#bulk").click(function(){
+		$("#bulk_request").click(function(){
 			$(".patient").hide();
+                        $(".enter-hospital").removeClass('sr-only');
+                        $(".enter-patient").removeClass('sr-only');
+			$("#hospital").show();
 			$(".bulk").show();
 		});
 		$("#request_date").Zebra_DatePicker();
+		$("#patient_type").change(function(){
+			if($(this).val()=="External"){
+				$(".enter-patient").removeClass('sr-only');
+                                $(".select-patient").addClass('sr-only');
+                                $(".enter-hospital").removeClass('sr-only');
+			}
+			else{
+				$(".enter-patient input").attr("name","")
+				$(".enter-patient").addClass('sr-only');
+				$("#select-patient").attr("name","hosp_file_no");
+				$(".enter-patient input").attr("name","hospital_id");
+				$("#select-patient").attr("form","request_form");
+				$(".select-patient").removeClass('sr-only');
+			}
+		});
 	});
 	function delete_row(i){
 		$("#row_"+i).remove();
 	}
 </script>
-<div class="col-md-10 col-sm-9">
+<div class="col-md-10 col-sm-9 header-shadow">
 	<?php
 	if(isset($msg)) {
 		if($msg='success'){
-		echo "Your request has been submitted.";
-		echo "<br />";
+		echo "<div class='alert alert-info'>Your request has been submitted.</div>";
 		echo "<br />";
 		}
 		else{
-		echo "There was an error in registering your request. Please retry.";
-		echo "<br />";
+		echo "<div class='alert alert-danger'>There was an error in registering your request. Please retry.</div>";
 		echo "<br />";
 		}
 	}
 	?>
 	<div>
-		<?php echo form_open('bloodbank/register/request',array('role'=>'form','class'=>'form-custom'));
-		echo validation_errors();?>
-		<h3>Request Form</h3>
-		<table class="table-2 table table-striped table-bordered">
-			<tr><td>Request Type : </td><td>
-					<label><input type="radio" value="0" name="request_type" id="patient" />Patient</label>
-					<label><input type="radio" value="1" name="request_type" id="bulk" />Bulk</label>
+		<?php echo form_open('bloodbank/register/request',array('role'=>'form','class'=>'form-custom','id'=>'request_form'));
+		if(validation_errors()) echo "<div class='alert alert-info'>".validation_errors()."</div>";?>
+		<h4>Request Form</h4>
+		<table class="table table-striped table-bordered">
+			<tr><td>Request Type : </td>
+			<td>
+					<label><input type="radio" value="0" name="request_type" id="patient" checked />Patient</label>
+					<label><input type="radio" value="1" name="request_type" id="bulk_request" />Bulk</label>
 			</td>
+			</tr>
+			<tr class="patient">
+				<td> Patient Type : </td>
+				<td>
+				<div class="col-md-12">
+					<div class="col-md-12">
+						<select class="form-control" id="patient_type" name="patient_type">
+							<option value="" disabled>Select Patient Type</option>
+							<option value="Internal" selected>Internal</option>
+							<option value="External">External</option>
+						</select>
+						<font color='red'>*</font>
+					</div>
+				</div>
+				</td>
 			</tr>
 			<tr class="patient">
 				<td> Patient : </td>
 				<td>
 				<div class="col-md-12">
 					<div class="col-md-12">
-					<select class="form-control" id="visit_type" name="patient_type">
-						<option value="" disabled>Select Patient Type</option>
-						<option value="OP">OP</option>
-						<option value="IP" selected>IP</option>
-					</select>
-					<select class="form-control" id="year"  name="year">
-						<option value="" disabled>Select Admission Year</option>
-						<option value="<?php echo date("Y",strtotime("Last Year"));?>"><?php echo date("Y",strtotime("Last Year"));?></option>
-						<option value="<?php echo date("Y");?>" selected><?php echo date("Y");?></option>
-					</select>
+					<input class="form-control sr-only enter-patient" type="hidden" name="hospital_internal_id" size="50px" />
 					<font color='red'>*</font>
 					</div>
-					<div class="col-md-6">
-					<select id="select-patient" class="repositories" placeholder="Select a Patient..." name="hosp_file_no" ></select>
+					<div class="col-md-6 select-patient">
+						<select id="select-patient" class="repositories" placeholder="Select a Patient..." name="hosp_file_no" ></select>
 					</div>
+					
+					<div class="col-md-8 sr-only enter-patient">
+						<input class="form-control" placeholder="Patient First Name" name="patient_first_name" size="50px"/>
+					</div>
+					<div class="col-md-8 sr-only enter-patient">
+						<input class="form-control" placeholder="Patient Last Name" name="patient_last_name" size="50px"/>
+					</div>
+					<div class="col-md-8 sr-only enter-patient">
+						<input class="form-control" placeholder="Age" name="patient_age" size="50px" />
+					</div>
+					<div class="col-md-8 sr-only enter-patient">
+						<input class="form-control" placeholder="Diagnosis" name="patient_diagnosis" size="50px" />
+					</div>
+					<div class="col-md-8 sr-only enter-patient">
+						<input class="form-control" placeholder="Ward/Unit" name="ward_unit" size="50px" />
+					</div>
+					<div class="col-md-8 sr-only enter-patient">
+						<label><input type="radio" value="0" name="gender" id="male" checked />Male</label>
+					   <label><input type="radio" value="1" name="gender" id="female" />Female</label>
+					    <label><input type="radio" value="2" name="gender" id="female" />Others</label>
+					</div>
+					
+					
 				</div>
 				<div class='col-md-12 selected_patient'>
 				</div>
+				
+				</td>
+				
+			</tr>
+			<tr class="doctor">
+			
+			<td>Doctor</td>
+			<td>
+			 <div class="row">
+			<div class="col-md-12">
+     <!--  					 <div class="col-md-6">
+         <select id="select_doctor" class="repositories" placeholder="Select a Doctor..." name="staff_id"  ></select> 
+            </div> -->
+			 <div class="col-md-4 sr-only enter-patient ">
+			        <input class="form-control" placeholder="Enter Doctor Name" name="doctor_name" size="50px" />
+			</div>
+			 <div class='col-md-10 selected_doctor'>
+		    </div>
+			<!-- <div class="col-md-6 sr-only enter-patient">
+                <select id="select_hospital" class="repositories" placeholder="Select Hospital Name..." name="hospital_id"  ></select>
+            </div> -->
+			<div class="col-md-6 sr-only enter-hospital">
+			<select class="form-control" id="hospital" name="hospital" >
+				                                  <option value="">Hospital</option>
+				                                  <?php foreach($hospitals as $d){
+				                                        echo "<option value='$d->hospital_id'>$d->hospital</option>";
+				                                  }?>
+			 </select>
+			 </div>
+			
+			 <!--<div class='col-md-10 selected_hospital'>
+		    </div>-->
+			</div>
+			</div>
+		   
+		   
 				</td>
 			</tr>
-			<tr><td>Required : </td>
+			<tr>
+			 	
+			<td>Required : </td>
 			<td>
 			<table class='required_blood'>
 				<tr>
@@ -162,7 +247,7 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td><select name="blood_group[]" required >
+					<td><select name="blood_group[]" >
 						<option value="" disabled selected>Select</option>
 						<option value="A+">A+</option>
 						<option value="B+">B+</option>
@@ -186,8 +271,9 @@
 					</td>
 				</tr>
 			</table>
-			</td></tr>
-			<tr><td> Request Date : </td><td><input type="text" name="request_date" id="request_date" required /></td>
+			</td>
+			</tr>
+			<tr><td> Request Date : </td><td><input type="text" name="request_date" id="request_date" /></td>
 			<tr><td colspan="2" align="center"><input type="submit" value="Submit" /> </td></tr>
 		</table>
 		</form>	
@@ -246,7 +332,7 @@
     load: function(query, callback) {
         if (!query.length) return callback();
 		$.ajax({
-            url: '<?php echo base_url();?>diagnostics/search_patients',
+            url: '<?php echo base_url();?>bloodbank/register/search_patients',
             type: 'POST',
 			dataType : 'json',
 			data : {visit_type:$visit_type,year:$year,query:query},
@@ -260,3 +346,103 @@
     }
 	});
 </script>
+
+<script>
+    
+    $(function(){
+		selectize = $("#select_doctor")[0].selectize;
+		selectize.on('change',function(){
+			var test = selectize.getOption(selectize.getValue());
+			test.find('.staff_id').text()!=""?$(".selected_doctor").text(test.find('.language').text()+", "+test.find('.staff_id').text()) :  $(".selected_doctor").text("").removeClass('well well-sm');
+			$(".selected_doctor").text()!=""?$(".selected_doctor").addClass('well well-sm') : $(".selected_doctor").removeClass('well well-sm');
+            
+		});
+	});
+
+    $('#select_doctor').selectize({
+    valueField: 'staff_id',
+    labelField: 'first_name',
+    searchField: 'first_name',
+    create: false,
+    render: {
+        option: function(item, escape) {
+
+            return '<div>' +                
+                '<ul class="meta">' +
+                    (item.first_name ? '<li class="language">' + escape(item.first_name) + ' ' : '') +
+                    (item.last_name ? '' + escape(item.last_name) + '</li>' : '') +                    
+                '</ul>' +
+                '<span class="title">' +
+                    '<span class="doctor_reg_no">' + escape(item.doctor_reg_no) + '</span>' +
+                '</span>' +
+            '</div>';
+        }
+    },
+    load: function(query, callback) {
+        if (!query.length) return callback();
+		$.ajax({
+            url: '<?php echo base_url();?>staff/search_doctor',
+            type: 'POST',            
+			dataType : 'json',
+            data : {query:query},			
+            error: function(res) {
+                callback();
+            },
+            success: function(res) {
+                callback(res.doctors.slice(0, 10));
+            }
+        });
+    }
+	});
+    </script>
+	
+	
+<script>
+    
+    $(function(){
+		selectize = $("#select_hospital")[0].selectize;
+		selectize.on('change',function(){
+			var test = selectize.getOption(selectize.getValue());
+			test.find('.hospital_id').text()!=""?$(".selected_hospital").text(test.find('.language').text()+", "+test.find('.hospital_id').text()) :  $(".selected_hospital").text("").removeClass('well well-sm');
+			$(".selected_hospital").text()!=""?$(".selected_hospital").addClass('well well-sm') : $(".selected_hospital").removeClass('well well-sm');
+            
+		});
+	});
+
+    $('#select_hospital').selectize({
+    valueField: 'hospital_id',
+    labelField: 'hospital',
+    searchField: 'hospital',
+    create: false,
+    render: {
+        option: function(item, escape) {
+
+            return '<div>' +                
+                '<ul class="meta">' +
+                    (item.hospital ? '<li class="language">' + escape(item.hospital) + ' ' : '') +
+                    (item.hospital ? '' + escape(item.hospital) + '</li>' : '') +                    
+                '</ul>' +
+                '<span class="title">' +
+                    '<span class="hospital">' + escape(item.hospital) + '</span>' +
+                '</span>' +
+            '</div>';
+        }
+    },
+    load: function(query, callback) {
+        if (!query.length) return callback();
+		$.ajax({
+            url: '<?php echo base_url();?>staff/search_hospital',
+            type: 'POST',            
+			dataType : 'json',
+            data : {query:query},			
+            error: function(res) {
+                callback();
+            },
+            success: function(res) {
+                callback(res.hospital.slice(0, 10));
+            }
+        });
+    }
+	});
+    </script>	
+	

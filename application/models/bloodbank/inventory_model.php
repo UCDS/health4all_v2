@@ -23,7 +23,7 @@ class Inventory_model extends CI_Model{
 		->where('bb_donation.hospital_id',$hospital)
 		->order_by('blood_unit_num');
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	function group_blood(){
 		$donation_ids=$this->input->post('donation_id');
@@ -108,9 +108,10 @@ class Inventory_model extends CI_Model{
 		->where('bb_donation.status_id >=',5,false)
 		->where('component_type','WB')
 		->where('bb_donation.hospital_id',$hospital)
-		->order_by('blood_unit_num');
+		->order_by('blood_unit_num')
+                ->limit('500');
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}	
 	
 	function prepare_components(){
@@ -130,85 +131,86 @@ class Inventory_model extends CI_Model{
 		->join('bb_donation','blood_inventory.donation_id=bb_donation.donation_id')
 		->where('bb_donation.donation_id',$donation_id);
 		$query=$this->db->get();
-		$result=$query->result_array();
+		$result=$query->result();
 		$inventory=$result[0];
 		
 		foreach($components as $component){
 			if($component=="WB"){
-				$volume=$inventory['volume'];
-				$expiry_date=$inventory['expiry_35'];
+				$volume=$inventory->volume;
+				$expiry_date=$inventory->expiry_35;
 			}
 			else if($component=='PC'){
-				if($inventory['volume']==350){
+				if($inventory->volume==350){
 					$volume='100';
 				}
 				else{
 					$volume='150';
 				}
-				if($inventory['bag_type']==5){
-					$expiry_date=$inventory['expiry_42'];
+				if($inventory->bag_type==5){
+					$expiry_date=$inventory->expiry_42;
 				}
 				else{
-					$expiry_date=$inventory['expiry_35'];
+					$expiry_date=$inventory->expiry_35;
 				}
 			}
 			else if($component=='FFP'){
-				if($inventory['volume']==350){
+				if($inventory->volume==350){
 					$volume='40';
 				}
 				else{
 					$volume='60';
 				}
-				$expiry_date=$inventory['expiry_365'];
+				$expiry_date=$inventory->expiry_365;
 			}
 			else if($component=='FP'){
-				if($inventory['volume']==350){
+				if($inventory->volume==350){
 					$volume='40';
 				}
 				else{
 					$volume='60';
 				}
-					$expiry_date=$inventory['expiry_1825'];
+					$expiry_date=$inventory->expiry_1825;
 			}
 			else if($component=='PRP'){
-				if($inventory['volume']==350){
+				if($inventory->volume==350){
 					$volume='100';
 				}
 				else{
 					$volume='120';
 				}
-					$expiry_date=$inventory['expiry_5'];
+					$expiry_date=$inventory->expiry_5;
 			}
 			else if($component=='Platelet Concentrate'){
-				if($inventory['volume']==350){
+				if($inventory->volume==350){
 					$volume='100';
 				}
 				else{
 					$volume='120';
 				}
-				$expiry_date=$inventory['expiry_5'];
+				$expiry_date=$inventory->expiry_5;
 			}
 			else if($component=='Cryo'){
-				if($inventory['volume']==350){
+				if($inventory->volume==350){
 					$volume='80';
 				}
 				else{
 					$volume='100';
 				}
-				$expiry_date=$inventory['expiry_5'];
+				$expiry_date=$inventory->expiry_5;
 			}
 			$userdata=$this->session->userdata('hospital');
 			$data[]=array(
 			'component_type'=>$component,
 			'status_id'=>7,
-			'donation_id'=>$inventory['donation_id'],
+			'donation_id'=>$inventory->donation_id,
 			'volume'=>$volume,
 			'created_by'=>$this->input->post('staff'),
 			'expiry_date'=>$expiry_date,
+			'component_perparation_time'=>$this->input->post($inventory->donation_id.'com_prep_time'),
 			'datetime'=>date("Y-m-d",strtotime($this->input->post('preparation_date')))
 			);
 			$update_data[]=array(
-			'inventory_id'=>$inventory['inventory_id'],
+			'inventory_id'=>$inventory->inventory_id,
 			'status_id'=>10,
 			'component_type'=>'Components Prepared'
 			);
@@ -242,7 +244,7 @@ class Inventory_model extends CI_Model{
 		->group_by('blood_inventory.donation_id')
 		->order_by('blood_unit_num');
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	
 	function blood_screening(){
@@ -252,6 +254,7 @@ class Inventory_model extends CI_Model{
 		$data=array();
 		$status_data=array();
 		$this->db->trans_start();
+		
 		foreach($tested as $donation_id){
 			$hiv=$this->input->post('test_hiv_'.$donation_id);
 			$hbsag=$this->input->post('test_hbsag_'.$donation_id);
@@ -287,6 +290,49 @@ class Inventory_model extends CI_Model{
 		$this->db->update_batch('bb_donation',$status_data,'donation_id');
 		$this->db->update_batch('blood_screening',$data,'donation_id');
 		$this->db->trans_complete();
+		
+		$this->db->select('blood_donor.phone, blood_donor.name, blood_donor.blood_group, bb_donation.donation_date')
+		->from('blood_donor')
+		->join('bb_donation','bb_donation.donor_id = blood_donor.donor_id','left')
+		->join('blood_screening','blood_screening.donation_id = bb_donation.donation_id AND blood_screening.screening_result!=1','left')
+		->where_in('bb_donation.donation_id',$tested);
+		$donor_info_query = $this->db->get();
+                $donor_info = $donor_info_query->result();
+                
+		$number_message = array();
+		foreach($donor_info as $donor)
+		{
+			if($donor->phone!='')
+			{
+				$donation_date = date("j F Y", strtotime($donor->donation_date));
+				$number_message[]=$number_message[]=$donor->phone.'^'
+					."Thank you $donor->name for donating you $donor->blood_group blood to IRCS on ".$donation_date.".";
+				
+			}
+		}
+               if(sizeof($number_message) > 1)
+		       $number_message_string = implode('~',$number_message);
+               else
+		       $number_message_string = implode('',$number_message);                   
+		//Send SMS
+		$url = "http://www.smsstriker.com/API/multi_messages.php?";
+		$data = array('username'=>'ucdsyousee',
+				'password'=>'SMS4UCDS',
+				'from'=>'IRCS',
+				'mno_msg'=>$number_message_string,
+				'type'=>1,
+				'dnd_check'=>0
+		);
+		$options = array(
+				'http' => array(
+						'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+						'method'  => 'POST',
+						'content' => http_build_query($data)
+				)
+		);
+		$context  = stream_context_create($options);
+		$result = file_get_contents($url, false, $context);
+		//End of send SMS.
 		return $this->db->trans_status();
 	}
 	
@@ -298,17 +344,17 @@ class Inventory_model extends CI_Model{
 		}
 		$this->db->select('blood_request.*, patient_visit.hosp_file_no, patient.first_name, patient.last_name, hospital, department.department, unit_name, area_name')
 		->from('blood_request')
-		->join('patient_visit','blood_request.patient_id = patient_visit.visit_id','left')
+		->join('patient_visit','blood_request.patient_id = patient_visit.patient_id','left')
 		->join('patient','patient_visit.patient_id = patient.patient_id','left')
 		->join('department','patient_visit.department_id = department.department_id','left')
 		->join('unit','patient_visit.unit = unit.unit_id','left')
 		->join('area','patient_visit.area = area.area_id','left')
-		->join('hospital','blood_request.bloodbank_id=hospital.hospital_id')
+		->join('hospital','blood_request.hospital_id=hospital.hospital_id','left')
 		->where('request_status','Pending')
-		->where('blood_request.bloodbank_id',$hospital)
+	//	->where('blood_request.bloodbank_id',$hospital)
 		->order_by('blood_transfusion_required desc,request_id asc');
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	
 	function get_inventory(){
@@ -327,10 +373,11 @@ class Inventory_model extends CI_Model{
 		->join('bb_status d_status','bb_donation.status_id=d_status.status_id')
 		->join('bb_status i_status','blood_inventory.status_id=i_status.status_id')
 		->where('blood_inventory.status_id !=',10)
-		->where('bb_donation.hospital_id',$hospital)
-		->order_by('component_type');
+	//	->where('bb_donation.hospital_id',$hospital)
+		->order_by('component_type')
+                ->limit(500);
 		$query=$this->db->get();
-		return $query->result_array();
+		return $query->result();
 	}
 	
 	function discard_inventory(){
@@ -357,22 +404,22 @@ class Inventory_model extends CI_Model{
 		SELECT * FROM blood_inventory
 		JOIN bb_donation ON blood_inventory.donation_id=bb_donation.donation_id
 		JOIN blood_donor ON bb_donation.donor_id=blood_donor.donor_id
-		WHERE ("WB" IN ('.$components.')) AND component_type="WB" AND bb_donation.status_id=6 AND bb_donation.hospital_id='.$hospital.' AND screening_result=1 AND blood_inventory.status_id=7 AND blood_group="'.$blood_group.'"
+		WHERE ("WB" IN ('.$components.')) AND component_type="WB" AND bb_donation.status_id=6 AND screening_result=1 AND blood_inventory.status_id=7 AND blood_group="'.$blood_group.'"
 		UNION
 		SELECT * FROM blood_inventory
 		JOIN bb_donation ON blood_inventory.donation_id=bb_donation.donation_id
 		JOIN blood_donor ON bb_donation.donor_id=blood_donor.donor_id
-		WHERE ("FP" IN ('.$components.') OR "FFP" IN ('.$components.') OR "PC" IN ('.$components.')) AND component_type IN ("PC","FP","FFP") AND bb_donation.status_id=6 AND bb_donation.hospital_id='.$hospital.' AND screening_result=1 AND blood_inventory.status_id=7  AND blood_group LIKE "'.trim($blood_group,'+-').'%"
+		WHERE ("FP" IN ('.$components.') OR "FFP" IN ('.$components.') OR "PC" IN ('.$components.')) AND component_type IN ("PC","FP","FFP") AND bb_donation.status_id=6 AND screening_result=1 AND blood_inventory.status_id=7  AND blood_group LIKE "'.trim($blood_group,'+-').'%"
 		UNION
 		SELECT * FROM blood_inventory
 		JOIN bb_donation ON blood_inventory.donation_id=bb_donation.donation_id
 		JOIN blood_donor ON bb_donation.donor_id=blood_donor.donor_id
 		WHERE ("Cryo" IN ('.$components.') OR "PRP" IN ('.$components.') OR "Platelet Concentrate" IN ('.$components.'))
 		AND component_type IN ("Cryo","PRP","Platelet Concentrate") 
-		AND bb_donation.status_id=6  AND screening_result=1 AND bb_donation.hospital_id='.$hospital.' AND blood_inventory.status_id=7
+		AND bb_donation.status_id=6  AND screening_result=1 AND blood_inventory.status_id=7
 		ORDER BY component_type,blood_unit_num ASC,expiry_date ASC
-		');
-		$data[]=$result->result_array();
+		'); //AND bb_donation.hospital_id='.$hospital.'
+		$data[]=$result->result();
 		$data[]=$result->num_rows();
 		return $data;
 	}
@@ -387,6 +434,7 @@ class Inventory_model extends CI_Model{
 		'issue_date'=>date("Y-m-d",strtotime($this->input->post('issue_date'))),
 		'issue_time'=>date("h:i:s",strtotime($this->input->post('issue_time')))
 		);
+                $issued_inventory = array();
 		$this->db->trans_start();
 		$this->db->insert('blood_issue',$data);
 		$issue_id=$this->db->insert_id();
@@ -406,16 +454,20 @@ class Inventory_model extends CI_Model{
 			return false;
 		}
 		else{
-			$this->db->select('blood_donor.donor_id,blood_donor.blood_group,blood_donor.sub_group,name,email,diagnosis,donation_date,issue_date,issue_time,request_type')->from('blood_donor')
-			->join('bb_donation','blood_donor.donor_id=bb_donation.donor_id')
-			->join('blood_inventory','bb_donation.donation_id=blood_inventory.donation_id')
-			->join('bb_issued_inventory','blood_inventory.inventory_id=bb_issued_inventory.inventory_id')
-			->join('blood_issue','bb_issued_inventory.issue_id=blood_issue.issue_id')
-			->join('blood_request','blood_issue.request_id=blood_request.request_id')
+			$this->db->select('blood_donor.donor_id,blood_donor.blood_group,blood_donor.sub_group,name,email,blood_request.diagnosis,donation_date,blood_issue.issue_id, issue_date,issue_time,request_type,patient.first_name,patient.last_name,blood_request.patient_name, patient_visit.final_diagnosis ,bb_donation.blood_unit_num, bb_donation.segment_num, blood_inventory.component_type, blood_inventory.volume, blood_request.blood_group "recipient_group", MAX(patient_visit.admit_date), hospital.hospital')
+                        ->from('blood_donor')
+			->join('bb_donation','blood_donor.donor_id=bb_donation.donor_id','left')
+			->join('blood_inventory','bb_donation.donation_id=blood_inventory.donation_id','left')
+			->join('bb_issued_inventory','blood_inventory.inventory_id=bb_issued_inventory.inventory_id','left')
+			->join('blood_issue','bb_issued_inventory.issue_id=blood_issue.issue_id','left')
+			->join('blood_request','blood_issue.request_id=blood_request.request_id','left')
+                        ->join('patient','patient.patient_id=blood_request.patient_id','left')
+                        ->join('patient_visit','patient_visit.patient_id=patient.patient_id','left')
+                        ->join('hospital','hospital.hospital_id=blood_request.hospital_id','left')
 			->where_in('blood_inventory.inventory_id',$inventory)
-			->group_by('blood_donor.donor_id');
+			->group_by('blood_donor.donor_id, patient_visit.patient_id');
 			$query=$this->db->get();
-			return $query->result_array();
+			return $query->result();
 		}
 	}
 }

@@ -17,6 +17,8 @@
 		</div>
 		<p>If you would like to donate blood, <a href="<?php echo base_url();?>appointment">click here</a></p>
 		<br />
+                <p>Staff login, <a href="<?php echo base_url();?>">click here</a></p>
+                <br />
 		<h4>Our inventory as on <?php echo date("d-M-Y");?> </h4>
 		<table class="table-2 table table-striped table-bordered" style="position:relative;float:left">
 			<tr><th colspan="4">Whole Blood & Packed Cells</th></tr>
@@ -29,23 +31,23 @@
 			$wb_total=0;
 			$pc_total=0;
 			foreach($available as $s){
-			$blood_group=str_replace("+","pos",$s['blood_group']);
+			$blood_group=str_replace("+","pos",$s->blood_group);
 			$blood_group=str_replace("-","neg",$blood_group);
 			?>
 			<tr>
-				<td><?php echo $s['blood_group'];?></td>
-				<td><?php echo $s['wb'];?></td>
-				<td><?php echo $s['pc'];?></td>
-				<th><?php $group_total=$s['wb']+$s['pc'];
+				<td><?php echo $s->blood_group;?></td>
+				<td><?php echo $s->wb;?></td>
+				<td><?php echo $s->pc;?></td>
+				<th><?php $group_total=$s->wb+$s->pc;
 					echo $group_total;
 					?>
 				</th>
 			</tr>
 			<?php
-			$available_groups[]=$s['blood_group'];
+			$available_groups[]=$s->blood_group;
 			$total+=$group_total;
-			$wb_total+=$s['wb'];
-			$pc_total+=$s['pc'];
+			$wb_total+=$s->wb;
+			$pc_total+=$s->pc;
 			}
 			$remaining=array_diff($blood_groups,$available_groups);
 			foreach($remaining as $r){
@@ -78,29 +80,29 @@
 			$fp_total=0;
 			$cryo_total=0;
 			foreach($available as $s){
-			$blood_group=str_replace("+","pos",$s['blood_group']);
+			$blood_group=str_replace("+","pos",$s->blood_group);
 			$blood_group=str_replace("-","neg",$blood_group);
 			?>
 			<tr>
-				<td><?php echo $s['blood_group'];?></td>
-				<td><?php echo $s['prp'];?></td>
-				<td><?php echo $s['platelet_concentrate'];?></td>
-				<td><?php echo $s['ffp'];?></td>
-				<td><?php echo $s['fp'];?></td>
-				<td><?php echo $s['cryo'];?></td>
-				<th><?php $group_total=$s['prp']+$s['platelet_concentrate']+$s['ffp']+$s['fp']+$s['cryo'];
+				<td><?php echo $s->blood_group;?></td>
+				<td><?php echo $s->prp;?></td>
+				<td><?php echo $s->platelet_concentrate;?></td>
+				<td><?php echo $s->ffp;?></td>
+				<td><?php echo $s->fp;?></td>
+				<td><?php echo $s->cryo;?></td>
+				<th><?php $group_total=$s->prp+$s->platelet_concentrate+$s->ffp+$s->fp+$s->cryo;
 					echo $group_total;
 					?>
 				</th>
 			</tr>
 			<?php
-			$available_groups[]=$s['blood_group'];
+			$available_groups[]=$s->blood_group;
 			$total+=$group_total;
-			$prp_total+=$s['prp'];
-			$platelet_concentrate_total+=$s['platelet_concentrate'];
-			$ffp_total+=$s['ffp'];
-			$fp_total+=$s['fp'];
-			$cryo_total+=$s['cryo'];
+			$prp_total+=$s->prp;
+			$platelet_concentrate_total+=$s->platelet_concentrate;
+			$ffp_total+=$s->ffp;
+			$fp_total+=$s->fp;
+			$cryo_total+=$s->cryo;
 			}
 			$remaining=array_diff($blood_groups,$available_groups);
 			foreach($remaining as $r){

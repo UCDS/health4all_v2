@@ -15,9 +15,18 @@ class Register extends CI_Controller {
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");	
 	}
-	public function index()
-	{
-		if($this->session->userdata('logged_in')){
+	public function index($donor_id=""){
+		if(!$this->session->userdata('logged_in')){
+		  show_404();
+	  }
+	  $this->data['userdata']=$this->session->userdata('logged_in');
+	  foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -126,6 +135,11 @@ class Register extends CI_Controller {
 		if ($this->form_validation->run() === FALSE)
 		{
 			$this->data['camps']=$this->register_model->get_camps();
+			/**
+			* If donor id is available, query donor details form db
+			*/
+			if(strlen($donor_id)>0)
+				$this->data['donor_details']=$this->register_model->get_donor_details($donor_id);	
 			$this->load->view('pages/bloodbank/walk_in_registration',$this->data);
 		}
 		else{
@@ -140,14 +154,80 @@ class Register extends CI_Controller {
 		}
 		
 		$this->load->view('templates/footer');
+	}
+	public function repeat_donor()
+	{
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	    }
+	    $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
 		}
-		else {
-			show_404();
+		if($access==0)
+		show_404();
+	    $this->data['userdata']=$this->session->userdata('hospital');
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+		$this->data['title']="Repeat Blood Donation";
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('templates/panel_nav',$this->data);
+		$validations=array(
+			array(
+				'field'=>'donor_id',
+				'label'=>'donor_id',
+				'rules'=>'trim|xss_clean'
+			),
+			array(
+				'field'=>'donor_name',
+				'label'=>'donor_name',
+				'rules'=>'trim|xss_clean'
+			),
+			array(
+				'field'=>'donor_email',
+				'label'=>'donor_email',
+				'rules'=>'trim|xss_clean'
+			),
+			array(
+				'field'=>'blood_group',
+				'label'=>'blood_group',
+				'rules'=>'trim|xss_clean'
+			),
+			array(
+				'field'=>'donor_mobile',
+				'label'=>'donor_mobile',
+				'rules'=>'trim|xss_clean'
+			)
+		);
+		$this->form_validation->set_rules($validations);
+		if ($this->form_validation->run() === FALSE)
+		{
+			//$this->data['camps']=$this->register_model->get_camps();
+			$this->load->view('pages/bloodbank/repeat_donor',$this->data);
 		}
+		else{
+			$this->data['donors']=$this->register_model->get_donors();
+			$this->load->view('pages/bloodbank/repeat_donor.php',$this->data);
+		}
+		
+		$this->load->view('templates/footer');
+		
 	}
 	public function donation()
 	{
-		if($this->session->userdata('logged_in')){
+       if(!$this->session->userdata('logged_in')){
+		 show_404();
+	     }
+	     $this->data['userdata']=$this->session->userdata('logged_in');
+	     foreach ($this->data['functions'] as $f ){
+		 if($f->user_function=="Bloodbank"){
+		 $access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -162,9 +242,6 @@ class Register extends CI_Controller {
 		{
 			$this->data['donors']=$donors;
 			$this->data['appointments']=$appointments;
-			if(count($this->data['appointments'])==0){
-				$this->data['msg']="No appointments booked for current slot.";
-			}
 			$this->load->view('pages/bloodbank/registered_donors',$this->data);
 		}
 		else if($this->input->post('search')) {
@@ -177,28 +254,42 @@ class Register extends CI_Controller {
 		}
 		
 		$this->load->view('templates/footer');
-		}
-		else {
-			show_404();
-		}
+		
 	}
 	
 	function appointment_register($donor_id)
 	{
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	    }
+	   $this->data['userdata']=$this->session->userdata('logged_in');
+	   foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$donation_id=$this->register_model->register_donation($donor_id);
 		if($donation_id){
 			$this->medical_checkup($donation_id);
 		}
-		}		
-		else {
-			show_404();
-		}
+		
 	}
 	
 	public function medical_checkup($donor_id=0,$donation_id=""){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	     }
+	    $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -218,22 +309,29 @@ class Register extends CI_Controller {
 			if($this->register_model->update_medical($donation_id)){
 			$this->data['msg']="<font color='green'>Updated Successfully.</font>";
 			$this->data['donors']=$this->register_model->get_registered_donors();
-			$this->load->view('pages/bloodbank/blood_donation',$this->data);
+			$this->data['appointments']=$this->register_model->get_appointments();
+			$this->load->view('pages/bloodbank/registered_donors',$this->data);
 			}
 			else{
 			$this->data['msg']="<font color='red'>Update Failed.</font>";
-			$this->load->view('pages/bloodbank/blood_donation',$this->data);
+			$this->load->view('pages/bloodbank/registered_donors',$this->data);
 			}
 		}
 		$this->load->view('templates/footer');
-		}
-		else 
-		show_404();
-		
 	}
 	
 	public function bleeding(){
-		if($this->session->userdata('logged_in')){
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	    }
+	    $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -252,10 +350,17 @@ class Register extends CI_Controller {
 		else{
 			$donation_id=$this->input->post('donation_id');
 			if($email=$this->register_model->update_bleeding($donation_id)){
-			$this->data['msg']="<font color='green'>Updated Successfully.</font>";
-			$this->data['donors']=$this->register_model->get_checked_donors();
-			$this->data['email']=$email;
-			$this->load->view('pages/bloodbank/bleeding',$this->data);
+				if($email !=2){
+					$this->data['msg']="<font color='green'>Updated Successfully.</font>";
+					$this->data['donors']=$this->register_model->get_checked_donors();
+					$this->data['email']=$email;
+					$this->load->view('pages/bloodbank/bleeding',$this->data);
+				}
+				else if($email==2){
+					$this->data['msg']="<font color='red'>Blood unit number already exists in database, please try again.</font>";
+					$this->data['donors']=$this->register_model->get_checked_donors();					
+					$this->load->view('pages/bloodbank/bleeding',$this->data);
+				}
 			}
 			else{
 			$this->data['msg']="<font color='red'>Update Failed.</font>";
@@ -263,44 +368,24 @@ class Register extends CI_Controller {
 			}
 		}
 		$this->load->view('templates/footer');
-		}
-		else 
-		show_404();
 		
 	}		
 	
-	public function request(){
-		if($this->session->userdata('logged_in')){
-		$this->data['userdata']=$this->session->userdata('hospital');
-		$this->load->helper('form');
-		$this->load->library('form_validation');
-		$this->data['hospitals']=$this->staff_model->get_hospital();
-		$this->data['title']="Request Form";
-		$this->load->view('templates/header',$this->data);
-		$this->load->view('templates/panel_nav',$this->data);
-		$this->form_validation->set_rules('blood_group[]', 'Blood Group',
-		'trim|required|xss_clean');
-		if ($this->form_validation->run() === FALSE){
-		$this->load->view('pages/bloodbank/request');
-		}
-		else{
-		if($this->register_model->make_request()){
-		$this->data['msg']='success';
-		$this->load->view('pages/bloodbank/request',$this->data);
-		}
-		else{
-		$this->data['msg']='failed';
-		$this->load->view('pages/bloodbank/request',$this->data);		
-		}
-		$this->load->view('templates/footer');
-		}
-		}
-		else 
-		show_404();
-	}
+	
 		
 	public function search()
 	{
+		if(!$this->session->userdata('logged_in')){
+		show_404();
+	    }
+	    $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 
@@ -308,14 +393,22 @@ class Register extends CI_Controller {
 		{
 			$this->load->view('pages/bloodbank/blood_donation');
 		}
-		else{
-
-		}	
+		
 	}
 	
 	function check_unique($blood_unit_num){
-	
-		$result=$this->register_model->check_unique($blood_unit_num);
+     if(!$this->session->userdata('logged_in')){
+		show_404();
+	    }
+	    $this->data['userdata']=$this->session->userdata('logged_in');
+	    foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if($access==0)
+		show_404();
+	   $result=$this->register_model->check_unique($blood_unit_num);
 		if($result->num_rows()>0){
 	     $this->form_validation->set_message('check_unique','Number already exists in database.');
 	     return false;
@@ -325,4 +418,43 @@ class Register extends CI_Controller {
 		 return true;
 	   }	
 	}
+public function request(){
+        if($this->session->userdata('logged_in')){
+        $this->data['userdata']=$this->session->userdata('hospital');
+        $this->load->helper('form');
+        $this->load->library('form_validation');
+        $this->data['hospitals']=$this->staff_model->get_hospital();
+        $this->data['title']="Request Form";
+        $this->load->view('templates/header',$this->data);
+        $this->load->view('templates/panel_nav',$this->data);
+        $this->form_validation->set_rules('blood_group[]', 'Blood Group',
+        'trim|required|xss_clean');
+        if ($this->form_validation->run() === FALSE){
+        $this->load->view('pages/bloodbank/request');
+        }
+        else{
+        if($this->register_model->make_request()){
+        $this->data['msg']='success';
+        $this->load->view('pages/bloodbank/request',$this->data);
+        }
+        else{
+        $this->data['msg']='failed';
+        $this->load->view('pages/bloodbank/request',$this->data);        
+        }
+        $this->load->view('templates/footer');
+        }
+        }
+        else 
+        show_404();
+    }
+function search_patients(){
+    if($patients = $this->register_model->search_patients()){
+        $list=array(
+            'patients'=>$patients
+        );
+        
+            echo json_encode($list);
+    }
+    else return false;
+}
 }

@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <script type="text/javascript"
  src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
- <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+  <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
@@ -70,16 +70,19 @@ $(function(){
 			direction:false
 		});
 	});
+	
+	
 </script>
 	<div class="col-md-10">
 <div class="col-md-10 col-sm-9">
-	<h4>Donors Report</h4>
-	<?php echo form_open('bloodbank/user_panel/blood_donors'); ?>
+
+	
+	<?php echo form_open('bloodbank/user_panel/blood_components'); ?>
 	<div>
-                <input type="text" class="date" size="12" id="from_date" name="from_date" />
-		<input type="text" class="date" size="12" name="to_date" />
-		<select name="blood_group" style="width:50px;">
-			<option value="" selected disabled>----</option>
+		<input type="text" class="date" size="12" name="from_date" placeholder="From Date" />
+		<input type="text" class="date" size="12" name="to_date"  placeholder="To Date" />
+		<select name="blood_group">
+			<option value="" selected disabled>Blood Group</option>
 			<option value="A+">A+</option>
 			<option value="B+">B+</option>
 			<option value="O+">O+</option>
@@ -90,41 +93,45 @@ $(function(){
 			<option value="AB-">AB-</option>
 		</select>
 		<input type="submit" name="submit" value="Search" />
+		<button type="button" class="btn btn-default btn-md print">
+          <span class="glyphicon glyphicon-print"></span> Print
+        </button>
 	</div>
 	
-	
 	<?php 
-	if($this->input->post('donation_date')) echo "Donors who donated on or before ".date("d-M-y",strtotime($this->input->post('donation_date'))). " | ";
 	if($this->input->post('blood_group')) echo "Blood Group : ".$this->input->post('blood_group');
+	if($this->input->post('from_date') && $this->input->post('to_date')) echo "From : ".date("d-M-Y",strtotime($this->input->post('from_date')))." To : ".date("d-M-Y",strtotime($this->input->post('to_date')));
+	else if($this->input->post('from_date') || $this->input->post('to_date')) if($this->input->post('from_date')) echo date("d-M-Y",strtotime($this->input->post('from_date'))); else echo date("d-M-Y",strtotime($this->input->post('to_date')));
 	if(count($donors)>0){ ?>
+	<table id="header-fixed" class="table-2"></table>
+	<div id="print-div"  style="width:100%;height:100%;">
 
-	<table  class="table table-bordered table-striped"></table>
-	<button type="button" class="btn btn-default btn-md print">
-		  <span class="glyphicon glyphicon-print"></span> Print
-		</button>
 	<table class="table table-bordered table-striped" id="table-sort">
 		<thead>
-			<th>S.No</th>
-			<th>Blood Unit No.</th>
-			<th>Donation Date</th>
-			<th>Name</th>
-			<th>Address</th>
-			<th>Phone / Email</th>
-			<th>Vol./RD</th>
-			<th>Age</th>
-			<th>Sex</th>
-			<th>Weight in Kgs</th>
-			<th>BP mm of Hg</th>
-			<th>HB gm%</th>
-			<th>Medical Exam</th>
-			<th width="60px">Reasons for Deferral</th>
-			<th>Blood Group</th>
-			<th>Segment Number</th>
-			<th>Type of Bag</th>
-			<th>Volume in ml</th>
-			<th width="60px">Sign of Donor</th>
-			<th width="60px">Sign of Staff</th>
-			<th width="60px">Sign of Medical Officer</th>
+		<tr>
+			<tr>
+				<th colspan="100" style="text-align:center">Master Record for Blood & it's Components</th>
+			</tr>
+			<tr>
+				<th rowspan="2">S.No</th>
+				<th rowspan="2">Blood Unit No.</th>
+				<th rowspan="2">Name</th>
+				<th rowspan="2">Date of Collection</th>
+				<th rowspan="2">Date of Expiry</th>
+				<th rowspan="2">Segment Number</th>
+				<th rowspan="2">Quantity in ml</th>
+				<th rowspan="2">Blood Group</th>
+				<th rowspan="2">Date of testing</th>
+				<th colspan="6">Tests</th>
+				<th rowspan="2">Status</th>
+				<th rowspan="2">WB/Components prepared & Date</th>
+				<th rowspan="2">Issue No & Date</th>
+				<th rowspan="2">Staff Sign</th>
+				<th rowspan="2">Medical Officer Sign</th>
+			</tr>
+			<tr>
+				<th>HIV</th><th>HBSAG</th><th>HCV</th><th>VDRL</th><th>MP</th><th>Irregular Antibodies</th>
+			</tr>
 		</thead>
 	<?php 
 	$i=1;
@@ -133,42 +140,36 @@ $(function(){
 	<tr>
 		<td><?php echo $i++;?></td>
 		<td><?php echo $s->blood_unit_num;?></td>
-		<td><?php if($s->donation_date!=0) echo date("d-M-y",strtotime($s->donation_date));?></td>
 		<td><?php echo $s->name;?></td>
-		<td><?php echo $s->address;?></td>
-		<td><?php echo $s->phone;?> / <?php echo $s->email;?></td>
-		<td><?php echo $s->donor_type;?></td>
-		<td><?php echo $s->age;?></td>
-		<td><?php echo strtoupper($s->sex);?></td>
-		<td><?php echo $s->weight;?></td>
-		<td><?php echo $s->sbp;?>/<?php echo $s->dbp;?></td>
-		<td><?php echo $s->hb;?></td>
-		<td>NAD</td>
-		<td></td>
-		<td><?php echo $s->blood_group;?></td>
+		<td><?php if($s->donation_date!=0) echo date("d-M-Y",strtotime($s->donation_date));?></td>
+		<td><?php if($s->expiry_date!=0) echo date("d-M-Y",strtotime($s->expiry_date));?></td>
 		<td><?php echo $s->segment_num;?></td>
-		<td><?php
-				switch($s->bag_type){
-					case 1 : echo "SB"; break;
-					case 2 : echo "DB"; break;
-					case 3 : echo "TB"; break;
-					case 4 : echo "QB"; break;
-					default : break;
-				}
-			?>
-		</td>
 		<td><?php echo $s->volume;?></td>
-		<td></td>
+		<td><?php echo $s->blood_group;?></td>
+		<td><?php if($s->screening_datetime!=0) echo date("d-M-Y",strtotime($s->screening_datetime));?></td>
+		<td><?php if($s->test_hiv!=NULL) {if($s->test_hiv==1) echo "Yes"; else echo "NR"; } ?></td>
+		<td><?php if($s->test_hbsag!=NULL) {if($s->test_hbsag==1) echo "Yes"; else echo "Neg"; } ?></td>
+		<td><?php if($s->test_hcv!=NULL) {if($s->test_hcv==1) echo "Yes"; else echo "NR"; } ?></td>
+		<td><?php if($s->test_vdrl!=NULL) {if($s->test_vdrl==1) echo "Yes"; else echo "NR"; } ?></td>
+		<td><?php if($s->test_mp!=NULL) {if($s->test_mp==1) echo "Yes"; else echo "NF"; } ?></td>
+		<td><?php if($s->test_irregular_ab!=NULL) {if($s->test_irregular_ab==1) echo "Yes"; else echo "Nil"; } ?></td>
+		<td><?php if($s->status=="Archived") echo "Components Prepared"; else echo $s->status;?></td>
+		<td><?php if($s->component_type=='Components Prepared') { ?> Components Prepared /<?php echo date("d-M-Y",strtotime($s->components_date)); } 
+		else if($s->component_type=='WB') { echo "WB / ".date("d-M-Y",strtotime($s->donation_date));}
+		else  { echo $s->component_type." / "; if($s->components_date!=0) echo date("d-M-Y",strtotime($s->components_date)); }?></td>
+		<td><?php if($s->issue_date!=0) { ?><?php echo $s->issue_id;?>/<?php echo date("d-M-Y",strtotime($s->issue_date)); }?></td>
 		<td></td>
 		<td></td>
 	</tr>
 	<?php
 	}
 	?>
-	</table></div>
+	</table>
+	</div>
 	<?php } 
 	else {
 	?>
 	<h2> No Donors found</h2>
 	<?php } ?>
+
 </div>

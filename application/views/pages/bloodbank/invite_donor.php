@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <script type="text/javascript"
  src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
- <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+  <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
@@ -9,7 +9,14 @@
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
-		<script type="text/javascript">
+ <script type="text/javascript">
+$(function(){
+		$("#from_date,#to_date").Zebra_DatePicker();
+		
+});
+</script>
+
+<script type="text/javascript">
 $(function(){
 		var options = {
 			widthFixed : true,
@@ -64,22 +71,44 @@ $(function(){
 		  });
 });
 </script>
-<script>
-	$(function(){
-		$(".date").Zebra_DatePicker({
-			direction:false
-		});
-	});
-</script>
 	<div class="col-md-10">
 <div class="col-md-10 col-sm-9">
-	<h4>Donors Report</h4>
-	<?php echo form_open('bloodbank/user_panel/blood_donors'); ?>
-	<div>
-                <input type="text" class="date" size="12" id="from_date" name="from_date" />
-		<input type="text" class="date" size="12" name="to_date" />
-		<select name="blood_group" style="width:50px;">
-			<option value="" selected disabled>----</option>
+	<div style="color:red;padding:5px;font-size:14px;">
+	<?php echo validation_errors(); ?></div>
+	<?php 
+	if(isset($msg)) { ?>
+		<div class="alert alert-info">
+			<b><?php echo $msg; ?></b>
+		</div>
+	<?php 
+	}
+	?>
+
+
+
+	<h4 class="text-center">Invite Donor</h4>
+
+
+	<?php echo form_open("bloodbank/user_panel/invite_donor",array('class'=>'form-custom')); ?>
+
+     	<div class="col-md-5">
+		<div class="input-group">
+		  <span class="input-group-addon" id="basic-addon1">Donate From</span>
+		  <input class="form-control"type="text" class="form-control" name="from_date"  id="from_date"  aria-describedby="basic-addon1" required>
+		</div>		
+		</div>
+		<div class="col-md-5">
+		<div class="input-group">
+		  <span class="input-group-addon" id="basic-addon1">Donate To</span>
+		  <input class="form-control"type="text" class="form-control" name="to_date"  id="to_date"    aria-describedby="basic-addon1" required>
+		</div>		
+		</div>
+		<br><br><br>
+		<div class="col-md-5">
+		<div class="input-group">
+		  <span class="input-group-addon" id="basic-addon1">Group</span>
+		  <select class="form-control" name="blood_group">
+			<option value="" disabled selected>Blood Group</option>
 			<option value="A+">A+</option>
 			<option value="B+">B+</option>
 			<option value="O+">O+</option>
@@ -89,86 +118,68 @@ $(function(){
 			<option value="O-">O-</option>
 			<option value="AB-">AB-</option>
 		</select>
-		<input type="submit" name="submit" value="Search" />
-	</div>
+		  
+		</div>		
+		</div>
+		<div class="col-md-5">
+		<div class="input-group">
+		  <span class="input-group-addon" id="basic-addon1">Camp</span>
+		  <select name="camp" id="camps" class="form-control" >
+				<option value="">--Select Location--</option>
+				<?php foreach($camps as $camp){
+					echo "<option value='".$camp->camp_id."' id='camp".$camp->camp_id."'>$camp->camp_name, $camp->location</option>";
+				?>
+					
+				<?php
+				}
+				?>
+				</select>
+		  
+		</div>		
+		</div><br><br><br><br>
+		<input type="submit" value="Search" name="reset" class="btn btn-primary btn-sm text-center" />
+		<br><br><br><br>
 	
-	
-	<?php 
-	if($this->input->post('donation_date')) echo "Donors who donated on or before ".date("d-M-y",strtotime($this->input->post('donation_date'))). " | ";
-	if($this->input->post('blood_group')) echo "Blood Group : ".$this->input->post('blood_group');
-	if(count($donors)>0){ ?>
-
-	<table  class="table table-bordered table-striped"></table>
-	<button type="button" class="btn btn-default btn-md print">
-		  <span class="glyphicon glyphicon-print"></span> Print
-		</button>
-	<table class="table table-bordered table-striped" id="table-sort">
-		<thead>
-			<th>S.No</th>
-			<th>Blood Unit No.</th>
-			<th>Donation Date</th>
-			<th>Name</th>
-			<th>Address</th>
-			<th>Phone / Email</th>
-			<th>Vol./RD</th>
-			<th>Age</th>
-			<th>Sex</th>
-			<th>Weight in Kgs</th>
-			<th>BP mm of Hg</th>
-			<th>HB gm%</th>
-			<th>Medical Exam</th>
-			<th width="60px">Reasons for Deferral</th>
-			<th>Blood Group</th>
-			<th>Segment Number</th>
-			<th>Type of Bag</th>
-			<th>Volume in ml</th>
-			<th width="60px">Sign of Donor</th>
-			<th width="60px">Sign of Staff</th>
-			<th width="60px">Sign of Medical Officer</th>
-		</thead>
-	<?php 
+		<table  class="table table-bordered table-striped" id="table-sort">
+		<thead><th>S.no</th><th>Donor Id</th><th>Donor Name</th><th>Gender</th><th>Phone</th><th>Email</th><th>Address</th><th>Date Of Donation</th><th>Select</th></thead>
+				<?php if(count($donors)>0){ ?>
+			<?php 
 	$i=1;
 	foreach($donors as $s){
 	?>
-	<tr>
+		<tr>
 		<td><?php echo $i++;?></td>
-		<td><?php echo $s->blood_unit_num;?></td>
-		<td><?php if($s->donation_date!=0) echo date("d-M-y",strtotime($s->donation_date));?></td>
-		<td><?php echo $s->name;?></td>
+		<td><?php echo $s->donor_id;?></td>
+	    <td><?php echo $s->name;?></td>
+		<td><?php echo $s->sex;?></td>
+		<td><?php echo $s->phone;?></td>
+		<td><?php echo $s->email;?></td>
 		<td><?php echo $s->address;?></td>
-		<td><?php echo $s->phone;?> / <?php echo $s->email;?></td>
-		<td><?php echo $s->donor_type;?></td>
-		<td><?php echo $s->age;?></td>
-		<td><?php echo strtoupper($s->sex);?></td>
-		<td><?php echo $s->weight;?></td>
-		<td><?php echo $s->sbp;?>/<?php echo $s->dbp;?></td>
-		<td><?php echo $s->hb;?></td>
-		<td>NAD</td>
-		<td></td>
-		<td><?php echo $s->blood_group;?></td>
-		<td><?php echo $s->segment_num;?></td>
-		<td><?php
-				switch($s->bag_type){
-					case 1 : echo "SB"; break;
-					case 2 : echo "DB"; break;
-					case 3 : echo "TB"; break;
-					case 4 : echo "QB"; break;
-					default : break;
-				}
-			?>
-		</td>
-		<td><?php echo $s->volume;?></td>
-		<td></td>
-		<td></td>
-		<td></td>
-	</tr>
+		<td><?php if($s->donation_date!=0) echo date("d-M-y",strtotime($s->donation_date));?></td>
+		<td>
+				<input type="checkbox"    value="<?php echo $s->donor_id;?>" name="donor_ids[]" /></td>
+		</tr>
+		
+           
+	
 	<?php
 	}
-	?>
-	</table></div>
+	?></table>
+</div>	
+	  <div class="well">           
+             
+			 <input type="checkbox" name="sms" value="sms" class="form-control" />Send SMS </input>					 
+			  <input type="checkbox"  name="email"  value="email" class="form-control" />Send Email</input><br><br><br>
+			 <input type="submit" value="Submit" name="submit" class="btn btn-primary btn-sm text-center">
+	</div>
+
+
+
+	</form>
 	<?php } 
 	else {
 	?>
-	<h2> No Donors found</h2>
+	<h2> No Donors found on the given date</h2>
 	<?php } ?>
+
 </div>

@@ -21,23 +21,23 @@
 	$wb_total=0;
 	$pc_total=0;
 	foreach($available as $s){
-	$blood_group=str_replace("+","pos",$s['blood_group']);
+	$blood_group=str_replace("+","pos",$s->blood_group);
 	$blood_group=str_replace("-","neg",$blood_group);
 	?>
 	<tr>
-		<td><?php echo $s['blood_group'];?></td>
-		<td><a href="<?php echo base_url()."user_panel/report_inventory/$blood_group/WB"; ?>"><?php echo $s['wb'];?></a></td>
-		<td><a href="<?php echo base_url()."user_panel/report_inventory/$blood_group/PC"; ?>"><?php echo $s['pc'];?></a></td>
-		<th><a href="<?php echo base_url()."user_panel/report_inventory/$blood_group/0"; ?>"><?php $group_total=$s['wb']+$s['pc'];
+		<td><?php echo $s->blood_group;?></td>
+		<td><a href="<?php echo base_url()."bloodbank/user_panel/report_inventory/$blood_group/WB"; ?>"><?php echo $s->wb;?></a></td>
+		<td><a href="<?php echo base_url()."bloodbank/user_panel/report_inventory/$blood_group/PC"; ?>"><?php echo $s->pc;?></a></td>
+		<th><a href="<?php echo base_url()."bloodbank/user_panel/report_inventory/$blood_group/0"; ?>"><?php $group_total=$s->wb+$s->pc;
 			echo $group_total;
 			?></a>
 		</th>
 	</tr>
 	<?php
-	$available_groups[]=$s['blood_group'];
+	$available_groups[]=$s->blood_group;
 	$total+=$group_total;
-	$wb_total+=$s['wb'];
-	$pc_total+=$s['pc'];
+	$wb_total+=$s->wb;
+	$pc_total+=$s->pc;
 	}
 	$remaining=array_diff($blood_groups,$available_groups);
 	foreach($remaining as $r){
@@ -71,29 +71,29 @@
 	$fp_total=0;
 	$cryo_total=0;
 	foreach($available as $s){
-	$blood_group=str_replace("+","pos",$s['blood_group']);
+	$blood_group=str_replace("+","pos",$s->blood_group);
 	$blood_group=str_replace("-","neg",$blood_group);
 	?>
 	<tr>
-		<td><?php echo $s['blood_group'];?></td>
-		<td><a href="<?php echo base_url()."user_panel/report_inventory/$blood_group/PRP"; ?>"><?php echo $s['prp'];?></a></td>
-		<td><a href="<?php echo base_url()."user_panel/report_inventory/$blood_group/Platelet Concentrate"; ?>"><?php echo $s['platelet_concentrate'];?></a></td>
-		<td><a href="<?php echo base_url()."user_panel/report_inventory/$blood_group/FFP"; ?>"><?php echo $s['ffp'];?></a></td>
-		<td><a href="<?php echo base_url()."user_panel/report_inventory/$blood_group/FP"; ?>"><?php echo $s['fp'];?></a></td>
-		<td><a href="<?php echo base_url()."user_panel/report_inventory/$blood_group/Cryo"; ?>"><?php echo $s['cryo'];?></a></td>
-		<th><a href="<?php echo base_url()."user_panel/report_inventory/$blood_group/1"; ?>"><?php $group_total=$s['prp']+$s['platelet_concentrate']+$s['ffp']+$s['fp']+$s['cryo'];
+		<td><?php echo $s->blood_group;?></td>
+		<td><a href="<?php echo base_url()."bloodbank/user_panel/report_inventory/$blood_group/PRP"; ?>"><?php echo $s->prp;?></a></td>
+		<td><a href="<?php echo base_url()."bloodbank/user_panel/report_inventory/$blood_group/Platelet Concentrate"; ?>"><?php echo $s->platelet_concentrate;?></a></td>
+		<td><a href="<?php echo base_url()."bloodbank/user_panel/report_inventory/$blood_group/FFP"; ?>"><?php echo $s->ffp;?></a></td>
+		<td><a href="<?php echo base_url()."bloodbank/user_panel/report_inventory/$blood_group/FP"; ?>"><?php echo $s->fp;?></a></td>
+		<td><a href="<?php echo base_url()."bloodbank/user_panel/report_inventory/$blood_group/Cryo"; ?>"><?php echo $s->cryo;?></a></td>
+		<th><a href="<?php echo base_url()."bloodbank/user_panel/report_inventory/$blood_group/1"; ?>"><?php $group_total=$s->prp+$s->platelet_concentrate+$s->ffp+$s->fp+$s->cryo;
 			echo $group_total;
 			?></a>
 		</th>
 	</tr>
 	<?php
-	$available_groups[]=$s['blood_group'];
+	$available_groups[]=$s->blood_group;
 	$total+=$group_total;
-	$prp_total+=$s['prp'];
-	$platelet_concentrate_total+=$s['platelet_concentrate'];
-	$ffp_total+=$s['ffp'];
-	$fp_total+=$s['fp'];
-	$cryo_total+=$s['cryo'];
+	$prp_total+=$s->prp;
+	$platelet_concentrate_total+=$s->platelet_concentrate;
+	$ffp_total+=$s->ffp;
+	$fp_total+=$s->fp;
+	$cryo_total+=$s->cryo;
 	}
 	$remaining=array_diff($blood_groups,$available_groups);
 	foreach($remaining as $r){

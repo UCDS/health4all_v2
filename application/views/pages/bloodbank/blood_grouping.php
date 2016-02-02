@@ -120,25 +120,31 @@
 <div class="col-md-10 col-sm-9">
 	<?php
 	if(isset($msg)) {
-		echo $msg;
-		echo "<br />";
+		echo "<div class='alert alert-info'>$msg</div>";
 		echo "<br />";
 	}
 	?>
 	<div>
+	
+		<?php echo form_open('bloodbank/inventory/blood_grouping');?>
+		<div class="form-group col-lg-2">
+			<input type="text" id="from_id" value="<?php echo $this->input->post('from_id');?>" placeholder="From Number" class="form-control" name="from_id" />
+		</div>
+		<div class="form-group col-lg-2">
+			<input type="text" id="to_id" value="<?php echo $this->input->post('to_id');?>" placeholder="To Number" class="form-control" name="to_id" />
+		</div>
+		<div class="form-group"><input type="submit" class="btn btn-primary" value="Filter" name="filter" /></div>
+		</form>
+		<hr>
 		<?php if(count($ungrouped_blood)==0){
-			echo "No samples available for grouping.";
+			echo "<div class='alert alert-info'>No samples available for grouping.</div>";
 		}
 		else{
 		?>
-		<?php echo form_open('bloodbank/inventory/blood_grouping');?>
-		<div class="form-group col-lg-2"><input type="text" id="from_id" placeholder="From" class="form-control" name="from_id" /></div>
-		<div class="form-group col-lg-2"><input type="text" id="to_id" placeholder="To" class="form-control" name="to_id" /></div>
-		<div class="form-group"><input type="submit" class="btn btn-primary" value="Filter" name="filter" />
-		</form>
 		<div class="panel panel-default">
 		<div class="panel-heading">
-		<h4>Available samples : </h4></div>
+			<h4>Available samples </h4>
+		</div>
 		<div class="panel-body">
 		<table id="header-fixed" class="table-2 table table-striped table-bordered"></table>
 		<table class="table-2 table table-striped table-bordered" id="table-1">
@@ -164,10 +170,10 @@
 		<tr>
 			<td><?php echo $i++;?></td>
 			<td>
-				<?php echo $blood['blood_unit_num'];?>
+				<?php echo $blood->blood_unit_num;?>
 			</td>
 		<td style="min-width:120px">
-			<select name="blood_group_<?php echo $blood['donation_id'];?>" id="blood_group_<?php echo $blood['donation_id'];?>"  class="blood_group form-control">
+			<select name="blood_group_<?php echo $blood->donation_id;?>" id="blood_group_<?php echo $blood->donation_id;?>"  class="blood_group form-control">
 			<option value="" selected disabled>-------</option>
 			<option value="A+">A+</option>
 			<option value="B+">B+</option>
@@ -178,7 +184,7 @@
 			<option value="O-">O-</option>
 			<option value="AB-">AB-</option>
 			</select>
-			<select name="sub_group_<?php echo $blood['donation_id'];?>" style="min-width:150px" class="form-control sr-only" id="sub_group_<?php echo $blood['donation_id'];?>">
+			<select name="sub_group_<?php echo $blood->donation_id;?>" style="min-width:150px" class="form-control sr-only" id="sub_group_<?php echo $blood->donation_id;?>">
 			<option value="" selected >Sub Group</option>
 			<option value="A1" >A1</option>
 			<option value="A2" >A2</option>
@@ -188,18 +194,18 @@
 			</select>
 		</td>
 			<td>
-			<div class="form-group"><input type='text' name='anti_a_<?php echo $blood['donation_id'];?>' class="form-control" id='anti_a_<?php echo $blood['donation_id'];?>' /></div>
+			<div class="form-group"><input type='text' name='anti_a_<?php echo $blood->donation_id;?>' class="form-control" id='anti_a_<?php echo $blood->donation_id;?>' /></div>
 			</td>
-			<td><div class="form-group"><input type='text' class="form-control" name='anti_b_<?php echo $blood['donation_id'];?>' id='anti_b_<?php echo $blood['donation_id'];?>' /></div></td>
-			<td><div class="form-group"><input type='text' class="form-control" name='anti_ab_<?php echo $blood['donation_id'];?>' id='anti_ab_<?php echo $blood['donation_id'];?>' /></div></td>
-			<td><div class="form-group"><input type='text' class="form-control" name='anti_d_<?php echo $blood['donation_id'];?>' id='anti_d_<?php echo $blood['donation_id'];?>' /></div></td>
-			<td><div class="form-group"><input type='text' class="form-control" name='a_cells_<?php echo $blood['donation_id'];?>' id='a_cells_<?php echo $blood['donation_id'];?>' /></div></td>
-			<td><div class="form-group"><input type='text' class="form-control" name='b_cells_<?php echo $blood['donation_id'];?>' id='b_cells_<?php echo $blood['donation_id'];?>' /></div></td>
-			<td><div class="form-group"><input type='text' class="form-control" name='o_cells_<?php echo $blood['donation_id'];?>' id='o_cells_<?php echo $blood['donation_id'];?>' /></div></td>
-			<td><div class="form-group"><input type='text' class="form-control" name='du_<?php echo $blood['donation_id'];?>' id='du_<?php echo $blood['donation_id'];?>' /></div></td>
+			<td><div class="form-group"><input type='text' class="form-control" name='anti_b_<?php echo $blood->donation_id;?>' id='anti_b_<?php echo $blood->donation_id;?>' /></div></td>
+			<td><div class="form-group"><input type='text' class="form-control" name='anti_ab_<?php echo $blood->donation_id;?>' id='anti_ab_<?php echo $blood->donation_id;?>' /></div></td>
+			<td><div class="form-group"><input type='text' class="form-control" name='anti_d_<?php echo $blood->donation_id;?>' id='anti_d_<?php echo $blood->donation_id;?>' /></div></td>
+			<td><div class="form-group"><input type='text' class="form-control" name='a_cells_<?php echo $blood->donation_id;?>' id='a_cells_<?php echo $blood->donation_id;?>' /></div></td>
+			<td><div class="form-group"><input type='text' class="form-control" name='b_cells_<?php echo $blood->donation_id;?>' id='b_cells_<?php echo $blood->donation_id;?>' /></div></td>
+			<td><div class="form-group"><input type='text' class="form-control" name='o_cells_<?php echo $blood->donation_id;?>' id='o_cells_<?php echo $blood->donation_id;?>' /></div></td>
+			<td><div class="form-group"><input type='text' class="form-control" name='du_<?php echo $blood->donation_id;?>' id='du_<?php echo $blood->donation_id;?>' /></div></td>
 			<td>
-			<div class="form-group"><input type='hidden' value='<?php echo $blood['donor_id'];?>' name='donor_id_<?php echo $blood['donation_id'];?>' size='2' />
-			<input type="checkbox" value="<?php echo $blood['donation_id'];?>" name="donation_id[]"  /></td>
+			<div class="form-group"><input type='hidden' value='<?php echo $blood->donor_id;?>' name='donor_id_<?php echo $blood->donation_id;?>' size='2' />
+			<input type="checkbox" value="<?php echo $blood->donation_id;?>" name="donation_id[]"  /></td>
 		</tr>
 		<?php 
 		}
@@ -210,7 +216,7 @@
 			<div class="form-group col-lg-3"><select class="form-control" name="forward_by" required>
 				<option value="" disabled selected>Forward Done By</option>
 				<?php foreach($staff as $s){
-					echo "<option value='$s->staff_id'>$s->first_name $s->last_name</option>";
+					echo "<option value='$s->staff_id'>$s->name</option>";
 				}
 				?>
 			</select></div>
@@ -218,7 +224,7 @@
 			<div class="form-group col-lg-3"><select name="reverse_by" class="form-control" required>
 				<option value="" disabled selected>Reverse Done By</option>
 				<?php foreach($staff as $s){
-					echo "<option value='$s->staff_id'>$s->first_name $s->last_name</option>";
+					echo "<option value='$s->staff_id'>$s->name</option>";
 				}
 				?>
 			</select></div>
