@@ -263,13 +263,12 @@ class Reports_model extends CI_Model{
 		->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
 		->join('department','patient_visit.department_id = department.department_id')
 		->join('test_area','test_order.test_area_id = test_area.test_area_id')
-		->join('test','test_order.order_id = test.order_id','left')
+		->join('test','test_order.order_id = test.order_id')
 		->join('test_master','test.test_master_id = test_master.test_master_id')
 		->join('test_method','test_master.test_method_id = test_method.test_method_id')
 		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')")
 		->group_by('test_method.test_method,test_master.test_master_id');
 		$resource=$this->db->get();
-  //              echo $this->db->last_query();
 		return $resource->result();
 	}
 		
@@ -559,7 +558,29 @@ class Reports_model extends CI_Model{
 		$query=$this->db->get();
 		return $query->result();
 	}
-	
+		function get_service_records()
+		{
+			if($this->input->post('department')){
+			$this->db->where('equipment.department_id',$this->input->post('department'));
+		}
+		if($this->input->post('equipment_type')){
+			$this->db->where('equipment.equipment_type_id',$this->input->post('equipment_type'));
+		}
+		if($this->input->post('working_status')!=NULL){
+			$this->db->where('service_record.working_status',$this->input->post('working_status'));
+		}
+		$this->db->select("equipment.equipment_id,equipment.equipment_type_id,equipment.department_id,request_id,call_date,call_time,call_information_type,call_information,service_person_remarks,service_date,service_time,problem_status,working_status
+		")
+		->from("service_record")
+		->join("equipment","service_record.equipment_id=equipment.equipment_id")
+		//->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id")
+		//->join("department","equipment.department_id=department.department_id" );
+		->group_by("equipment_id")
+		->order_by("equipment_id");
+		$query=$this->db->get();
+		return $query->result();
+		
+		}
 	function get_equipment_summary(){
 	
 	
@@ -578,7 +599,7 @@ class Reports_model extends CI_Model{
 		if($this->input->post('equipment_type')){
 			$this->db->where('equipment.equipment_type_id',$this->input->post('equipment_type'));
 		}
-		$this->db->select("equipment.equipment_type_id,equipment_type,equipment.department_id,department,equipment.area_id,area_name,equipment.unit_id,unit_name,equipment_status,		
+		$this->db->select("equipment.equipment_type_id,equipment_type,equipment.department_id,department,equipment.area_id,area_name,equipment.unit_id,unit_name,equipment_status,equipment_id,make,model,		
 		SUM(CASE WHEN 1 THEN 1 ELSE 0 END) 'total',
 		SUM(CASE WHEN equipment_status=1 THEN 1 ELSE 0 END) 'total_working',
 		SUM(CASE WHEN equipment_status=0 THEN 1 ELSE 0 END) 'total_not_working'
@@ -630,31 +651,25 @@ class Reports_model extends CI_Model{
 			$this->db->where('test_sample.specimen_type_id',$this->input->post('specimen_type'));
 		}
 		
-		$this->db->select('antibiotic_test.antibiotic_result,antibiotic,micro_organism,antibiotic.antibiotic_id,micro_organism.micro_organism_id,
-			test_area.department_id,unit,area,test_sample.specimen_type_id,test.test_id,test.test_result_binary,test_order.test_area_id',false)
-			->from('test')
-                        ->join('test_order',"test.order_id = test_order.order_id AND (DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')",'left')
-                        ->join('micro_organism_test','micro_organism_test.test_id = test.test_id','left')
-                     ->join('test_master','test_master.test_master_id = test.test_master_id AND (test_master.test_area_id = 2 AND test_master.test_method_id = 3)')
-                        ->join('test_method','test_method.test_method_id = test_master.test_method_id')
-                        ->join('test_area','test_area.test_area_id = test_master.test_area_id')                        		
-                        ->join('micro_organism','micro_organism_test.micro_organism_id = micro_organism.micro_organism_id','left')
-                        ->join('antibiotic_test','antibiotic_test.micro_organism_test_id=micro_organism_test.micro_organism_test_id','left')			
-			->join('antibiotic','antibiotic_test.antibiotic_id = antibiotic.antibiotic_id','left')			
+		$this->db->select('SUM(CASE WHEN antibiotic_result = 1 THEN 1 ELSE 0 END) `sensitive`,
+			SUM(CASE WHEN 1  THEN 1 ELSE 0 END) total_antibiotic,
+			antibiotic,micro_organism,antibiotic.antibiotic_id,micro_organism.micro_organism_id,
+			department_id,unit,area,test_sample.specimen_type_id',false)
+			->from('antibiotic_test')
+			->join('micro_organism_test','antibiotic_test.micro_organism_test_id = micro_organism_test.micro_organism_test_id')
+			->join('micro_organism','micro_organism_test.micro_organism_id = micro_organism.micro_organism_id')
+			->join('antibiotic','antibiotic_test.antibiotic_id = antibiotic.antibiotic_id')
+			->join('test','micro_organism_test.test_id=test.test_id')
+			->join('test_order','test.order_id = test_order.order_id')
 			->join('test_sample','test_order.order_id = test_sample.order_id')
 			->join('specimen_type','test_sample.specimen_type_id = specimen_type.specimen_type_id')
 			->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
 			->join('patient','patient_visit.patient_id = patient.patient_id')
-//			->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')")
-			->where('test.test_status',2);
-//			->limit(10000);
- //                      ->where('test.test_result_binary IS NOT NULL');
- //                       ->where('test_master.test_area_id',2)
- //                       ->where('test_master.test_method_id',3)
-//			->group_by('test.test_id')
-//			->order_by('antibiotic,micro_organism');
+			->where("(DATE(test_date_time) BETWEEN '$from_date' AND '$to_date')")
+			->where('test.test_status',2)
+			->group_by('antibiotic.antibiotic_id,micro_organism.micro_organism_id')
+			->order_by('antibiotic,micro_organism');
 		$query=$this->db->get();
- //               echo $this->db->last_query();
 		return $query->result();
 	}
         
@@ -687,8 +702,7 @@ class Reports_model extends CI_Model{
 			$this->db->where('(patient_visit.admit_date BETWEEN "'.$from_date.'" AND "'.$to_date.'")');
 		}
 		
-		$this->db->select('test_name,patient_visit.visit_id,test_master.test_master_id,department.department_id,area.area_id,unit.unit_id,
-		area_name,unit.unit_name,test_result_binary,count_visit',false)
+		$this->db->select('test_name,patient_visit.visit_id,test_master.test_master_id,department.department_id,area.area_id,unit.unit_id,area_name,unit.unit_name,test_result_binary',false)
 			->from('test')
 			->join('test_order','test.order_id = test_order.order_id')
 			->join('test_master','test.test_master_id = test_master.test_master_id')
@@ -699,26 +713,7 @@ class Reports_model extends CI_Model{
 			->join('unit','patient_visit.unit = unit.unit_id','left')
 			->where('test.test_status',2)
 			->where_in('test_name',array('Left OAE','Right OAE'));
-
-		if($this->input->post('oae_count') == 2){
-			$this->db->join('(SELECT MAX(order_date_time) max_date, visit_id,COUNT(visit_id) count_visit FROM test_order 
-			JOIN test USING(order_id) JOIN test_master USING(test_master_id) 
-			WHERE test_name IN ("LEFT OAE","Right OAE") GROUP BY visit_id) testo','patient_visit.visit_id = testo.visit_id');
-			$this->db->where('count_visit',4); 
-		}
-		if($this->input->post('oae_count') == 3){
-			$this->db->join('(SELECT MAX(order_date_time) max_date, visit_id,COUNT(visit_id) count_visit FROM test_order 
-			JOIN test USING(order_id) JOIN test_master USING(test_master_id) 
-			WHERE test_name IN ("LEFT OAE","Right OAE") GROUP BY visit_id) testo','patient_visit.visit_id = testo.visit_id');
-			$this->db->where('count_visit',6); 
-		}
-		if($this->input->post('oae_count') == 1){
-			$this->db->join('(SELECT MAX(order_date_time) max_date, visit_id,COUNT(visit_id) count_visit FROM test_order 
-			JOIN test USING(order_id) JOIN test_master USING(test_master_id) 
-			WHERE test_name IN ("LEFT OAE","Right OAE") GROUP BY visit_id) testo','patient_visit.visit_id = testo.visit_id');
-			$this->db->where('count_visit',2); 
-		}
-		$query=$this->db->get();
+			$query=$this->db->get();
 		return $query->result();
 	}
         

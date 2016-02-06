@@ -67,15 +67,19 @@ $(function(){
 		  });
 });
 </script>
+
 <script type="text/javascript">
 $(function(){
-	$("#date,#calldate").Zebra_DatePicker({
+	$("#call_date").Zebra_DatePicker({
 			});
-	$("#vendor").on('change',function(){
-		var vendor_id=$(this).val();
-		$("#contact_person_id option").hide();
-		$("#contact_person_id option[class="+vendor_id+"]").show();
-	});
+	
+});
+</script>
+<script type="text/javascript">
+$(function(){
+	$("#service_date").Zebra_DatePicker({
+			});
+	
 });
 </script>
 <script>
@@ -85,8 +89,50 @@ $(function(){
 	
 	});
 </script>
-<div class="col-md-8 col-md-offset-2">
+<div class="row">
+<center>
+<strong><?php if(isset($msg)){ echo $msg;}?></strong></center>
+	<div class="col-md-8 col-md-offset-2">
+		<h4> Service Issue</h4>	
+		<?php echo form_open("equipments/edit/service_records",array('role'=>'form','class'=>'form-custom'));  ?>
+				      
+		           
+					<select name="equipment_type" id="equipment_type" class="form-control">
+					<option value="">Equipment Type</option>
+					<?php 
+					foreach($equipment_types as $e){
+						echo "<option value='".$e->equipment_type_id."'";
+						if($this->input->post('equipment_type') && $this->input->post('equipment_type') == $e->equipment_type_id) echo " selected ";
+						echo ">".$e->equipment_type."</option>";
+					}
+					?>
+					</select>
+					<select name="department" id="department" class="form-control">
+					<option value="">Department</option>
+					<?php 
+					foreach($all_departments as $dept){
+						echo "<option value='".$dept->department_id."'";
+						if($this->input->post('department') && $this->input->post('department') == $dept->department_id) echo " selected ";
+						echo ">".$dept->department."</option>";
+					}
+					?>
+					</select>
+					 
+					<select name="working_status" id="service_records" class="form-control" >
+					<option value="">All</option>	
+					<option value="1" <?php if($this->input->post('working_status') == '1') ?>>Working</option>
+					<option value="0" <?php if($this->input->post('working_status') == '0') ;?>>Not Working</option>
+					</select>
+					<input class="btn btn-sm btn-primary" type="submit" name="filter" value="submit" />
+		</form>
+	<br />
+	</div>
 
+
+
+
+<div class="col-md-8 col-md-offset-2">
+<!--when  clicked  on tr this form will load --->
 	<?php if(isset($mode)&& $mode=="select"){ ?>
 	<center>	<h3>Edit  Service Issue</h3></center><br>
 	<?php echo validation_errors(); echo form_open('equipments/edit/service_records',array('role'=>'form','id'=>'edit_service_record')); ?>
@@ -100,9 +146,9 @@ $(function(){
 		</div>
 		<div  class="col-md-6">
 	
-		<input type="text" class="form-control" placeholder=" Call Date" form="add_service_record" id="calldate" name="call_date"
+		<input type="text" class="form-control" placeholder=" Call Date"  id="call_date" name="call_date"
 <?php if(isset($service_records)){
-			echo "value='".$service_records[0]->call_date."' ";
+			echo "value='".date("d-M-Y",strtotime($service_records[0]->call_date))."' ";
 			}
 		?>		/>
 		
@@ -143,11 +189,12 @@ $(function(){
 		<label for="service_records" >Call Information</label>
 		</div>
 		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder=" Call Information" id="service_records" name="call_information"
+	<textarea class="form-control" placeholder=" Call Information" id="service_records" name="call_information">	 
 <?php if(isset($service_records)){
-			echo "value='".$service_records[0]->call_information."' ";
+	        
+			echo "".$service_records[0]->call_information." ";
 			}
-		?>		/>
+		?>		</textarea>
 		</div>
 	</div></div><br><br>
 	
@@ -157,17 +204,12 @@ $(function(){
 		<label for="description" > Working Status<font color='red'>*</font></label>
 		</div>
 		<div  class="col-md-6">
-	        <input type="text" class="form-control" placeholder=" Call Information" id="service_records" name="working_status"
-           
-		   <?php
-				if($service_records[0]->working_status==1)
-				{
-					echo  "value='".'Working'."' ";
-				}
-						else{
-                        echo "value='".'Not working'."' ";	}?>
-		  />
-
+	
+           <select id="service_records" class="form-control" name="working_status" placehoder="working_status">
+		     
+            <option value="1" <?php echo $service_records[0]->working_status == 1 ? " selected" : ""; ?>>Working</option>
+		   <option value="0" <?php echo  $service_records[0]->working_status == 0 ? " selected" : ""; ;?>>Not Working</option>
+</select>
 
 		</div>
 	</div></div><br><br>
@@ -178,17 +220,17 @@ $(function(){
 		<div class="col-md-6">
 			<label for="vendor" >Vendor<font color='red'>*</font></label>
 		</div>
+			
 			<div class="col-md-6">
-			<select class="form-control" id="vendor" name="vendor">
+			<select class="form-control" id="vendor_id" name="vendor_id">
 				<option value=""> </option>
-				<?php foreach($vendors as $u){
-					echo "<option value='$u->vendor_id'>$u->vendor_name class='$u->vendor_id'";
-					if($service_records[0]->vendor_id == $u->vendor_id)
-					{
-						echo ' selected';
-					}
-					echo ">$u->vendor_id</option>";
-				}?>
+				<?php foreach($vendors as $d){
+						echo "<option value='$d->vendor_id'";
+			$service_records[0]->vendor_id==$d->vendor_id;
+				echo " SELECTED ";
+			echo ">$d->vendor_name</option>";
+			
+		} ?>
 			</select>
 		</div>	
 	
@@ -200,16 +242,17 @@ $(function(){
 			<label for="contact_person_id" > Contact Person</label>
 		</div>
 		<div class="col-md-6">
-			<select class="form-control" id="vendor" name="vendor">
+			<select class="form-control" id="contact_person" name="contact_person">
 				<option value=""> </option>
-				<?php foreach($vendors as $d){
-					echo "<option value='$d->contact_person_id'>$d->contact_person_first_name $d->contact_person_last_name class='$d->contact_person_id'";
-					if($service_records[0]->contact_person_id == $u->contact_person_id)
-					{
-						echo ' selected';
-					}
-					echo ">$d->contact_person_id</option>";
-				}?>
+				<?php foreach($contact_persons as $d){
+						echo "<option value='$d->contact_person_id'";
+			$service_records[0]->contact_person_id==$d->contact_person_id;
+				echo " SELECTED ";
+			echo ">$d->contact_person_first_name</option>";
+			
+		} ?>
+				
+			
 			</select>
 		</div>	
 		
@@ -236,9 +279,10 @@ $(function(){
 		<label for="service_records" >Service Date</label>
 		</div>
 		<div  class="col-md-6">
-		<input type="text" class="form-control" placeholder="   Service Date" id="date" form="add_service_record" name="service_date"
-<?php if(isset($service_records)){
-			echo "value='".$service_records[0]->service_date."' ";
+		<input type="text" class="form-control" placeholder="Service Date" id="service_date"  name="service_date"
+         
+		<?php if(isset($service_records)){
+			echo "value='".date("d-M-Y",strtotime($service_records[0]->service_date))."' ";
 			}
 		?>		/>
 		</div>
@@ -268,11 +312,11 @@ $(function(){
 			
 <select name="problem_status" class="form-control">
 		<option value="">Select Problem Status</option>
-
-	<option value="Issue Reported">Issue Reported</option>
-	<option value="Service Visit Made">Service Visit Made</option>
-	<option value="Under Observation">Under Observation</option>
-	<option value="Issue Resolved">Issue Resolved</option>
+     <option value="Issue Reported" <?php echo  $service_records[0]->problem_status == 'Issue Reported' ? " selected" : ""; ;?>>Issue Reported</option>
+	 <option value="Service Visit Made" <?php echo  $service_records[0]->problem_status == 'Service Visit Made' ? " selected" : ""; ;?>>Service Visit Made</option>
+     <option value="Under Observation" <?php echo  $service_records[0]->problem_status == 'Under Observation' ? " selected" : ""; ;?>>Under Observation</option>
+     <option value="Issue Resolved" <?php echo  $service_records[0]->problem_status == 'Issue Resolved' ? " selected" : ""; ;?>>Issue Resolved</option>
+	
 
 
 
@@ -290,8 +334,8 @@ $(function(){
 	</div>
 	</form>
 	<?php } 
-	else { ?>
-	
+	if(isset($mode)&&($mode)== "filter"){ ?>
+	 <!--when filter is clicked this form will load --->
 	<h3 class="col-md-12">List of Service Records </h3>
 	<div class="col-md-12 ">
 	</div>	
@@ -305,7 +349,7 @@ $(function(){
 	<tbody>
 	<?php 
 	$i=1;
-	foreach($service_records as $a){ ?>
+	foreach($service_summary as $a){ ?>
 	<?php echo form_open('equipments/edit/service_records',array('id'=>'select_service_records_form_'.$a->request_id,'role'=>'form')); ?>
 	<tr onclick="$('#select_service_records_form_<?php echo $a->request_id;?>').submit();" >
 		<td><?php echo $i++; ?></td>
@@ -319,14 +363,10 @@ $(function(){
 		<td><?php echo $a->call_time; ?></td>
 		<td><?php echo $a->call_information_type; ?></td>
 		<td><?php echo $a->call_information; ?></td>
-		<td><?php foreach($vendors as $d){
-			echo "<option value='$d->vendor_id'>$d->vendor_name</option>";
-		}
-		?></td>
-		<td><?php foreach($contact_persons as $d){
-			echo "<option value='$d->contact_person_id' class='$d->vendor_id' >$d->contact_person_first_name  $d->contact_person_last_name</option>";
-		}
-		?></td>
+		<td><?php echo $a->vendor_name; ?></td>
+	
+		<td><?php echo $a->contact_person_first_name; ?>
+		</td>
 		<td><?php echo $a->service_person_remarks; ?></td>
 		<td><?php echo $a->service_date; ?></td>
 		<td><?php echo $a->service_time; ?></td>

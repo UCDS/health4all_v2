@@ -78,8 +78,76 @@ $(function(){
 		}
 	});
 	
+	//$("#vendor").on('change',function(){
+	//	var vendor_id=$(this).val();
+	//	$("#contact_person_id option").hide();
+	//	$("#contact_person_id option[class="+vendor_id+"]").show();
+	//});
 });
 </script>
+<script>
+$("#department").on('change',function(){
+		var department_id=$(this).val();
+		$("#unit option,#area option").hide();
+		$("#unit option[class="+department_id+"],#area option[class="+department_id+"]").show();
+	});
+</script>
+<div class="row">
+<center>
+<strong><?php if(isset($msg)){ echo $msg;}?></strong></center>
+	<div class="col-md-8 col-md-offset-2">
+		<h4> Edit Equipments</h4>	
+		<?php echo form_open("equipments/edit/equipment",array('role'=>'form','class'=>'form-custom'));  ?>
+					<select name="equipment_type" id="equipment_type" class="form-control">
+					<option value="">Equipment Type</option>
+					<?php 
+					foreach($equipment_types as $e){
+						echo "<option value='".$e->equipment_type_id."'";
+						if($this->input->post('equipment_type') && $this->input->post('equipment_type') == $e->equipment_type_id) echo " selected ";
+						echo ">".$e->equipment_type."</option>";
+					}
+					?>
+					</select>
+					<select name="department" id="department" class="form-control">
+					<option value="">Department</option>
+					<?php 
+					foreach($all_departments as $dept){
+						echo "<option value='".$dept->department_id."'";
+						if($this->input->post('department') && $this->input->post('department') == $dept->department_id) echo " selected ";
+						echo ">".$dept->department."</option>";
+					}
+					?>
+					</select>
+					<select name="unit" id="unit" class="form-control" >
+					<option value="">Unit</option>
+					<?php 
+					foreach($units as $unit){
+						echo "<option value='".$unit->unit_id."' class='".$unit->department_id."'";
+						if($this->input->post('unit') && $this->input->post('unit') == $unit->unit_id) echo " selected ";
+						echo ">".$unit->unit_name."</option>";
+					}
+					?>
+					</select>
+					<select name="area" id="area" class="form-control" >
+					<option value="">Area</option>
+					<?php 
+					foreach($areas as $area){
+						echo "<option value='".$area->area_id."' class='".$area->department_id."'";
+						if($this->input->post('area') && $this->input->post('area') == $area->area_id) echo " selected ";
+						echo ">".$area->area_name."</option>";
+					}
+					?>
+					</select>
+					<select name="equipment_status" id="equipment" class="form-control" >
+					<option value="">All</option>	
+					<option value="1" <?php if($this->input->post('equipment_status') == '1') ?>>Working</option>
+					<option value="0" <?php if($this->input->post('equipment_status') == '0') ;?>>Not Working</option>
+					</select>
+					<input class="btn btn-sm btn-primary" type="submit" name="filter" value="submit" />
+		</form>
+	<br />
+	</div>
+	</div>
 
 <div class="col-md-8 col-md-offset-2">
 
@@ -179,16 +247,7 @@ $(function(){
 		?>
 		/>
 </div></div>
-		<div class="form-group">
-		<label for="account_no" class="col-md-4">Supplier</label>
-		<div  class="col-md-8">
-		<input type="text" class="form-control" placeholder="Supplier" id="account_no" name="supplier" 
-		<?php if(isset($equipments)){
-			echo "value='".$equipments[0]->supplier."' ";
-			}
-		?>
-		/>
-		</div></div>
+		
 
 		<div class="form-group">
 		<label for="bank_name" class="col-md-4">Supply Date</label>
@@ -200,11 +259,26 @@ $(function(){
 		?>
 		/>
 </div></div>
+		<div class="form-group">
+		<label for="branch" class="col-md-4">Warranty Start Date</label>
+		<div  class="col-md-8">
+	
 
+		
+		<input type="text" class="form-control" placeholder="Warranty Period" id="warranty_start_date" name="warranty_start_date" 
+		<?php if(isset($equipments)){
+			echo "value='".date('d-M-Y',strtotime($equipments[0]->warranty_start_date))."' ";
+			}
+		?>
+		/>
+</div></div>
 
 		<div class="form-group">
-		<label for="branch" class="col-md-4">Warranty Period</label>
+		<label for="branch" class="col-md-4">Warranty End Period</label>
 		<div  class="col-md-8">
+	
+
+		
 		<input type="text" class="form-control" placeholder="Warranty Period" id="warranty_end_date" name="warranty_end_date" 
 		<?php if(isset($equipments)){
 			echo "value='".date('d-M-Y',strtotime($equipments[0]->warranty_end_date))."' ";
@@ -222,7 +296,7 @@ $(function(){
 		?>
 		/>
 
-		</div>
+		</div></div>
 <div class="form-group">
 		<label for="pan" class="col-md-4">Service Engineer  Contact</label>
 		<div  class="col-md-8">
@@ -234,7 +308,7 @@ $(function(){
 		/>
 
 		</div>
-
+</div>
 <div class="form-group">
 		<label for="pan" class="col-md-4">Hospital</label>
 		<div  class="col-md-8">
@@ -254,9 +328,9 @@ $(function(){
 
 		</div></div>
 		<div class="form-group">
-		<label for="pan" class="col-md-4">Department</label>
+		<label for="department" class="col-md-4">Department</label>
 		<div  class="col-md-8">
-<select name="department" id="facility_type" class="form-control">
+<select name="department" id="department" class="form-control">
 		<option value="">Select Department</option>
 		<?php foreach($department as $e){
 			echo "<option value='$e->department_id'";
@@ -269,17 +343,47 @@ $(function(){
 </select>
 	</div>
 	</div>
+      <div class="form-group">
+		<div class="col-md-4">
+		<label for="area" >Area</label>
+		</div>
+		<div  class="col-md-8">
+		<select name="area" id="area" class="form-control">
+		<option value="">Area</option>
+		<?php foreach($areas as $a){
+			echo "<option value='$a->area_id' class='$a->department_id'>$a->area_name</option>";
+		}
+		?>
+		</select>
+		
+		</div>
+	</div>
+	<div class="form-group">
+	<div class="col-md-4">
+		<label for="unit" >Unit</label>
+		</div>
+		<div  class="col-md-8">
+		<select name="unit" id="unit" class="form-control">
+		<option value="">Unit</option>
+		<?php foreach($units as $u){
+			echo "<option value='$u->unit_id' class='$u->department_id'>$u->unit_name</option>";
+		}
+		?>
+		</select>
+		
+		</div>
+	</div>
 	
-	<input type="hidden" class="form-control" placeholder="Service Engineer" id="pan" name="service_engineer" >
+
 	
 		<div class="form-group">
 		<label for="pan" class="col-md-4">Select Equipment Status</label>
 		<div  class="col-md-8">
 <select name="equipment_status" id="facility_type" class="form-control">
 		<option value="">Select Equipment Status</option>
-<option value="1">Working</option>
-		<option value="0">Not Working</option>
-				
+      
+				<option value="1" <?php echo $equipments[0]->equipment_status == 1 ? " selected" : ""; ?>>Working</option>
+		   <option value="0" <?php echo  $equipments[0]->equipment_status == 0 ? " selected" : ""; ;?>>Not Working</option>
 
 		</select></div></div>
 
@@ -288,21 +392,23 @@ $(function(){
    	<div class="col-md-3 col-md-offset-4">
 	<input class="btn btn-lg btn-primary btn-block" type="submit" value="Update" name="update">
 	</div>
+	
 	</form>
 
+	<?php }?>
+	<?php  if(isset($mode)&& $mode=="filter")  {?>
 	
-	<?php }  
-	else { ?>
+	
 	
 	<h3 class="col-md-12">List of Equipments </h3>
 	<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
-	<th>S.No</th><th>Equipment Type </th><th>Make</th><th>Model</th><th>Serial Number</th><th>Asset Number</th><th>Procured By</th><th>Cost</th><th>Supplier</th>
-	<th>Supply Date</th><th>Warranty Period</th><th>Service Engineer</th><th>Service Engineer Contact</th><th>Hospital</th><th>Department</th><th>Equipment Status</th></thead>
+	<th>S.No</th><th>Equipment Type </th><th>Make</th><th>Model</th><th>Serial Number</th><th>Asset Number</th><th>Procured By</th><th>Cost</th>
+	<th>Supply Date</th><th>Warranty Period</th><th>Service Engineer</th><th>Service Engineer Contact</th><th>Department</th><th>Equipment Status</th></thead>
 	<tbody>
 	<?php 
 	$i=1;
-	foreach($equipments as $a){ ?>
+	foreach($summary as $a){ ?>
 	<?php echo form_open('equipments/edit/equipment',array('id'=>'select_equipment_form_'.$a->equipment_id,'role'=>'form')); ?>
 	<tr onclick="$('#select_equipment_form_<?php echo $a->equipment_id;?>').submit();" >
 		<td><?php echo $i++; ?></td>
@@ -318,13 +424,14 @@ $(function(){
 		<td><?php echo $a->asset_number; ?></td>
 		<td><?php echo $a->procured_by; ?></td>
 		<td><?php echo $a->cost; ?></td>
-		<td><?php echo $a->supplier; ?></td>
 		
-		<td><?php if($a->supply_date!=0 && $a->supply_date!=0) echo date("d-M-Y",strtotime($a->supply_date))." - ".date("d-M-Y",strtotime($a->supply_date)); ?></td>
-		<td><?php if($a->warranty_start_date!=0 && $a->warranty_end_date!=0) echo date("d-M-Y",strtotime($a->warranty_start_date))." - ".date("d-M-Y",strtotime($a->warranty_end_date)); ?></td>
+		
+		<td><?php if($a->supply_date!=0 && $a->supply_date!=0) echo date('d/m/Y', strtotime(str_replace('.', '-', ($a->supply_date)))) ?></td>
+		
+		<td><?php if($a->warranty_start_date!=0 && $a->warranty_end_date!=0)  echo date('Y-m-d ', strtotime( $a->warranty_start_date ))." - ".date('Y-m-d ', strtotime(str_replace('.', '-', ($a->warranty_start_date)))); ?></td>
 		<td><?php echo $a->service_engineer; ?></td>
 		<td><?php echo $a->service_engineer_contact; ?></td>
-		<td><?php echo $a->hospital; ?></td>
+		<!--<td><?php //echo $a->hospital; ?></td>-->
 		<td><?php echo $a->department; ?></td>
 		<td><?php if($a->equipment_status==1)
 				{
@@ -340,7 +447,10 @@ $(function(){
 	<?php } ?>
 	</tbody>
 	</table>
+	
 	<?php } ?>
+
+
 	</div>
 </div>
 </div>
