@@ -55,35 +55,58 @@ class Equipments extends CI_Controller {
 
 
 
+
 else if($type=="service_records"){
 		 	$title="Add Service Records";
-		
-			$config=array(
-                         array(
-                     'field'   => 'equipment_id',
-                     'label'   =>  'Equipment',
+			 
+		      $config=array(
+               array(
+                     'field'   => 'equipment_type',
+                     'label'   => 'Equipment',
+					 'rules'   => 'required|trim|xss_clean'
+                     
+                  ),
+				    array(
+                     'field1'   => 'equipment_type',
+                     'label1'   => 'Equipment',
                      'rules'   => 'required|trim|xss_clean'
-                  )
-        
-             
-             
-			);
-		$this->data['user']=$this->masters_model->get_data("user");
-		$this->data['equipments']=$this->masters_model->get_data("equipment");
-		$this->data['service_records']=$this->masters_model->get_data("service_records");
-        $this->data['vendors']=$this->masters_model->get_data("vendors");
-		$this->data['contact_persons']=$this->masters_model->get_data("contact_person");		
-			
-				$this->data['summary']=$this->reports_model->get_equipment_summary();
-			        $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
+                  ),
+                                    
+		);
+		     $config_test=array(
+               array(
+                     'field'   => 'equipment_id',
+                     'label'   => 'Equipment',
+					 'rules'   => 'required|trim|xss_clean'
+                     
+                  ),
+				    array(
+                     'field'   => 'equipment_id',
+                     'label'   => 'Equipment',
+                     'rules'   => 'required|trim|xss_clean'
+                  ),
+                                    
+		);
+	  
+				$this->data['user']=$this->masters_model->get_data("user");
+				$this->data['equipments']=$this->masters_model->get_data("equipment");
+				$this->data['service_records']=$this->masters_model->get_data("service_records");
+				$this->data['vendors']=$this->masters_model->get_data("vendors");
+				$this->data['contact_persons']=$this->masters_model->get_data("contact_person");		
+				$this->data['equipments']=$this->masters_model->get_data("equipment");
+				$this->data['summary']=$this->masters_model->get_data("filter");
+			    $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
 				$this->data['all_departments']=$this->masters_model->get_data("department");
 				$this->data['areas']=$this->masters_model->get_data("area");
 				$this->data['units']=$this->masters_model->get_data("unit");
 				$this->data['vendors']=$this->masters_model->get_data("vendor");
 				$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
-
+				
+         
 		
 }
+
+
 
 
 	else if($type=="equipment"){
@@ -92,11 +115,11 @@ else if($type=="service_records"){
 			$config=array(
                array(
                      'field'   => 'equipment_type',
-                     'label'   => 'Equipment Type',
+                     'label'   => 'Equipment',
                      'rules'   => 'required|trim|xss_clean'
                   ),
                        array(
-                     'field'   => 'equipment_status',
+                     'field'   => 'equipment_type',
                      'label'   => 'Equipment Status',
                      'rules'   => 'required|trim|xss_clean'
                   ),
@@ -118,46 +141,61 @@ else if($type=="service_records"){
 		$this->data['title']=$title;
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/leftnav');
+		
 		$this->form_validation->set_rules($config);
+		//$this->form_validation->set_rules($config_test);
+		
  		if ($this->form_validation->run() === FALSE)
 		{
-		    $this->data['mode'] = 'search';
+		    //$this->data['mode'] = 'search';
 			$this->load->view($page,$this->data);
+			
 		}
 		else{
-			
-			
+			   //echo "hello";
+
 				 if($this->input->post('select'))
 			{
 				//selected record's id is taken from  input in master_model
 				//all the fields are retrieved and sent to the view
+				
 				$this->data['mode'] = 'select';
-			   	$this->data[$type]=$this->masters_model->get_data($type);
+				
+			   
 				$this->data['vendors']=$this->masters_model->get_data("vendors");
 		        $this->data['contact_persons']=$this->masters_model->get_data("contact_persons");
+				$this->data[$type]=$this->masters_model->get_data($type);
          		$this->load->view($page,$this->data);
-				
-				
 			}
+			 else  if($this->input->post('filter')){
+				$this->data['mode']="filter";
+				$this->data['equipments']=$this->masters_model->get_data("equipment");
+				$this->data['summary']=$this->masters_model->get_data("filter");
+			    $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
+				$this->data['all_departments']=$this->masters_model->get_data("department");
+				$this->data['areas']=$this->masters_model->get_data("area");
+				$this->data['units']=$this->masters_model->get_data("unit");
+				$this->data['vendors']=$this->masters_model->get_data("vendor");
+				$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
+			    $this->data[$type]=$this->masters_model->get_data($type);
+         
+         	$this->load->view($page,$this->data);
+			}
+			 else	 if(($this->input->post('submit'))||($this->masters_model->insert_data($type))){
+					
+					
+				  $this->data['msg']=" Inserted  Successfully";
+					 // unset($_POST['submit']);
+                   //  unset($_REQUEST['submit']);
+				
+					
+					$this->load->view($page,$this->data);  
+			 }
+		
+				
+		    
 			
-				else if(($this->input->post('submit'))||($this->masters_model->insert_data($type))){
-				    $this->data['msg']=" Inserted  Successfully";
-					//echo '<script type="text/javascript">alert("Inserted  Successfully");</script>';
-					
-					if (isset($_POST['submit'])){
-					$this->load->view($page,$this->data);
-					
-				    
-					
-						}
-                      
-				}
-				else{
-					
-					$this->data['msg']="Failed";
-					
-					$this->load->view($page,$this->data);
-				}
+			 
 		}
 		$this->load->view('templates/footer');
   	}	
@@ -179,8 +217,9 @@ function edit($type=""){
              
              
 			);
-$this->data['equipments']=$this->masters_model->get_data("equipments");
-		
+				$this->data['equipments']=$this->masters_model->get_data("equipments");
+				$this->data['vendors']=$this->masters_model->get_data("vendor");
+				$this->data['contact_persons']=$this->masters_model->get_data("contact_person");		
 }
 
 		else if($type=="equipment_type"){
@@ -215,9 +254,10 @@ else if($type=="equipment"){
 				$this->data['department']=$this->masters_model->get_data("department");
 				$this->data['areas']=$this->masters_model->get_data("area");
 				$this->data['user']=$this->masters_model->get_data("user");
-					$this->data['summary']=$this->reports_model->get_equipment_summary();
-			        $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
+				$this->data['summary']=$this->reports_model->get_equipment_summary();
+			    $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
 				$this->data['all_departments']=$this->masters_model->get_data("department");
+				$this->data['department']=$this->masters_model->get_data("department");
 				$this->data['areas']=$this->masters_model->get_data("area");
 				$this->data['units']=$this->masters_model->get_data("unit");
 				$this->data['vendors']=$this->masters_model->get_data("vendor");
@@ -230,16 +270,21 @@ else if($type=="equipment"){
 		
 			$config=array(
                array(
-                     'field'   => 'equipment_type',
-                     'label'   => 'Equipment Name ',
+                     'field'   => 'request_id',
+                     'label'   => 'Request_id ',
                      'rules'   => 'trim|xss_clean'
                   )
 				);
 		$this->data['service_records']=$this->masters_model->get_data("service_records");		
 		$this->data['equipments']=$this->masters_model->get_data("equipment");
 		$this->data['user']=$this->masters_model->get_data("user");
-		$this->data['vendors']=$this->masters_model->get_data("vendor");
-		$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
+	    $this->data['vendors']=$this->masters_model->get_data("vend");
+		$this->data['contact_persons']=$this->masters_model->get_data("contact");
+	    $this->data['service_summary']=$this->masters_model->get_data("service_filter");
+        $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
+	    $this->data['all_departments']=$this->masters_model->get_data("department");
+		$this->data['areas']=$this->masters_model->get_data("area");
+		$this->data['units']=$this->masters_model->get_data("unit");
 
 	}	
 
@@ -262,7 +307,8 @@ else if($type=="equipment"){
 				if($this->masters_model->update_data($type)){
 					
 					$this->data['msg']="Updated Successfully";
-		    
+						$this->data['vendors']=$this->masters_model->get_data("vendor");
+				$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
 					$this->load->view($page,$this->data);
 				}
 				else{
@@ -272,6 +318,23 @@ else if($type=="equipment"){
 			}
 			else if($this->input->post('select')){
             $this->data['mode']="select";
+			$this->data[$type]=$this->masters_model->get_data($type);
+			$this->data['vendors']=$this->masters_model->get_data("vend");
+		    $this->data['contact_persons']=$this->masters_model->get_data("contact");
+         
+         	$this->load->view($page,$this->data);
+			}
+			else if($this->input->post('filter')){
+            $this->data['mode']="filter";
+				$this->data['equipments']=$this->masters_model->get_data("equipment");
+			$this->data['summary']=$this->masters_model->get_data("equipment_filter");
+			$this->data['service_summary']=$this->masters_model->get_data("service_filter");
+			    $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
+				$this->data['all_departments']=$this->masters_model->get_data("department");
+				$this->data['areas']=$this->masters_model->get_data("area");
+				$this->data['units']=$this->masters_model->get_data("unit");
+				$this->data['vendors']=$this->masters_model->get_data("vendor");
+				$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
 			   $this->data[$type]=$this->masters_model->get_data($type);
          
          	$this->load->view($page,$this->data);
@@ -307,10 +370,10 @@ else if($type=="equipment"){
 				$this->data['units']=$this->masters_model->get_data("unit");
 				$this->data['vendors']=$this->masters_model->get_data("vendor");
 				$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
-            case "edit_equipment" :
-			   
-				$this->data['summary']=$this->reports_model->get_equipment_summary();
-			        $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
+            case "service_record_summary" :
+			  
+			    $this->data['service_summary']=$this->reports_model->get_service_records();
+			    $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
 				$this->data['all_departments']=$this->masters_model->get_data("department");
 				$this->data['areas']=$this->masters_model->get_data("area");
 				$this->data['units']=$this->masters_model->get_data("unit");
