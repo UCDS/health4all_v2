@@ -317,14 +317,14 @@ class Staff_model extends CI_Model{
 		  return true;
 		}
     }
-
+       
     function search_staff(){
         $name = array(
                    'LOWER(first_name)'=>strtolower($this->input->post('query')), 
                    'LOWER(last_name)'=>strtolower($this->input->post('query'))                           
         );
        
-        $this->db->select('staff_id, first_name, last_name')
+        $this->db->select('staff_id, first_name, last_name ,doctor_reg_no')
             ->from('staff')
             ->or_like($name,'both');
         $query=$this->db->get();
@@ -334,6 +334,45 @@ class Staff_model extends CI_Model{
 		else
             return false;
     }
-			
+		
+		function search_doctor(){
+        $name = array(
+                   'LOWER(first_name)'=>strtolower($this->input->post('query')), 
+                   'LOWER(last_name)'=>strtolower($this->input->post('query')),
+				   'LOWER(doctor_reg_no)'=>strtolower($this->input->post('query'))
+        );
+       
+        $this->db->select('staff_id, first_name, last_name ,doctor_reg_no')
+            ->from('staff')
+            ->or_like($name,'both');
+        $query=$this->db->get();
+		if($query->num_rows()>0){
+		    return $query->result_array();
+		}
+		else
+            return false;
+    }
+	
+	
+		function search_hospital(){
+        $name = array(
+                   'LOWER(hospital)'=>strtolower($this->input->post('query')), 
+                   'LOWER(place)'=>strtolower($this->input->post('query')),
+				   //'LOWER(hospital_id)'=>strtolower($this->input->post('query'))
+        );
+       
+        $this->db->select('hospital_id, hospital, place ')
+            ->from('hospital')
+            ->or_like($name,'both');
+        $query=$this->db->get();
+		if($query->num_rows()>0){
+		    return $query->result_array();
+		}
+		else
+            return false;
+    }
+	
+	
+    		
 }
 ?>

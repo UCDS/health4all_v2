@@ -17,6 +17,99 @@ class Masters_model extends CI_Model{
 		else if($type=="department"){
 			$this->db->select("department_id,hospital_id,department")->from("department")->order_by('department');
 		}
+		elseif($type=="equipment_filter")
+		{
+			
+		if($this->input->post('department')){
+			$this->db->where('equipment.department_id',$this->input->post('department'));
+		}
+		if($this->input->post('unit')){
+			$this->db->where('equipment.unit_id',$this->input->post('unit'));
+		}
+		if($this->input->post('area')){
+			$this->db->where('equipment.area_id',$this->input->post('area'));
+		}
+		if($this->input->post('equipment_status')!=NULL){
+			$this->db->where('equipment.equipment_status',$this->input->post('equipment_status'));
+		}
+		if($this->input->post('equipment_type')){
+			$this->db->where('equipment.equipment_type_id',$this->input->post('equipment_type'));
+		}
+		$this->db->select("equipment.equipment_type_id,equipment_type,equipment.department_id,department,equipment.area_id,area_name,equipment.unit_id,unit_name,equipment_status,equipment_id,make,model,serial_number,asset_number,procured_by,cost,supply_date,warranty_start_date,warranty_end_date,service_engineer,service_engineer_contact,department
+		")
+		->from("equipment")
+		->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id")
+		->join("department","equipment.department_id=department.department_id")
+		->join("unit","equipment.unit_id=unit.unit_id","left")
+		->join("area","equipment.area_id=area.area_id","left")
+		//->group_by("equipment_type,department,equipment.area_id,equipment.unit_id")
+		->order_by("equipment_type");
+		$query=$this->db->get();
+		return $query->result();
+		
+		}
+		//filter type is used to join all the tables and 
+		elseif($type=="filter")
+		{
+			
+		if($this->input->post('department')){
+			$this->db->where('equipment.department_id',$this->input->post('department'));
+		}
+		if($this->input->post('unit')){
+			$this->db->where('equipment.unit_id',$this->input->post('unit'));
+		}
+		if($this->input->post('area')){
+			$this->db->where('equipment.area_id',$this->input->post('area'));
+		}
+		if($this->input->post('equipment_status')!=NULL){
+			$this->db->where('equipment.equipment_status',$this->input->post('equipment_status'));
+		}
+		if($this->input->post('equipment_type')){
+			$this->db->where('equipment.equipment_type_id',$this->input->post('equipment_type'));
+		}
+		$this->db->select("equipment.equipment_type_id,equipment_type,equipment.department_id,department,equipment.area_id,area_name,equipment.unit_id,unit_name,equipment_status,equipment_id,make,model,serial_number,asset_number,procured_by,cost,supply_date,warranty_start_date,warranty_end_date,service_engineer,service_engineer_contact,department,equipment_status
+		")
+		->from("equipment")
+		->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id")
+		->join("department","equipment.department_id=department.department_id")
+		->join("unit","equipment.unit_id=unit.unit_id","left")
+		->join("area","equipment.area_id=area.area_id","left")
+		//->join("service_record","equipment.equipment_id=service_record.equipment_id")
+		//->group_by("equipment_type,department,equipment.area_id,equipment.unit_id")
+		->order_by("equipment_type");
+		$query=$this->db->get();
+		return $query->result();
+		
+		}
+			elseif($type=="service_filter")
+		{
+				if($this->input->post('department')){
+			$this->db->where('equipment.department_id',$this->input->post('department'));
+		}
+		if($this->input->post('equipment_type')){
+			$this->db->where('equipment.equipment_type_id',$this->input->post('equipment_type'));
+		}
+		if($this->input->post('working_status')!=NULL){
+			$this->db->where('service_record.working_status',$this->input->post('working_status'));
+		}
+		$this->db->select("equipment.equipment_id,equipment.equipment_type_id,equipment.department_id,contact_person.contact_person_id,vendor.vendor_id,request_id,call_date,call_time,call_information_type,call_information,service_person_remarks,service_date,service_time,problem_status,working_status,vendor_name,contact_person_first_name,contact_person_last_name
+		")
+		->from("service_record")
+		
+	
+		->join("equipment","service_record.equipment_id=equipment.equipment_id")
+		->join("vendor","service_record.vendor_id=vendor.vendor_id",'left')
+		->join("contact_person","service_record.contact_person_id=contact_person.contact_person_id",'left')
+		//->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id")
+		//->join("department","equipment.department_id=department.department_id" )
+		->group_by("equipment_id")
+		->order_by("equipment_id");
+		$query=$this->db->get();
+		//echo $this->db->last_query();
+		return $query->result();
+		
+		
+		}
 		else if($type=="area"){
 			if($hospitals!=0){
 				$hosp_id=array();
@@ -65,67 +158,40 @@ class Masters_model extends CI_Model{
 		{
 			if($this->input->post('search'))
 			{
-				
-				if($this->input->post('department_id'))
-					$this->db->where('staff.department_id',$this->input->post('department_id'));
-				if($this->input->post('designation'))
-					$this->db->like('staff.designation',$this->input->post('designation'),'both');
-				if($this->input->post('staff_category_id'))
-					$this->db->where('staff.staff_category_id',$this->input->post('staff_category_id'));
-				if($this->input->post('gender'))
-					$this->db->where('staff.gender',$this->input->post('gender'));
-				if($this->input->post('mci_flag'))
-					$this->db->where('staff.mci_flag',$this->input->post('mci_flag'));
+				$staff = strtolower($this->input->post('staff'));
+				$this->db->like('LOWER(first_name)',$staff,'after');
 			}
 			if($this->input->post('select'))
 			{
 				$staff_id = $this->input->post('staff_id');
-				$this->db->where('staff.staff_id',$staff_id);
+				$this->db->where('staff_id',$staff_id);
 			}
 			
 			
-			$this->db->select("staff.staff_id,first_name,last_name,gender,date_of_birth,staff.department_id,department,unit_id,area_id,staff_role_id,
-			staff_category.staff_category_id,staff_category.staff_category,designation,email,phone,specialisation,research,research_area, mci_flag, hr_transaction_type.hr_transaction_type, MAX(hr_transaction.hr_transaction_date)")
+			$this->db->select("staff_id,first_name,last_name,gender,date_of_birth,staff.department_id,department,unit_id,area_id,staff_role_id,
+			staff_category_id,designation,email,phone,specialisation,research,research_area")
 			->from("staff")
-			->join('department','staff.department_id = department.department_id','left')
-			->join('staff_category','staff_category.staff_category_id=staff.staff_category_id','left')
-			->join('hr_transaction','hr_transaction.staff_id=staff.staff_id','left')
-			->join('hr_transaction_type','hr_transaction_type.hr_transaction_type_id=hr_transaction.hr_transaction_type_id','left')
-			->group_by('staff.staff_id');
+			->join('department','staff.department_id = department.department_id','left');
 			
 		}
 				else if($type=='view_staff')
 		{
 			if($this->input->post('search'))
 			{
-				
-				if($this->input->post('department_id'))
-					$this->db->where('staff.department_id',$this->input->post('department_id'));
-				if($this->input->post('designation'))
-					$this->db->like('staff.designation',$this->input->post('designation'),'both');
-				if($this->input->post('staff_category_id'))
-					$this->db->where('staff.staff_category_id',$this->input->post('staff_category_id'));
-				if($this->input->post('gender'))
-					$this->db->where('staff.gender',$this->input->post('gender'));
-				if($this->input->post('mci_flag'))
-					$this->db->where('staff.mci_flag',$this->input->post('mci_flag'));
+				$staff = strtolower($this->input->post('staff'));
+				$this->db->like('LOWER(first_name)',$staff,'after');
 			}
 			if($this->input->post('select'))
 			{
 				$staff_id = $this->input->post('staff_id');
-				$this->db->where('staff.staff_id',$staff_id);
+				$this->db->where('staff_id',$staff_id);
 			}
 			
 			
-			$this->db->select("staff.staff_id,first_name,last_name,gender,date_of_birth,staff.department_id,department,unit_id,area_id,staff_role_id,
-			staff_category.staff_category_id,staff_category.staff_category,designation,email,phone,specialisation,research,research_area, mci_flag, hr_transaction_type.hr_transaction_type, MAX(hr_transaction.hr_transaction_date)")
+			$this->db->select("staff_id,first_name,last_name,gender,date_of_birth,staff.department_id,department,unit_id,area_id,staff_role_id,
+			staff_category_id,designation,email,phone,specialisation,research,research_area")
 			->from("staff")
-			->join('department','staff.department_id = department.department_id','left')
-			->join('staff_category','staff_category.staff_category_id=staff.staff_category_id','left')
-			->join('hr_transaction','hr_transaction.staff_id=staff.staff_id','left')
-			->join('hr_transaction_type','hr_transaction_type.hr_transaction_type_id=hr_transaction.hr_transaction_type_id','left')
-			->group_by('staff.staff_id');
-			
+			->join('department','staff.department_id = department.department_id','left');
 			
 		}
 		else if($type=="staff_category")
@@ -216,7 +282,7 @@ class Masters_model extends CI_Model{
 						
 			}
 			
-			$this->db->select("equipment_id,request_id,call_date,call_time,vendor_id,service_person_id,call_information_type,call_information,service_person_remarks,service_person_id,service_date,service_time,problem_status,working_status")->from("service_record");
+			$this->db->select("equipment_id,request_id,call_date,call_time,vendor_id,contact_person_id,call_information_type,call_information,service_person_remarks,contact_person_id,service_date,service_time,problem_status,working_status")->from("service_record");
 					
 			
 					
@@ -280,7 +346,7 @@ class Masters_model extends CI_Model{
 						->join('department','equipment.department_id=department.department_id','left')
 						->join('user','equipment.user_id=user.user_id','left')
 						->order_by('equipment_type');	
-	
+				
 
 		}
 	     	else if($type=="vendor_type"){
@@ -433,7 +499,7 @@ class Masters_model extends CI_Model{
 					}
 					$this->db->where_in('department_id',$deps);
 				}
-				$this->db->select("test_group.group_id,group_name,test_name,test_method, test_master.test_area_id, test_area.test_area")->from("test_group")
+				$this->db->select("test_group.group_id,group_name,test_name,test_method")->from("test_group")
 				->join('test_group_link','test_group.group_id = test_group_link.group_id')
 				->join('test_master','test_group_link.test_master_id = test_master.test_master_id')
 				->join('test_method','test_master.test_method_id=test_method.test_method_id')
@@ -474,7 +540,7 @@ class Masters_model extends CI_Model{
 				}
 				$this->db->where_in('department_id',$deps);
 			}
-			$this->db->select("test_master_id,test_name,test_master.test_method_id,test_master.test_area_id,test_method, test_master.test_area_id, test_area.test_area")
+			$this->db->select("test_master_id,test_name,test_master.test_method_id,test_master.test_area_id,test_method")
 			->from("test_master")
 			->join('test_method','test_master.test_method_id=test_method.test_method_id')
 			->join('test_area','test_master.test_area_id=test_area.test_area_id')
@@ -601,6 +667,12 @@ class Masters_model extends CI_Model{
 		else if($type=="contact_persons"){
 			$this->db->select("contact_person_id,contact_person_first_name,contact_person_last_name")->from("contact_person");
 		}
+		else if($type=="vend"){
+			$this->db->select("vendor_id,vendor_name")->from("vendor");
+		}
+		else if($type=="contact"){
+			$this->db->select("contact_person_id,contact_person_first_name,contact_person_last_name")->from("contact_person");
+		}
 		else if($type=="facility_activity"){
 			$this->db->select("activity_id")->from("facility_activity");
 		}
@@ -655,32 +727,9 @@ class Masters_model extends CI_Model{
 			->where('area.area_id',$this->input->post('area'));
 		}
 		$query=$this->db->get();
-	
 		return $query->result();
 	
 }
-
-
-function get_transactions(){
-    $this->db->select('hr_transaction.hr_transaction_date, hr_transaction_type.hr_transaction_type')
-    ->from('hr_transaction')
-    ->join('hr_transaction_type', 'hr_transaction.hr_transaction_type_id=hr_transaction_type.hr_transaction_type_id', 'left')
-    ->where('hr_transaction.staff_id', $this->input->post('staff_id'));
-    $query=$this->db->get();
-   
-    return $query->result();
-}
-
-function get_designation(){
-	$this->db->select('DISTINCT(designation)')
-	->from('staff');
-	$query=$this->db->get();
-	
-	return $query->result();
-
-}
-
-
 function update_data($type){
 	if($type=="drugs"){
 			$data = array(
@@ -791,6 +840,7 @@ function update_data($type){
 			if($this->input->post('warranty_end_date')) $warranty_end_date = date("Y-m-d",strtotime($this->input->post('warranty_end_date')));
 			else $warranty_end_date=0;
 			$data = array(
+			
 					  'equipment_type_id'=>$this->input->post('equipment_type'),
 					  'make'=>$this->input->post('make'),	
 					  'model'=>$this->input->post('model'),	
@@ -799,8 +849,9 @@ function update_data($type){
 					  'procured_by'=>$this->input->post('procured_by'),	
 					  'cost'=>$this->input->post('cost'),	
 					  'supplier'=>$this->input->post('supplier'),	
-					  'supply_date'=>date("Y-m-d",strtotime($this->input->post('service_date'))),
-					  'warranty_end_date'=>$this->input->post('warranty_end_date'),	
+					  'supply_date'=>$date_supply,
+					  'warranty_start_date'=>$warranty_start_date,
+					  'warranty_end_date'=>$warranty_end_date,
 					  'service_engineer'=>$this->input->post('service_engineer'),	
 					  'service_engineer_contact'=>$this->input->post('service_engineer_contact'),	
 					  'hospital_id'=>$this->input->post('hospital'),	
@@ -816,29 +867,35 @@ function update_data($type){
 
 	}
 		elseif($type=="service_records"){
-			  if($this->input->post('call_date')) $call_date = date("Y-m-d",strtotime($this->input->post('call_date')));
+			/*if($this->input->post('call_date')) $call_date = date("d-m-Y",strtotime($this->input->post('call_date')));
 			else $call_date=0;
-			  if($this->input->post('service_date')) $service_date = date("Y-m-d",strtotime($this->input->post('service_date')));
-			else $service_date=0;
+			  if($this->input->post('service_date')) $service_date = date("d-m-Y",strtotime($this->input->post('service_date')));
+			else $service_date=0;*/
+			$date = $this->input->post('call_date');
+			$date = date("Y-m-d",strtotime($date));
+			$service_date = $this->input->post('service_date');
+			$service_date = date("Y-m-d",strtotime($service_date));
 		$data = array(
-
-					'request_id'=>$this->input->post('request_id'),
-					  'call_date'=>date("Y-m-d",strtotime($this->input->post('call_date'))),
+		
+					//'request_id'=>$this->input->post('request_id'),
+					 'call_date'=>$date,
 					 'call_time'=>$this->input->post('call_time'),
 					 //'user_id'=>$this->input->post('user'),
 					
 					 'call_information_type'=>$this->input->post('call_information_type'),
 					 'call_information'=>$this->input->post('call_information'),
 					 'vendor_id'=>$this->input->post('vendor_id'),
-					 'service_person_id'=>$this->input->post('contact_person'),
+					 'contact_person_id'=>$this->input->post('contact_person'),
 					 'service_person_remarks'=>$this->input->post('service_person_remarks'),
-					 'service_date'=>date("Y-m-d",strtotime($this->input->post('service_date'))),
+					 'service_date'=>$service_date,
 					 'service_time'=>$this->input->post('service_time'),
 					 'problem_status'=>$this->input->post('problem_status'),
 					 'working_status'=>$this->input->post('working_status')
 			);
+		
          	$this->db->where('request_id',$this->input->post('request_id'));
 		$table="service_record";
+	
 		}
 
 
@@ -1039,7 +1096,6 @@ else if($type=="dosage"){
 					  'staff_role_id'=>$this->input->post('staff_role'),
 					  'staff_category_id'=>$this->input->post('staff_category'),
 					  'designation'=>$this->input->post('designation'),
-					  'mci_flag'=>$this->input->post('mci_flag'),
 					  'staff_type'=>$this->input->post('staff_type'),
 					  'email'=>$this->input->post('email'),
 					  'phone'=>$this->input->post('phone'),
@@ -1203,7 +1259,7 @@ else if($type=="dosage"){
 				'supply_date'=>$date_supply,
 				'warranty_start_date'=>$warranty_start_date,
 				'warranty_end_date'=>$warranty_end_date,
-				'service_person_id'=>$this->input->post('contact_person'),
+				'contact_person_id'=>$this->input->post('contact_person'),
 				'hospital_id'=>$hospital_id,
 				'department_id'=>$this->input->post('department'),
 				'area_id'=>$this->input->post('area'),
@@ -1255,7 +1311,7 @@ else if($type=="dosage"){
 					 'call_information_type'=>$this->input->post('call_information_type'),
 					  'call_information'=>$this->input->post('call_information'),
 					   'vendor_id'=>$this->input->post('vendor_id'),
-					   'service_person_id'=>$this->input->post('contact_person'),
+					   'contact_person_id'=>$this->input->post('contact_person'),
 					    'service_person_remarks'=>$this->input->post('service_person_remarks'),
 					     'service_date'=>$service_date,
 					      'service_time'=>$this->input->post('service_time'),
