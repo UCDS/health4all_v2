@@ -61,18 +61,16 @@
 				</tbody>
 				<tr class="print-element" width="95%" height="100px">
 					<td colspan="2">
+						<br />
+						<br />
 						Chief Complaint: <?php echo $registered->presenting_complaints;?>
 					</td>
 					<td>
-						<?php if(file_exists(base_url()."assets/images/patients/".$registered->patient_id.".jpg")) { ?>
-						<img src="<?php echo base_url()."assets/images/patients/".$registered->patient_id;?>.jpg" alt="Image" style="width:100px;height:100px" onError="this.onerror=null;this.src='<?php echo base_url()."assets/images/patients/default.png";?>';" />
+						<img src="<?php echo base_url()."assets/images/patients/".$registered->patient_id;?>.jpg" alt="" style="width:100px;height:100px" onError="this.onerror=null;this.style='';" />
 						<br />
 						<br />
 						<br />
-						<br />
-						<br />
-						<?php } ?>
-						Investigations:<br />
+						<br /><br />Investigations:<br />
 						<small style="font-size:10px;color:#666;">Provisional Diagnosis is <br />
 						mandatory for investigations.</small>
 						<br />

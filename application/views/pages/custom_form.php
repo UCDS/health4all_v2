@@ -693,7 +693,7 @@ pri.print();
 				<?php 
 					break;
 					
-					case "mlc_number" : ?>
+					case "mlc_number_manual" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Manual MLC<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
