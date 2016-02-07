@@ -696,7 +696,7 @@ pri.print();
 					case "mlc_number_manual" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
-						<label class="control-label">Manual MLC<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<label class="control-label">MLC Number<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<input type="text" name="mlc_number_manual" class="form-control mlc" value="<?php if($update) echo $patient->mlc_number_manual;?>"  <?php if($mandatory) echo "required"; ?> />
 						</div>
 					</div>

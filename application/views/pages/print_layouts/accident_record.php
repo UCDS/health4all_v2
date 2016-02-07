@@ -20,7 +20,7 @@
 				</tr>
 				<tbody height="10%">
 				<tr width="95%">
-						<td width="30%" style="padding:5px;">MLC Number: <?php if(!!$registered->mlc_number_manual) echo $registered->mlc_number_manual; else echo "A".$registered->mlc_number; ?></td>
+						<td width="30%" style="padding:5px;">MLC Number: <?php if(!!$registered->mlc_number_manual) echo $registered->mlc_number_manual; else echo $registered->mlc_number; ?></td>
 						<td style="padding:5px;">Date, Time:  
 							<?php echo date("d-M-Y",strtotime($registered->admit_date)); ?>,
 							<?php echo date("g:iA",strtotime($registered->admit_time)); ?>

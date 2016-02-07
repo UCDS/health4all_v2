@@ -48,7 +48,7 @@
 						<td  style="padding:5px;"> MLC number: 
 						<?php 
 						if(!!trim($registered->mlc_number_manual)) echo $registered->mlc_number_manual; 
-						else echo "A".$registered->mlc_number;
+						else echo $registered->mlc_number;
 						?></td>
 						<td style="padding:5px;">PS Name/PC # : <?php echo $registered->ps_name; ?>/<?php echo $registered->pc_number; ?></td>
 				</tr>

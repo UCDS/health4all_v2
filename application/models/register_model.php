@@ -226,7 +226,7 @@ class Register_model extends CI_Model{
 				//if it's a new entry, store the mlc data from the post variables.
 			$mlc_data=array(
 				'visit_id'=>$visit_id,
-				'mlc_number'=>$mlc_number,
+				'mlc_number'=>"A".$mlc_number,
 				'mlc_number_manual'=>$mlc_number_manual,
 				'ps_name'=>$ps_name,
 				'pc_number'=>$pc_number,
@@ -241,9 +241,11 @@ class Register_model extends CI_Model{
 		//update the admit id, setting it equal to the visit id, only changes for transfer cases.
 		$this->db->where('visit_id',$visit_id);
 		$this->db->update('patient_visit',array('admit_id'=>$visit_id));
-		//update the counter table with the new hospital file number.
+		//update the counter table with the new hospital file number and MLC number.
 		$this->db->where('counter_name',$form_type);
 		$this->db->update('counter',array('count'=>$hosp_file_no));
+		$this->db->where('counter_name','MLC');
+		$this->db->update('counter',array('count'=>$mlc_number));
 		
 		//Transaction ends here.
 		$this->db->trans_complete();
