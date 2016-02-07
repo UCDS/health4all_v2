@@ -61,15 +61,23 @@ class Register_model extends CI_Model{
 		$hospital_id=$hospital['hospital_id'];
 		$form_type=$this->input->post('form_type');
 		$mlc=$this->input->post('mlc');
+		//check if it is an mlc case
 		if($this->input->post('mlc')==1){
-		if($this->input->post('mlc_number_manual'))
+		//if a manual mlc number has been entered, use it and ignore the auto counter
+		if($this->input->post('mlc_number_manual')) { 
 		$mlc_number_manual=$this->input->post('mlc_number_manual');
-		else 
+		$mlc_number = "";
+		}
+		else {
+		//else, set the manual mlc to blank and increment the counter for MLC and use it as the number.
 		$mlc_number_manual="";
 		$this->db->select('count')->from('counter')->where('counter_name','MLC');
 		$query = $this->db->get();
 		$result = $query->row();
 		$mlc_number = ++$result->count;
+		$this->db->where('counter_name','MLC');
+		$this->db->update('counter',array('count'=>$mlc_number));
+		}
 		$ps_name=$this->input->post('ps_name');
 		$pc_number=$this->input->post('pc_number');
 		$brought_by=$this->input->post('brought_by');
@@ -241,11 +249,9 @@ class Register_model extends CI_Model{
 		//update the admit id, setting it equal to the visit id, only changes for transfer cases.
 		$this->db->where('visit_id',$visit_id);
 		$this->db->update('patient_visit',array('admit_id'=>$visit_id));
-		//update the counter table with the new hospital file number and MLC number.
+		//update the counter table with the new hospital file number.
 		$this->db->where('counter_name',$form_type);
 		$this->db->update('counter',array('count'=>$hosp_file_no));
-		$this->db->where('counter_name','MLC');
-		$this->db->update('counter',array('count'=>$mlc_number));
 		
 		//Transaction ends here.
 		$this->db->trans_complete();
