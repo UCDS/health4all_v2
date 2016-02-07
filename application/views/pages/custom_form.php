@@ -45,10 +45,10 @@ $(function(){
 	$(".mlc:text").parent().parent().hide();
 	$(".mlc:radio").on('change',function(){
 		if($(this).val()==1){
-			$(".mlc:text").parent().parent().show();
+			$(".mlc:text,.mlc_field").parent().parent().show();
 		}
 		else{
-			$(".mlc:text").parent().parent().hide();
+			$(".mlc:text,.mlc_field").parent().parent().hide();
 		}
 	});
 });
@@ -103,7 +103,12 @@ pri.print();
                 
                 if($registered->mlc==1){ ?>
                 <div class="sr-only" id="print-MLC-div" style="width:100%;height:100%;"> 
-                    <?php $this->load->view("pages/print_layouts/MLC_complaint");
+                    <?php 
+						if($registered->visit_type == "OP"){
+							$this->load->view("pages/print_layouts/accident_record");
+						}
+						else
+						$this->load->view("pages/print_layouts/MLC_complaint");
                         $offset=4;
                     ?>
 				</div>
@@ -691,8 +696,82 @@ pri.print();
 					case "mlc_number" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
-						<label class="control-label">MLC Number<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-						<input type="text" name="mlc_number" class="form-control mlc" value="<?php if($update) echo $patient->mlc_number;?>"  <?php if($mandatory) echo "required"; ?> />
+						<label class="control-label">Manual MLC<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="mlc_number_manual" class="form-control mlc" value="<?php if($update) echo $patient->mlc_number_manual;?>"  <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+					<?php 
+					break;
+					
+					case "ps_name" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">PS Name<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="ps_name" class="form-control mlc" value="<?php if($update) echo $patient->ps_name;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+					<?php 
+					break;
+					
+					case "pc_number" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Constable #<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="pc_number" class="form-control mlc" value="<?php if($update) echo $patient->pc_number;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+					<?php 
+					break;
+					
+					case "brought_by" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Brought By<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="brought_by" class="form-control mlc" value="<?php if($update) echo $patient->brought_by;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+					<?php 
+					break;
+					
+					case "police_intimation" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="radio">
+						<label class="control-label">Police Intimation</label>
+						<label class="control-label"><input type="radio" value="1" class="mlc_field" name="police_intimation" <?php if($update)  if($patient->police_intimation==1) echo " checked ";?> <?php if($mandatory) echo "required"; ?> />Yes</label>
+						<label class="control-label"><input type="radio" value="0" class="mlc_field" name="police_intimation" <?php if($update) if($patient->police_intimation==0) echo " checked ";?>  <?php if($mandatory) echo "required"; ?> />No</label>
+						<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?>
+						</div>
+					</div>
+					<?php 
+					break;
+					
+					case "declaration_required" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="radio">
+						<label class="control-label">Declaration Req?</label>
+						<label class="control-label"><input type="radio" value="1" class="mlc_field" name="declaration_required" <?php if($update)  if($patient->declaration_required==1) echo " checked ";?> <?php if($mandatory) echo "required"; ?> />Yes</label>
+						<label class="control-label"><input type="radio" value="0" class="mlc_field" name="declaration_required" <?php if($update) if($patient->declaration_required==0) echo " checked ";?>  <?php if($mandatory) echo "required"; ?> />No</label>
+						<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?>
+						</div>
+					</div>
+					<?php 
+					break;
+					
+					case "identification_mark_1" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Identification Mark 1<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="identification_mark_1" class="form-control mlc" value="<?php if($update) echo $patient->identification_mark_1;?>" <?php if($mandatory) echo "required"; ?> />
+						</div>
+					</div>
+					<?php 
+					break;
+					
+					case "identification_mark_2" : ?>
+					<div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Identification Mark 2<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
+						<input type="text" name="identification_mark_2" class="form-control mlc" value="<?php if($update) echo $patient->identification_mark_2;?>" <?php if($mandatory) echo "required"; ?> />
 						</div>
 					</div>
 				<?php 
@@ -757,16 +836,6 @@ pri.print();
 						<div class="form-group">
 						<label class="control-label">Respiratory Rate<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<input type="text" name="respiratory_rate" class="form-control mlc" value="<?php if($update) echo $patient->respiratory_rate;?>"  <?php if($mandatory) echo "required"; ?> />
-						</div>
-					</div>
-					<?php 
-					break;
-					
-					case "ps_name" : ?>
-					<div class="<?php echo $class;?>">
-						<div class="form-group">
-						<label class="control-label">PS Name<?php if($mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-						<input type="text" name="ps_name" class="form-control mlc" value="<?php if($update) echo $patient->ps_name;?>" <?php if($mandatory) echo "required"; ?> />
 						</div>
 					</div>
 				<?php 
