@@ -2,8 +2,8 @@
 		<table style="width:98%;padding:5px">
 				<tr>
 				<td colspan="3">
-				<img style="float:right" style="margin-top:-20px" src="<?php echo base_url();?>assets/images/ap-logo.png" width="60px" />
-				<img style="float:left" src="<?php echo base_url();?>assets/images/<?php $hospital=$this->session->userdata('hospital');echo $hospital['logo'];?>" width="60px" />
+				<img style="float:right" style="margin-top:-20px" src="<?php echo base_url();?>assets/images/ap-logo.png" alt="" width="60px" />
+				<img style="float:left" src="<?php echo base_url();?>assets/images/<?php $hospital=$this->session->userdata('hospital');echo $hospital['logo'];?>" alt="" width="60px" />
 				<div style="float:middle;text-align:center">
 				<b>Government of Telangana</b><br />
 				<font size="4"><?php echo $hospital['hospital'];?></font>
@@ -12,7 +12,7 @@
 					<?php echo $hospital['district'];?>
 					<br />
 					<br />
-				<span style="border:1px solid #ccc;padding:5px;margin:5px;font-size:1.5em"><u><b>OUT PATIENT <?php if(!!$registered->visit_name) echo "- ".strtoupper($registered->visit_name);?></b></u></span>
+				<span style="padding:5px;margin:5px;font-size:1.5em"><u><b>OUT PATIENT <?php if(!!$registered->visit_name) echo "- ".strtoupper($registered->visit_name);?></b></u></span>
 				<br />
 				<br />
 				</div>
@@ -64,13 +64,14 @@
 						Chief Complaint: <?php echo $registered->presenting_complaints;?>
 					</td>
 					<td>
-								
+						<?php if(file_exists(base_url()."assets/images/patients/".$registered->patient_id.".jpg")) { ?>
 						<img src="<?php echo base_url()."assets/images/patients/".$registered->patient_id;?>.jpg" alt="Image" style="width:100px;height:100px" onError="this.onerror=null;this.src='<?php echo base_url()."assets/images/patients/default.png";?>';" />
 						<br />
 						<br />
 						<br />
 						<br />
 						<br />
+						<?php } ?>
 						Investigations:<br />
 						<small style="font-size:10px;color:#666;">Provisional Diagnosis is <br />
 						mandatory for investigations.</small>
@@ -99,6 +100,8 @@
 				</tr>
 				<tr class="print-element" width="95%" height="70px">
 					<td>
+						<br />
+						<br />
 						<br />
 						<br />
 						<br />
