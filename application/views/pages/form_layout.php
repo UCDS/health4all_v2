@@ -267,7 +267,6 @@
 						</select>
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 					    </div>
-					</div>
 					<div class="layout-div col-md-4 education_level">
 						<div class="form-group">
 						<label class="control-label"> Education Level </label>
@@ -385,10 +384,10 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-                    <div class="layout-div col-md-4 visit_information">
+                    <div class="layout-div col-md-4 visit_name">
 						<div class="form-group">
-						<label class="control-label"> Visit Information </label>
-						<input type="text" name="visit_information" style="width: 170px" class="form-control" />
+						<label class="control-label"> Visit Type </label>
+						<input type="text" name="visit_name" style="width: 170px" class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 						</div>
@@ -483,10 +482,10 @@
 						</div>					
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 					</div>
-					<div class="layout-div col-md-4 mlc_number">
+					<div class="layout-div col-md-4 mlc_number_manual">
 						<div class="form-group">
-						<label class="control-label">MLC Number</label>
-						<input type="text" name="mlc_number" style="width: 170px" class="form-control" />
+						<label class="control-label">Manual MLC Number</label>
+						<input type="text" name="mlc_number_manual" style="width: 170px" class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
@@ -497,10 +496,62 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-					<div class="layout-div col-md-4 presenting_complaint">
+					<div class="layout-div col-md-4 pc_number">
+						<div class="form-group">
+						<label class="control-label">Constable #</label>
+						<input type="text" name="pc_number" style="width: 170px" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 brought_by">
+						<div class="form-group">
+						<label class="control-label">Brought By</label>
+						<input type="text" name="brought_by" style="width: 170px" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 police_intimation">
+						<div class="radio ">
+						<label class="control-label" title="Medico Legal Case">Police Intimation</label>
+						<label class="control-label">
+							<input type="radio" name="police_intimation" value="1" />Yes
+						</label>
+						<label class="control-label">
+							<input type="radio" name="police_intimation" value="0" checked />No
+						</label>
+						</div>					
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+					</div>
+					<div class="layout-div col-md-4 declaration_required">
+						<div class="radio ">
+						<label class="control-label" title="Medico Legal Case">Declaration Req?</label>
+						<label class="control-label">
+							<input type="radio" name="declaration_required" value="1" />Yes
+						</label>
+						<label class="control-label">
+							<input type="radio" name="declaration_required" value="0" checked />No
+						</label>
+						</div>					
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+					</div>
+					<div class="layout-div col-md-4 identification_mark_1">
+						<div class="form-group">
+						<label class="control-label">Identification Mark 1</label>
+						<input type="text" name="identification_mark_1" style="width: 170px" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 identification_mark_2">
+						<div class="form-group">
+						<label class="control-label">Identification Mark 2</label>
+						<input type="text" name="identification_mark_2" style="width: 170px" class="form-control" />
+						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+						</div>
+					</div>
+					<div class="layout-div col-md-4 presenting_complaints">
 						<div class="form-group">
 						<label class="control-label">Complaint</label>
-						<input type="text" name="presenting_complaint" style="width: 170px" class="form-control" />
+						<input type="text" name="presenting_complaints" style="width: 170px" class="form-control" />
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
@@ -648,7 +699,73 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
+					
+					<div class="layout-div col-md-12 patient_picture">
+						<div class="form-group well well-sm">
+						<div class="row">
+							<div class="col-md-12">
+							<p class="col-md-6" id="results-text">Captured image will appear here..</p>
+							<p class="col-md-6">Camera View</p>
+							<div id="results" class="col-md-6 results"></div>
+							
+							<div id="my_camera" class="col-md-6"></div>
+							</div>
+						</div>
+							<div class="col-md-offset-6" style="position:relative;top:5px">
+							
+							<!-- A button for taking snaps -->
+								<div id="button">
+									<input id="patient_picture" type="hidden" class="sr-only" name="patient_picture" value=""/>
+									<button class="btn btn-default btn-sm" type="button" onclick="save_photo()"><i class="fa fa-camera"></i> Take Picture</button>
+								</div>
+							</div>
+							<!-- First, include the Webcam.js JavaScript Library -->
+							<script type="text/javascript" src="<?php echo base_url();?>assets/js/webcam.min.js"></script>
+							
+							<!-- Configure a few settings and attach camera -->
+							<script language="JavaScript">
+								Webcam.set({
+									width: 320,
+									height: 240,
+									// device capture size
+									dest_width: 320,
+									dest_height: 240,
+									// final cropped size
+									crop_width: 200,
+									crop_height: 240,											
+									image_format: 'jpeg',
+									jpeg_quality: 90
+								});
+								Webcam.attach( '#my_camera' );
+							</script>
+							
+							<!-- Code to handle taking the snapshot and displaying it locally -->
+							<script language="JavaScript">
+								
+								function save_photo() {
+									// actually snap photo (from preview freeze) and display it
+									Webcam.snap( function(data_uri) {
+										// display results in page
+										document.getElementById('results').innerHTML = 
+											'<img src="'+data_uri+'"/>';
+										document.getElementById('results-text').innerHTML = 
+											'Captured Image';
+										//Store image data in input field.
+										var raw_image_data = data_uri.replace(/^data\:image\/\w+\;base64\,/, '');
+										
+										document.getElementById('patient_picture').value = raw_image_data;
+										
+										// swap buttons back
+										document.getElementById('pre_take_buttons').style.display = '';
+										document.getElementById('post_take_buttons').style.display = 'none';
+									} );
+								}
+							</script>
+							
+						</div>
+					</div>
 			        </div>
+					
 				</div>
 				<div class="panel-footer">
 					<button type="submit" class="btn btn-primary" id="save-form">Save</button>
@@ -744,6 +861,21 @@
 						<label><input type="checkbox" value="1" id="blood_group" class="checklist" />Blood Group</label>
 					</div>
 				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="identification_mark_1" class="checklist" />Identification Mark 1</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="identification_mark_2" class="checklist" />Identification Mark 2</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="patient_picture" class="checklist" />Picture</label>
+					</div>
+				</li>
 			</ul>
 			<strong>Birth Information</strong>
 			  <ul class="nav nav-sidebar">
@@ -802,6 +934,11 @@
 			  <ul class="nav nav-sidebar">
 				<li>  
 					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="visit_name" class="checklist" />Visit Type</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
 						<label><input type="checkbox" value="1" id="hospital" class="checklist" />Hospital</label>
 					</div>
 				</li>
@@ -832,22 +969,7 @@
 				</li>
 				<li>  
 					<div class="checkbox">
-						<label><input type="checkbox" value="1" id="mlc" class="checklist" />MLC</label>
-					</div>
-				</li>
-				<li>  
-					<div class="checkbox">
-						<label><input type="checkbox" value="1" id="mlc_number" class="checklist" />MLC Number</label>
-					</div>
-				</li>
-				<li>  
-					<div class="checkbox">
-						<label><input type="checkbox" value="1" id="ps_name" class="checklist" />PS Name</label>
-					</div>
-				</li>
-				<li>  
-					<div class="checkbox">
-						<label><input type="checkbox" value="1" id="presenting_complaint" class="checklist" />Presenting Complaint</label>
+						<label><input type="checkbox" value="1" id="presenting_complaints" class="checklist" />Presenting Complaint</label>
 					</div>
 				</li>  
 				<li>  
@@ -910,6 +1032,44 @@
 						<label><input type="checkbox" value="1" id="final_diagnosis" class="checklist" />Final Diagnosis</label>
 					</div>
 				</li> 
+			</ul>
+			<strong>MLC Information</strong>
+			  <ul class="nav nav-sidebar">
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="mlc" class="checklist" />MLC</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="mlc_number_manual" class="checklist" />Manual MLC Number</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="ps_name" class="checklist" />PS Name</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="pc_number" class="checklist" />Constable #</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="brought_by" class="checklist" />Brought By</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="police_intimation" class="checklist" />Police Intimation</label>
+					</div>
+				</li>
+				<li>  
+					<div class="checkbox">
+						<label><input type="checkbox" value="1" id="declaration_required" class="checklist" />Declaration Required</label>
+					</div>
+				</li>
 			</div>
       </form>
 

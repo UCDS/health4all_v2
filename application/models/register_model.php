@@ -61,8 +61,35 @@ class Register_model extends CI_Model{
 		$hospital_id=$hospital['hospital_id'];
 		$form_type=$this->input->post('form_type');
 		$mlc=$this->input->post('mlc');
-		$mlc_number=$this->input->post('mlc_number');
+		//check if it is an mlc case
+		if($this->input->post('mlc')==1){
+		//if a manual mlc number has been entered, use it and ignore the auto counter
+		if($this->input->post('mlc_number_manual')) { 
+		$mlc_number_manual=$this->input->post('mlc_number_manual');
+		$mlc_number = "";
+		}
+		else {
+		//else, set the manual mlc to blank and increment the counter for MLC and use it as the number.
+		$mlc_number_manual="";
+		$this->db->select('count')->from('counter')->where('counter_name','MLC');
+		$query = $this->db->get();
+		$result = $query->row();
+		$mlc_number = ++$result->count;
+		$this->db->where('counter_name','MLC');
+		$this->db->update('counter',array('count'=>$mlc_number));
+		}
 		$ps_name=$this->input->post('ps_name');
+		$pc_number=$this->input->post('pc_number');
+		$brought_by=$this->input->post('brought_by');
+		$police_intimation=$this->input->post('police_intimation');
+		$declaration_required=$this->input->post('declaration_required');
+		}
+		else {
+			$mlc_number = "";
+			$mlc_number_manual = "";
+		}
+		$identification_mark_1=$this->input->post('identification_mark_1');
+		$identification_mark_2=$this->input->post('identification_mark_2');
 		$outcome=$this->input->post('outcome');
 		if($this->input->post('outcome_date')) $outcome_date=date("Y-m-d",strtotime($this->input->post('outcome_date'))); else $outcome_date = 0;
 		if($this->input->post('outcome_time')) $outcome_time=date("h:i:s",strtotime($this->input->post('outcome_time'))); else $outcome_time = 0;
@@ -127,7 +154,9 @@ class Register_model extends CI_Model{
 			'place'=>$place,
 			'phone'=>$phone,
 			'alt_phone'=>$alt_phone,
-			'district_id'=>$district
+			'district_id'=>$district,
+			'identification_mark_1'=>$identification_mark_1,
+			'identification_mark_2'=>$identification_mark_2
 		);
 		
 		//Start a mysql transaction.
@@ -205,8 +234,13 @@ class Register_model extends CI_Model{
 				//if it's a new entry, store the mlc data from the post variables.
 			$mlc_data=array(
 				'visit_id'=>$visit_id,
-				'mlc_number'=>$mlc_number,
-				'ps_name'=>$ps_name
+				'mlc_number'=>"A".$mlc_number,
+				'mlc_number_manual'=>$mlc_number_manual,
+				'ps_name'=>$ps_name,
+				'pc_number'=>$pc_number,
+				'brought_by'=>$brought_by,
+				'police_intimation'=>$police_intimation,
+				'declaration_required'=>$declaration_required
 			);
 			//insert into the mlc table.
 			$this->db->insert('mlc',$mlc_data);
@@ -231,7 +265,7 @@ class Register_model extends CI_Model{
 		patient.patient_id,patient_visit.visit_id,
 		CONCAT(IF(first_name=NULL,"",first_name)," ",IF(last_name=NULL,"",last_name)) name,
 		IF(father_name=NULL OR father_name="",spouse_name,father_name) parent_spouse,visit_name,visit_name.visit_name_id,
-		department,unit_name,area_name,district,op_room_no,mlc_number,ps_name',false)
+		department,unit_name,area_name,district,op_room_no,mlc.*,occupation',false)
 		->from('patient')->join('patient_visit','patient.patient_id=patient_visit.patient_id')
 		->join('department','patient_visit.department_id=department.department_id','left')
 		->join('unit','patient_visit.unit=unit.unit_id','left')
@@ -239,6 +273,7 @@ class Register_model extends CI_Model{
 		->join('district','patient.district_id=district.district_id','left')
 		->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
 		->join('visit_name','patient_visit.visit_name_id=visit_name.visit_name_id','left')
+		->join('occupation','patient.occupation_id=occupation.occupation_id','left')
 		->where('patient_visit.visit_id',$visit_id);
 		$resource=$this->db->get();
 		//return the result array to the controller
