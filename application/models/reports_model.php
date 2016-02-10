@@ -263,7 +263,7 @@ class Reports_model extends CI_Model{
 		->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
 		->join('department','patient_visit.department_id = department.department_id')
 		->join('test_area','test_order.test_area_id = test_area.test_area_id')
-		->join('test','test_order.order_id = test.order_id')
+		->join('test','test_order.order_id = test.order_id','left')
 		->join('test_master','test.test_master_id = test_master.test_master_id')
 		->join('test_method','test_master.test_method_id = test_method.test_method_id')
 		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')")
@@ -306,10 +306,12 @@ class Reports_model extends CI_Model{
 			$this->db->select('"0" as area',false);
 		}
 
-		$this->db->select("hosp_file_no,visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,
+		$this->db->select("hosp_file_no,patient_visit.visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,
 		gender,IF(gender='F' AND father_name=NULL,spouse_name,father_name) parent_spouse,unit_name,area_name,
-		age_years,age_months,age_days,place,phone,department,unit_name,area_name",false);
-		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
+		age_years,age_months,age_days,place,phone,department,unit_name,area_name, admit_date, admit_time, mlc_number, mlc_number_manual",false);
+		 $this->db->from('patient_visit')
+		 ->join('patient','patient_visit.patient_id=patient.patient_id')
+		 ->join('mlc','mlc.visit_id=patient_visit.visit_id','left')
 		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
