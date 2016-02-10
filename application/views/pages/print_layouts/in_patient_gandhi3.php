@@ -64,7 +64,8 @@
 				<b>Phone:</b> <?php echo $registered->phone; ?>
 			</div>
 			<div  class="column">
-				<?php if($registered->mlc==1) { echo "<b>MLC No:</b> ".$registered->mlc_number.", <b>PS Name:</b>".$registered->ps_name; }?>
+				<?php echo "<b>MLC No: </b>";if(!!$registered->mlc_number_manual) echo $registered->mlc_number_manual; else echo $registered->mlc_number; ?>
+				<?php echo ", <b>PS Name:</b>".$registered->ps_name; }?>
 			</div>
 		</div>	
 		<div class="row">
@@ -107,7 +108,7 @@
 				<b>Phone:</b> <?php echo $registered->phone; ?>
 			</div>
 			<?php if($registered->mlc==1) { ?>
-			<div  class="column"><?php echo "<b>MLC No:</b>" .$registered->mlc_number; ?>
+			<div  class="column"><?php echo "<b>MLC No:</b>"; if(!!$registered->mlc_number_manual) echo $registered->mlc_number_manual; else echo $registered->mlc_number;?>
 			</div>
 			<div class="column">
 				<?php echo "<b>PS Name:</b>" .$registered->ps_name;?>
@@ -162,7 +163,7 @@
 				<b>Phone:</b> <?php echo $registered->phone; ?>
 			</div>
 			<?php if($registered->mlc==1) { ?>
-			<div  class="column"><?php echo "<b>MLC No:</b>" .$registered->mlc_number; ?>
+			<div  class="column"><?php echo "<b>MLC No:</b>"; if(!!$registered->mlc_number_manual) echo $registered->mlc_number_manual; else echo $registered->mlc_number; ?>
 			</div>
 			<div class="column">
 				<?php echo "<b>PS Name:</b>" .$registered->ps_name;?>
