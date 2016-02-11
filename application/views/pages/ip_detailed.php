@@ -102,16 +102,7 @@ $(function(){
 					}
 					?>
 					</select>
-					<select name="visit_name" id="visit_name" class="form-control" >
-					<option value="">All</option>
-					<?php 
-					foreach($visit_names as $v){
-						echo "<option value='".$v->visit_name_id."'";
-						if($this->input->post('visit_name') && $this->input->post('visit_name') == $v->visit_name_id) echo " selected ";
-						echo ">".$v->visit_name."</option>";
-					}
-					?>
-					</select>
+					
 					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
 		</form>
 	<br />
@@ -166,7 +157,7 @@ $(function(){
 				echo $s->area_name;
 			?>
 		</td>
-		<td><?php echo $s->mlc_number;?></td>
+		<td><?php if($s->mlc_number_manual=='') echo $s->mlc_number; else echo $s->mlc_number_manual;?></td>
 	</tr>
 	<?php
 	$total_count++;

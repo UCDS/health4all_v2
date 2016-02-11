@@ -124,7 +124,8 @@ $(function(){
 	<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
 		<th>OP No.</th>
-		<th>Date/Time</th>
+		<th>Date</th>
+		<th>Time</th>
 		<th>Gender</th>
 		<th>Name</th>
 		<th>Age</th>
@@ -147,7 +148,8 @@ $(function(){
 	?>
 	<tr>
 		<td><?php echo $s->hosp_file_no;?></td>
-		<td><?php echo date("j M Y", strtotime("$s->admit_date")).'/'.date("h:i A.", strtotime("$s->admit_time"));?></td>
+		<td><?php echo date("j M Y", strtotime("$s->admit_date"));?></td>
+		<td><?php echo date("h:i A.", strtotime("$s->admit_time"));?></td>
 		<td><?php echo $s->gender;?></td>
 		<td><?php echo $s->name;?></td>
 		<td><?php echo $age;?></td>
