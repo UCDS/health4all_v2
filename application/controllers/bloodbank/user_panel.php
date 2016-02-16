@@ -229,13 +229,15 @@ class User_panel extends CI_Controller {
 		
 		if($this->session->userdata('logged_in')){
 		$this->data['userdata']=$this->session->userdata('logged_in');		
-	   if($from_date == 0 && $to_date==0) {$from_date=date('Y-m-d',strtotime('-90 Days'));$to_date=date('Y-m-d');}
+	  if($from_date == 0 && $to_date==0) {$from_date=date('Y-m-d',strtotime('-90 Days'));$to_date=date('Y-m-d');}
 		$this->load->helper('form');
 		$this->data['title']="User Panel";
 		$this->data['staff']=$this->staff_model->staff_list();
 		$this->load->helper('form');
 		$this->load->library('form_validation');
-		$this->data['screened']=$this->reports_model->get_screened_blood($staff,$from_date,$to_date,$screened_by,$offset);
+		$screening_result = $this->reports_model->get_screened_blood($staff,$from_date,$to_date,$screened_by,$offset);
+		//To get total records
+		$this->data['screened']= $screening_result['result'];
 		$this->form_validation->set_rules('from_date', 'From Date',
 		'trim|required|xss_clean');
 	    $this->form_validation->set_rules('to_date', 'To Date', 
@@ -246,16 +248,17 @@ class User_panel extends CI_Controller {
 		if($this->input->post('screened_by')) $screened_by=$this->input->post('screened_by');
 		$limit=500;
 		$num_links=7/2;
-		$counttotal=$this->reports_model->get_blood_count($staff,$from_date,$to_date,$screened_by)->count_bb;
+		//To Get Number of records total count 
+		$counttotal= $screening_result['rows'];
 		$search=$this->input->post('search');
 		 $this->data['from_date']=$from_date;
-			$this->data['to_date']=$to_date;
+		$this->data['to_date']=$to_date;
 			$uri_segment=8;
 			$offset= $this->uri->segment(8);
 			if(!$offset)
 				$offset = 1;
-			$base_url = base_url()."bloodbank/user_panel/report_screening/"."$staff/$from_date/$to_date/$screened_by/";
-			$this->pagination_string($offset,$base_url,$counttotal,$limit,$uri_segment,$num_links);
+		$base_url = base_url()."bloodbank/user_panel/report_screening/"."$staff/$from_date/$to_date/$screened_by/";
+		$this->pagination_string($offset,$base_url,$counttotal,$limit,$uri_segment,$num_links);
 		$this->data['initial'] = ($offset-1)*$limit+1;
 		$this->data['offset']=$offset;
 		$this->data['counttotal']=$counttotal;

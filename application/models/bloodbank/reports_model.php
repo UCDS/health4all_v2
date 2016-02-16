@@ -589,6 +589,11 @@ class Reports_model extends CI_Model{
 		if($this->input->post('staff')){
 		$this->db->select("*")->from("staff")->where("department_id","4")->order_by('staff_id')->where('status',1);
 		}
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+			$this->db->where("(DATE(blood_screening.screening_datetime) BETWEEN '$from_date' AND '$to_date')");
+		}
 		if($from_date=="")
 		{
 			$from_date=date('Y-m-d',strtotime($this->input->post('from_date')));
@@ -612,7 +617,7 @@ class Reports_model extends CI_Model{
 		if($this->input->post('screened_by')){
 			$this->db->where('staff_id',$this->input->post('screened_by'));
 		}
-		$this->db->select('*')
+		$this->db->select('SQL_CALC_FOUND_ROWS bb_donation.*, blood_screening.*,blood_donor.*,staff.*',FALSE)
 		->from('bb_donation')
 		->join('blood_screening','bb_donation.donation_id=blood_screening.donation_id')
 		->join('blood_donor','bb_donation.donor_id=blood_donor.donor_id')
@@ -626,50 +631,13 @@ class Reports_model extends CI_Model{
 		}
 		$this->db->limit(500,$start_at);
 		$query=$this->db->get();
-		return $query->result(); 
+		 $return['rows'] = $this->db->query('SELECT FOUND_ROWS() count;')->row()->count;
+		 $return['result'] = $query->result(); 
+		 $return['rows'];
+		return $return;
 		}
-		// To count  Total number of Records  in bb_donation 
-	function get_blood_count($staff,$from_date,$to_date,$screened_by){
-      $search=$this->input->post('search');
-		if($this->input->post('staff')){
-		$this->db->select("*")->from("staff")->where("department_id","4")->order_by('staff_id')->where('status',1);
-		}
-		if($from_date=="")
-		{
-			$from_date=date('Y-m-d',strtotime($this->input->post('from_date')));
-			}
-		if($to_date=="")
-		{
-			$to_date=date('Y-m-d',strtotime($this->input->post('to_date')));
-		}
-		if($from_date && $to_date){
-			$this->db->where("(DATE(blood_screening.screening_datetime) BETWEEN '$from_date' AND '$to_date')");
-		}
-		else if($from_date!="" || $to_date!=""){
-		 $from_date=="0"?$date=$to_date:$date=$from_date;
-		 $this->db->where('DATE(blood_screening.screening_datetime)',$date);
-		}
-		else{
-			$from=date('Y-m-d',strtotime('-90 Days'));
-			$to=date('Y-m-d');
-			
-		 }
-		if($this->input->post('screened_by')){
-			$this->db->where('staff_id',$this->input->post('screened_by'));
-		}
-		$this->db->select("count(*) count_bb");
-		 $this->db->from('bb_donation')
-		->join('blood_screening','bb_donation.donation_id=blood_screening.donation_id')
-		->join('blood_donor','bb_donation.donor_id=blood_donor.donor_id')
-		->join('(SELECT staff_id,CONCAT(first_name," ",last_name," ",name) AS staff_name FROM staff) staff','blood_screening.screened_by=staff.staff_id')
-		->where('status_id',6)
-		//->where('bb_donation.hospital_id',$hospital)
-		->order_by('screening_datetime','asc');
-	    $query=$this->db->get();
-		return $query->row();
-	}
-	
-	/* get_issues() : Generate the report of the issues made in a given period of time. Defaults to last 10 days. */
+
+/* get_issues() : Generate the report of the issues made in a given period of time. Defaults to last 10 days. */
 
 	function get_issues($issue_date,$blood_group,$from_date,$to_date,$hospital=0){
 
