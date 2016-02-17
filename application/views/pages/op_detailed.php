@@ -103,6 +103,16 @@ $(function(){
 					}
 					?>
 					</select>
+					<select name="visit_name" id="visit_name" class="form-control" >
+					<option value="">All</option>
+					<?php 
+					foreach($visit_names as $v){
+						echo "<option value='".$v->visit_name_id."'";
+						if($this->input->post('visit_name') && $this->input->post('visit_name') == $v->visit_name_id) echo " selected ";
+						echo ">".$v->visit_name."</option>";
+					}
+					?>
+					</select>
 					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
 		</form>
 	<br />
@@ -114,6 +124,7 @@ $(function(){
 	<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
 		<th>OP No.</th>
+		<th>Date/Time</th>
 		<th>Gender</th>
 		<th>Name</th>
 		<th>Age</th>
@@ -122,19 +133,21 @@ $(function(){
 		<th>Phone</th>
 		<th>Department</th>
 		<th>Unit/ Area</th>
+		<th>MLC Number</th>
 	</thead>
 	<tbody>
 	<?php 
 	$total_count=0;
 	foreach($report as $s){
 		$age="";
-		if($s->age_years!=0) $age.=$s->age_years."Y ";
-		if($s->age_months!=0) $age.=$s->age_months."M ";
-		if($s->age_days!=0) $age.=$s->age_days."D ";
+		if(!!$s->age_years) $age.=$s->age_years."Y ";
+		if(!!$s->age_months) $age.=$s->age_months."M ";
+		if(!!$s->age_days) $age.=$s->age_days."D ";
 		if($s->age_days==0 && $s->age_months==0 && $s->age_years==0) $age.="0D";
 	?>
 	<tr>
 		<td><?php echo $s->hosp_file_no;?></td>
+		<td><?php echo date("j M Y", strtotime("$s->admit_date")).'/'.date("h:i A.", strtotime("$s->admit_time"));?></td>
 		<td><?php echo $s->gender;?></td>
 		<td><?php echo $s->name;?></td>
 		<td><?php echo $age;?></td>
@@ -147,7 +160,9 @@ $(function(){
 				if(!!$s->unit_name && !!$s->area_name) echo  "/ ";
 				echo $s->area_name;
 			?>
-		</td>	</tr>
+		</td>	
+		<td><?php if($s->mlc_number_manual=='') echo $s->mlc_number; else echo $s->mlc_number_manual;?></td>
+		</tr>
 	<?php
 	$total_count++;
 	}
