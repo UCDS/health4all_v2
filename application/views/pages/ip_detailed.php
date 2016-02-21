@@ -166,7 +166,7 @@ $(function(){
 				echo $s->area_name;
 			?>
 		</td>
-		<td><?php echo $s->mlc_number;?></td>
+		<td><?php if($s->mlc_number_manual=='') echo $s->mlc_number; else echo $s->mlc_number_manual;?></td>
 	</tr>
 	<?php
 	$total_count++;
