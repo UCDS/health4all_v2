@@ -18,7 +18,8 @@
 				<li ><a href="#"><i class="fa fa-file-text  "></i>&nbsp;&nbsp;&nbsp;AMC/CMC</a></li>
 				<li class="nav-header">View</li>
 				<li <?php if(preg_match("^view/equipments_summary^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/view/equipments_summary"> <i class="glyph-icon flaticon-medical-equipment"></i> Equipment</a></li>
-				 <li <?php if(preg_match("^view/service_record_summary^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/view/service_record_summary"> <i class="fa fa-cog "></i> Service Issue</a></li>
+				 <li <?php if(preg_match("^view/equipments_detail^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/view/equipments_detail"> <i class="fa fa-cog "></i> Equipment Detail</a></li>
+				<li <?php if(preg_match("^view/service_record_summary^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/view/service_record_summary"> <i class="fa fa-cog "></i> Service Issue</a></li>
 	<ul>
 </div>
 <?php } ?>
