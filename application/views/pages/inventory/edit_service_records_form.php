@@ -344,7 +344,7 @@ $(function(){
 		</button>
 		<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
-	<th>S.No</th><th>Call Date </th><th>Call Time</th><th>Call Information Type</th><th>Call Information</th><th>Vendor</th><th>Contact Person</th><th>Service Person Remarks</th>
+	<th>S.No</th><th>equipment type</th><th>Call Date </th><th>Call Time</th><th>Call Information Type</th><th>Call Information</th><th>Vendor</th><th>Contact Person</th><th>Service Person Remarks</th>
 	<th>Service Date</th><th>Service Time</th><th>Problem Status</th><th>Working Status</th></thead>
 	<tbody>
 	<?php 
@@ -353,14 +353,15 @@ $(function(){
 	<?php echo form_open('equipments/edit/service_records',array('id'=>'select_service_records_form_'.$a->request_id,'role'=>'form')); ?>
 	<tr onclick="$('#select_service_records_form_<?php echo $a->request_id;?>').submit();" >
 		<td><?php echo $i++; ?></td>
-		<td><?php echo $a->call_date; ?>
+		<td> <?php echo $a->equipment_type; ?></td>
+		<td><?php echo date("d-M-Y", strtotime("$a->call_date"));   ?>
 		
 		<input type="hidden" value="<?php echo $a->request_id; ?>" name="request_id" />
 		<input type="hidden" value="select" name="select" />
 		</td>
 	
-	
-		<td><?php echo $a->call_time; ?></td>
+	     
+		<td><?php echo date("h:i A", strtotime("$a->call_time"));  ?></td>
 		<td><?php echo $a->call_information_type; ?></td>
 		<td><?php echo $a->call_information; ?></td>
 		<td><?php echo $a->vendor_name; ?></td>
@@ -368,8 +369,8 @@ $(function(){
 		<td><?php echo $a->contact_person_first_name; ?>
 		</td>
 		<td><?php echo $a->service_person_remarks; ?></td>
-		<td><?php echo $a->service_date; ?></td>
-		<td><?php echo $a->service_time; ?></td>
+		<td><?php  echo date("d-M-Y", strtotime("$a->service_date"));  ?></td>
+		<td><?php  echo date("h:i A", strtotime("$s->service_time"));  ?></td>
 		<td><?php echo $a->problem_status; ?></td>
 		<td><?php
 				if($a->working_status==1)

@@ -583,47 +583,61 @@ class Reports_model extends CI_Model{
 		$query=$this->db->get();
 		return $query->result();
 	}
-	
-	
-	function get_screened_blood(){
-
-		$userdata=$this->session->userdata('hospital');
-		$hospital=$userdata['hospital_id'];
+	//To get total records in bb_donation for screening report by using Pagination
+	function get_screened_blood($staff,$from_date,$to_date,$screened_by,$offset){
+		$search=$this->input->post('search');
+		if($this->input->post('staff')){
+		$this->db->select("*")->from("staff")->where("department_id","4")->order_by('staff_id')->where('status',1);
+		}
 		if($this->input->post('from_date') && $this->input->post('to_date')){
-			$from_date=date('Y-m-d',strtotime($this->input->post('from_date')));
-			$to_date=date('Y-m-d',strtotime($this->input->post('to_date')));
+			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
 			$this->db->where("(DATE(blood_screening.screening_datetime) BETWEEN '$from_date' AND '$to_date')");
 		}
-		else if($this->input->post('from_date') || $this->input->post('to_date')){
-		 $this->input->post('from_date')==""?$date=date("Y-m-d",strtotime($this->input->post('to_date'))):$date=date("Y-m-d",strtotime($this->input->post('from_date')));
+		if($from_date=="")
+		{
+			$from_date=date('Y-m-d',strtotime($this->input->post('from_date')));
+			}
+		if($to_date=="")
+		{
+			$to_date=date('Y-m-d',strtotime($this->input->post('to_date')));
+		}
+		if($from_date && $to_date){
+			$this->db->where("(DATE(blood_screening.screening_datetime) BETWEEN '$from_date' AND '$to_date')");
+		}
+		else if($from_date!="" || $to_date!=""){
+		 $from_date=="0"?$date=$to_date:$date=$from_date;
 		 $this->db->where('DATE(blood_screening.screening_datetime)',$date);
 		}
-		if($this->input->post('from_num') && $this->input->post('to_num')){
-			$from_num=trim($this->input->post('from_num'));
-			$to_num=trim($this->input->post('to_date'));
-			$this->db->where("blood_unit_num BETWEEN '$from_num' AND '$to_num')");
-		}
-		else if($this->input->post('from_num') || $this->input->post('to_num')){
-		 $this->input->post('from_num')==""?$num=$this->input->post('to_num'):$num=$this->input->post('from_num');
-		 $this->db->where('blood_unit_num',$num);
-		}	
+		else{
+			$from=date('Y-m-d',strtotime('-90 Days'));
+			$to=date('Y-m-d');
+			
+		 }
 		if($this->input->post('screened_by')){
 			$this->db->where('staff_id',$this->input->post('screened_by'));
 		}
-		$this->db->select('*')
+		$this->db->select('SQL_CALC_FOUND_ROWS bb_donation.*, blood_screening.*,blood_donor.*,staff.*',FALSE)
 		->from('bb_donation')
 		->join('blood_screening','bb_donation.donation_id=blood_screening.donation_id')
 		->join('blood_donor','bb_donation.donor_id=blood_donor.donor_id')
 		->join('(SELECT staff_id,CONCAT(first_name," ",last_name," ",name) AS staff_name FROM staff) staff','blood_screening.screened_by=staff.staff_id')
 		->where('status_id',6)
-	//	->where('bb_donation.hospital_id',$hospital)
-		->order_by('screening_datetime','desc')
-                ->limit('300');
+		//	->where('bb_donation.hospital_id',$hospital)
+		->order_by('screening_datetime','asc');
+		$start_at =1;
+		if($offset>1){
+		$start_at=($offset*500)-500;
+		}
+		$this->db->limit(500,$start_at);
 		$query=$this->db->get();
-		return $query->result();
-	}
-	
-	/* get_issues() : Generate the report of the issues made in a given period of time. Defaults to last 10 days. */
+		 $return['rows'] = $this->db->query('SELECT FOUND_ROWS() count;')->row()->count;
+		 $return['result'] = $query->result(); 
+		 $return['rows'];
+		return $return;
+		}
+
+/* get_issues() : Generate the report of the issues made in a given period of time. Defaults to last 10 days. */
 
 	function get_issues($issue_date,$blood_group,$from_date,$to_date,$hospital=0){
 

@@ -398,7 +398,9 @@ $("#department").on('change',function(){
 	<?php }?>
 	<?php  if(isset($mode)&& $mode=="filter")  {?>
 	
-	
+	 <button type="button" class="btn btn-default btn-md print">
+		  <span class="glyphicon glyphicon-print"></span> Print
+		</button>
 	
 	<h3 class="col-md-12">List of Equipments </h3>
 	<table class="table table-bordered table-striped" id="table-sort">
@@ -424,11 +426,11 @@ $("#department").on('change',function(){
 		<td><?php echo $a->asset_number; ?></td>
 		<td><?php echo $a->procured_by; ?></td>
 		<td><?php echo $a->cost; ?></td>
+		 
 		
+		<td><?php if($a->supply_date!=0 && $a->supply_date!=0) echo date("d-M-Y", strtotime("$a->supply_date")); ?></td>
 		
-		<td><?php if($a->supply_date!=0 && $a->supply_date!=0) echo date('d/m/Y', strtotime(str_replace('.', '-', ($a->supply_date)))) ?></td>
-		
-		<td><?php if($a->warranty_start_date!=0 && $a->warranty_end_date!=0)  echo date('Y-m-d ', strtotime( $a->warranty_start_date ))." - ".date('Y-m-d ', strtotime(str_replace('.', '-', ($a->warranty_start_date)))); ?></td>
+		<td><?php if($a->warranty_start_date!=0 && $a->warranty_end_date!=0) echo date("d-M-Y", strtotime("$a->warranty_end_date")); ?></td>
 		<td><?php echo $a->service_engineer; ?></td>
 		<td><?php echo $a->service_engineer_contact; ?></td>
 		<!--<td><?php //echo $a->hospital; ?></td>-->
