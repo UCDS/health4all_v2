@@ -115,7 +115,14 @@
 				<b>Phone:</b> <?php echo $registered->phone; ?>
 			</div>
 			<?php if($registered->mlc==1) { ?>
+<<<<<<< HEAD
 			<div  class="column"><?php echo "<b>MLC No: </b>";if(!!$registered->mlc_number_manual) echo $registered->mlc_number_manual; else echo $registered->mlc_number; ?>
+=======
+			<div  class="column"><?php echo "<b>MLC No:</b>"; ?><?php 
+						if(!!trim($registered->mlc_number_manual)) echo $registered->mlc_number_manual; 
+						else echo $registered->mlc_number;
+						?>
+>>>>>>> eb06d719fb1688d360c7e3f4801c68cb093a220d
 			</div>
 			<div class="column">
 				<?php echo "<b>PS Name:</b>" .$registered->ps_name;?>
