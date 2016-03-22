@@ -1,14 +1,10 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
-    <script type="text/javascript"
- src="<?php echo base_url();?>assets/js/jquery.timeentry.min.js"></script>
-<script type="text/javascript"
- src="<?php echo base_url();?>assets/js/jquery.mousewheel.js"></script>
+
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
@@ -23,7 +19,7 @@ $(function(){
 
 			widgetOptions: {
 
-		  print_title      : 'table',          // this option > caption > table id > "table"
+		  print_title      : 'Equipment',          // this option > caption > table id > "table"
 		  print_dataAttrib : 'data-name', // header attrib containing modified header name
 		  print_rows       : 'f',         // (a)ll, (v)isible or (f)iltered
 		  print_columns    : 's',         // (a)ll, (v)isible or (s)elected (columnSelector widget)
@@ -67,35 +63,41 @@ $(function(){
 		  });
 });
 </script>
+	
+
+	
+	
+
 
 <script type="text/javascript">
 $(function(){
-	$("#call_date").Zebra_DatePicker({
-			});
+	$("#warranty_start_date,#warranty_end_date").Zebra_DatePicker();
+	$("#supply_date").Zebra_DatePicker({
+		onSelect : function(date){
+		$("#warranty_start_date").val(date);
+		}
+	});
 	
-});
-</script>
-<script type="text/javascript">
-$(function(){
-	$("#service_date").Zebra_DatePicker({
-			});
-	
+	//$("#vendor").on('change',function(){
+	//	var vendor_id=$(this).val();
+	//	$("#contact_person_id option").hide();
+	//	$("#contact_person_id option[class="+vendor_id+"]").show();
+	//});
 });
 </script>
 <script>
-	$(function(){
-		
-		$(".time").timeEntry();
-	
+$("#department").on('change',function(){
+		var department_id=$(this).val();
+		$("#unit option,#area option").hide();
+		$("#unit option[class="+department_id+"],#area option[class="+department_id+"]").show();
 	});
 </script>
 <div class="row">
-	<div class="col-md-10 col-md-offset-2">
-		<h4> Service Issue</h4>	
-		<?php echo form_open("equipments/view/service_record_summary",array('role'=>'form','class'=>'form-custom'));  ?>
-				
-		          
-					
+<center>
+<strong><?php if(isset($msg)){ echo $msg;}?></strong></center>
+	<div class="col-md-8 col-md-offset-2">
+		<h4> Equipments Details</h4>	
+		<?php echo form_open("equipments/view/equipments_detail",array('role'=>'form','class'=>'form-custom'));  ?>
 					<select name="equipment_type" id="equipment_type" class="form-control">
 					<option value="">Equipment Type</option>
 					<?php 
@@ -116,7 +118,7 @@ $(function(){
 					}
 					?>
 					</select>
-						<select name="unit" id="unit" class="form-control" >
+					<select name="unit" id="unit" class="form-control" >
 					<option value="">Unit</option>
 					<?php 
 					foreach($units as $unit){
@@ -136,75 +138,67 @@ $(function(){
 					}
 					?>
 					</select>
-					<label> Working Status</label>
-					<select name="working_status" id="service_records" class="form-control" >
+					<select name="equipment_status" id="equipment" class="form-control" >
 					<option value="">All</option>	
-					<option value="1" <?php if($this->input->post('working_status') == '1') ?>>Working</option>
-					<option value="0" <?php if($this->input->post('working_status') == '0') ;?>>Not Working</option>
+					<option value="1" <?php if($this->input->post('equipment_status') == '1') ?>>Working</option>
+					<option value="0" <?php if($this->input->post('equipment_status') == '0') ;?>>Not Working</option>
 					</select>
-					
-					
 					<input class="btn btn-sm btn-primary" type="submit" name="filter" value="submit" />
 		</form>
 	<br />
 	</div>
-
-
-
+	</div>
 
 <div class="col-md-8 col-md-offset-2">
 
 	
-<?php if(isset($service_summary) && count($service_summary)>0){ ?>
-	 
-	<h3 class="col-md-12">List of Service Records </h3>
-	<div class="col-md-12 ">
-	</div>	
-<button type="button" class="btn btn-default btn-md print">
+
+
+
+	<button type="button" class="btn btn-default btn-md print">
 		  <span class="glyphicon glyphicon-print"></span> Print
 		</button>
-		<table class="table table-bordered table-striped" id="table-sort">
+	
+	
+	<h3 class="col-md-12">List of Equipments </h3>
+	<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
-	<th>S.No</th><th>equipment type</th><th>Call Date </th><th>Call Time</th><th>Call Information Type</th><th>Call Information</th><th>Vendor</th><th>Contact Person</th><th>Service Person Remarks</th>
-	<th>Service Date</th><th>Service Time</th><th>Problem Status</th><th>Working Status</th></thead>
+	<th>S.No</th><th>Equipment Type </th><th>Make</th><th>Model</th><th>Serial Number</th><th>Asset Number</th><th>Procured By</th><th>Cost</th>
+	<th>Supply Date</th><th>Warranty Period</th><th>Service Engineer</th><th>Service Engineer Contact</th><th>Department</th><th>Equipment Status</th></thead>
 	<tbody>
 	<?php 
 	$i=1;
-	foreach($service_summary as $a){ ?>
-		<?php echo form_open('equipments/view/service_records_detail',array('id'=>'select_service_records_form_'.$a->request_id,'role'=>'form')); ?>
-	<tr onclick="$('#select_service_records_form_<?php echo $a->request_id;?>').submit();" >
+	foreach($summary as $a){ ?>
+	<?php echo form_open('equipments/view/equipments_detail',array('id'=>'select_equipment_form_'.$a->equipment_id,'role'=>'form')); ?>
+	<tr onclick="$('#select_equipment_form_<?php echo $a->equipment_id;?>').submit();" >
 		<td><?php echo $i++; ?></td>
-		<td> <?php echo $a->equipment_type?></td>
-		<td><?php echo date("d-M-Y", strtotime("$a->call_date"));    ?>
+		<td><?php echo $a->equipment_type; ?>
 		
-		<input type="hidden" value="<?php echo $a->request_id; ?>" name="request_id" />
+		<input type="hidden" value="<?php echo $a->equipment_id; ?>" name="equipment_id" />
 		<input type="hidden" value="select" name="select" />
 		</td>
+			<td><?php echo $a->make; ?></td>
 	
-	
-		<td><?php echo date("h:i A", strtotime("$a->call_time")); ?></td>
-		<td><?php echo $a->call_information_type; ?></td>
-		<td><?php echo $a->call_information; ?></td>
-		<td><?php foreach($vendors as $d){
-			echo "<option value='$d->vendor_id'>$d->vendor_name</option>";
-		}
-		?></td>
-		<td><?php foreach($contact_persons as $d){
-			echo "<option value='$d->contact_person_id' class='$d->contact_person_id' >$d->contact_person_first_name  </option>";
-		}
-		?></td>
-		<td><?php echo $a->service_person_remarks; ?></td>
-		<td><?php echo date("d-M-Y", strtotime("$a->service_date"));   ?></td>
-		<td><?php  echo date("h:i A", strtotime("$s->service_time"));  ?></td>
-		<td><?php echo $a->problem_status; ?></td>
-		<td><?php
-				if($a->working_status==1)
+		<td><?php echo $a->model; ?></td>
+		<td><?php echo $a->serial_number; ?></td>
+		<td><?php echo $a->asset_number; ?></td>
+		<td><?php echo $a->procured_by; ?></td>
+		<td><?php echo $a->cost; ?></td>
+		 
+		
+		<td><?php if($a->supply_date!=0 && $a->supply_date!=0) echo date("d-M-Y", strtotime("$a->supply_date")); ?></td>
+		
+		<td><?php if($a->warranty_start_date!=0 && $a->warranty_end_date!=0) echo date("d-M-Y", strtotime("$a->warranty_end_date")); ?></td>
+		<td><?php echo $a->service_engineer; ?></td>
+		<td><?php echo $a->service_engineer_contact; ?></td>
+		<!--<td><?php //echo $a->hospital; ?></td>-->
+		<td><?php echo $a->department; ?></td>
+		<td><?php if($a->equipment_status==1)
 				{
 					echo "Working";
 				}
 						else{
                         echo "Not working";	}?></td>
-		                
 		
 
 
@@ -213,7 +207,10 @@ $(function(){
 	<?php } ?>
 	</tbody>
 	</table>
-<?php } else { ?>
-	No service records found  are present under given criteria.
-	<?php } ?>
-	</div></div>
+	
+
+
+
+	</div>
+</div>
+</div>

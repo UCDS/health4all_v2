@@ -181,15 +181,20 @@ else if($type=="service_records"){
          
          	$this->load->view($page,$this->data);
 			}
-			 else	 if(($this->input->post('submit'))||($this->masters_model->insert_data($type))){
-					
-					
+			 else	 if(($this->input->post('submit'))){
+					$output = $this->masters_model->insert_data($type);
+					if($output){
 				  $this->data['msg']=" Inserted  Successfully";
-					 // unset($_POST['submit']);
-                   //  unset($_REQUEST['submit']);
+				  if($type=='service_records'){
+						$this->data['service']=$output;
 				
-					
+				$this->data['service_records']=$this->masters_model->get_data("service_records");
+				  $this->load->view('pages/inventory/add_service_record_print',$this->data);
+				  }
+				}
+				  else{
 					$this->load->view($page,$this->data);  
+				  }
 			 }
 		
 				
@@ -358,19 +363,36 @@ else if($type=="equipment"){
 				$this->data['all_departments']=$this->staff_model->get_department();
 				$this->data['units']=$this->staff_model->get_unit();
 				$this->data['areas']=$this->staff_model->get_area();
-
-				
 				break;
 			case "equipments_summary" :
 				$this->data['title']="Equipments Summary report";
 				$this->data['summary']=$this->reports_model->get_equipment_summary();
-			        $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
+			    $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
 				$this->data['all_departments']=$this->masters_model->get_data("department");
 				$this->data['areas']=$this->masters_model->get_data("area");
 				$this->data['units']=$this->masters_model->get_data("unit");
 				$this->data['vendors']=$this->masters_model->get_data("vendor");
 				$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
-            case "service_record_summary" :
+				break;
+				
+			case "equipments_detail" :
+				$this->data['title']="Equipments detailed report";
+				$this->data['equipments']=$this->masters_model->get_data("equipment");
+				$this->data['equipment_type']=$this->masters_model->get_data("equipment_types");
+				$this->data['hospital']=$this->masters_model->get_data("hospital");
+				$this->data['department']=$this->masters_model->get_data("department");
+				$this->data['areas']=$this->masters_model->get_data("area");
+				$this->data['user']=$this->masters_model->get_data("user");
+				$this->data['summary']=$this->masters_model->get_data("equipment_filter");
+			    $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
+				$this->data['all_departments']=$this->masters_model->get_data("department");
+				$this->data['department']=$this->masters_model->get_data("department");
+				$this->data['areas']=$this->masters_model->get_data("area");
+				$this->data['units']=$this->masters_model->get_data("unit");
+				$this->data['vendors']=$this->masters_model->get_data("vendor");
+				$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
+				break;	
+            case "service_record_summary" : 
 			  
 			    $this->data['service_summary']=$this->reports_model->get_service_records();
 			    $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
@@ -380,6 +402,17 @@ else if($type=="equipment"){
 				$this->data['vendors']=$this->masters_model->get_data("vendor");
 				$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
 				break;
+				 case "service_records_detail" : 
+			    $this->data['service_records']=$this->masters_model->get_data("service_records");		
+			    $this->data['service_summary']=$this->reports_model->get_service_records();
+			    $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
+				$this->data['all_departments']=$this->masters_model->get_data("department");
+				$this->data['areas']=$this->masters_model->get_data("area");
+				$this->data['units']=$this->masters_model->get_data("unit");
+				$this->data['vendors']=$this->masters_model->get_data("vendor");
+				$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
+				break;
+
 		}				
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/leftnav',$this->data);
