@@ -115,8 +115,8 @@ $(function(){
 		<td style="text-align:center" rowspan="2">Department</th>
 		<td style="text-align:center" colspan="3"><=14 Years</th>
 		<td style="text-align:center" colspan="3">14 to 30 Years</th>
-		<td style="text-align:center" colspan="3">30 to 50 Years</th>
-		<td style="text-align:center" colspan="3">>50 Years</th>
+		<td style="text-align:center" colspan="3">30 to <60 Years</th>
+		<td style="text-align:center" colspan="3">>=60 Years</th>
 		<td style="text-align:center" rowspan="1" colspan="3">Total IP Admits</th>
 	</tr>
 	<tr>
@@ -135,12 +135,12 @@ $(function(){
 	$total_m14to30=0;
 	$total_f14to30=0;
 	$total_14to30=0;
-	$total_m30to50=0;
-	$total_f30to50=0;
-	$total_30to50=0;
-	$total_m50plus=0;
-	$total_f50plus=0;
-	$total_50plus=0;
+	$total_m30to60=0;
+	$total_f30to60=0;
+	$total_30to60=0;
+	$total_m60plus=0;
+	$total_f60plus=0;
+	$total_60plus=0;
 	$total_male=0;
 	$total_female=0;
 	$total_ip=0;
@@ -154,12 +154,12 @@ $(function(){
 		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/M/14/30/$from_date/$to_date";?>"><?php echo $s->ip_m14to30;?></td>
 		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/F/14/30/$from_date/$to_date";?>"><?php echo $s->ip_f14to30;?></td>
 		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/0/14/30/$from_date/$to_date";?>"><?php echo $s->ip_14to30;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/M/30/50/$from_date/$to_date";?>"><?php echo $s->ip_m30to50;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/F/30/50/$from_date/$to_date";?>"><?php echo $s->ip_f30to50;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/0/30/50/$from_date/$to_date";?>"><?php echo $s->ip_30to50;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/M/0/50/$from_date/$to_date";?>"><?php echo $s->ip_m50plus;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/F/0/50/$from_date/$to_date";?>"><?php echo $s->ip_f50plus;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/0/0/50/$from_date/$to_date";?>"><?php echo $s->ip_50plus;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/M/30/50/$from_date/$to_date";?>"><?php echo $s->ip_m30to60;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/F/30/50/$from_date/$to_date";?>"><?php echo $s->ip_f30to60;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/0/30/50/$from_date/$to_date";?>"><?php echo $s->ip_30to60;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/M/0/50/$from_date/$to_date";?>"><?php echo $s->ip_m60plus;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/F/0/50/$from_date/$to_date";?>"><?php echo $s->ip_f60plus;?></td>
+		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/0/0/50/$from_date/$to_date";?>"><?php echo $s->ip_60plus;?></td>
 		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/M/0/0/$from_date/$to_date";?>"><?php echo $s->ip_male;?></td>
 		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/F/0/0/$from_date/$to_date";?>"><?php echo $s->ip_female;?></td>
 		<td class="text-right"><a href="<?php echo base_url()."reports/ip_detail/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date";?>"><?php echo $s->ip;?></td>
@@ -171,12 +171,12 @@ $(function(){
 	$total_m14to30+=$s->ip_m14to30;
 	$total_f14to30+=$s->ip_f14to30;
 	$total_14to30+=$s->ip_14to30;
-	$total_m30to50+=$s->ip_m30to50;
-	$total_f30to50+=$s->ip_f30to50;
-	$total_30to50+=$s->ip_30to50;
-	$total_m50plus+=$s->ip_m50plus;
-	$total_f50plus+=$s->ip_f50plus;
-	$total_50plus+=$s->ip_50plus;
+	$total_m30to60+=$s->ip_m30to60;
+	$total_f30to60+=$s->ip_f30to60;
+	$total_30to60+=$s->ip_30to60;
+	$total_m60plus+=$s->ip_m60plus;
+	$total_f60plus+=$s->ip_f60plus;
+	$total_60plus+=$s->ip_60plus;
 	$total_male+=$s->ip_male;
 	$total_female+=$s->ip_female;
 	$total_ip+=$s->ip;
@@ -190,12 +190,12 @@ $(function(){
 		<th class="text-right" ><?php echo $total_m14to30;?></th>
 		<th class="text-right" ><?php echo $total_f14to30;?></th>
 		<th class="text-right" ><?php echo $total_14to30;?></th>
-		<th class="text-right" ><?php echo $total_m30to50;?></th>
-		<th class="text-right" ><?php echo $total_f30to50;?></th>
-		<th class="text-right" ><?php echo $total_30to50;?></th>
-		<th class="text-right" ><?php echo $total_m50plus;?></th>
-		<th class="text-right" ><?php echo $total_f50plus;?></th>
-		<th class="text-right" ><?php echo $total_50plus;?></th>
+		<th class="text-right" ><?php echo $total_m30to60;?></th>
+		<th class="text-right" ><?php echo $total_f30to60;?></th>
+		<th class="text-right" ><?php echo $total_30to60;?></th>
+		<th class="text-right" ><?php echo $total_m60plus;?></th>
+		<th class="text-right" ><?php echo $total_f60plus;?></th>
+		<th class="text-right" ><?php echo $total_60plus;?></th>
 		<th class="text-right" ><?php echo $total_male;?></th>
 		<th class="text-right" ><?php echo $total_female;?></th>
 		<th class="text-right" ><?php echo $total_ip;?></th>
