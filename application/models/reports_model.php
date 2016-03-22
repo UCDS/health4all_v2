@@ -285,6 +285,20 @@ class Reports_model extends CI_Model{
 			$from_date=date("Y-m-d");
 			$to_date=$from_date;
 		}
+        if($this->input->post('from_time') && $this->input->post('to_time')){
+			$from_time=date("H:i",strtotime($this->input->post('from_time')));
+			$to_time=date("H:i",strtotime($this->input->post('to_time')));
+				$this->db->where("(admit_time BETWEEN '$from_time' AND '$to_time')");	 
+			
+		}
+		else if($this->input->post('from_time') || $this->input->post('to_time')){
+			$this->input->post('from_time')?$from_time=$this->input->post('from_time'):$from_time=$this->input->post('to_time');
+			$to_time=$from_time;
+			$this->db->where("(admit_time BETWEEN '$from_time' AND '$to_time')");
+		}
+		else{
+			$this->db->where("(admit_time BETWEEN '00:00' AND '11:59')");
+		}
 		if($this->input->post('visit_name')){
 			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
 		}
@@ -308,7 +322,7 @@ class Reports_model extends CI_Model{
 
 		$this->db->select("hosp_file_no,patient_visit.visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,
 		gender,IF(gender='F' AND father_name=NULL,spouse_name,father_name) parent_spouse,unit_name,area_name,
-		age_years,age_months,age_days,place,phone,department,unit_name,area_name, admit_date, admit_time, mlc_number, mlc_number_manual",false);
+		age_years,age_months,age_days,place,phone,department,unit_name,area_name, admit_date, admit_time, mlc_number",false);
 		 $this->db->from('patient_visit')
 		 ->join('patient','patient_visit.patient_id=patient.patient_id')
 		 ->join('mlc','mlc.visit_id=patient_visit.visit_id','left')
@@ -316,9 +330,9 @@ class Reports_model extends CI_Model{
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
 		 ->where('visit_type','OP')
-		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')");		  
-		$resource=$this->db->get();
-		return $resource->result();
+		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')");
+        $resource=$this->db->get();
+	     return $resource->result();
 	}
 	function get_ip_detail($department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date,$visit_name){
 		if($this->input->post('from_date') && $this->input->post('to_date')){
@@ -332,6 +346,20 @@ class Reports_model extends CI_Model{
 		else if($from_date=='0' && $to_date=='0'){
 			$from_date=date("Y-m-d");
 			$to_date=$from_date;
+		}
+		if($this->input->post('from_time') && $this->input->post('to_time')){
+			$from_time=date("H:i",strtotime($this->input->post('from_time')));
+			$to_time=date("H:i",strtotime($this->input->post('to_time')));
+				$this->db->where("(admit_time BETWEEN '$from_time' AND '$to_time')");	 
+			
+		}
+		else if($this->input->post('from_time') || $this->input->post('to_time')){
+			$this->input->post('from_time')?$from_time=$this->input->post('from_time'):$from_time=$this->input->post('to_time');
+			$to_time=$from_time;
+			$this->db->where("(admit_time BETWEEN '$from_time' AND '$to_time')");
+		}
+		else{
+			$this->db->where("(admit_time BETWEEN '00:00' AND '11:59')");
 		}
 		if($visit_name!='-1'){
 			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
@@ -371,7 +399,7 @@ class Reports_model extends CI_Model{
 		}
 		$this->db->select("hosp_file_no,patient_visit.visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,
 		gender,IF(gender='F' AND father_name ='',spouse_name,father_name) parent_spouse,
-		age_years,age_months,age_days,place,phone,address,admit_date,admit_time, department,unit_name,area_name,mlc_number,mlc_number_manual",false);
+		age_years,age_months,age_days,place,phone,address,admit_date,admit_time, department,unit_name,area_name,mlc_number",false);
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
 		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
