@@ -146,8 +146,8 @@ function printDiv(i)
 			<td><?php echo $row->component_type;?></td>
 			<td><?php echo $row->patient_name." ".$row->first_name." ".$row->last_name;?></td>
 			<td><?php echo $row->blood_group;?></td>
-			<td><?php echo $row->diagnosis;?></td>
-			<td><?php echo $row->hospital;?></td>
+			<td><?php echo $row->diagnosis." ".$row->final_diagnosis;?></td>
+			<td><?php echo $row->hosptial; ?></td>
 			<td><?php echo $row->issued_staff_name;?></td>
 			<td><?php echo $row->cross_matched_staff_name;?></td>
 			<td>

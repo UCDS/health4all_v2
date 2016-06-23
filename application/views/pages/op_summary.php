@@ -1,11 +1,16 @@
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.ptTimeSelect.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-ui.js"></script>
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.css">
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery.ptTimeSelect.css">
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
+
 <script type="text/javascript">
 $(function(){
 	$("#from_date,#to_date").Zebra_DatePicker();
@@ -62,16 +67,29 @@ $(function(){
 		  });
 });
 </script>
+<script type="text/javascript">
+        $(document).ready(function(){
+			// find the input fields and apply the time select to them.
+           $('#from_time').ptTimeSelect();
+			$('#to_time').ptTimeSelect();
+        });
+		
+    </script>
 	<?php 
 	$from_date=0;$to_date=0;
 	if($this->input->post('from_date')) $from_date=date("Y-m-d",strtotime($this->input->post('from_date'))); else $from_date = date("Y-m-d");
 	if($this->input->post('to_date')) $to_date=date("Y-m-d",strtotime($this->input->post('to_date'))); else $to_date = date("Y-m-d");
+        $from_time=0;$to_time=0;
+	if($this->input->post('from_time')) $from_time=date("H:i",strtotime($this->input->post('from_time'))); else $from_time = date("00:00");
+	if($this->input->post('to_time')) $to_time=date("H:i",strtotime($this->input->post('to_time'))); else $to_time = date("23:59");
 	?>
 	<div class="row">
 		<h4>Out-Patient Summary Report</h4>	
 		<?php echo form_open("reports/op_summary",array('role'=>'form','class'=>'form-custom')); ?>
 					From Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y",strtotime($from_date)); ?>" name="from_date" id="from_date" size="15" />
 					To Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y",strtotime($to_date)); ?>" name="to_date" id="to_date" size="15" />
+                                        From Time:<input  class="form-control" style = "background-color:#EEEEEE" type="text" value="<?php echo date("h:i A",strtotime($from_time)); ?>" name="from_time" id="from_time" size="7px"/>
+                                        To Time:<input class="form-control" style = "background-color:#EEEEEE" type="text" value="<?php echo date("h:i A",strtotime($to_time)); ?>" name="to_time" id="to_time" size="7px"/>
 					<select name="department" id="department" class="form-control">
 					<option value="">Department</option>
 					<?php 
@@ -125,8 +143,8 @@ $(function(){
 		<th style="text-align:center" rowspan="2">Department</th>
 		<th style="text-align:center" colspan="3"><=14 Years</th>
 		<th style="text-align:center" colspan="3">14 to 30 Years</th>
-		<th style="text-align:center" colspan="3">30 to 50 Years</th>
-		<th style="text-align:center" colspan="3">>50 Years</th>
+		<th style="text-align:center" colspan="3">30 to <60 Years</th>
+		<th style="text-align:center" colspan="3">>=60 Years</th>
 		<th style="text-align:center" rowspan="1" colspan="3">Total OP Visits</th>
 	</tr>
 	<tr>
@@ -145,12 +163,12 @@ $(function(){
 	$total_m14to30=0;
 	$total_f14to30=0;
 	$total_14to30=0;
-	$total_m30to50=0;
-	$total_f30to50=0;
-	$total_30to50=0;
-	$total_m50plus=0;
-	$total_f50plus=0;
-	$total_50plus=0;
+	$total_m30to60=0;
+	$total_f30to60=0;
+	$total_30to60=0;
+	$total_m60plus=0;
+	$total_f60plus=0;
+	$total_60plus=0;
 	$total_male=0;
 	$total_female=0;
 	$total_op=0;
@@ -164,12 +182,12 @@ $(function(){
 		<td class="text-right"><?php echo $s->op_m14to30;?></td>
 		<td class="text-right"><?php echo $s->op_f14to30;?></td>
 		<td class="text-right"><?php echo $s->op_14to30;?></td>
-		<td class="text-right"><?php echo $s->op_m30to50;?></td>
-		<td class="text-right"><?php echo $s->op_f30to50;?></td>
-		<td class="text-right"><?php echo $s->op_30to50;?></td>
-		<td class="text-right"><?php echo $s->op_m50plus;?></td>
-		<td class="text-right"><?php echo $s->op_f50plus;?></td>
-		<td class="text-right"><?php echo $s->op_50plus;?></td>
+		<td class="text-right"><?php echo $s->op_m30to60;?></td>
+		<td class="text-right"><?php echo $s->op_f30to60;?></td>
+		<td class="text-right"><?php echo $s->op_30to60;?></td>
+		<td class="text-right"><?php echo $s->op_m60plus;?></td>
+		<td class="text-right"><?php echo $s->op_f60plus;?></td>
+		<td class="text-right"><?php echo $s->op_60plus;?></td>
 		<td class="text-right"><?php echo $s->op_male;?></td>
 		<td class="text-right"><?php echo $s->op_female;?></td>
 		<td class="text-right"><?php echo $s->op;?></td>
@@ -181,12 +199,12 @@ $(function(){
 	$total_m14to30+=$s->op_m14to30;
 	$total_f14to30+=$s->op_f14to30;
 	$total_14to30+=$s->op_14to30;
-	$total_m30to50+=$s->op_m30to50;
-	$total_f30to50+=$s->op_f30to50;
-	$total_30to50+=$s->op_30to50;
-	$total_m50plus+=$s->op_m50plus;
-	$total_f50plus+=$s->op_f50plus;
-	$total_50plus+=$s->op_50plus;
+	$total_m30to60+=$s->op_m30to60;
+	$total_f30to60+=$s->op_f30to60;
+	$total_30to60+=$s->op_30to60;
+	$total_m60plus+=$s->op_m60plus;
+	$total_f60plus+=$s->op_f60plus;
+	$total_60plus+=$s->op_60plus;
 	$total_male+=$s->op_male;
 	$total_female+=$s->op_female;
 	$total_op+=$s->op;
@@ -200,12 +218,12 @@ $(function(){
 		<th class="text-right" ><?php echo $total_m14to30;?></th>
 		<th class="text-right" ><?php echo $total_f14to30;?></th>
 		<th class="text-right" ><?php echo $total_14to30;?></th>
-		<th class="text-right" ><?php echo $total_m30to50;?></th>
-		<th class="text-right" ><?php echo $total_f30to50;?></th>
-		<th class="text-right" ><?php echo $total_30to50;?></th>
-		<th class="text-right" ><?php echo $total_m50plus;?></th>
-		<th class="text-right" ><?php echo $total_f50plus;?></th>
-		<th class="text-right" ><?php echo $total_50plus;?></th>
+		<th class="text-right" ><?php echo $total_m30to60;?></th>
+		<th class="text-right" ><?php echo $total_f30to60;?></th>
+		<th class="text-right" ><?php echo $total_30to60;?></th>
+		<th class="text-right" ><?php echo $total_m60plus;?></th>
+		<th class="text-right" ><?php echo $total_f60plus;?></th>
+		<th class="text-right" ><?php echo $total_60plus;?></th>
 		<th class="text-right" ><?php echo $total_male;?></th>
 		<th class="text-right" ><?php echo $total_female;?></th>
 		<th class="text-right" ><?php echo $total_op;?></th>

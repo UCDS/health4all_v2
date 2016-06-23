@@ -278,6 +278,41 @@
 		</table>
 		</form>	
 	</div>
+    <div class="alert alert-info" role="alert">
+        <ul>
+            <li>Request Type.
+                <ul>
+                    <li>Patient: Select this option when issuing to a patient.</li>
+                    <li>Bulk: Select this option when issuing to a Hospital or a Storage center.</li>
+                </ul>
+            </li>
+            <li>Patient:
+                <ul>
+                    <li>
+                        Patient Type:
+                        <ul>
+                            <li>
+                                Internal: Patients who make regular visits to the Hosptial for blood transfusions. Ex: Thalassemia.<br>
+                                <ul>
+                                    <li>To be able to use this option the patient information needs to be added in the Patients menu item.</li>
+                                    <li>To add a request for internal patient you have to type in the patients IP/OP/Name/Patient ID/Telephone number in patient text box.</li>
+                                </ul>
+                            </li>
+                            <li> External: Patients who are on a one time visit with the hospital, or patients who do not belong to the Hospital.
+                                <ul><li>Input the patients details.</li></ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Doctor: Please input the name of the Doctor who is treating the patient.
+            </li>
+            <li>
+                Hospital: Please input the name of the hospital to which the patient belong to. To add a new hospital <a href="<?php echo base_url();?>bloodbank/staff/add_hospital">click here</a>
+            </li>            
+        </ul>
+    </div>
 </div>
 
 <script>
