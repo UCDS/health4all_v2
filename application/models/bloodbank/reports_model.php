@@ -390,7 +390,42 @@ class Reports_model extends CI_Model{
 	}
 	/* get_booked_appointments() : Generate the report of the appointments booked in a given period of time. Defaults to last 10 days. */
 
-	function get_booked_appointments(){
+	function get_discard_inventory_detail(){                /*Model function for discard summary*/                             
+                  
+	$userdata=$this->session->userdata('hospital');         
+	$hospital=$userdata['hospital_id'];                       
+	$this->db->select("                                 
+		blood_group,
+		SUM(CASE WHEN component_type='PRP' THEN 1 ELSE 0 END) prp, 
+		SUM(CASE WHEN component_type='Platelet Concentrate' THEN 1 ELSE 0 END) platelet_concentrate,
+		SUM(CASE WHEN component_type='PC' THEN 1 ELSE 0 END) pc,
+		SUM(CASE WHEN component_type='WB' THEN 1 ELSE 0 END) wb,
+		SUM(CASE WHEN component_type='Cryo' THEN 1 ELSE 0 END) cryo,
+		SUM(CASE WHEN component_type='FP' THEN 1 ELSE 0 END) fp,
+		SUM(CASE WHEN component_type='FFP' THEN 1 ELSE 0 END) ffp"
+		)                                       /*selecting the component types*/
+	 ->from('bb_donation')                           /*query for discarded blood*/
+         ->join('blood_grouping', 'blood_grouping.donation_id = bb_donation.donation_id')
+	 ->join('blood_inventory','bb_donation.donation_id=blood_inventory.donation_id') 
+	 ->where('blood_inventory.status_id',9)       /*status id =9 for discarded blood*/
+         ->where('bb_donation.screening_result',0) 
+	 //->where('bb_donation.hospital_id',$hospital)
+	 ->where('expiry_date>=',date("Y-m-d"),false)
+	 ->group_by('blood_group');
+	  if($query=$this->db->get()){
+			return $query->result();      /*returning result for query*/
+		}
+		
+	   else
+	   {
+	     return false;	
+	   }
+	}
+        
+       
+	
+     
+        function get_booked_appointments(){
 
 		$userdata=$this->session->userdata('hospital');
 		$hospital=$userdata['hospital_id'];
