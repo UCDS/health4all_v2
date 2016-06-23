@@ -74,7 +74,7 @@ $(function(){
  src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <script>
 	$(function(){
-		$(".date").Zebra_DatePicker({
+		$("#from_date,#to_date").Zebra_DatePicker({
 			direction:false
 		});
 	});
@@ -83,10 +83,10 @@ $(function(){
 <div class="col-md-10 col-sm-9">
 	
 	<h4>Report of Blood Donors at Indian Red Cross Society Bloodbank - Vidyanagar</h4>
-	<?php echo form_open('bloodbank/user_panel/issue_summary'); ?>
+	<?php echo form_open('bloodbank/user_panel/issue_summary',array('role'=>'form','class'=>'form-custom'));?>
 	<div>
-		<input type="text" class="date" size="12" id="from_date" name="from_date" />
-		<input type="text" class="date" size="12" name="to_date" />
+		<input type="text" placeholder= "From date" class="form-control" size="15" id="from_date" name="from_date" />
+		<input type="text" placeholder="To date" class="form-control" size="15" id="to_date" name="to_date" />
 		<input type="submit" name="submit" value="Search" />
 	</div>
 	<br />
@@ -131,7 +131,6 @@ $(function(){
 	</thead>
 	<?php 
 	$Apos=0;$Aneg=0;$Bpos=0;$Bneg=0;$ABpos=0;$ABneg=0;$Opos=0;$Oneg=0;$total=0;
-	
 	foreach($summary as $s){
 		$day_total=0;
 		$day_total+=$s->Apos+$s->Aneg+$s->Bpos+$s->Bneg+$s->ABpos+$s->ABneg+$s->Opos+$s->Oneg;

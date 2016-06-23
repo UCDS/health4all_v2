@@ -107,8 +107,8 @@ $(function(){
 	<div>
 		<?php echo form_open('bloodbank/user_panel/report_donations',array('role'=>'form','class'=>'form-custom')); ?>
 		<div>
-			<input type="text" placeholder="From date" size="10" class="form-control" name="from_date" value="<?php echo $from_date;?>" id="from_date" />
-			<input type="text" placeholder="To date" size="10" class="form-control" value="<?php echo $to_date;?>" name="to_date" id="to_date" />
+			<input type="text" placeholder="From date" size="10" class="form-control" name="from_date"  id="from_date" />
+			<input type="text" placeholder="To date" size="10" class="form-control"  name="to_date" id="to_date" />
 			<input type="text" placeholder="From Num" size="10" class="form-control" value="<?php echo $from_num;?>" name="from_num" id="from_num" />
 			<input type="text" placeholder="To Num" size="10" class="form-control" value="<?php echo $to_num;?>" name="to_num" id="to_num" />
 			<select name="camp" class="form-control">
@@ -120,6 +120,10 @@ $(function(){
 			</select>
 			<input type="submit" value="Search" name="search" class='btn btn-primary btn-md' />
 		</div>
+		<br/>
+		<button type="button" class="btn btn-default btn-md print">
+		  <span class="glyphicon glyphicon-print"></span> Print
+		</button>
 		</form>
 		<hr>
 		<?php

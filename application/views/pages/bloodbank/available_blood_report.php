@@ -8,6 +8,11 @@
 		text-decoration:none;
 	}
 </style>
+
+<button type="button" class="btn btn-default btn-md print">
+		  <span class="glyphicon glyphicon-print"></span> Print
+		</button>
+		<br/>
 <div class="col-md-10 col-sm-9">
 	<?php echo form_open('bloodbank/user_panel/available_blood'); ?>
 	<table class="table-2 table table-striped table-bordered" style="position:relative;float:left">
