@@ -372,7 +372,8 @@ class Inventory_model extends CI_Model{
 		->join('blood_donor','bb_donation.donor_id=blood_donor.donor_id')
 		->join('bb_status d_status','bb_donation.status_id=d_status.status_id')
 		->join('bb_status i_status','blood_inventory.status_id=i_status.status_id')
-		->where('blood_inventory.status_id !=',10)
+		->where('blood_inventory.status_id !=',10)//displays screening failed and under collection
+                ->where('blood_inventory.discarded_by =',0)//displays screening failed and under collection and also which are not disarded
 	//	->where('bb_donation.hospital_id',$hospital)
 		->order_by('component_type')
                 ->limit(500);
@@ -385,7 +386,8 @@ class Inventory_model extends CI_Model{
 		$inv_id=$this->input->post('inventory_id');
 		$data=array(
 		'status_id'=>9,
-		'notes'=>$this->input->post('notes')
+		'notes'=>$this->input->post('notes'),
+                'discarded_by'=>$this->input->post('staff_id')//posts discarded staff_id to blood_inventory[database]
 		);
 		$this->db->where('inventory_id',$inv_id);
 		$this->db->update('blood_inventory',$data);
@@ -395,6 +397,7 @@ class Inventory_model extends CI_Model{
 	
 	function check_inventory(){
 		$userdata=$this->session->userdata('hospital');
+                 
 		$hospital=$userdata['hospital_id'];
 		$components=implode($this->input->post('components'),",");
 		$units=$this->input->post('units');
