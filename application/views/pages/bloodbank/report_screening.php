@@ -1,17 +1,16 @@
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-ui.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/style.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+<script type="text/javascript"
+ src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+ <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.css">
-<script type="text/javascript">
-$(document).ready(function(){$("#from_date").datepicker({
-		dateFormat:"dd-M-yy",changeYear:1,changeMonth:1,onSelect:function(sdt)
-		{$("#to_date").datepicker({dateFormat:"dd-M-yy",changeYear:1,changeMonth:1})
-		$("#to_date").datepicker("option","minDate",sdt)}})
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
+
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
+		<script type="text/javascript">
+$(function(){
 		var options = {
 			widthFixed : true,
 			showProcessing: true,
@@ -65,54 +64,27 @@ $(document).ready(function(){$("#from_date").datepicker({
 		  });
 });
 </script>
-<style>
-ul.tsc_pagination li a:hover,
-ul.tsc_pagination li a.current
-{ color:black;
-    text-shadow:0px 1px #388DBE;
-    border:1px solid #bbb; 
-    background:#F9F9F9; 
-    background:-moz-linear-gradient(#F9F9F9);
-    background:-webkit-gradient(#F9F9F9));
-}
-ul.tsc_pagination li a
-{ 
-    color:#333;
-    border:1px solid #bbb;
-    background:#EEEEEE; 
-}
-#div1{
-	opacity:0.8;
-}
-</style>
+<script>
+	$(function(){
+		$("#from_date,#to_date").Zebra_DatePicker();
+	});
+</script>
+
 <div class="col-md-10 col-sm-9">
-<?php
-	$search=$this->input->post('search');
-      if($this->input->post('from_date') && $this->input->post('to_date')){
-			$from_date=date('Y-m-d',strtotime($this->input->post('from_date')));
-			$to_date=date('Y-m-d',strtotime($this->input->post('to_date')));
-		}
-		else if($this->input->post('from_date') || $this->input->post('to_date')){
-		 $this->input->post('from_date')==""?$date=$this->input->post('to_date'):$date=$this->input->post('from_date');
-		 }
-		else if( (!$search && isset($from_date) && isset($to_date) ) == false){
-			$from_date=date('Y-m-d',strtotime('-90 Days'));
-			$to_date=date('Y-m-d');
-		}
-		?>
+
 	<div>
-		<?php echo form_open('bloodbank/user_panel/report_screening',array('role'=>'form','class'=>'form-custom')); ?>
+		<?php echo form_open('bloodbank/user_panel/report_screening'); ?>
 		<div>
-			From Date : <input class="form-control" style = "background-color:#EEEEEE" type="text" value="<?php echo date("d-M-Y",strtotime($from_date)); ?>" name="from_date" id="from_date" size="15" />
-			To Date : <input  class="form-control" type="text" style = "background-color:#EEEEEE" value="<?php echo date("d-M-Y",strtotime($to_date)); ?>" name="to_date" id="to_date" size="15" />
-			<select class="form-control" style = "background-color:#EEEEEE" name="screened_by">
-					<option class="form-control" value="" disabled selected>Done By</option>
+			<input type="text" placeholder="From date" size="10" name="from_date" id="from_date" />
+			<input type="text" placeholder="To date" size="10" name="to_date" id="to_date" />
+			<select name="screened_by">
+					<option value="" disabled selected>Done By</option>
 					<?php foreach($staff as $s){
 						echo "<option value='$s->staff_id'>$s->name</option>";
 					}
 					?>
 			</select>
-			<input type="submit" class="form-control" value="Search" style = "background-color:#EEEEEE" name="search" />
+			<input type="submit" value="Search" name="search" />
 		</div>
 		</form>
 		<?php
@@ -123,37 +95,34 @@ ul.tsc_pagination li a
 		}
 		?>
 		<?php if(count($screened)>0){ ?>
-		
+		<b>
+		<?php
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from_date=date('d-M-Y',strtotime($this->input->post('from_date')));
+			$to_date=date('d-M-Y',strtotime($this->input->post('to_date')));
+			echo "Samples Screened from ".$from_date." to ".$to_date;
+		}
+		else if($this->input->post('from_date') || $this->input->post('to_date')){
+		 $this->input->post('from_date')==""?$date=$this->input->post('to_date'):$date=$this->input->post('from_date');
+		 echo "Samples Screened on $date";
+		}
+		else{
+			$from_date=date('d-M-Y',strtotime('-10 Days'));
+			$to_date=date('d-M-Y');
+			echo "Screened in the last 10 days";	
+		}
+		?>
+		</b>
+
 		<table class="table table-bordered table-striped"></table>
 		<button type="button" class="btn btn-default btn-md print">
 		  <span class="glyphicon glyphicon-print"></span> Print
 		</button>
-		<div id="pagination">
-        <ul class="tsc_pagination">
-		<?php 
-		foreach($page1 as $d)
-		{
-			echo '<li>'.$d.'<li>';
-		}
-	    ?>
-		</ul>	
-		</div>
-		<div id="div1">
-		<?php		
-      $counttotal1=$counttotal;	
-      $limit=$limit;
-      $val2=$offset*$limit;
-	  if($val2<$counttotal) {
-			echo'&nbsp&nbsp&nbsp'.'Showing   '.((($offset*$limit)-$limit)+1) .'  to    '.(($offset*$limit)).'  out off '.$counttotal;
-		}
-      else
-		  echo '&nbsp&nbsp&nbsp'.'Showing   '.((($offset*$limit)-$limit)+1) .'  to   '.$counttotal.'  out off '.$counttotal;
-					?>	
-					</div>
 		<table class="table table-bordered table-striped" id="table-sort">
 		<thead><th>S.No</th><th>Date</th><th>Blood Unit No.</th><th>Donor Name</th><th>Blood Group</th><th>HIV</th><th>HBSAG</th><th>HCV</th><th>VDRL</th><th>MP</th><th>Irregular Ab</th><th>Screened By</th></thead>
 		<?php 
 		$i=1;
+                
 		foreach($screened as $row){
 		?>
 		<tr>
@@ -174,28 +143,6 @@ ul.tsc_pagination li a
 		}
 		?>
 		</table>
-		<div id="pagination">
-        <ul class="tsc_pagination">
-		<?php 
-		foreach($page1 as $d)
-		{
-			echo '<li>'.$d.'<li>';
-		}
-	    ?>
-		</ul>	
-		</div>
-		<div id="div1">
-		<?php		
-      $counttotal1=$counttotal;	
-      $limit=$limit;
-      $val2=$offset*$limit;
-	  if($val2<$counttotal) {
-			echo'&nbsp&nbsp&nbsp'.'Showing   '.((($offset*$limit)-$limit)+1) .'  to    '.(($offset*$limit)).'  out off '.$counttotal;
-		}
-      else
-		  echo '&nbsp&nbsp&nbsp'.'Showing   '.((($offset*$limit)-$limit)+1) .'  to   '.$counttotal.'  out off '.$counttotal;
-					?>	
-					</div>
 		<?php }
 		else{
 			 ?>

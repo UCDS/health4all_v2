@@ -18,10 +18,6 @@ class Diagnostics_model extends CI_Model{
 		$test_area_id=$this->input->post('test_area');
 		$order_date_time=date("Y-m-d H:i:s",strtotime($this->input->post('order_date')." ".$this->input->post('order_time')));
 		$order_status=0;
-                
-                
-                
-                
 		$this->db->trans_start();
 			$data=array(
 				'visit_id'=>$visit_id,
@@ -252,6 +248,7 @@ class Diagnostics_model extends CI_Model{
 						'group_id'=>0,
                                                 'test_range_id'=>$range_id
 					);
+                                        $range_id = '';
 				}
 			if($this->input->post('test_group')){
 				foreach($this->input->post('test_group') as $test_group){
@@ -441,16 +438,18 @@ class Diagnostics_model extends CI_Model{
 							'sample_id'=>$sample_id,
 							'group_id'=>$test_group,
 							'test_master_id'=>$row->test_master_id,
-                            'test_range_id'=>$range_id                                                        
+                                                        'test_range_id'=>$range_id                                                        
 						);
-					}					
+                                                $range_id ='';
+                                            }					
 						$data[]=array(
 							'order_id'=>$order_id,
 							'sample_id'=>$sample_id,
 							'group_id'=>$test_group,
 							'test_master_id'=>0,
-                            'test_range_id'=>$range_id
+                                                        'test_range_id'=>$range_id
 						);
+                                                $range_id ='';
 				}
 			}
 			$this->db->insert_batch('test',$data);

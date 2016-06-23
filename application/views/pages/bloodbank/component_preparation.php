@@ -45,6 +45,13 @@ $(document).ready(function(){
 		}
 		else{
 		?>
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="">Alert:</span>
+                    Bags shown in Component Preparation are Whole Blood. If you need a bag to be Whole Blood you need not update its status on this page.
+                    Once the bag is issued it will not show on this page.
+                </div>
+                
 		<h4>Available bags : </h4>
 
 		<table id="header-fixed" class="table-2 table table-striped table-bordered"></table>
@@ -125,7 +132,7 @@ treatment episode">
 			<div class="form-group col-lg-8"><select name="staff" class="form-control" required>
 				<option value="" disabled selected>Done By</option>
 				<?php foreach($staff as $s){
-					echo "<option value='".$s->staff_id."'>$s->first_name $s->last_name $s->name</option>";
+					echo '<option value='.$s->staff_id.'>'.$s->first_name." ".$s->last_name." ".$s->name.'</option>';
 				}
 				?>
 			</select></div>
@@ -143,5 +150,18 @@ treatment episode">
 </table>
 			
 	</div>
+    <div class="alert alert-info" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="">Note:</span>
+        <ul>
+            <li>Blood Unit is the Blood bag number</li>
+            <li>You will get the details of what each table column means if you hover the mouse pointer over the column heading.</li>
+            <li>Staff name shows up in done by only if the staff name is added to the database to add staff <a href="<?php echo base_url()."staff/add/staff";?>">click here.</a>
+                <ul><li>When adding staff make sure you select his/her department as Blood Bank, you get the department after selecting hospital</li></ul>
+                <ul><li>Only fields with a '*' are mandatory</li></ul>
+            </li>
+        </ul>
+    </div>
+	
 </div>
 
