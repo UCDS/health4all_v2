@@ -21,6 +21,14 @@
 		</form>
 		<br/>
 		<?php if(isset($msg)) echo $msg;?>
+                
+                <div class="alert alert-info" role="alert">
+                    <ul>
+                        <li>Please input Camp Name and Address to add Camp to the database.</li>
+                        <li>Once a Camp is added to the database it will always remain in the database.</li>
+                        <li>Camp added here will reflect in the Place page.</li>
+                    </ul>
+                </div>
 	</div>
 
 	

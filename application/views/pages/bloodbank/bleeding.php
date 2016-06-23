@@ -15,6 +15,21 @@ $(document).ready(function(){
 	if(count($donors)>0){
 	?>
 	<div>
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="">Note:</span>
+                <ul>
+                    <li>Blood Unit is the Blood bag number</li>
+                    <li>Segment number is the pilot tube number</li>
+                    <li>Blood Group selected here is not final, Blood Group selected in Grouping stage is final.</li>
+                    <li>Select <strong>UC(Under Collection)</strong> if the volume collected is less than the volume of the bag. Bags selected as UC don't show up in Grouping or Inventory, they are shown in Discard.</li>
+                    <li>Staff name can be selected in <strong>Done By</strong> column only if the staff name is added to the database. To add staff <a href="<?php echo base_url()."staff/add/staff";?>">click here.</a>
+                        <ul><li>When adding staff make sure you select his/her department as Blood Bank, you get the department after selecting hospital</li></ul>
+                        <ul><li>Only fields with a '*' are mandatory</li></ul>
+                    </li>
+                    
+                </ul>
+             </div>
 		<h4>Donors waiting: </h4>
 
 		<table id="header-fixed" class="table-2 table table-striped table-bordered"></table>
@@ -91,7 +106,7 @@ $(document).ready(function(){
 			<select name="staff" class="form-control" required >
 				<option value="" disabled selected>Done By</option>
 				<?php foreach($staff as $s){
-					echo "<option value='$s->staff_id'>$s->name</option>";
+					echo '<option value='.$s->staff_id.'>'.$s->first_name." ".$s->last_name." ".$s->name.'</option>';
 				}
 				?>
 			</select></div></td>
@@ -113,5 +128,12 @@ $(document).ready(function(){
 		echo "No donors waiting.";
 	}
 	?>
+    <div class="alert alert-info" role="alert">
+        <ul>
+            <li>Please input the bleeding details for the patient.</li>
+            <li>Only the donors in the current camp show up in this page.</li>
+            <li>Please set the camp to see donors of that camp. <a href="<?php echo base_url();?>bloodbank/user_panel/place">Click here.</a></li>
+        </ul>
+    </div>
 </div>
 

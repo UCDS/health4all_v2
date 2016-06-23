@@ -21,6 +21,7 @@ class Inventory_model extends CI_Model{
 		->join('blood_donor','bb_donation.donor_id=blood_donor.donor_id')
 		->where('bb_donation.status_id',4)
 		->where('bb_donation.hospital_id',$hospital)
+		->where('YEAR(donation_date)',date("Y"))
 		->order_by('blood_unit_num');
 		$query=$this->db->get();
 		return $query->result();
@@ -77,6 +78,7 @@ class Inventory_model extends CI_Model{
 		$this->db->insert_batch('blood_grouping',$data);
 		$this->db->update_batch('blood_donor',$update_data,'donor_id');
 		$this->db->update_batch('bb_donation',$update_status_data,'donation_id');
+		
 		$this->db->trans_complete();
 		return $this->db->trans_status();
 		}
@@ -93,6 +95,7 @@ class Inventory_model extends CI_Model{
 			$from=$this->input->post('from_id');
 			$to=$this->input->post('to_id');
 			$this->db->where("(blood_unit_num BETWEEN $from AND $to)");
+			
 		}
 		else if($this->input->post('from_id') || $this->input->post('to_id')){
 			$this->input->post('from_id')!=""?$id=$this->input->post('from_id'):$id=$this->input->post('to_id');
@@ -108,9 +111,11 @@ class Inventory_model extends CI_Model{
 		->where('bb_donation.status_id >=',5,false)
 		->where('component_type','WB')
 		->where('bb_donation.hospital_id',$hospital)
+		->where('YEAR(donation_date)',date("Y"))
 		->order_by('blood_unit_num')
                 ->limit('500');
 		$query=$this->db->get();
+
 		return $query->result();
 	}	
 	
@@ -219,6 +224,7 @@ class Inventory_model extends CI_Model{
 		
 		$this->db->insert_batch('blood_inventory',$data);
 		$this->db->update_batch('blood_inventory',$update_data,'inventory_id');
+		
 		$this->db->trans_complete();
 		return $this->db->trans_status();
 	}
@@ -289,6 +295,7 @@ class Inventory_model extends CI_Model{
 		}
 		$this->db->update_batch('bb_donation',$status_data,'donation_id');
 		$this->db->update_batch('blood_screening',$data,'donation_id');
+		
 		$this->db->trans_complete();
 		
 		$this->db->select('blood_donor.phone, blood_donor.name, blood_donor.blood_group, bb_donation.donation_date')

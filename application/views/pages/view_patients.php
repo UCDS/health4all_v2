@@ -138,6 +138,8 @@ pri.print();
 	  <!-- Nav tabs -->
 	  <ul class="nav nav-tabs" role="tablist">
 		<li role="presentation" class="active"><a href="#patient" aria-controls="patient" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Patient Info</a></li>
+                <li role="presentation"><a href="#patient_visit" aria-controls="patient" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Patient Visit</a></li>
+                <li role="presentation"><a href="#mlc" aria-controls="patient" role="tab" data-toggle="tab"><i class="fa fa-user"></i> MLC</a></li>
 		<li role="presentation"><a href="#clinical" aria-controls="clinical" role="tab" data-toggle="tab"><i class="fa fa-stethoscope"></i> Clinical</a></li>
 		<li role="presentation"><a href="#diagnostics" aria-controls="diagnostics" role="tab" data-toggle="tab"><i class="glyph-icon flaticon-chemistry20"></i> Diagnostics</a></li>
 		<li role="presentation"><a href="#procedures" aria-controls="procedures" role="tab" data-toggle="tab"><i class="fa fa-scissors"></i> Procedures</a></li>
@@ -176,18 +178,7 @@ pri.print();
 				<b>Age/ Gender: </b><?php echo $age."/ ".$patient->gender;?>
 			</div>
 			</div>
-			<div class="row alt">
-			<div class="col-md-4 col-xs-12 col-lg-3">
-				<b><?php if( $patient->visit_type == "IP") echo "Admit Date:"; else echo "Visit Date:";?></b>
-				<?php echo date("d-M-Y", strtotime($patient->admit_date)).", ".date("g:ia", strtotime($patient->admit_time));?>
-			</div>
-			<div class="col-md-4 col-xs-12 col-lg-3">
-				<b>Department: </b><?php echo $patient->department;?>
-			</div>
-			<div class="col-md-4 col-xs-12 col-lg-3">
-				<b>Unit/Area: </b><?php echo $patient->unit_name."/".$patient->area_name;?>
-			</div>
-			</div>
+			
 			<div class="row alt">
 			<div class="col-md-4 col-xs-12 col-lg-3">
 				<b>Parent/ Spouse: </b><?php echo $patient->parent_spouse;?>
@@ -208,19 +199,9 @@ pri.print();
 			<div class="col-md-4 col-xs-12 col-lg-3">
 				<b>Phone: </b><?php if(!!$patient->phone) echo $patient->phone;?>
 			</div>
-			<div class="col-md-4 col-xs-12 col-lg-3">
-				<b>MLC: </b><?php if($patient->mlc) echo "Yes"; else echo "No";?>
-			</div>
-			<?php if($patient->mlc){ ?>
-				<div class="col-md-4 col-xs-12 col-lg-3">
-					<b>PS Name: </b><?php if(!!$patient->ps_name) echo $patient->ps_name;?>
-				</div>
-			<?php } ?>	
+			
 			</div>
 			<div class="row alt">
-			<div class="col-md-4 col-xs-12 col-lg-3">
-				<b>Presenting Complaint: </b><?php echo $patient->presenting_complaints;?>
-			</div>
 			<div class="col-md-4 col-xs-12 col-lg-3">
 				<b>ID Proof: </b>
 				<?php 
@@ -233,6 +214,37 @@ pri.print();
 			</div>
 			</div>
 		</div>
+              <div role="tabpanel" class="tab-pane" id="patient_visit">
+                  <div class="row alt">
+			<div class="col-md-4 col-xs-12 col-lg-3">
+				<b><?php if( $patient->visit_type == "IP") echo "Admit Date:"; else echo "Visit Date:";?></b>
+				<?php echo date("d-M-Y", strtotime($patient->admit_date)).", ".date("g:ia", strtotime($patient->admit_time));?>
+			</div>
+			<div class="col-md-4 col-xs-12 col-lg-3">
+				<b>Department: </b><?php echo $patient->department;?>
+			</div>
+			<div class="col-md-4 col-xs-12 col-lg-3">
+				<b>Unit/Area: </b><?php echo $patient->unit_name."/".$patient->area_name;?>
+			</div>
+		  </div>
+                  <div class="row alt">
+                  <div class="col-md-4 col-xs-12 col-lg-3">
+				<b>Presenting Complaint: </b><?php echo $patient->presenting_complaints;?>
+                  </div>
+                  </div>
+              </div>
+              <div role="tabpanel" class="tab-pane" id="mlc">
+                  <div class="row alt">
+                  <div class="col-md-4 col-xs-12 col-lg-3">
+				<b>MLC: </b><?php if($patient->mlc) echo "Yes"; else echo "No";?>
+			</div>
+			<?php if($patient->mlc){ ?>
+				<div class="col-md-4 col-xs-12 col-lg-3">
+					<b>PS Name: </b><?php if(!!$patient->ps_name) echo $patient->ps_name;?>
+				</div>
+                <?php } ?>
+                  </div>
+              </div>
 		<div role="tabpanel" class="tab-pane" id="clinical">
 			<div class="row alt">
 				<div class="col-md-4 col-xs-6">

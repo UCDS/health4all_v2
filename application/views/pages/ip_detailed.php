@@ -4,6 +4,7 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
+script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-ui.js"></script>
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery.ptTimeSelect.css">
@@ -117,6 +118,16 @@ $(document).ready(function(){$("#from_date").datepicker({
 						echo "<option value='".$area->area_id."' class='".$area->department_id."'";
 						if($this->input->post('area') && $this->input->post('area') == $area->area_id) echo " selected ";
 						echo ">".$area->area_name."</option>";
+					}
+					?>
+					</select>
+					<select name="visit_name" id="visit_name" class="form-control" >
+					<option value="">All</option>
+					<?php 
+					foreach($visit_names as $v){
+						echo "<option value='".$v->visit_name_id."'";
+						if($this->input->post('visit_name') && $this->input->post('visit_name') == $v->visit_name_id) echo " selected ";
+						echo ">".$v->visit_name."</option>";
 					}
 					?>
 					</select>

@@ -5,16 +5,11 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.mousewheel.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.timeentry.min.js"></script>
 <style>
-    .obstetric_history_table { 
-        border-collapse: collapse; 
-    }
-    .obstetric_history_table tr{
+    .obstetric_history tr{
         display: block; float: left;
     }
-    .obstetric_history_table td{
-        display: block; 
-        border: 1px solid black;
-        height: 55px;
+    .obstetric_history td{
+        display: block; border: 1px solid black;
     }
 </style>
 <style>
@@ -110,16 +105,43 @@ pri.print();
 }
 </script>
 <script type="text/javascript">
+var counter = 1;
+function add_obstetric_history(tableName){
+    alert('Entered');
+    var newRow = document.createElement('tr');
+    newRow.innerHTML = '<td><input type="text" name="pregnancy_number[]" class="form-control pregnancy_number" id="pregnancy_number" placeholder="Pregnancy Number" /></td>'+
+            '<td><input type="text" name="conception_type[]" class="form-control conception_type" id="conception_type" placeholder="Conception Type" /></td>'+
+            '<td><input type="radio" name="delivered[]" class="form-control delivered" value="1" id="delivered" />Delivered <input type="radio" name="delivered[]" class="form-control delivered" value="-1" id="delivered" />Abortion'+
+            '<td><input type="text" name="imp_date[]" class="form-control imp_date" id="imp_date" style="width:150px" /></td>' +
+            '<td><input type="text" name="edd_date[]" class="form-control imp_date" id="imp_date" style="width:150px" /></td>' +            
+            '<td><input type="text" name="delivery_outcome[]" class="form-control delivery_outcome" id="delivery_outcome" placeholder="Delivery Outcome" /></td>'+
+            '<td><input type="radio" name="booked[]" class="form-control booked" value="1" id="booked" />Delivered <input type="radio" name="booked[]" class="form-control booked" value="-1" id="booked" />Abortion</td>' +
+            '<td><input type="text" name="delivery_mode[]" class="form-control delivery_mode" id="delivery_mode" placeholder="Delivery Mode" /></td>' +
+            '<td><input type="text" name="date_of_birth" class="form-control date_of_birth" id="date_of_birth" style="width:150px" /></td>' +
+            '<td><input type="radio" name="gender[]" class="form-control gender" value="2" id="gender" />Male <input type="radio" name="gender[]" class="form-control gender" value="1" id="gender" />Female <input type="radio" name="gender[]" class="form-control gender" value="3" id="gender" />Other </td>' +
+            '<td><input type="text" name="weight_at_birth[]" class="form-control weight_at_birth" id="weight_at_birth" placeholder="Weight at birth" /></td>'+
+            '<td><input type="text" name="apgar[]" class="form-control apgar" id="apgar" placeholder="APGR" /></td>'+
+            '<td><input type="radio" name="nicu_admission[]" class="form-control booked" value="1" id="booked" />Yes <input type="radio" name="nicu_admission[]" class="form-control booked" value="-1" id="booked" />No </td>' +
+            '<td><input type="text" name="nicu_admission_reason[]" class="form-control nicu_admission_reason" id="nicu_admission_reason" placeholder="NICU Admission Reason" /></td>' +
+            '<td><input type="radio" name="alive[]" class="form-control alive" value="1" id="alive" />Alive <input type="radio" name="alive[]" class="form-control alive" value="-1" id="alive" />Dead </td>' +
+            '<td><input type="text" name="date_of_death" class="form-control date_of_death" id="date_of_death" style="width:150px" /></td>'
+            '<td><input type="text" name="cause_of_death[]" class="form-control cause_of_death" id="cause_of_death" placeholder="Cause of death" /></td>';
+    document.getElementById(tableName).appendChild(newRow);
+    counter++;
+    document.getElementById('') = counter;
+}
+</script>
+<script type="text/javascript">
     $(document).ready(function() {
-  $("input:radio[name=mlc_radio]").click(function() {
-      if($('input[name=mlc_radio]:checked').val()=='-1'){          
+  $("input:radio[name=mlc_radio]").click(function() {      
+      if($('input[name=mlc_radio]:checked').val()=='0'){
           $("#mlc_number_manual").prop("disabled", true);
           $("#ps_name").prop("disabled", true);
           $("#brought_by").prop("disabled", true);
           $("#police_intimation").prop("disabled", true);
           $("#declaration_required").prop("disabled", true);
           $("#pc_number").prop("disabled", true);
-      }else if($('input[name=mlc_radio]:checked').val()=='1'){          
+      }else if($('input[name=mlc_radio]:checked').val()=='1'){
           $("#mlc_number_manual").prop("disabled", false);
           $("#ps_name").prop("disabled", false);
           $("#brought_by").prop("disabled", false);
@@ -138,42 +160,10 @@ pri.print();
           $("#insurance_no").prop("disabled", false);
       }
    });
-   var counter = 1;
-   $("#add_obstetric_history").click(function(){
-    var newRow = document.createElement('tr');
-    alert('In add');
-    newRow.innerHTML = '<td><input type="text" name="pregnancy_number[]" class="form-control pregnancy_number" id="pregnancy_number" placeholder="Pregnancy Number" /></td>'+
-            '<td><input type="text" name="conception_type[]" class="form-control conception_type" id="conception_type" placeholder="Conception Type" /></td>'+
-            '<td><input type="radio" name="delivered[]" class="form-control delivered" value="1" id="delivered" />Delivered <input type="radio" name="delivered[]" class="form-control delivered" value="-1" id="delivered" />Abortion'+
-            '<td><input type="text" name="imp_date[]" class="form-control imp_date" id="imp_date" style="width:150px" /></td>' +
-            '<td><input type="text" name="edd_date[]" class="form-control edd_date'+counter.toString()+'" id="edd_date'+counter.toString()+'" style="width:150px" /></td>' +            
-            '<td><input type="text" name="delivery_outcome[]" class="form-control delivery_outcome" id="delivery_outcome" placeholder="Delivery Outcome" /></td>'+
-            '<td><input type="radio" name="booked[]" class="form-control booked" value="1" id="booked" />Delivered <input type="radio" name="booked[]" class="form-control booked" value="-1" id="booked" />Abortion</td>' +
-            '<td><input type="text" name="delivery_mode[]" class="form-control delivery_mode" id="delivery_mode" placeholder="Delivery Mode" /></td>' +
-            '<td><input type="text" name="date_of_birth" class="form-control date_of_birth" id="date_of_birth" style="width:150px" /></td>' +
-            '<td><input type="radio" name="gender[]" class="form-control gender" value="2" id="gender" />Male <input type="radio" name="gender[]" class="form-control gender" value="1" id="gender" />Female <input type="radio" name="gender[]" class="form-control gender" value="3" id="gender" />Other </td>' +
-            '<td><input type="text" name="weight_at_birth[]" class="form-control weight_at_birth" id="weight_at_birth" placeholder="Weight at birth" /></td>'+
-            '<td><input type="text" name="apgar[]" class="form-control apgar" id="apgar" placeholder="APGR" /></td>'+
-            '<td><input type="radio" name="nicu_admission[]" class="form-control booked" value="1" id="booked" />Yes <input type="radio" name="nicu_admission[]" class="form-control booked" value="-1" id="booked" />No </td>' +
-            '<td><input type="text" name="nicu_admission_reason[]" class="form-control nicu_admission_reason" id="nicu_admission_reason" placeholder="NICU Admission Reason" /></td>' +
-            '<td><input type="radio" name="alive[]" class="form-control alive" value="1" id="alive" />Alive <input type="radio" name="alive[]" class="form-control alive" value="-1" id="alive" />Dead </td>' +
-            '<td><input type="text" name="date_of_death" class="form-control date_of_death" id="date_of_death" style="width:150px" /></td>'+
-            '<td><input type="text" name="cause_of_death[]" class="form-control cause_of_death" id="cause_of_death" placeholder="Cause of death" /></td>';
-    $(".edd_date"+counter.toString()).Zebra_DatePicker();
-    $('#obstetric_history').append(newRow);    
-    counter++;
-    document.getElementById('child_count') = counter;
-    
-   });
+
 });
 </script>
-<!-- $("#remove_obstetric_history").click(function(){
-       alert('In remove');
-       var rowCount = $("#obstetric_history").rows.length;
-       var row = $("#obstetric_history").rows.[rowCount - 1];
-       $("#obstetric_history").deleteRow(row);
-   }); -->
-<br />
+	<br />
 	<?php 
         $pic_set = 1;
         if(isset($patients) && count($patients)>1){ ?>
@@ -924,9 +914,9 @@ pri.print();
                   <div class="row alt">
                         <div class="col-md-4 col-xs-6">
 				<label class="control-label">MLC</label>
-				<label class="control-label"><input type="radio" value="1" class="mlc" name="mlc_radio" id="mlc_radio" <?php  if($patient->mlc=='1') echo " checked ";?> <?php if($f->edit==1  && $patient->mlc==0) echo ''; else echo ' disabled'; ?> />Yes</label>
-				<label class="control-label"><input type="radio" value="-1" class="mlc" name="mlc_radio" id="mlc_radio" <?php if($patient->mlc=='-1') echo " checked ";?> <?php if($f->edit==1 && $patient->mlc==0) echo ''; else echo ' disabled'; ?> />No</label>
-                             <?php if($patient->mlc!=0) { ?><input type="hidden" value=<?php echo $patient->mlc; ?> name="mlc_radio" /> <?php } ?>
+				<label class="control-label"><input type="radio" value="1" class="mlc" name="mlc_radio" id="mlc_radio" <?php  if($patient->mlc==1) echo " checked ";?> <?php if($f->edit==1  && $patient->mlc==-1) echo ''; else echo ' disabled'; ?> />Yes</label>
+				<label class="control-label"><input type="radio" value="0" class="mlc" name="mlc_radio" id="mlc_radio" <?php if($patient->mlc==0) echo " checked ";?> <?php if($f->edit==1 && $patient->mlc==-1) echo ''; else echo ' disabled'; ?> />No</label>
+                             <?php if($patient->mlc!=-1) { ?><input type="hidden" value=<?php echo $patient->mlc; ?> name="mlc_radio" /> <?php } ?>
 			
 			</div>
                       <div class="col-md-4 col-xs-6">
@@ -935,34 +925,36 @@ pri.print();
                       </div>
                         <div class="col-md-4 col-xs-6">
                                 <label class="control-label">MLC Number Manual</label>
-                                <input type="text" name="mlc_number_manual" class="form-control mlc" id="mlc_number_manual" value="<?php if(!empty($patient->mlc_number_manual)) echo $patient->mlc_number_manual; else echo ''; ?>" <?php if($f->edit==1 && ((empty($patient->mlc_number_manual) && $patient->mlc!='-1') || $patient->mlc==0)) echo ''; else echo ' readonly'; ?> />
+                                <input type="text" name="mlc_number_manual" class="form-control mlc" id="mlc_number_manual" value="<?php if(!empty($patient->mlc_number_manual)) echo $patient->mlc_number_manual; else echo ''; ?>" <?php if($f->edit==1 && empty($patient->mlc_number_manual) && $patient->mlc!=0) echo ''; else echo ' readonly'; ?> />
+                                
                         </div>
                       
 		</div>
                   <div class="row alt">
                       <div class="col-md-4 col-xs-6">
                                 <label class="control-label">PS Name</label>
-                                <input type="text" name="ps_name" class="form-control mlc" id="ps_name" value="<?php echo $patient->ps_name;?>" <?php if($f->edit==1 && ((empty($patient->ps_name) && $patient->mlc!='-1') || $patient->mlc==0)) echo ''; else echo ' readonly'; ?>/>
+                                <input type="text" name="ps_name" class="form-control mlc" id="ps_name" value="<?php echo $patient->ps_name;?>" <?php if($f->edit==1 && empty($patient->ps_name) && $patient->mlc!=0) echo ''; else echo ' readonly'; ?>/>
                         </div>
                       
                       <div class="col-md-4 col-xs-6">
                           <label class="control-label">Police Intimation</label>
-                          <input type="text" name="police_intimation" class="form-control mlc" id="police_intimation" value="<?php echo $patient->police_intimation;?>" <?php if($f->edit==1 && ((empty($patient->police_intimation) && $patient->mlc!='-1') || $patient->mlc==0)) echo ''; else echo ' readonly'; ?> />
+                          <input type="text" name="police_intimation" class="form-control mlc" id="police_intimation" value="<?php echo $patient->police_intimation;?>" <?php if($f->edit==1 && empty($patient->police_intimation) && $patient->mlc!=0) echo ''; else echo ' readonly'; ?> />
                       </div>
                       <div class="col-md-4 col-xs-6">
                           <label class="control-label">PC Number</label>
-                          <input type="text" name="pc_number" class="form-control mlc" id="pc_number" value="<?php echo $patient->pc_number;?>" <?php if($f->edit==1 && ((empty($patient->pc_number) && $patient->mlc!='-1') || $patient->mlc==0)) echo ''; else echo ' readonly'; ?> />
+                          <input type="text" name="pc_number" class="form-control mlc" id="pc_number" value="<?php echo $patient->pc_number;?>" <?php if($f->edit==1 && empty($patient->pc_number) && $patient->mlc!=0) echo ''; else echo ' readonly'; ?> />
                       </div>
                   </div>
                   <div class="row alt">
                       <div class="col-md-4 col-xs-6">
                           <label class="control-label">Brought By</label>
-                          <input type="text" name="brought_by" class="form-control mlc" id="brought_by" value="<?php echo $patient->brought_by;?>" <?php if($f->edit==1 && ((empty($patient->brought_by) && $patient->mlc!='-1') || $patient->mlc==0)) echo ''; else echo ' readonly'; ?> />
+                          <input type="text" name="brought_by" class="form-control mlc" id="brought_by" value="<?php echo $patient->brought_by;?>" <?php if($f->edit==1 && empty($patient->brought_by) && $patient->mlc!=0) echo ''; else echo ' readonly'; ?> />
                       </div>
                       <div class="col-md-4 col-xs-6">
                           <label class="control-label">Declaration Required</label>
-                          <input type="text" name="declaration_required" class="form-control mlc" id="declaration_required" value="<?php echo $patient->declaration_required;?>" <?php if($f->edit==1 && ((empty($patient->declaration_required) && $patient->mlc!='-1') || $patient->mlc==0)) echo ''; else echo ' readonly'; ?> />
-                      </div>                                            
+                          <input type="text" name="declaration_required" class="form-control mlc" id="declaration_required" value="<?php echo $patient->declaration_required;?>" <?php if($f->edit==1 && empty($patient->declaration_required) && $patient->mlc!=0) echo ''; else echo ' readonly'; ?> />
+                      </div>
+                                            
                   </div>
               </div>              
                         <?php
@@ -1023,7 +1015,7 @@ pri.print();
                   <div class="row alt">
                       <!--OBG, table transpose has been applied on the table class obstetric_history, check in style sheets. -->
                                  <div class="col-md-12 col-xs-12">
-                                     <table class="table table-striped table-bordered obstetric_history_table" id="obstetric_history">
+                                     <table class="table table-striped table-bordered obstetric_history" id="obstetric_history">
                                          <thead>
                                             <th colspan="17">Table (obstetric_history)</th>
                                          </thead>
@@ -1119,7 +1111,7 @@ pri.print();
                                              <input type="text" name="imp_date[]" class="form-control imp_date" id="imp_date" style="width:150px" />                                             
                                          </td>
                                          <td>
-                                             <input type="text" name="edd_date[]" class="form-control edd_date" id="edd_date" style="width:150px" />                                             
+                                             <input type="text" name="edd_date[]" class="form-control imp_date" id="imp_date" style="width:150px" />                                             
                                          </td>
                                          <td>
                                              <input type="text" name="delivery_outcome[]" class="form-control delivery_outcome" id="delivery_outcome" placeholder="Delivery Outcome" />                                             
@@ -1168,8 +1160,7 @@ pri.print();
                                      <?php if($f->edit==1) { ?>
                                      <div class="btn-group" role="group">
                                          <input type="hidden" name="child_count" id="child_count" value="1" />
-                                        <button type="button" id='add_obstetric_history'>Add</button>
-                                        <button type="button" id='remove_obstetric_history'>Remove Last</button>
+                                        <button type="button" onclick="add_obstetric_history('obstetric_history')">Add</button>                                        
                                     </div>
                                      <?php } ?>
                                  </div>

@@ -37,10 +37,11 @@ class Register_model extends CI_Model{
 		if($this->input->post('congenial_anamalies'))$congenial_anamalies=$this->input->post('congenial_anamalies'); else $congenial_anamalies="";
 		if($this->input->post('address')) $address=$this->input->post('address'); else $address="";
 		if($this->input->post('place')) $place=$this->input->post('place'); else $place="";
-	    if($this->input->post('doctor_Id')) $doctor_id=$this->input->post('doctor_id'); else $doctor_id="";
+                if($this->input->post('doctor_Id')) $doctor_id=$this->input->post('doctor_id'); else $doctor_id="";
 		if($this->input->post('nurse')) $nurse=$this->input->post('nurse'); else $nurse="";
 		if($this->input->post('insurance_case')) $insurance_case=$this->input->post('insurance_case'); else $insurance_case="";
 		if($this->input->post('insurance_no')) $insurance_no=$this->input->post('insurance_no'); else $insurance_no="";
+                if($this->input->post('insurance_id')) $insurance_id=$this->input->post('insurance_id'); else $insurance_id="";
 		if($this->input->post('sbp')) $sbp=$this->input->post('sbp'); else $sbp="";
 		if($this->input->post('dbp')) $dbp=$this->input->post('dbp'); else $dbp="";
 		if($this->input->post('pulse_rate')) $pulse_rate=$this->input->post('pulse_rate'); else $pulse_rate="";
@@ -50,46 +51,42 @@ class Register_model extends CI_Model{
 		if($this->input->post('discharge_weight')) $discharge_weight=$this->input->post('discharge_weight'); else $discharge_weight="";
 		$phone=$this->input->post('phone');
 		$alt_phone=$this->input->post('alt_phone');
+		$country_code=$this->input->post('country');
+		$state_code=$this->input->post('state');
 		$district=$this->input->post('district');
 		$department=$this->input->post('department');
 		$unit=$this->input->post('unit');
 		$area=$this->input->post('area');
 		if($this->input->post('presenting_complaints')) $presenting_complaints=$this->input->post('presenting_complaints'); else $presenting_complaints="";
 		if($this->input->post('provisional_diagnosis')) $provisional_diagnosis=$this->input->post('provisional_diagnosis'); else $provisional_diagnosis="";
-	    if($this->input->post('past_history')) $past_history=$this->input->post('past_history'); else $past_history="";
+                if($this->input->post('past_history')) $past_history=$this->input->post('past_history'); else $past_history="";
 		$hospital=$this->session->userdata('hospital');
 		$hospital_id=$hospital['hospital_id'];
 		$form_type=$this->input->post('form_type');
-		$mlc=$this->input->post('mlc');
+                $mlc = $this->input->post('mlc');
+		if(($this->input->post('mlc')=='1' || $this->input->post('mlc')=='0')) $mlc= $this->input->post('mlc'); else $mlc=-1;
 		//check if it is an mlc case
 		if($this->input->post('mlc')==1){
-		//if a manual mlc number has been entered, use it and ignore the auto counter
-		if($this->input->post('mlc_number_manual')) { 
-		$mlc_number_manual=$this->input->post('mlc_number_manual');
-		$mlc_number = "";
+                    //if a manual mlc number has been entered, use it and ignore the auto counter		
+                    $mlc_number_manual=$this->input->post('mlc_number_manual');
+                    $this->db->select('count')->from('counter')->where('counter_name','MLC');
+                    $query = $this->db->get();
+                    $result = $query->row();
+                    $mlc_number = ++$result->count;
+                    $this->db->where('counter_name','MLC');
+                    $this->db->update('counter',array('count'=>$mlc_number));
+
+                    $ps_name=$this->input->post('ps_name');
+                    $pc_number=$this->input->post('pc_number');
+                    $brought_by=$this->input->post('brought_by');
+                    $police_intimation=$this->input->post('police_intimation');
+                    $declaration_required=$this->input->post('declaration_required');
 		}
 		else {
-		//else, set the manual mlc to blank and increment the counter for MLC and use it as the number.
-		$mlc_number_manual="";
-		$this->db->select('count')->from('counter')->where('counter_name','MLC');
-		$query = $this->db->get();
-		$result = $query->row();
-		$mlc_number = ++$result->count;
-		$this->db->where('counter_name','MLC');
-		$this->db->update('counter',array('count'=>$mlc_number));
+                    $mlc_number = "";
+                    $mlc_number_manual = "";
 		}
-		$ps_name=$this->input->post('ps_name');
-		$pc_number=$this->input->post('pc_number');
-		$brought_by=$this->input->post('brought_by');
-		$police_intimation=$this->input->post('police_intimation');
-		$declaration_required=$this->input->post('declaration_required');
-		}
-		else {
-			$mlc_number = "";
-			$mlc_number_manual = "";
-		}
-		$identification_mark_1=$this->input->post('identification_mark_1');
-		$identification_mark_2=$this->input->post('identification_mark_2');
+		$identification_marks=$this->input->post('identification_marks');
 		$outcome=$this->input->post('outcome');
 		if($this->input->post('outcome_date')) $outcome_date=date("Y-m-d",strtotime($this->input->post('outcome_date'))); else $outcome_date = 0;
 		if($this->input->post('outcome_time')) $outcome_time=date("h:i:s",strtotime($this->input->post('outcome_time'))); else $outcome_time = 0;
@@ -154,9 +151,10 @@ class Register_model extends CI_Model{
 			'place'=>$place,
 			'phone'=>$phone,
 			'alt_phone'=>$alt_phone,
+			'country_code'=>$country_code,
+			'state_code'=>$state_code,
 			'district_id'=>$district,
-			'identification_mark_1'=>$identification_mark_1,
-			'identification_mark_2'=>$identification_mark_2
+			'identification_marks'=>$identification_marks,
 		);
 		
 		//Start a mysql transaction.
@@ -188,6 +186,7 @@ class Register_model extends CI_Model{
 			'department_id'=>$department,
 			'insurance_case'=>$insurance_case,
 			'insurance_no'=>$insurance_no,
+                        'insurance_id'=>$insurance_id,
 			'sbp'=>$sbp,
 			'dbp'=>$dbp,
 			'pulse_rate'=>$pulse_rate,
@@ -262,7 +261,7 @@ class Register_model extends CI_Model{
 		else {
 		//Select the inserted or updated patient record with the visit_id 
 		$this->db->select('patient.*,patient_visit.*,
-		patient.patient_id,patient_visit.visit_id,
+		patient.patient_id,patient_visit.visit_id visit_id1,
 		CONCAT(IF(first_name=NULL,"",first_name)," ",IF(last_name=NULL,"",last_name)) name,
 		IF(father_name=NULL OR father_name="",spouse_name,father_name) parent_spouse,visit_name,visit_name.visit_name_id,
 		department,unit_name,area_name,district,op_room_no,mlc.*,occupation',false)
@@ -286,6 +285,7 @@ class Register_model extends CI_Model{
 		//// All the post variables are stored in local variables; 
 		// based on the field type we modify the data as required before storing in the variables.
 		if($this->input->post('first_name')) $first_name=$this->input->post('first_name'); else $first_name="";
+                if($this->input->post('middle_name')) $middle_name=$this->input->post('middle_name'); else $middle_name="";
 		if($this->input->post('last_name')) $last_name=$this->input->post('last_name'); else $last_name="";
 		$age_years=$this->input->post('age_years');
 		$age_months=$this->input->post('age_months');
@@ -298,8 +298,9 @@ class Register_model extends CI_Model{
 		if($this->input->post('id_proof_type'))$id_proof_type=$this->input->post('id_proof_type'); else $id_proof_type="";
 		if($this->input->post('id_proof_no'))$id_proof_no=$this->input->post('id_proof_no'); else $id_proof_no="";
 		if($this->input->post('occupation'))$occupation=$this->input->post('occupation'); else $occupation=0;
-		// if($this->input->post('education_level'))$education_level=$this->input->post('education_level'); else $education_level="";
-		// if($this->input->post('education_qualification'))$education_qualification=$this->input->post('education_qualification'); else $education_qualification="";
+		if($this->input->post('education_level'))$education_level=$this->input->post('education_level'); else $education_level="";
+		if($this->input->post('education_qualification'))$education_qualification=$this->input->post('education_qualification'); else $education_qualification="";
+                if($this->input->post('identification_marks'))$identification_marks=$this->input->post('identification_marks'); else $identification_marks="";
 		if($this->input->post('blood_group'))$blood_group=$this->input->post('blood_group'); else $blood_group="";
 		// if($this->input->post('gestation'))$gestation=$this->input->post('gestation'); else $gestation="";
 		// if($this->input->post('gestation_type'))$gestation_type=$this->input->post('gestation_type'); else $gestation_type=""; 
@@ -313,10 +314,13 @@ class Register_model extends CI_Model{
 		// if($this->input->post('congenial_anamalies'))$congenial_anamalies=$this->input->post('congenial_anamalies'); else $congenial_anamalies="";
 		if($this->input->post('address')) $address=$this->input->post('address'); else $address="";
 		if($this->input->post('place')) $place=$this->input->post('place'); else $place="";
-	    // if($this->input->post('doctor_Id')) $doctor_id=$this->input->post('doctor_id'); else $doctor_id="";
-		// if($this->input->post('nurse')) $nurse=$this->input->post('nurse'); else $nurse="";
-		// if($this->input->post('insurance_case')) $insurance_case=$this->input->post('insurance_case'); else $insurance_case="";
-		// if($this->input->post('insurance_no')) $insurance_no=$this->input->post('insurance_no'); else $insurance_no="";
+	        if($this->input->post('doctor_Id')) $doctor_id=$this->input->post('doctor_id'); else $doctor_id="";
+		if($this->input->post('nurse')) $nurse=$this->input->post('nurse'); else $nurse="";
+                if($this->input->post('visit_name_id')) $visit_name_id=$this->input->post('visit_name_id'); else $visit_name_id="";
+		if($this->input->post('insurance_case')) $insurance_case=$this->input->post('insurance_case'); else $insurance_case="";
+		if($this->input->post('insurance_no')) $insurance_no=$this->input->post('insurance_no'); else $insurance_no="";
+                if($this->input->post('refereal_hospital_id')) $refereal_hospital_id=$this->input->post('refereal_hospital_id'); else $refereal_hospital_id="";
+                if($this->input->post('arrival_mode')) $arrival_mode=$this->input->post('arrival_mode'); else $arrival_mode="";
 		if($this->input->post('sbp')) $sbp=$this->input->post('sbp'); else $sbp="";
 		if($this->input->post('dbp')) $dbp=$this->input->post('dbp'); else $dbp="";
 		if($this->input->post('pulse_rate')) $pulse_rate=$this->input->post('pulse_rate'); else $pulse_rate="";
@@ -324,8 +328,8 @@ class Register_model extends CI_Model{
 		if($this->input->post('temperature')) $temperature=$this->input->post('temperature'); else $temperature="";
 		if($this->input->post('admit_weight')) $admit_weight=$this->input->post('admit_weight'); else $admit_weight="";
 		// if($this->input->post('discharge_weight')) $discharge_weight=$this->input->post('discharge_weight'); else $discharge_weight="";
-		$phone=$this->input->post('phone');
-		$alt_phone=$this->input->post('alt_phone');
+		if($this->input->post('phone')) $phone=$this->input->post('phone'); else $phone="";
+		if($this->input->post('alt_phone')) $alt_phone=$this->input->post('alt_phone'); else $alt_phone="";
 		$district=$this->input->post('district');
 		$department=$this->input->post('department');
 		$unit=$this->input->post('unit');
@@ -341,11 +345,10 @@ class Register_model extends CI_Model{
 	    if($this->input->post('cns')) $cns=$this->input->post('cns'); else $cns="";
 		$hospital=$this->session->userdata('hospital');
 		$hospital_id=$hospital['hospital_id'];
-		// $form_type=$this->input->post('form_type');
-		$mlc=$this->input->post('mlc');
-		$mlc_number=$this->input->post('mlc_number');
-		$ps_name=$this->input->post('ps_name');
+		// $form_type=$this->input->post('form_type');                
+		
 		$outcome=$this->input->post('outcome');
+                if(($this->input->post('mlc_radio')=='1' || $this->input->post('mlc_radio')=='-1')) $mlc_radio= $this->input->post('mlc_radio'); else $mlc_radio=0;                
 		if($this->input->post('outcome_date')) $outcome_date=date("Y-m-d",strtotime($this->input->post('outcome_date'))); else $outcome_date = 0;
 		if($this->input->post('outcome_time')) $outcome_time=date("h:i:s",strtotime($this->input->post('outcome_time'))); else $outcome_time = 0;
 		if($this->input->post('final_diagnosis')) $final_diagnosis=$this->input->post('final_diagnosis'); else $final_diagnosis="";
@@ -356,11 +359,13 @@ class Register_model extends CI_Model{
 
 		//Creating an array with the database column names as keys and the post values as values. 
 		$data=array(
-	        'first_name'=>$first_name,
+                        'first_name'=>$first_name,
+                        'middle_name'=>$middle_name,
 			'last_name'=>$last_name,
 			'age_years'=>$age_years,
 			'age_months'=>$age_months,
 			'age_days'=>$age_days,
+                        'dob'=>$dob,
 			'gender'=>$gender,
 			'spouse_name'=>$spouse_name,
 			'father_name'=>$father_name,
@@ -368,8 +373,9 @@ class Register_model extends CI_Model{
 			'id_proof_type_id'=>$id_proof_type,
 			'id_proof_number'=>$id_proof_no,
 			'occupation_id'=>$occupation,
-			// 'education_level'=>$education_level,
-			// 'education_qualification'=>$education_qualification,
+			'education_level'=>$education_level,
+			'education_qualification'=>$education_qualification,
+                        'identification_marks'=>$identification_marks,
 			'blood_group'=>$blood_group,
 			// 'gestation'=>$gestation, 
 			// 'gestation_type'=>$gestation_type,
@@ -385,7 +391,9 @@ class Register_model extends CI_Model{
 			'address'=>$address,
 			'place'=>$place,
 			'phone'=>$phone,
-			'district_id'=>$district
+                        'alt_phone'=>$alt_phone,
+			'district_id'=>$district,
+                        
 		);
 		
 		//Start a mysql transaction.
@@ -397,7 +405,15 @@ class Register_model extends CI_Model{
 			$this->db->where('patient_id',$patient_id);
 			$this->db->update('patient',$data);
 		}
-		
+		// Update photograph
+                if($this->input->post('patient_picture')){
+			$encoded_data = $this->input->post('patient_picture');
+			$binary_data = base64_decode( $encoded_data );
+
+			// save to server (beware of permissions)
+			$result = file_put_contents("assets/images/patients/$patient_id.jpg", $binary_data );
+			if (!$result) die("Could not save image!  Check file permissions.");
+		}
 		//Creating an array with the database column names as keys and the post values as values. 
 		$visit_data=array( 
 		    'hospital_id'=>$hospital_id,
@@ -427,7 +443,12 @@ class Register_model extends CI_Model{
 			'cns'=>$cns,
 			// 'admit_date'=>$date,
 			// 'admit_time'=>$time,
-			'mlc'=>$mlc,
+			'mlc'=>$mlc_radio,
+                        'visit_name_id'=>$visit_name_id,
+                        'insurance_case'=>$insurance_case,
+                        'insurance_no'=>$insurance_no,
+                        'refereal_hospital_id'=>$refereal_hospital_id,
+                        'arrival_mode' => $arrival_mode,
 			'outcome'=>$outcome,
 			'outcome_date'=>$outcome_date,
 			'outcome_time'=>$outcome_time,
@@ -436,19 +457,77 @@ class Register_model extends CI_Model{
 			'advise'=>$advise,
 			'icd_10'=>$icd_code
 		);
+                $visit_id = '';
 		if($this->input->post('visit_id')){
 			//if it's an update form, use the visit id from the post variables and update the record in the patient_visit table
 			$visit_id=$this->input->post('visit_id');
 			$this->db->where('visit_id',$visit_id);
 			$this->db->update('patient_visit',$visit_data);
+                        if($this->input->post('transfer_department'))$transfer_department_id=$this->input->post('transfer_department'); else $transfer_department_id="";
+                        if($this->input->post('transfer_area'))$transfer_area_id=$this->input->post('transfer_area'); else $transfer_area_id="";
+                        if($this->input->post('transfer_date')) $transfer_date=date("Y-m-d",strtotime($this->input->post('transfer_date'))); else $transfer_date=0;
+                        if($this->input->post('transfer_time'))$transfer_time=$this->input->post('transfer_time'); else $transfer_time="";
+                        if(!empty($transfer_department_id)||!empty($transfer_area_id)){
+                            $transfer_info = array(
+                                'visit_id'=>$visit_id,
+                                'department_id'=>$transfer_department_id,
+                                'area_id'=>$transfer_area_id,
+                                'transfer_date'=>$transfer_date,
+                                'transfer_time'=>$transfer_time
+                            );
+                            $this->db->insert('internal_transfer',$transfer_info);
+                        }
 		}
-		if($mlc==1){
-			//if the mlc field is selected as "Yes"
-			if($this->input->post('visit_id')){
-			//	if it's an update form, use the visit id to update the mlc record in the databse - mlc table.
-			$this->db->where('visit_id',$visit_id);
-			$this->db->update('mlc',array('mlc_number'=>$mlc_number,'ps_name'=>$ps_name));
-			}
+                //check if it is an mlc case, i.e mlc is being updated.
+                //if mlc_number value is 'unset', it means mlc has not be added while creating patient_visit, we need to add now.
+                //if mlc_number has a value then it means the exisiting record needs to be updated with whatever values have been set.
+                $mlc_number_manual='';
+                $mlc_number = "";
+                $ps_name = "";
+                $pc_number= "";
+                $brought_by = "";
+                $police_intimation = "";
+                $declaration_required= "";
+                
+		if($this->input->post('mlc_radio')=='1'){
+                    $this->db->select('count')->from('counter')->where('counter_name','MLC');
+                    $query = $this->db->get();
+                    $result = $query->row();
+                    $mlc_number = ++$result->count;
+                    $this->db->where('counter_name','MLC');
+                    $this->db->update('counter',array('count'=>$mlc_number));
+                    $mlc_number_manual=$this->input->post('mlc_number_manual');
+                    $ps_name=$this->input->post('ps_name');
+                    $pc_number=$this->input->post('pc_number');
+                    $brought_by=$this->input->post('brought_by');
+                    $police_intimation=$this->input->post('police_intimation');
+                    $declaration_required=$this->input->post('declaration_required');
+		}
+		else {
+                    $mlc_number = "";
+                    $mlc_number_manual = "";
+		}
+                $mlc_data=array(
+                    'visit_id'=>$visit_id,
+                    'mlc_number'=>"A".$mlc_number,
+                    'mlc_number_manual'=>$mlc_number_manual,
+                    'ps_name'=>$ps_name,
+                    'pc_number'=>$pc_number,
+                    'brought_by'=>$brought_by,
+                    'police_intimation'=>$police_intimation,
+                    'declaration_required'=>$declaration_required
+                );
+              
+                if($this->input->post('mlc_radio')=='1'){
+                    // if the mlc field is selected as "Yes", and mlc_number is not set.
+                    if( $this->input->post('mlc_number')=="unset"){
+                        $this->db->insert('mlc',$mlc_data);                            
+                    }
+                    else{
+                        //if it's an update form, use the visit id to update the mlc record in the databse - mlc table.
+                        $this->db->where('visit_id',$visit_id);
+                        $this->db->update('mlc',$mlc_data);
+                    }
 		}
 		
 		if($this->input->post('prescription')){
@@ -572,10 +651,13 @@ class Register_model extends CI_Model{
 		}
 		//Build the query to retrieve the patient records based on the search query.
 		$this->db->select("patient.*,patient_visit.*,CONCAT(first_name,' ',last_name) name,
-		IF(father_name IS NULL OR father_name='',spouse_name,father_name) parent_spouse,patient.*,patient_visit.*,mlc.*,occupation,id_proof_type,
-		area_name,state.state_id,state.state,unit_name,unit.unit_id,code_title,area.area_id,district,department,patient.patient_id,patient_visit.visit_id",false)
+		IF(father_name IS NULL OR father_name='',spouse_name,father_name) parent_spouse,patient.*,patient_visit.*,mlc.*,occupation.occupation,id_proof_type,
+		area_name,state.state_id,state.state,unit_name,unit.unit_id,code_title,area.area_id,district,department,patient.patient_id,patient_visit.visit_id, 
+                patient_procedure.procedure_duration, patient_procedure.procedure_note, patient_procedure.procedure_findings, visit_name.visit_name",false)
 		->from('patient')
 		->join('patient_visit','patient.patient_id=patient_visit.patient_id')
+                ->join('visit_name','patient_visit.visit_name_id=visit_name.visit_name_id','left')
+                ->join('patient_procedure','patient_procedure.visit_id = patient_visit.visit_id','left')
 		->join('department','patient_visit.department_id=department.department_id','left')
 		->join('district','patient.district_id=district.district_id','left')
 		->join('state','district.state_id=state.state_id','left')

@@ -31,6 +31,13 @@
 		</form>
 		<br/>
 		<?php if(isset($msg)) echo $msg; ?>
+                <div class="alert alert-info" role="alert">
+                    <ul>
+                        <li>Please input Hospital Name and Address to add Hospital to the database.</li>
+                        <li>Once a Hospital is added to the database it will always remain in the database.</li>
+                        <li>Hospital added here will reflect in the blood request page.</li>
+                    </ul>
+                </div>
 	</div>
 
 	
