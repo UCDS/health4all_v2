@@ -35,6 +35,7 @@ class Inventory extends CI_Controller {
 		$this->data['title']="Inventory";
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/panel_nav',$this->data);
+                $this->data['staff']=$this->staff_model->staff_list();//posting staff details to discard[view]
 		$this->form_validation->set_rules('inventory_id', 'Inventory ID',
 		'required|xss_clean');
 		if ($this->form_validation->run() === FALSE)
@@ -43,11 +44,11 @@ class Inventory extends CI_Controller {
 			$this->load->view('pages/bloodbank/discard',$this->data);
 		}
 		else{
-			if($this->input->post('discard')){
+			if($this->input->post('discard'))//gets discarded data
+                       {
 				if($this->inventory_model->discard_inventory()){
 					$this->data['msg']="Discarded Successfully. ";
 					$this->data['inventory']=$this->inventory_model->get_inventory();
-
 					$this->load->view('pages/bloodbank/discard',$this->data);
 				}
 				else{
