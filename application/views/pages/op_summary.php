@@ -148,8 +148,8 @@ $(function(){
         <!--table is displayed only when there is atleast one registration is done-->
 	<?php if(isset($report) && count($report)>0){ ?>
 	
-		<button type="button" class="btn btn-default btn-md print">
-		  <span class="glyphicon glyphicon-print"></span> Print
+	<button type="button" class="btn btn-default btn-md print">
+           <span class="glyphicon glyphicon-print"></span> Print
 		</button>
         <!--frontend-->
         <!--created button which converts html table to Excel sheet-->
