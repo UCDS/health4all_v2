@@ -3,7 +3,6 @@
 	<?php echo form_open('bloodbank/inventory/discard');?>
 	<input type="text" placeholder="Blood Unit Number" name="blood_unit_num" />
 	<input type="submit" value="Search" name="search" />
-	</form>
 	<?php
 	$search="";
 	$expired="";
@@ -41,7 +40,7 @@
 		<h3>Inventory : </h3>
 		<table id="header-fixed" class="table-2 table table-striped table-bordered"></table>
 		<table class="table-2 table table-striped table-bordered" id="table-1">
-		<thead><th>Blood Unit No.</th><th>Component Type</th><th>Blood Group</th><th>Expiry Date</th><th>Status</th><th>Notes</th><th></th></thead>
+		<thead><th>Blood Unit No.</th><th>Component Type</th><th>Blood Group</th><th>Expiry Date</th><th>Status</th><th>Notes</th><th>Discard By</th><th></th></thead>
 		<?php 
 		foreach($inventory as $inv){
 			if($this->input->post('search')){
@@ -53,10 +52,14 @@
 					<td>$inv->blood_group</td>		
 					<td>".date('d-M-Y',strtotime($inv->expiry_date))."</td>";
 				$search.="<td>$inv->don_status /<br /> $inv->inv_status</td>";
-				$search.="<td><input type='text' name='notes' required /></td>
-					<td><input type='submit' value='Discard'  name='discard' /></td>
-				</form>
-				</tr>";
+				$search.="<td><input type='text' name='notes' required /></td>";
+                                 $search.="<td><select name='staff_id' class='form-control' required><option value='' disabled selected>Discard by</option>";
+                                foreach($staff as $s){
+                                    $search.="<option value='".$s->staff_id."'>".$s->first_name." ".$s->last_name."</option>";//gets staff details
+                                }
+                                $search.="</select></td>";
+                                $search.="<td><div class='form-group'><input type='submit' class='btn btn-primary' value='Discard'  name='discard' /></div></td>";//discard posts discarded data to inventory[controller]
+                                $search.="</form></tr>";
 			}
 			else{
 			if($inv->donation_status==3){
@@ -68,10 +71,15 @@
 					<td>$inv->blood_group</td>		
 					<td>".date('d-M-Y',strtotime($inv->expiry_date))."</td>";
 				$under_collection.="<td>$inv->don_status /<br /> $inv->inv_status</td>";
-				$under_collection.="<td><input type='text' value='Under Collection' name='notes' required /></td>
-					<td><input type='submit' value='Discard'  name='discard' /></td>
-				</form>
-				</tr>";
+				$under_collection.="<td><input type='text' value='Under Collection' name='notes' required /></td>";
+                                 $under_collection.="<td><select name='staff_id' class='form-control' required><option value='' disabled selected>Discard by</option>";
+                                foreach($staff as $s){
+                                    $under_collection.="<option value='".$s->staff_id."'>".$s->first_name." ".$s->last_name."</option>";//gets staff details
+                                }
+                                $under_collection.="</select></td>";
+                                $under_collection.="<td><div class='form-group'><input type='submit' class='btn btn-primary' value='Discard'  name='discard' /></div></td>";//discard posts discarded data to inventory[controller]
+
+                                $under_collection.="</form></tr>";
 			}
 			else if($inv->donation_status==6 && $inv->screening_result==0){
 				$screening_failed.="<tr>";
@@ -82,10 +90,14 @@
 					<td>$inv->blood_group</td>		
 					<td>".date('d-M-Y',strtotime($inv->expiry_date))."</td>";
 				$screening_failed.="<td>$inv->don_status /<br /> $inv->inv_status</td>";
-				$screening_failed.="<td><input type='text' value='Screening failed.' name='notes' required /></td>
-					<td><input type='submit' value='Discard'  name='discard' /></td>
-				</form>
-				</tr>";
+				$screening_failed.="<td><input type='text' value='Screening failed.' name='notes' required /></td>";	
+                                 $screening_failed.="<td><select name='staff_id' class='form-control' required><option value='' disabled selected>Discard by</option>";
+                                foreach($staff as $s){
+                                    $screening_failed.="<option value='".$s->staff_id."'>".$s->first_name." ".$s->last_name."</option>";//gets staff details
+                                }
+                                $screening_failed.="</select></td>";
+                                $screening_failed.="<td><div class='form-group'><input type='submit' class='btn btn-primary' value='Discard'  name='discard' /></div></td>";//discard posts discarded data to inventory[controller]
+                                $screening_failed.="</form></tr>";
 			}
 			else if($inv->expiry_date>date('Y-m-d',strtotime("+7 Days"))){
 				continue;
@@ -96,13 +108,17 @@
 				$expiring.="<input type='text' value='".$inv->inventory_id."' readonly name='inventory_id' size='3' hidden />
 					<td>$inv->blood_unit_num</td>		
 					<td>$inv->component_type</td>
-					<td>$inv->blood_group</td>		
+					<td>$inv->blood_group</td>
 					<td>".date('d-M-Y',strtotime($inv->expiry_date))."</td>";
 				$expiring.="<td>$inv->don_status /<br /> $inv->inv_status</td>";
-				$expiring.="<td></td>
-					<td><input type='submit' value='Discard' name='discard'   /></td>
-				</form>
-				</tr>";			
+				$expiring.="<td></td>";
+                                 $expiring.="<td><select name='staff_id' class='form-control' required><option value='' disabled selected>Discard by</option>";
+                                foreach($staff as $s){
+                                    $expiring.="<option value='".$s->staff_id."'>".$s->first_name." ".$s->last_name."</option>";//gets staff details
+                                }
+                                $expiring.="</select></td>";
+                                $expiring.="<td><div class='form-group'><input type='submit' class='btn btn-primary' value='Discard' name='discard'   /></div></td>";//discard posts discarded data to inventory[controller]
+                                 $expiring.="</form></tr>";
 			}
 			else if($inv->expiry_date<date('Y-m-d')){
 				$expired.="<tr>";
@@ -113,10 +129,14 @@
 					<td>$inv->blood_group</td>		
 					<td>".date('d-M-Y',strtotime($inv->expiry_date))."</td>";
 				$expired.="<td>$inv->don_status /<br /> $inv->inv_status</td>";
-				$expired.="<td><input type='text' value='Expired' name='notes' required /></td>
-					<td><input type='submit' value='Discard' name='discard'  /></td>
-				</form>
-				</tr>";
+				$expired.="<td><input type='text' value='Expired' name='notes' required /></td>";
+                                $expired.="<td><select name='staff_id' class='form-control' required><option value='' disabled selected>Discard by</option>";
+                                foreach($staff as $s){
+                                    $expired.="<option value='".$s->staff_id."'>".$s->first_name." ".$s->last_name."</option>";//gets staff details
+                                }
+                                $expired.="</select></td>";
+                                $expired.="<td><div class='form-group'><input type='submit' class='btn btn-primary' value='Discard' name='discard'  /></div></td>";
+                                $expired.="</form></tr>";
 			}
 			}
 		}
