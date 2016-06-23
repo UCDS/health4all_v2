@@ -357,44 +357,6 @@ class Inventory_model extends CI_Model{
 		return $query->result();
 	}
 	
-	function get_inventory(){
-		$userdata=$this->session->userdata('hospital');
-		$hospital=$userdata['hospital_id'];
-		if($this->input->post('blood_unit_num')){
-			$this->db->where('blood_unit_num',$this->input->post('blood_unit_num'));
-		}
-		else{
-			$this->db->where('blood_inventory.status_id',7);
-		}
-		$this->db->select('blood_unit_num,component_type,blood_group,expiry_date,bb_donation.donation_id,blood_unit_num,bb_donation.status_id as donation_status,d_status.status as don_status,i_status.status as inv_status,screening_result,inventory_id')
-		->from('blood_inventory')
-		->join('bb_donation','blood_inventory.donation_id=bb_donation.donation_id')
-		->join('blood_donor','bb_donation.donor_id=blood_donor.donor_id')
-		->join('bb_status d_status','bb_donation.status_id=d_status.status_id')
-		->join('bb_status i_status','blood_inventory.status_id=i_status.status_id')
-		->where('blood_inventory.status_id !=',10)//displays screening failed and under collection
-                ->where('blood_inventory.discarded_by =',0)//displays screening failed and under collection and also which are not disarded
-	//	->where('bb_donation.hospital_id',$hospital)
-		->order_by('component_type')
-                ->limit(500);
-		$query=$this->db->get();
-		return $query->result();
-	}
-	
-	function discard_inventory(){
-		$this->db->trans_start();
-		$inv_id=$this->input->post('inventory_id');
-		$data=array(
-		'status_id'=>9,
-		'notes'=>$this->input->post('notes'),
-                'discarded_by'=>$this->input->post('staff_id')//posts discarded staff_id to blood_inventory[database]
-		);
-		$this->db->where('inventory_id',$inv_id);
-		$this->db->update('blood_inventory',$data);
-		$this->db->trans_complete();
-		return $this->db->trans_status();
-	}
-	
 	function check_inventory(){
 		$userdata=$this->session->userdata('hospital');
                  
@@ -473,5 +435,44 @@ class Inventory_model extends CI_Model{
 			return $query->result();
 		}
 	}
+	
+	function get_inventory(){
+		$userdata=$this->session->userdata('hospital');
+		$hospital=$userdata['hospital_id'];
+		if($this->input->post('blood_unit_num')){
+			$this->db->where('blood_unit_num',$this->input->post('blood_unit_num'));
+		}
+		else{
+			$this->db->where('blood_inventory.status_id',7);
+		}
+		$this->db->select('blood_unit_num,component_type,blood_group,expiry_date,bb_donation.donation_id,blood_unit_num,bb_donation.status_id as donation_status,d_status.status as don_status,i_status.status as inv_status,screening_result,inventory_id')
+		->from('blood_inventory')
+		->join('bb_donation','blood_inventory.donation_id=bb_donation.donation_id')
+		->join('blood_donor','bb_donation.donor_id=blood_donor.donor_id')
+		->join('bb_status d_status','bb_donation.status_id=d_status.status_id')
+		->join('bb_status i_status','blood_inventory.status_id=i_status.status_id')
+		->where('blood_inventory.status_id !=',10)//displays screening failed and under collection
+                ->where('blood_inventory.discarded_by =',0)//displays screening failed and under collection and also which are not disarded
+	//	->where('bb_donation.hospital_id',$hospital)
+		->order_by('component_type')
+                ->limit(500);
+		$query=$this->db->get();
+		return $query->result();
+	}
+	
+	function discard_inventory(){
+		$this->db->trans_start();
+		$inv_id=$this->input->post('inventory_id');
+		$data=array(
+		'status_id'=>9,
+		'notes'=>$this->input->post('notes'),
+                'discarded_by'=>$this->input->post('staff_id')//posts discarded staff_id to blood_inventory[database]
+		);
+		$this->db->where('inventory_id',$inv_id);
+		$this->db->update('blood_inventory',$data);
+		$this->db->trans_complete();
+		return $this->db->trans_status();
+	}
+	
 }
 ?>
