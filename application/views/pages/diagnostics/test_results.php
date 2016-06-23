@@ -112,7 +112,7 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
             $age .= $order [0]->age_days . "D ";
         ?>
         <?php
-        $assay_set = 0;                                                            // Display Mehod coloumn in report only if assay_set flag is 1.
+        $assay_set = 0;                                                               // Display Mehod coloumn in report only if assay_set flag is 1.
         foreach ($order as $o) {
 
             if ($o->assay != '') {
@@ -363,8 +363,8 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
                                             else
                                                 $result .= $test ['binary_negative'];
                                         }
-                                        if(isset($test['test_result_text']) && $test ['test_status'] == 2){
-                                            $result.=" ".$test['test_result_text'];
+                                        if(isset($test['test_result_text']) && !empty($test['test_result_text']) && $test ['test_status'] == 2){
+                                            $result.=(($test['numeric_result']==1 || $test ['binary_result'] == 1)? ", ": "").$test['test_result_text'];
                                         }
                                         if($test ['test_status'] == 1)
                                             $result = "Tests not yet done.";
@@ -415,8 +415,8 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
                                             else
                                                 $result .= $test_inner ['binary_negative'];
                                         }
-                                        if(isset($test_inner['test_result_text']) && $test_inner ['test_status'] == 2){
-                                            $result.=" ".$test_inner['test_result_text'];
+                                        if(isset($test_inner['test_result_text']) && !empty($test_inner['test_result_text']) && $test_inner ['test_status'] == 2){
+                                            $result.=(($test_inner['numeric_result']==1 || $test_inner ['binary_result'] == 1)? ", ": "").$test_inner['test_result_text'];
                                         }
                                         if($test ['test_status'] == 1)
                                             $result = "Tests not yet done.";
@@ -487,11 +487,11 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
                                             else
                                                 $result .= $test->binary_negative;
                                         }
-                                        if($test->test_result_text!="" && $test->test_status == 2){
+                                        if($test->test_result_text!="" && !empty($test->test_result_text) && $test->test_status == 2){
                                             if($test->test_result_text=='0')
                                                 $result.='';
                                             else
-                                             $result .= $test->test_result_text;
+                                             $result .= (($test->numeric_result==1 || $test->binary_result == 1)? ", ": "").$test->test_result_text;
                                         }
                                         if($test ->test_status == 1)
                                             $result = "Tests not yet done.";
@@ -506,7 +506,7 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
                                         $result="";
                                         if(($test ->test_result != NULL || isset($test->test_result_text)) && $test->test_status == 2){
                                             if ($test->range_type == 1)
-                                                $result .= "< " . $test->max . $test_inner->lab_unit;
+                                                $result .= "< " . $test->max . $test->lab_unit;
                                             if ($test ->range_type == 2)
                                                 $result .= "> " . $test->min . $test ->lab_unit;
                                             else if ($test->range_type == 3)
@@ -555,7 +555,7 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
                                                 if (!in_array($sensitivity_test['micro_organism'], $microbes_1)) {
                                                     $microbes_1 [] = $sensitivity_test['micro_organism'];
                                                     if($flag_1 == 0)
-                                                        $positive_for.="Positive for ";
+                                                        $positive_for.=" for ";
                                                     if($flag_1==1)
                                                         $positive_for.=", ";
                                                     $positive_for.=$sensitivity_test['micro_organism'];
@@ -859,8 +859,8 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
                                             else
                                                 $result .= $test ['binary_negative'];
                                         }
-                                        if($test['test_result_text']!='' && $test ['test_status'] == 2){
-                                             $result .= $test ['test_result_text'];
+                                        if($test['test_result_text']!='' && !empty($test['test_result_text']) && $test ['test_status'] == 2){
+                                             $result .=(($test['numeric_result']==1 || $test ['binary_result'] == 1)? ", ": "").$test ['test_result_text'];
                                         }
                                         if($test ['test_status'] == 1)
                                             $result = "Tests not yet done.";
@@ -918,8 +918,8 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
                                             else
                                                 $result .= $test_inner ['binary_negative'];
                                         }
-                                        if($test_inner['test_result_text'] != ""  && $test_inner ['test_status'] == 2){
-                                            $result.=" ".$test_inner['test_result_text'];
+                                        if($test_inner['test_result_text'] != ""  && !empty($test_inner['test_result_text']) && $test_inner ['test_status'] == 2){
+                                            $result.=(($test_inner['numeric_result']==1 || $test_inner ['binary_result'] == 1)? ", ": "").$test_inner['test_result_text'];
                                         }
                                         if($test_inner ['test_status'] == 1)
                                             $result = "Tests not yet done.";
@@ -990,11 +990,11 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
                                             else
                                                 $result .= $test->binary_negative;
                                         }
-                                        if($test->test_result_text!='' && $test ->test_status == 2){
+                                        if($test->test_result_text!='' && !empty($test->test_result_text) && $test ->test_status == 2){
                                             if($test->test_result_text=='0')
                                                 $result.='';
                                             else
-                                             $result .= $test->test_result_text;
+                                             $result .= (($test->numeric_result==1 || $test->binary_result == 1)? ", ": "").$test->test_result_text;
                                         }
                                         if($test ->test_status == 1)
                                             $result = "Tests not yet done.";
@@ -1058,7 +1058,7 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
                                                 if (!in_array($sensitivity_test['micro_organism'], $microbes_1)) {
                                                     $microbes_1 [] = $sensitivity_test['micro_organism'];
                                                     if($flag_1 == 0)
-                                                        $positive_for.="Positive for ";
+                                                        $positive_for.=" for ";
                                                     if($flag_1==1)
                                                         $positive_for.=", ";
                                                     $positive_for.=$sensitivity_test['micro_organism'];

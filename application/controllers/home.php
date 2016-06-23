@@ -82,25 +82,31 @@ class Home extends CI_Controller {
 	{	
 		if(!$this->session->userdata('logged_in')){
 			
-		$this->data['title']="Login";
+			$this->data['title']="Login";
 
-		$this->load->view('templates/header',$this->data);
-		$this->load->helper('form');
-		$this->load->library('form_validation');
-		
-		$this->form_validation->set_rules('username', 'Username',
-		'trim|required|xss_clean');
-	    $this->form_validation->set_rules('password', 'Password', 
-	    'trim|required|xss_clean|callback_check_database');
-		if ($this->form_validation->run() === FALSE)
-		{
-			$this->load->view('pages/login');
-		}
-		else{
-			redirect('home', 'refresh');
-		}
-		
-		$this->load->view('templates/footer');
+			$this->load->view('templates/header',$this->data);
+			$this->load->helper('form');
+			$this->load->library('form_validation');
+			
+			$this->form_validation->set_rules('username', 'Username',
+			'trim|required|xss_clean');
+			$this->form_validation->set_rules('password', 'Password', 
+			'trim|required|xss_clean|callback_check_database');
+			if ($this->form_validation->run() === FALSE)
+			{
+				$this->load->view('pages/login');
+			}
+			else{
+				$defaults = $this->staff_model->get_defaults();
+				 if($defaults != false) {
+					foreach($defaults as $def) {
+							$this->session->set_userdata($def->primary_key, $def->default_value_text);
+					}
+				 }
+				redirect('home', 'refresh');
+			}
+			
+			$this->load->view('templates/footer');
 		}
 		else {
 			redirect('home','refresh');

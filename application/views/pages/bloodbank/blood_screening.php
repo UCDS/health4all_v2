@@ -42,6 +42,20 @@ $(document).ready(function(){
 		}
 		else{
 		?>
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="">Alert:</span>
+                            <ul>
+                                <li>
+                                    Please select the check mark against a condition only if the sample tests positive. 
+                                    If every condition is negative select only Tested and click on update.
+                                </li>
+                                <li>
+                                    Only Blood bags that clear screening will be shown in inventory.
+                                </li>                                
+                            </ul>
+                    
+                </div>
 		<h4>Available samples : </h4>
 
 		<table id="header-fixed" class="table-2 table table-striped table-bordered"></table>
@@ -95,7 +109,7 @@ $(document).ready(function(){
 				<div class="form-group col-lg-8"><select name="staff" class="form-control" required>
 					<option value="" disabled selected>Done By</option>
 					<?php foreach($staff as $s){
-						echo "<option value='$s->staff_id'>$s->name</option>";
+						echo '<option value='.$s->staff_id.'>'.$s->first_name." ".$s->last_name." ".$s->name.'</option>';
 					}
 					?>
 				</select></div>
@@ -114,5 +128,20 @@ $(document).ready(function(){
 		</table>
 			
 	</div>
+    <div class="alert alert-info" role="alert">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="">Note:</span>
+        <ul>
+            <li>Blood Unit is the Blood bag number</li>
+            <li>You will get the details of what each table column means if you hover the mouse pointer over the column heading.</li>
+            <li>Staff name shows up in done by only if the staff name is added to the database to add staff <a href="<?php echo base_url()."staff/add/staff";?>">click here.</a>
+                <ul><li>When adding staff make sure you select his/her department as Blood Bank, you get the department after selecting hospital</li></ul>
+                <ul><li>Only fields with a '*' are mandatory</li></ul>
+            </li>
+            <li>
+                If this Blood Bank has a SMS pack, an SMS will be sent to the donor thanking him for the donation along with his blood group(To enable Contact Administrator).
+            </li>
+        </ul>
+    </div>
 </div>
 
