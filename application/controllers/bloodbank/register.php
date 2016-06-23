@@ -138,13 +138,11 @@ class Register extends CI_Controller {
 			/**
 			* If donor id is available, query donor details form db
 			*/
-			if(strlen($donor_id)>0)
-				$this->data['donor_details']=$this->register_model->get_donor_details($donor_id);	
 			$this->load->view('pages/bloodbank/walk_in_registration',$this->data);
 		}
 		else{
 			if($this->register_model->donor_register()){
-				$this->data['msg']="Registration successful!";
+				$this->data['msg']="Donor registration successful!";
 				$this->load->view('pages/bloodbank/walk_in_registration.php',$this->data);
 			}
 			else{
@@ -155,7 +153,7 @@ class Register extends CI_Controller {
 		
 		$this->load->view('templates/footer');
 	}
-	public function repeat_donor()
+	public function repeat_donor($donor_id=0)
 	{
 		if(!$this->session->userdata('logged_in')){
 		show_404();
@@ -176,45 +174,136 @@ class Register extends CI_Controller {
 		$this->load->view('templates/panel_nav',$this->data);
 		$validations=array(
 			array(
-				'field'=>'donor_id',
-				'label'=>'donor_id',
-				'rules'=>'trim|xss_clean'
+				'field'=>'name',
+				'label'=>'name',
+				'rules'=>'required'
 			),
 			array(
-				'field'=>'donor_name',
-				'label'=>'donor_name',
-				'rules'=>'trim|xss_clean'
+				'field'=>'age',
+				'label'=>'Age',
+				'rules'=>'required'
 			),
 			array(
-				'field'=>'donor_email',
-				'label'=>'donor_email',
-				'rules'=>'trim|xss_clean'
+				'field'=>'gender',
+				'label'=>'Gender',
+				'rules'=>'required'
 			),
 			array(
-				'field'=>'blood_group',
-				'label'=>'blood_group',
-				'rules'=>'trim|xss_clean'
+				'field'=>'question1',
+				'label'=>'Questionaire',
+				'rules'=>'required|exact_length[3]',
 			),
 			array(
-				'field'=>'donor_mobile',
-				'label'=>'donor_mobile',
-				'rules'=>'trim|xss_clean'
+				'field'=>'question2',
+				'label'=>'Questionaire',
+				'rules'=>'required|exact_length[3]'
+			),
+			array(
+				'field'=>'question3',
+				'label'=>'Questionaire',
+				'rules'=>'required|exact_length[3]'
+			),
+			array(
+				'field'=>'question4',
+				'label'=>'Questionaire',
+				'rules'=>'required|exact_length[2]'
+			),
+			array(
+				'field'=>'question5',
+				'label'=>'Questionaire',
+				'rules'=>'required|exact_length[2]'
+			),
+			array(
+				'field'=>'question6',
+				'label'=>'Questionaire',
+				'rules'=>'required|exact_length[2]'
+			),
+			array(
+				'field'=>'question7',
+				'label'=>'Questionaire',
+				'rules'=>'required|exact_length[2]'
+			),
+			array(
+				'field'=>'question8',
+				'label'=>'Questionaire',
+				'rules'=>'required|exact_length[2]'
+			),
+			array(
+				'field'=>'question9',
+				'label'=>'Questionaire',
+				'rules'=>'required|exact_length[2]'
+			),
+			array(
+				'field'=>'question10',
+				'label'=>'Questionaire',
+				'rules'=>'required|exact_length[2]'
+			),
+			array(
+				'field'=>'question11',
+				'label'=>'Questionaire',
+				'rules'=>'required|exact_length[2]'
 			)
 		);
+		if($this->input->post('gender')=="Female"){
+			$female_validations=array(
+				array(
+				'field'=>'question12',
+				'label'=>'Questionaire',
+				'rules'=>'required|exact_length[2]'
+				),
+				array(
+				'field'=>'question13',
+				'label'=>'Questionaire',
+				'rules'=>'required|exact_length[2]'
+				),
+				array(
+				'field'=>'question14',
+				'label'=>'Questionaire',
+				'rules'=>'required|exact_length[2]'
+				),
+				array(
+				'field'=>'question15',
+				'label'=>'Questionaire',
+				'rules'=>'required|exact_length[2]'
+				)
+			);
+			$this->form_validation->set_rules($female_validations);
+		}
 		$this->form_validation->set_rules($validations);
-		if ($this->form_validation->run() === FALSE)
+		$this->form_validation->set_message('exact_length','Questionaire failed.');
+		if ($this->form_validation->run() === FALSE && !$this->input->post('search'))
 		{
-			//$this->data['camps']=$this->register_model->get_camps();
-			$this->load->view('pages/bloodbank/repeat_donor',$this->data);
-		}
-		else{
-			$this->data['donors']=$this->register_model->get_donors();
-			$this->load->view('pages/bloodbank/repeat_donor.php',$this->data);
-		}
-		
+                    if($donor_id !=0 || $donor_id != '0'){
+                        $this->data['donor_details'] = $this->register_model->get_donor_details($donor_id);
+                        $this->load->view('pages/bloodbank/repeat_donor_form',$this->data);
+                    }else{
+                        $this->data['camps']=$this->register_model->get_camps();
+                        $this->load->view('pages/bloodbank/repeat_donor',$this->data);
+                    }
+                }else if($this->input->post("repeat_donor")){
+                    if($this->register_model->donor_register()){
+                        $this->data['msg']="Donor registration successful!";
+                        $this->data['camps']=$this->register_model->get_camps();
+                        $this->load->view('pages/bloodbank/repeat_donor',$this->data);
+                    }
+                    else{
+                        $this->data['msg']="Error in storing data. Please retry. ";
+                        $this->data['donor_details'] = $this->register_model->get_donor_details($donor_id);
+                        $this->load->view('pages/bloodbank/repeat_donor_form',$this->data);
+                    }
+                }
+		else if($this->input->post('search')){
+                    $this->data['donors']=$this->register_model->get_donors();
+                    $this->load->view('pages/bloodbank/repeat_donor',$this->data);
+		}else{
+                    $this->data['camps']=$this->register_model->get_camps();
+                    $this->load->view('pages/bloodbank/repeat_donor',$this->data);
+                }
 		$this->load->view('templates/footer');
 		
 	}
+
+        
 	public function donation()
 	{
        if(!$this->session->userdata('logged_in')){
@@ -277,7 +366,7 @@ class Register extends CI_Controller {
 		}
 		
 	}
-	
+        
 	public function medical_checkup($donor_id=0,$donation_id=""){
 		if(!$this->session->userdata('logged_in')){
 		show_404();
@@ -457,4 +546,35 @@ function search_patients(){
     }
     else return false;
 }
+
+    function delete_donor($donor_id=0){
+        if(!$this->session->userdata('logged_in')){
+            show_404();
+        }
+       $this->data['userdata']=$this->session->userdata('logged_in');
+       foreach ($this->data['functions'] as $f ){
+            if($f->user_function=="Bloodbank"){
+                $access=1;
+            }		
+        }
+        if($access==0){
+            show_404();
+        }
+        $this->data['userdata']=$this->session->userdata('hospital');
+        $this->load->helper('form');
+        $this->load->library('form_validation');
+        if($donor_id!=0 && $donor_id!='0'){
+            $donation_id=$this->register_model->remove_donation($donor_id);
+        }
+        $this->data['title']="Register Blood Donation";
+        $this->load->view('templates/header',$this->data);
+        $this->load->view('templates/panel_nav',$this->data);
+        $donors=$this->register_model->get_registered_donors();
+        $appointments=$this->register_model->get_appointments();
+        $this->data['donors']=$donors;
+        $this->data['appointments']=$appointments;
+        $this->load->view('pages/bloodbank/registered_donors',$this->data);
+        $this->load->view('templates/footer');
+    }
+
 }

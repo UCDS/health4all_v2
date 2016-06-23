@@ -85,4 +85,11 @@
 		</div>
 		</form><br />
 	</div>
+    <div class="alert alert-info" role="alert">
+        <ul>
+            <li>Please input the medical check up details for the patient.</li>
+            <li>Only the donors in the current camp show up in this page.</li>
+            <li>Please set the camp to see donors of that camp. <a href="<?php echo base_url();?>bloodbank/user_panel/place">Click here.</a></li>
+        </ul>
+    </div>
 </div>

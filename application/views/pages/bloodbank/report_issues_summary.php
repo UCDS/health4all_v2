@@ -131,6 +131,7 @@ $(function(){
 	</thead>
 	<?php 
 	$Apos=0;$Aneg=0;$Bpos=0;$Bneg=0;$ABpos=0;$ABneg=0;$Opos=0;$Oneg=0;$total=0;
+	
 	foreach($summary as $s){
 		$day_total=0;
 		$day_total+=$s->Apos+$s->Aneg+$s->Bpos+$s->Bneg+$s->ABpos+$s->ABneg+$s->Opos+$s->Oneg;

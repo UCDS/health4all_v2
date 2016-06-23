@@ -141,7 +141,21 @@
 		}
 		else{
 		?>
+                <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="">Note:</span>
+                        <ul>
+                            <li>Blood Unit is the Blood bag number</li>
+                            <li>Blood Group selected here is final, Blood Group group set here will override group set in previous stages.</li>
+                            <li>Staff name shows up in Forward/Reverse done by only if the staff name is added to the database to add staff <a href="<?php echo base_url()."staff/add/staff";?>">click here.</a>
+                                <ul><li>When adding staff make sure you select his/her department as Blood Bank, you get the department after selecting hospital</li></ul>
+                                <ul><li>Only fields with a '*' are mandatory</li></ul>
+                            </li>
+
+                        </ul>
+                    </div>
 		<div class="panel panel-default">
+                    
 		<div class="panel-heading">
 			<h4>Available samples </h4>
 		</div>
@@ -160,7 +174,7 @@
 			<th>B Cells</th>
 			<th>O Cells</th>
 			<th>Du</th>
-			<th></th>
+			<th>Grouped</th>
 		</thead>
 		<?php echo form_open('bloodbank/inventory/blood_grouping',array('id'=>'grouping_form','class'=>'form-custom'));?>
 		<?php 
@@ -216,7 +230,7 @@
 			<div class="form-group col-lg-3"><select class="form-control" name="forward_by" required>
 				<option value="" disabled selected>Forward Done By</option>
 				<?php foreach($staff as $s){
-					echo "<option value='$s->staff_id'>$s->name</option>";
+					echo '<option value='.$s->staff_id.'>'.$s->first_name." ".$s->last_name." ".$s->name.'</option>';
 				}
 				?>
 			</select></div>
@@ -224,7 +238,7 @@
 			<div class="form-group col-lg-3"><select name="reverse_by" class="form-control" required>
 				<option value="" disabled selected>Reverse Done By</option>
 				<?php foreach($staff as $s){
-					echo "<option value='$s->staff_id'>$s->name</option>";
+					echo '<option value='.$s->staff_id.'>'.$s->first_name." ".$s->last_name." ".$s->name.'</option>';
 				}
 				?>
 			</select></div>

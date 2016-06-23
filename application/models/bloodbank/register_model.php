@@ -15,7 +15,8 @@ class Register_model extends CI_Model{
 		->where('hospital_id',$hospital);
 		$query=$this->db->get();
 		return $query->result();
-	}
+	}// search
+
 	function donor_register(){
 		$place=$this->session->userdata('place');
 		$userdata=$this->session->userdata('hospital');
@@ -67,11 +68,11 @@ class Register_model extends CI_Model{
 		$this->db->insert('blood_donor',$data);
 		$donor_id=$this->db->insert_id();
 		$data=array(
-			'donor_id'=>$donor_id,
-			'replacement_patient_id'=>$replacement_patient_id,
-			'status_id'=>1,
-			'camp_id'=>$camp_id,
-			'hospital_id'=>$hospital
+                    'donor_id'=>$donor_id,
+                    'replacement_patient_id'=>$replacement_patient_id,
+                    'status_id'=>1,
+                    'camp_id'=>$camp_id,
+                    'hospital_id'=>$hospital
 		);
 		$this->db->insert('bb_donation',$data);
 		$this->db->trans_complete();
@@ -81,8 +82,77 @@ class Register_model extends CI_Model{
 		else{
 			return true;
 		}
-		
-	}
+	}// donor_register
+        
+        function repeat_donor(){
+            $place=$this->session->userdata('place');
+            $userdata=$this->session->userdata('hospital');
+            $hospital=$userdata['hospital_id'];
+            $name=$this->input->post('name');
+            $parent_spouse=$this->input->post('parent_spouse');
+            $maritial=$this->input->post('maritial_status');
+            $occupation=$this->input->post('occupation');
+            $dob=date("Y-m-d",strtotime($this->input->post('dob')));
+            $age=$this->input->post('age');
+            $sex=$this->input->post('gender');
+            $blood_group=$this->input->post('blood_group');
+            $phone=$this->input->post('phone');
+            $email=$this->input->post('email');
+            $address=$this->input->post('address');
+            $replacement_patient_id="";
+            if(!!$place['camp_id']) $camp_id=$place['camp_id'];
+            else $camp_id = 0;
+            $data=array(
+            'name'=>$name,
+            'parent_spouse'=>$parent_spouse,
+            'maritial_status'=>$maritial,
+            'occupation'=>$occupation,
+            'dob'=>$dob,
+            'age'=>$age,
+            'sex'=>$sex,
+            'blood_group'=>$blood_group,
+            'phone'=>$phone,
+            'email'=>$email,
+            'address'=>$address
+            );
+            $this->db->trans_start();
+            if($donation_type=$this->input->post('donation_type')){
+                if($donation_type=="replacement"){
+                    $patient_name=$this->input->post('patient_name');
+                    $patient_ip=$this->input->post('ip_no');
+                    $patient_ward_unit=$this->input->post('ward_unit');
+                    $patient_blood_group=$this->input->post('patient_blood_group');
+                    $patient_data=array(
+                    'ip_number'=>$patient_ip,
+                    'name'=>$patient_name,
+                    'ward_unit'=>$patient_ward_unit,
+                    'blood_group'=>$patient_blood_group
+                    );                    
+                    $this->db->insert('bb_replacement_patient',$patient_data);
+                    $replacement_patient_id=$this->db->insert_id();
+                }		
+            }
+            $donor_id = $this->input->post('repeat_donor');
+            $this->db->where('donor_id', $this->input->post('donor_id'));
+            $this->db->update('blood_donor',$data);
+            
+            $data=array(
+                'donor_id'=>$donor_id,
+                'replacement_patient_id'=>$replacement_patient_id,
+                'status_id'=>1,
+                'camp_id'=>$camp_id,
+                'hospital_id'=>$hospital
+            );
+            $this->db->insert('bb_donation',$data);
+            $this->db->trans_complete();
+            if($this->db->trans_status()==FALSE){
+                    return false;
+            }
+            else{
+                    return true;
+            }
+        }
+        
 	function get_registered_donors(){
 		$args=func_get_args();
 		$place=$this->session->userdata('place');
@@ -100,7 +170,8 @@ class Register_model extends CI_Model{
 		->where('hospital_id',$hospital);
 		$query=$this->db->get();
 		return $query->result();
-	}
+	}// get_registered_donors
+
 	function get_appointments(){
 		$userdata=$this->session->userdata('hospital');
 		$hospital=$userdata['hospital_id'];
@@ -124,8 +195,8 @@ class Register_model extends CI_Model{
 		->where('hospital_id',$hospital);
 		$query=$this->db->get();
 		return $query->result();
-	}
-	
+	}//get_appointments
+
 	function register_donation($donor_id){
 
 		$userdata=$this->session->userdata('hospital');
@@ -142,7 +213,7 @@ class Register_model extends CI_Model{
 		return $donation_id;
 		}
 		else return FALSE;
-	}
+	}// register_donation
 		
 		
 	function get_checked_donors(){
@@ -284,22 +355,22 @@ class Register_model extends CI_Model{
 	*/
 	function get_donors(){
 		if($this->input->post('donor_id')){
-			$this->db->like('LOWER(blood_donor.donor_id)',strtolower($this->input->post('donor_id')));
+                    $this->db->like('LOWER(blood_donor.donor_id)',strtolower($this->input->post('donor_id')));
 		}
 		if($this->input->post('donor_name')){
-			$this->db->like('LOWER(blood_donor.name)',strtolower($this->input->post('donor_name')));
+                    $this->db->like('LOWER(blood_donor.name)',strtolower($this->input->post('donor_name')));
 		}
 		if($this->input->post('donor_email')){
-			$this->db->like('LOWER(blood_donor.email)',strtolower($this->input->post('donor_email')));
+                    $this->db->like('LOWER(blood_donor.email)',strtolower($this->input->post('donor_email')));
 		}
 		if($this->input->post('donor_mobile')){
-			$this->db->like('blood_donor.phone',$this->input->post('donor_mobile'));
+                    $this->db->like('blood_donor.phone',$this->input->post('donor_mobile'));
 		}
 		if($this->input->post('blood_group')){
-			$this->db->where('blood_donor.blood_group',$this->input->post('blood_group'));
+                    $this->db->where('blood_donor.blood_group',$this->input->post('blood_group'));
 		}
 		if($this->input->post('gender')){
-			$this->db->where('blood_donor.sex',$this->input->post('gender'));
+                    $this->db->where('blood_donor.sex',$this->input->post('gender'));
 		}
 		$this->db->select("donor_id, name, parent_spouse,
 		occupation,	
@@ -455,7 +526,7 @@ function make_request(){
 		);
                 $this->db->insert('patient',$data);
 		$patient_id=$this->db->insert_id();
-                $this->db->select('count')->from('counter')->where('counter_name',$form_type);
+                $this->db->select('count')->from('counter')->where('counter_name','OP');
 			$query=$this->db->get();
 			$result=$query->row();
 			$hospital_id = $this->input->post('hospital');
@@ -558,6 +629,21 @@ function make_request(){
         return $query->result_array();
         }
         else return false;
+    }
+    
+    function remove_donation($donation_id){
+        $this->db->trans_start();
+        $this->db->where('donation_id',$donation_id);
+        $this->db->where('status_id','1');
+	$this->db->update('bb_donation',array('status_id'=>'-1'));
+        $this->db->trans_complete();
+        if($this->db->trans_status()==TRUE){
+            return true;
+        }
+        else{
+            return false;
+        }
+        
     }
 		
 }
