@@ -170,6 +170,31 @@ class User_panel extends CI_Controller {
 			show_404();
 		}
 	}
+        function discard_summary(){     /*discard summary function*/
+        {
+	if(!$this->session->userdata('logged_in')){                                         
+		show_404();
+	}
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if ($access == 0) {
+                show_404();
+            }
+            $this->load->helper('form');
+		$this->data['title']="Discarded Blood";
+		$this->data['userdata']=$this->session->userdata('hospital');
+		$this->data['discard']=$this->reports_model->get_discard_inventory_detail();   /*model call in reports model*/
+		$this->load->view('templates/header',$this->data);                           /*loading header*/
+                $this->load->view('templates/reports_nav',$this->data);                     /*loading reports nav*/
+		$this->load->view('pages/bloodbank/discard_summary',$this->data);         /*loading page discard_summary in views*/
+                $this->load->view('templates/footer');		                         /*loading footer*/
+        }
+	
+	}
 	function appointment_bookings(){
 		if($this->session->userdata('logged_in')){
 		$this->load->helper('form');
@@ -225,7 +250,7 @@ class User_panel extends CI_Controller {
 			show_404();
 		}
 	}
-	function report_screening($staff=-1,$from_date=0,$to_date=0,$screened_by=-1,$offset=1){
+	function report_screening($staff=-1,$from_date=0,$to_date=0,$screened_by=-1,$offset=1){  
 		
 		if($this->session->userdata('logged_in')){
 		$this->data['userdata']=$this->session->userdata('logged_in');		
