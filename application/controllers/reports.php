@@ -120,6 +120,8 @@ class Reports extends CI_Controller {
 				$access=1;
 			}
 		}
+		
+		
 		if($access==1){
 			$this->data['title']="ICD 10 Summary Report";
 			$this->data['all_departments']=$this->staff_model->get_department();
@@ -129,6 +131,11 @@ class Reports extends CI_Controller {
 			$this->load->view('templates/header',$this->data);
 			$this->load->helper('form');
 			$this->data['report']=$this->reports_model->get_icd_summary();
+			
+			$this->data['icd_codes']=$this->masters_model->icd_code();  // retrives the values from the function icd_code in master model
+			$this->data['icd_chapters']=$this->masters_model->icd_chapter();	//retrives the values from the function icd_chapter	 in master model
+			$this->data['icd_blocks']=$this->masters_model->icd_block();      //retrives the values from the function icd_block  in master model
+			
 			$this->load->view('pages/icd_summary',$this->data);
 			$this->load->view('templates/footer');
 		}
