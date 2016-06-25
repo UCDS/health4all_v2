@@ -380,7 +380,7 @@ class User_panel extends CI_Controller {
 			show_404();
 		}
 	}
-         function discard_summary(){     /*discard summary function*/
+         function discard_summary($from_date=0,$to_date=0){     /*discard summary function*/
         {
 	if(!$this->session->userdata('logged_in')){                                         
 		show_404();
@@ -397,8 +397,10 @@ class User_panel extends CI_Controller {
             }
             $this->load->helper('form');
 		$this->data['title']="Discarded Blood";
+                $this->data['from_date']=$from_date;
+		$this->data['to_date']=$to_date;
 		$this->data['userdata']=$this->session->userdata('hospital');
-		$this->data['discard']=$this->reports_model->get_discard_inventory_detail();   /*model call in reports model*/
+		$this->data['discard']=$this->reports_model->get_discard_inventory_detail($from_date=0,$to_date=0);   /*model call in reports model*/
 		$this->load->view('templates/header',$this->data);                           /*loading header*/
                 $this->load->view('templates/reports_nav',$this->data);                     /*loading reports nav*/
 		$this->load->view('pages/bloodbank/discard_summary',$this->data);         /*loading page discard_summary in views*/
