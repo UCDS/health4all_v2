@@ -1,11 +1,7 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<script type="text/javascript"
- src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
- <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
-
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
@@ -66,7 +62,7 @@ $(function(){
 </script>
 <script>
 	$(function(){
-		$(".date").Zebra_DatePicker({
+		$("#from_date,#to_date").Zebra_DatePicker({
 			direction:false
 		});
 	});
@@ -74,11 +70,11 @@ $(function(){
 	<div class="col-md-10">
 <div class="col-md-10 col-sm-9">
 	<h4>Donors Report</h4>
-	<?php echo form_open('bloodbank/user_panel/blood_donors'); ?>
+	<?php echo form_open('bloodbank/user_panel/blood_donors', array('role'=>'form','class'=>'form-custom')); ?>
 	<div>
-                <input type="text" class="date" size="12" id="from_date" name="from_date" />
-		<input type="text" class="date" size="12" name="to_date" />
-		<select name="blood_group" style="width:50px;">
+        <input type="text" placeholder="From date" class="form-control" size="10" name="from_date" id="from_date" />
+		<input type="text" placeholder="To date" class="form-control" size="10" name="to_date" id="to_date" />
+		<select name="blood_group" class="form-control" style="width:100px;">
 			<option value="" selected disabled>----</option>
 			<option value="A+">A+</option>
 			<option value="B+">B+</option>
@@ -89,7 +85,7 @@ $(function(){
 			<option value="O-">O-</option>
 			<option value="AB-">AB-</option>
 		</select>
-		<input type="submit" name="submit" value="Search" />
+		<input type="submit" name="submit" class='btn btn-primary btn-md' value="Search" />
 	</div>
 	
 	

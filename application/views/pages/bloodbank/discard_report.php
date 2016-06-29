@@ -10,26 +10,12 @@
 <div class="col-md-10 col-sm-9">
 
 	<div>
-		<?php echo form_open('bloodbank/user_panel/discard_report'); ?>
+		<?php echo form_open('bloodbank/user_panel/discard_report', array('role'=>'form','class'=>'form-custom')); ?>
 		<div>
-		<div class="col-md-6">
-		<div class="input-group">
-		  <span class="input-group-addon" id="basic-addon1">From date </span>
-		  <input type="text" placeholder="From date" class="form-control"  name="from_date" id="from_date"   aria-describedby="basic-addon1" required>
-		</div>		
+			<input type="text" placeholder="From date" class="form-control" size="10" name="from_date" id="from_date" />
+			<input type="text" placeholder="To date" class="form-control" size="10" name="to_date" id="to_date" />
+			<input type="submit" name="submit" class='btn btn-primary btn-md' value="Search" />
 		</div>
-			<div class="col-md-6">
-		<div class="input-group">
-		  <span class="input-group-addon" id="basic-addon1">To date </span>
-		  <input type="text" placeholder="To date"  class="form-control" name="to_date" id="to_date"   aria-describedby="basic-addon1" required>
-		</div>		
-		</div>
-		<br><br><br>
-		    <div class="col-md-6 col-md-offset-5">
-			<input type="submit" value="Search" class="btn btn-primary" name="search" />
-			</div>
-		</div>
-		</form>
 			<?php
 	$search="";
 	$expired="";
