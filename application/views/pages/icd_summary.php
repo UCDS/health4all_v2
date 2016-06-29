@@ -1,24 +1,12 @@
-<link rel="stylesheet"
-	href="<?php echo base_url();?>assets/css/metallic.css">
-<link rel="stylesheet"
-	href="<?php echo base_url();?>assets/css/theme.default.css">
-
-<script type="text/javascript"
-	src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
-<script type="text/javascript"
-	src="<?php echo base_url();?>assets/js/table2CSV.js"></script>
-<script type="text/javascript"
-	src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
-
-<script type="text/javascript"
-	src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
-<script type="text/javascript"
-	src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
-<script type="text/javascript"
-	src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
-<link rel="stylesheet" type="text/css"
-	href="<?php echo base_url(); ?>assets/css/selectize.css">
-
+<link rel="stylesheet"href="<?php echo base_url();?>assets/css/metallic.css">
+<link rel="stylesheet"href="<?php echo base_url();?>assets/css/theme.default.css">
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/table2CSV.js"></script>
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
+<link rel="stylesheet" type="text/css"href="<?php echo base_url(); ?>assets/css/selectize.css">
 <style type="text/css">
 .selectize-control.repositories .selectize-dropdown>div {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
