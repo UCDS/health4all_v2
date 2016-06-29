@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <script type="text/javascript"
- src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+ src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>		<!--added java script code component filters for sorting the data.-->
  <script type="text/javascript"
  src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
  <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
@@ -75,10 +75,10 @@ $(function(){
 <div class="col-md-10 col-sm-9">
 
 	<div>
-		<?php echo form_open('bloodbank/user_panel/report_inventory'); ?>
+		<?php echo form_open('bloodbank/user_panel/report_inventory',array('role'=>'form','class'=>'form-custom'));?>			<!--changed the code for datepicker.-->
 		<div>
-			<input type="text" placeholder="From date" size="10" name="from_date" id="from_date" />
-			<input type="text" placeholder="To date" size="10" name="to_date" id="to_date" />
+			<input type="text" placeholder="From date" class= "form-control" size="12" name="from_date" id="from_date" />
+			<input type="text" placeholder="To date" size="12" class="form-control"name="to_date" id="to_date" />
 			<input type="text" placeholder="From Num" size="10" name="from_num" id="from_num" />
 			<input type="text" placeholder="To Num" size="10" name="to_num" id="to_num" />
 			<select name="camp">
@@ -90,6 +90,11 @@ $(function(){
 			</select>
 			<input type="submit" value="Search" name="search" />
 		</div>
+		<br/>
+		<button type="button" class="btn btn-default btn-md print">			<!--added the print button-->
+		  <span class="glyphicon glyphicon-print"></span> Print
+		</button>
+		<br/>
 		</form>
 		<?php
 		if(isset($msg)) {
