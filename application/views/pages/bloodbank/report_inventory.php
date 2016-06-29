@@ -1,8 +1,3 @@
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<script type="text/javascript"
- src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
- <script type="text/javascript"
- src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
  <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
@@ -75,22 +70,27 @@ $(function(){
 <div class="col-md-10 col-sm-9">
 
 	<div>
-		<?php echo form_open('bloodbank/user_panel/report_inventory'); ?>
+		<?php echo form_open('bloodbank/user_panel/report_inventory', array('role'=>'form','class'=>'form-custom')); ?>
 		<div>
-			<input type="text" placeholder="From date" size="10" name="from_date" id="from_date" />
-			<input type="text" placeholder="To date" size="10" name="to_date" id="to_date" />
-			<input type="text" placeholder="From Num" size="10" name="from_num" id="from_num" />
-			<input type="text" placeholder="To Num" size="10" name="to_num" id="to_num" />
-			<select name="camp">
+			<input type="text" placeholder="From date" class="form-control" size="10" name="from_date" id="from_date" />
+			<input type="text" placeholder="To date" class="form-control" size="10" name="to_date" id="to_date" />
+			<input type="text" placeholder="From Num" class="form-control" size="10" name="from_num" id="from_num" />
+			<input type="text" placeholder="To Num" class="form-control" size="10" name="to_num" id="to_num" />
+			<select name="camp" class="form-control">
 					<option value="" disabled selected>Location</option>
 					<?php foreach($camps as $c){
 						echo "<option value='$c->camp_id'>$c->camp_name</option>";
 					}
 					?>
 			</select>
-			<input type="submit" value="Search" name="search" />
+			<input type="submit" class='btn btn-primary btn-md' value="Search" name="search" />
 		</div>
 		</form>
+                <br/>
+                <button type="button" class="btn btn-default btn-md print">
+		  <span class="glyphicon glyphicon-print"></span> Print
+		</button>
+                <br/>
 		<?php
 		if(isset($msg)) {
 			echo $msg;

@@ -1,7 +1,4 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<script type="text/javascript"
- src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
- <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
@@ -73,18 +70,18 @@ $(function(){
 <div class="col-md-10 col-sm-9">
 
 	<div>
-		<?php echo form_open('bloodbank/user_panel/report_screening'); ?>
+		<?php echo form_open('bloodbank/user_panel/report_screening', array('role'=>'form','class'=>'form-custom')); ?>
 		<div>
-			<input type="text" placeholder="From date" size="10" name="from_date" id="from_date" />
-			<input type="text" placeholder="To date" size="10" name="to_date" id="to_date" />
-			<select name="screened_by">
+			<input type="text" placeholder="From date" size="10" class="form-control" name="from_date" id="from_date" />
+			<input type="text" placeholder="To date" size="10" class="form-control" name="to_date" id="to_date" />
+			<select name="screened_by" class="form-control">
 					<option value="" disabled selected>Done By</option>
 					<?php foreach($staff as $s){
 						echo "<option value='$s->staff_id'>$s->name</option>";
 					}
 					?>
 			</select>
-			<input type="submit" value="Search" name="search" />
+			<input type="submit" value="Search" class='btn btn-primary btn-md' name="search" />
 		</div>
 		</form>
 		<?php
