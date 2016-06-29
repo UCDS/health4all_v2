@@ -800,10 +800,34 @@ class Reports_model extends CI_Model{
 	     return false;	
 	   }
 	}
-        function get_discard_inventory_detail(){                /*Model function for discard summary*/                             
+        function get_discard_inventory_detail($from_date=0,$to_date=0){                /*Model function for discard summary*/                             
                   
 	$userdata=$this->session->userdata('hospital');         
-	$hospital=$userdata['hospital_id'];                       
+	$hospital=$userdata['hospital_id']; 
+        if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from=date('Y-m-d',strtotime($this->input->post('from_date')));
+			$to=date('Y-m-d',strtotime($this->input->post('to_date')));
+			$this->db->where("(DATE(blood_inventory.expiry_date) BETWEEN '$from' AND '$to')");
+		}
+		else if($this->input->post('from_date') || $this->input->post('to_date')){
+		 $this->input->post('from_date')==""?$date=date("Y-m-d",strtotime($this->input->post('to_date'))):$date=date("Y-m-d",strtotime($this->input->post('from_date')));
+		 $this->db->where('DATE(blood_inventory.expiry_date)',$date);
+		}
+		else if($from_date!="0" && $to_date!="0"){
+			$from_date=date('Y-m-d',strtotime($from_date));
+			$to_date=date('Y-m-d',strtotime($to_date));
+			$this->db->where("(DATE(blood_inventory.expiry_date) BETWEEN '$from_date' AND '$to_date')");
+		}
+		else if($from_date!="0" || $to_date!="0"){
+		 $from_date=="0"?$date=$to_date:$date=$from_date;
+		 $this->db->where('DATE(blood_inventory.expiry_date)',$date);
+		}
+		else{
+			$from=date('Y-m-d',strtotime('-30 Days'));
+			$to=date('Y-m-d');
+			$this->db->where("(donation_date BETWEEN '$from' AND '$to')");
+		 }
+       
 	$this->db->select("                                 
 		blood_group,
 		SUM(CASE WHEN component_type='PRP' THEN 1 ELSE 0 END) prp, 

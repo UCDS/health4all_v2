@@ -10,13 +10,50 @@
 		text-align:center;
 	}
 </style>
+<script type="text/javascript"
+ src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<script>
+	$(function(){
+		$(".date").Zebra_DatePicker({
+			direction:false
+		});
+	});
+</script>
 
 
 <div class="col-md-10 col-sm-9">  
 
 	<div>                                                     
-		<?php echo form_open('bloodbank/user_panel/discard_summary'); ?>      
-                  <h3> Summary of Discarded Blood </h3>   
+		<?php echo form_open('bloodbank/user_panel/discard_summary'); ?> 
+            <div>
+		<input type="text" class="date" size="12" id="from_date" name="from_date" />
+		<input type="text" class="date" size="12" name="to_date" />
+		<input type="submit" name="submit" value="Search" />
+	</div>
+	<br />
+	<?php
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from_date=date('d-M-Y',strtotime($this->input->post('from_date')));
+			$to_date=date('d-M-Y',strtotime($this->input->post('to_date')));
+		}
+		else if($this->input->post('from_date') || $this->input->post('to_date')){
+		 $this->input->post('from_date')==""?$from_date=date("d-M-Y",strtotime($this->input->post('to_date'))):$from_date=date("d-M-Y",strtotime($this->input->post('from_date')));
+		 $to_date=$from_date;
+		}
+		else if(!!$from_date && !!$to_date){
+			$from_date=date('d-M-Y',strtotime($from_date));
+			$to_date=date('d-M-Y',strtotime($to_date));
+		}
+		else if(!!$from_date || !!$to_date){
+		 $from_date=="0"?$from_date=$to_date:$to_date=$from_date;
+		}
+		else{
+			$from_date=date('d-M-Y',strtotime('-30 Days'));
+			$to_date=date('d-M-Y');
+		 }
+		
+?>
+                  <h2> Summary of Discarded Blood </h2>   
 		
 	<br />
 	
