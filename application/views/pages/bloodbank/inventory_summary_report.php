@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <script type="text/javascript"
- src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+ src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>		<!--added java script code component filters for sorting the data.-->
 <script>
 	$(function(){
 		$("#from_date,#to_date").Zebra_DatePicker({
@@ -11,9 +11,9 @@
 
 <div class="col-md-10 col-sm-9">
 	<h4>Screened Inventory at Gandhi Hospital</h4>
-	<?php echo form_open('bloodbank/user_panel/inventory_summary',array('role'=>'form','class'=>'form-custom'));?>
+	<?php echo form_open('bloodbank/user_panel/inventory_summary',array('role'=>'form','class'=>'form-custom'));?>		
 	<div>
-		<input type="text" placeholder="From date" class="form-control" size="12" name="from_date" />
+		<input type="text" placeholder="From date" class="form-control" size="12" name="from_date" />	<!--changed the code for datepicker.-->
 		<input type="text" placeholder="To date" class="form-control" size="12" name="to_date" />
 		<input type="submit" name="submit" value="Search" />
 	</div>

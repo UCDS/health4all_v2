@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <script type="text/javascript"
- src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+ src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>					<!--added java script code component filters for sorting the data.-->
  <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
@@ -85,7 +85,7 @@ $(function(){
 	<h4>Report of Blood Donors at Indian Red Cross Society Bloodbank - Vidyanagar</h4>
 	<?php echo form_open('bloodbank/user_panel/issue_summary',array('role'=>'form','class'=>'form-custom'));?>
 	<div>
-		<input type="text" placeholder= "From date" class="form-control" size="15" id="from_date" name="from_date" />
+		<input type="text" placeholder= "From date" class="form-control" size="15" id="from_date" name="from_date" />			<!--added java script code component filters for sorting the data.-->
 		<input type="text" placeholder="To date" class="form-control" size="15" id="to_date" name="to_date" />
 		<input type="submit" name="submit" value="Search" />
 	</div>
@@ -112,8 +112,8 @@ $(function(){
 		$date= "Issues in the last 30 days.";
 	 }
 	 ?>
-	 	<button type="button" class="btn btn-default btn-md print">
-		  <span class="glyphicon glyphicon-print"></span> Print
+	 	<button type="button" class="btn btn-default btn-md print">								<!--added the print button-->
+		  <span class="glyphicon glyphicon-print"></span> Print				
 		</button>
 	<table class="table table-bordered table-striped" id="table-sort">
 	<thead><th colspan="20">Blood Issue Report - <?php echo $date; ?></th>

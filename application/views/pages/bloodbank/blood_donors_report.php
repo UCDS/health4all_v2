@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >					<!--added java script code component filters for sorting the data.-->
 <script type="text/javascript"
  src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
  <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
@@ -74,7 +74,7 @@ $(function(){
 	<div class="col-md-10">
 <div class="col-md-10 col-sm-9">
 	<h4>Donors Report</h4>
-	<?php echo form_open('bloodbank/user_panel/blood_donors',array('role'=>'form','class'=>'form-custom')); ?>
+	<?php echo form_open('bloodbank/user_panel/blood_donors',array('role'=>'form','class'=>'form-custom')); ?>					<!--changed the code for datepicker.-->
 	<div>
                 <input type="text" class="form-control" placeholder="From date"  name="from_date" id="from_date" size="15" />
 		<input type="text" class="form-control" placeholder="To date" name="to_date" id="to_date" size="15"/>
@@ -92,8 +92,8 @@ $(function(){
 		<input type="submit" name="submit" value="Search" />
 	</div>
 	<br/>
-	<button type="button" class="btn btn-default btn-md print">
-		  <span class="glyphicon glyphicon-print"></span> Print
+	<button type="button" class="btn btn-default btn-md print">							<!-- added the print button -->
+		  <span class="glyphicon glyphicon-print"></span> Print				
 		</button>
 	
 	

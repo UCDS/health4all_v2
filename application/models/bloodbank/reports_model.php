@@ -580,8 +580,7 @@ class Reports_model extends CI_Model{
 		->join('bb_status i_status','blood_inventory.status_id=i_status.status_id')
 		->where('blood_inventory.status_id !=',10)
 	//	->where('bb_donation.hospital_id',$hospital)
-		->order_by('component_type, blood_inventory.expiry_date')
-		->limit(3000);
+		->order_by('component_type, blood_inventory.expiry_date');
 		$query=$this->db->get();
 		return $query->result();
 	}

@@ -1,6 +1,6 @@
  <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>		<!--added java script code component filters for sorting the data.-->
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
 
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
@@ -80,7 +80,7 @@ $(function(){
 <div class="col-md-10 col-sm-9">
 	
 	<h4>Report of Blood Donations at <?php echo $hospitaldata['hospital'];?></h4>
-	<?php echo form_open('bloodbank/user_panel/donation_summary',array('role'=>'form','class'=>'form-custom')); ?>
+	<?php echo form_open('bloodbank/user_panel/donation_summary',array('role'=>'form','class'=>'form-custom')); ?>		<!--changed the code for datepicker.-->
 	<div>
 		<input type="text"  class="form-control" placeholder="From date"  name="from_date" id="from_date" size="15" />
 		<input type="text" class="form-control" placeholder="To date"  name="to_date" id="to_date" size="15" />
@@ -109,7 +109,7 @@ $(function(){
 		$date= "Last 30 days donations recieved ";
 	 }
 	 ?>
-	 <button type="button" class="btn btn-default btn-md print">
+	 <button type="button" class="btn btn-default btn-md print">					<!-- added the print button -->
 		  <span class="glyphicon glyphicon-print"></span> Print
 		</button>
 	<table class="table-2 table table-striped table-bordered" id="table-sort">

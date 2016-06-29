@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <script type="text/javascript"
- src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+ src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>		<!--added java script code component filters for sorting the data.-->
  <script type="text/javascript"
  src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
  <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
@@ -64,7 +64,6 @@ $(function(){
 		  $('.print').click(function(){
 			$('#table-sort').trigger('printTable');
 		  });
-
 });
 </script>
 <script>
@@ -95,7 +94,7 @@ function printDiv(i)
 		<div>
 			
 		
-			<input type="text" class= "form-control"  name="from_date" placeholder="From date" id="from_date" size="15" />
+			<input type="text" class= "form-control"  name="from_date" placeholder="From date" id="from_date" size="15" /> <!-- changed the code for datepicker-->
 			<input type="text" class= "form-control" placeholder="To date" name="to_date" id="to_date" size="15" />
 			<select name="issued_by">
 					<option value="" disabled selected>Issued By</option>
@@ -107,7 +106,7 @@ function printDiv(i)
 			<input type="submit" value="Search" name="search" />
 		</div>
 		<br/>
-	<button type="button" class="btn btn-default btn-md print">
+	<button type="button" class="btn btn-default btn-md print">					<!--added the print button-->
 		  <span class="glyphicon glyphicon-print"></span> Print
 		</button>
 		

@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <script type="text/javascript"
  src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
- <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+ <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >					<!--added java script code component filters for sorting the data.-->
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
@@ -150,10 +150,10 @@ $(function(){
 <div class="col-md-10 col-sm-9">
 	
 	<h4>Report of Issues to hospitals by Indian Red Cross Society Bloodbank - Vidyanagar</h4>
-	<?php echo form_open('bloodbank/user_panel/hospital_issues',array('role'=>'form','class'=>'form-custom')); ?>
+	<?php echo form_open('bloodbank/user_panel/hospital_issues',array('role'=>'form','class'=>'form-custom')); ?>		
 	<div>
-		<input type="text" class="form-control" value="<?php $from_date=0; echo date("d-M-Y",strtotime($from_date)); ?>" name="from_date" id="from_date" size="15" />
-		<input type="text" class="form-control" value="<?php $to_date=0; echo date("d-M-Y",strtotime($to_date)); ?>" name="to_date" id="to_date" size="15" />
+		<input type="text" class="form-control" placeholder="From date" name="from_date" id="from_date" size="15" />			<!--added java script code component filters for sorting the data.-->
+		<input type="text" class="form-control"  placeholder="To date"name="to_date" id="to_date" size="15" />
 		<input type="submit" name="submit" value="Search" />
 	</div>
 	<br />
@@ -179,8 +179,8 @@ $(function(){
 		$date= "Last 30 days issues";
 	 }
 	 ?>
-	 <button type="button" class="btn btn-default btn-md print">
-		  <span class="glyphicon glyphicon-print"></span> Print
+	 <button type="button" class="btn btn-default btn-md print">					<!--added the print button-->
+		  <span class="glyphicon glyphicon-print"></span> Print				
 		</button>
 	<table class="table table-bordered table-striped" id="table-sort">
 	<thead><th colspan="20">Blood Issued to Hospitals - <?php echo $date; ?></th>
