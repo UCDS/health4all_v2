@@ -1,19 +1,117 @@
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<link rel="stylesheet"
+	href="<?php echo base_url();?>assets/css/metallic.css">
+<link rel="stylesheet"
+	href="<?php echo base_url();?>assets/css/theme.default.css">
+
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/table2CSV.js"></script>
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
+
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
+	
+	
+<link rel="stylesheet" type="text/css"
+	href="<?php echo base_url(); ?>assets/css/selectize.css">
+
+<style type="text/css">
+.selectize-control.repositories .selectize-dropdown>div {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.selectize-control.repositories .selectize-dropdown .by {
+	font-size: 11px;
+	opacity: 0.8;
+}
+
+.selectize-control.repositories .selectize-dropdown .by::before {
+	content: 'by ';
+}
+
+.selectize-control.repositories .selectize-dropdown .name {
+	font-weight: bold;
+	margin-right: 5px;
+}
+
+.selectize-control.repositories .selectize-dropdown .title {
+	display: block;
+}
+
+.selectize-control.repositories .selectize-dropdown .description {
+	font-size: 12px;
+	display: block;
+	color: #a0a0a0;
+	white-space: nowrap;
+	width: 100%;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.selectize-control.repositories .selectize-dropdown .meta {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	font-size: 10px;
+}
+
+.selectize-control.repositories .selectize-dropdown .meta li {
+	margin: 0;
+	padding: 0;
+	display: inline;
+	margin-right: 10px;
+}
+
+.selectize-control.repositories .selectize-dropdown .meta li span {
+	font-weight: bold;
+}
+
+.selectize-control.repositories::before {
+	-moz-transition: opacity 0.2s;
+	-webkit-transition: opacity 0.2s;
+	transition: opacity 0.2s;
+	content: ' ';
+	z-index: 2;
+	position: absolute;
+	display: block;
+	top: 12px;
+	right: 34px;
+	width: 16px;
+	height: 16px;
+	background: url(<?php echo base_url(); ?> assets /images/spinner.gif);
+	background-size: 16px 16px;
+	opacity: 0;
+}
+
+.selectize-control.repositories.loading::before {
+	opacity: 0.4;
+}
+</style>
+
+
+<!--  added selectize javascript for search box function -->
+
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/jquery.selectize.js"></script>
+
 <script type="text/javascript">
 $(function(){
 	$("#from_date,#to_date").Zebra_DatePicker();
+	$("#generate-csv").click(function(){
+		$(".table").table2CSV();
+	});
 		var options = {
 			widthFixed : true,
 			showProcessing: true,
 			headerTemplate : '{content} {icon}', // Add icon for jui theme; new in v2.7!
 
-			widgets: [ 'default', 'zebra', 'print', 'stickyHeaders','filter'],
+			widgets: [ 'default', 'zebra', 'print', 'stickyHeaders'],
 
 			widgetOptions: {
 
@@ -59,6 +157,10 @@ $(function(){
 		  $('.print').click(function(){
 			$('#table-sort').trigger('printTable');
 		  });
+		$('#icd_block').selectize({maxItems:20});   // maximum items(20) to display in serch box while typing
+                $('#icd_code').selectize({maxItems:20});
+                $('#icd_chapter').selectize({maxItems:20});
+		
 });
 </script>
 	<?php 
@@ -111,15 +213,72 @@ $(function(){
 						echo ">".$v->visit_name."</option>";
 					}
 					?>
-					</select>
+					</select>							
 					Visit Type : <select class="form-control" name="visit_type">
 									<option value="" >All</option>
 									<option value="OP" <?php if($visit_type == "OP") echo " selected ";?>>OP</option>
 									<option value="IP" <?php if($visit_type == "IP" || $visit_type != 'OP') echo " selected ";?>>IP</option>
-								</select>
+								</select>			
+								<br/><br/>
+								
+				<!--  added 3 divisions (search boxes)as ICD code, ICD chapter, ICD block -->	
+								
+				<div class="col-md-4 alt">
+       
+<!-- ICD codes selection column -->   
+		<select name="icd_code[]" id="icd_code"placeholder="Select ICD Codes.." >
+				<option value=""></option>
+						<?php
+						foreach ( $icd_codes as $icd_code ) {
+							echo "<option value='" . $icd_code->code_title . "'";
+							if ($this->input->post ( 'icd_code' ))
+								echo " selected ";
+							echo ">" . $icd_code->code_title . "</option>";
+						}
+						?>
+						</select>
+						</div>
+<!-- ICD chapter selection column	--> 
+						
+			<div class="col-md-4 alt">
+                            <select name="icd_chapter[]" id="icd_chapter" placeholder="Select ICD Chapter.."></div>
+				<option value=""></option>
+                                
+						<?php
+						foreach ( $icd_chapters as $icd_chapter ) {
+							echo "<option value='" . $icd_chapter->chapter_title . "'";
+							if ($this->input->post ( 'icd_chapter' ))
+								echo " selected ";
+							echo ">" . $icd_chapter->chapter_title . "</option>";
+						}
+						?>o
+						</select>
+</div>			
+
+<!--  ICD block selection column	-->  
+
+			<div class="col-md-4 alt">			
+			<select name="icd_block[]" id="icd_block"placeholder="Select ICD Block..">
+				<option value="">ICD Block</option>
+						<?php
+						foreach ( $icd_blocks as $icd_block ) {
+							echo "<option value='" . $icd_block->block_title . "'";
+							if ($this->input->post ( 'icd_block' ))
+								echo " selected ";
+							echo ">" . $icd_block->block_title . "</option>";
+						}
+						?>
+				</select>	
+				</div>
+	</div>
+
+
+	<center>
 					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
+</center>					
+					
 		</form>
-	<br />
+	<br /><br /><br /><br /><br />
 	<?php if(isset($report) && count($report)>0){ ?>
 	
 		<button type="button" class="btn btn-default btn-md print">
@@ -216,3 +375,4 @@ $(function(){
 	No patient registrations on the given date.
 	<?php } ?>
 	</div>
+
