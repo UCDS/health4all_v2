@@ -770,23 +770,26 @@ class Masters_model extends CI_Model{
 	
 }
 
-function icd_code(){
-		$this->db->select("*")->from("icd_code")->order_by('icd_code');		
-		$query=$this->db->get();
-		return $query->result();
-	}
+
+function get_transactions(){
+    $this->db->select('hr_transaction.hr_transaction_date, hr_transaction_type.hr_transaction_type')
+    ->from('hr_transaction')
+    ->join('hr_transaction_type', 'hr_transaction.hr_transaction_type_id=hr_transaction_type.hr_transaction_type_id', 'left')
+    ->where('hr_transaction.staff_id', $this->input->post('staff_id'));
+    $query=$this->db->get();
+   
+    return $query->result();
+}
+
+function get_designation(){
+	$this->db->select('DISTINCT(designation)')
+	->from('staff');
+	$query=$this->db->get();
 	
-function icd_chapter(){
-		$this->db->select("*")->from("icd_chapter")->order_by('chapter_id');		
-		$query=$this->db->get();
-		return $query->result();
-	}
-	function icd_block(){
-		$this->db->select("*")->from("icd_block")->order_by('block_id');		
-		$query=$this->db->get();
-		return $query->result();
-	}
-	
+	return $query->result();
+
+}
+
 
 function update_data($type){
 	if($type=="drugs"){
@@ -1897,6 +1900,26 @@ else if($type=="dosage"){
 		}
 		else return true;
    }
+   
+   
+function icd_code(){
+		$this->db->select("*")->from("icd_code")->order_by('icd_code');		
+		$query=$this->db->get();
+		return $query->result();
+	}
+	
+function icd_chapter(){
+		$this->db->select("*")->from("icd_chapter")->order_by('chapter_id');		
+		$query=$this->db->get();
+		return $query->result();
+	}
+	function icd_block(){
+		$this->db->select("*")->from("icd_block")->order_by('block_id');		
+		$query=$this->db->get();
+		return $query->result();
+	}
+	
+
 
 }
 ?>
