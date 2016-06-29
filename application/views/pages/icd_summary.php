@@ -1,13 +1,105 @@
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<link rel="stylesheet"
+	href="<?php echo base_url();?>assets/css/metallic.css">
+<link rel="stylesheet"
+	href="<?php echo base_url();?>assets/css/theme.default.css">
+
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/table2CSV.js"></script>
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
+
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="<?php echo base_url(); ?>assets/css/selectize.css">
+
+<style type="text/css">
+.selectize-control.repositories .selectize-dropdown>div {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.selectize-control.repositories .selectize-dropdown .by {
+	font-size: 11px;
+	opacity: 0.8;
+}
+
+.selectize-control.repositories .selectize-dropdown .by::before {
+	content: 'by ';
+}
+
+.selectize-control.repositories .selectize-dropdown .name {
+	font-weight: bold;
+	margin-right: 5px;
+}
+
+.selectize-control.repositories .selectize-dropdown .title {
+	display: block;
+}
+
+.selectize-control.repositories .selectize-dropdown .description {
+	font-size: 12px;
+	display: block;
+	color: #a0a0a0;
+	white-space: nowrap;
+	width: 100%;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.selectize-control.repositories .selectize-dropdown .meta {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	font-size: 10px;
+}
+
+.selectize-control.repositories .selectize-dropdown .meta li {
+	margin: 0;
+	padding: 0;
+	display: inline;
+	margin-right: 10px;
+}
+
+.selectize-control.repositories .selectize-dropdown .meta li span {
+	font-weight: bold;
+}
+
+.selectize-control.repositories::before {
+	-moz-transition: opacity 0.2s;
+	-webkit-transition: opacity 0.2s;
+	transition: opacity 0.2s;
+	content: ' ';
+	z-index: 2;
+	position: absolute;
+	display: block;
+	top: 12px;
+	right: 34px;
+	width: 16px;
+	height: 16px;
+	background: url(<?php echo base_url(); ?> assets /images/spinner.gif);
+	background-size: 16px 16px;
+	opacity: 0;
+}
+
+.selectize-control.repositories.loading::before {
+	opacity: 0.4;
+}
+</style>
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/jquery.selectize.js"></script>
+
 <script type="text/javascript">
 $(function(){
 	$("#from_date,#to_date").Zebra_DatePicker();
+	$("#generate-csv").click(function(){
+		$(".table").table2CSV();
+	});
 		var options = {
 			widthFixed : true,
 			showProcessing: true,
@@ -59,6 +151,10 @@ $(function(){
 		  $('.print').click(function(){
 			$('#table-sort').trigger('printTable');
 		  });
+		$('#icd_block').selectize({maxItems:20});
+                $('#icd_code').selectize({maxItems:20});
+                $('#icd_chapter').selectize({maxItems:20});
+		
 });
 </script>
 	<?php 
@@ -116,10 +212,116 @@ $(function(){
 									<option value="" >All</option>
 									<option value="OP" <?php if($visit_type == "OP") echo " selected ";?>>OP</option>
 									<option value="IP" <?php if($visit_type == "IP" || $visit_type != 'OP') echo " selected ";?>>IP</option>
-								</select>
+								</select>			
+								<br/><br/>
+								
+				<div class="col-md-4 alt">
+                                    
+                                    <select name="icd_code[]" id="icd_code"placeholder="Select ICD Codes.." >
+				<option value="">ICD Codes</option>
+						<?php
+						foreach ( $icd_codes as $icd_code ) {
+							echo "<option value='" . $icd_code->code_title . "'";
+							if ($this->input->post ( 'icd_code' )  && in_array ( $icd_code->code_title, $this->input->post ( 'code_title' ) ))
+								echo " selected ";
+							echo ">" . $icd_code->code_title . "</option>";
+						}
+						?>
+						</select>
+				</div>
+			<div class="col-md-4 alt">
+                            <select name="icd_chapter[]" id="icd_chapter" placeholder="Select ICD Chapter.."></div>
+				<option value="">ICD Chapter</option>
+                                
+						<?php
+						foreach ( $icd_chapters as $icd_chapter ) {
+							echo "<option value='" . $icd_chapter->chapter_title . "'";
+							if ($this->input->post ( 'icd_chapter' )&& in_array ( $icd_chapter->chapter_title, $this->input->post ( 'chapter_title' ) ))
+								echo " selected ";
+							echo ">" . $icd_chapter->chapter_title . "</option>";
+						}
+						?>o
+						</select>
+                        </div>
+
+			<div class="col-md-4 alt">			
+			<select name="icd_block[]" id="icd_block"placeholder="Select ICD Block..">
+				<option value="">ICD Block</option>
+						<?php
+						foreach ( $icd_blocks as $icd_block ) {
+							echo "<option value='" . $icd_block->block_title . "'";
+							if ($this->input->post ( 'icd_block' )&& in_array ( $icd_block->block_title, $this->input->post ( 'block_title' ) ))
+								echo " selected ";
+							echo ">" . $icd_block->block_title . "</option>";
+						}
+						?>
+				</select>	
+			</div>
+</div>
+<script>
+	$(function(){
+		selectize = $("#icd_block")[0].selectize;
+		selectize.on('change',function(){
+			var test = selectize.getOption(selectize.getValue());
+			console.log(test);
+		});
+		$i=1;
+		$("#prescription_add").click(function(){
+			$row = '<tr class="prescription">'+
+                                                                '<td>'+
+								'<select name="drug_'+$i+'" class="form-control">'+
+								'<option value="">--Select--</option>'+
+								'<?php foreach($drugs as $drug){ echo '<option value="'.$drug->item_id.'">'.$drug->item_name.'</option>';}?>'+
+								'</select>'+
+							'</td>'+
+							
+						'</tr>';
+			$i++;
+			$(".prescription").parent().append($row);
+		});
+	});
+	$('#icd_block').selectize({
+    valueField: 'icd_block',
+    labelField: 'block_title',
+    searchField: 'block_title',
+    create: false,
+    render: {
+        option: function(item, escape) {
+
+            return '<div>' +
+                '<span class="title">' +
+                    '<span class="icd_code">' + escape(item.block_title) + '</span>' +
+                '</span>' +
+            '</div>';
+        }
+    },
+    load: function(query, callback) {
+        if (!query.length) return callback();
+		$.ajax({
+            url: '<?php echo base_url();?>register/search_icd_blocks',
+            type: 'POST',
+			dataType : 'JSON',
+			data : {query:query},
+            error: function(res) {
+                callback();
+            },
+            success: function(res) {
+                callback(res.icd_blocks.slice(0, 10));
+            }
+        });
+    }
+	});
+</script>
+
+
+
+
+	<center>
 					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
+</center>					
+					
 		</form>
-	<br />
+	<br /><br /><br /><br /><br />
 	<?php if(isset($report) && count($report)>0){ ?>
 	
 		<button type="button" class="btn btn-default btn-md print">
