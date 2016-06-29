@@ -344,7 +344,7 @@ $(function(){
 		</button>
 		<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
-	<th>S.No</th><th>equipment type</th><th>Call Date </th><th>Call Time</th><th>Call Information Type</th><th>Call Information</th><th>Vendor</th><th>Contact Person</th><th>Service Person Remarks</th>
+	<th>S.No</th><th>Equipment type</th><th>Call Date </th><th>Call Time</th><th>Call Information Type</th><th>Call Information</th><th>Vendor</th><th>Contact Person</th><th>Service Person Remarks</th>
 	<th>Service Date</th><th>Service Time</th><th>Problem Status</th><th>Working Status</th></thead>
 	<tbody>
 	<?php 

@@ -41,7 +41,7 @@
 			//Loop through the session data to check if the user has access to each function and only display those.
 			foreach($functions as $f){
 					//Check if the user has access to Out Patient Registration forms or In Patient Registration forms 
-					if($f->user_function=="Out Patient Registration" || $f->user_function=="In Patient Registration" || $f->user_function == "View Patients"){ 
+					if($f->user_function=="Out Patient Registration" || $f->user_function=="In Patient Registration" || $f->user_function == "View Patients" || $f->user_function == "Update Patients"){ 
 					// If they do, display dropdown menu which will contain all the links to the forms. ?>
 						<li class="dropdown  <?php if(preg_match("^".base_url()."register^",current_url())){ echo "active";}?>">
 									<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><i class="fa fa-user"></i> Patients <b class="caret"></b></a>
@@ -165,6 +165,7 @@
 						} 
 					} 
 				?> 
+                                 
 			<?php foreach($functions as $f){
 					if($f->user_function=="Equipment" || $f->user_function=="Consumables" || $f->user_function=="HR" || $f->user_function=="Vendor"){ ?>
 			<li class="dropdown  <?php if(preg_match("^".base_url()."inventory^",current_url())){ echo "active";}?>">
@@ -210,7 +211,7 @@
 						} 
 					} 
 				?> 
-
+                              
 			<?php 
 			foreach($functions as $f){
 					if($f->user_function=="OP Summary" || $f->user_function=="IP Summary" || 
@@ -289,11 +290,17 @@
 				}  
 			}
 			?>
-			</li>
-			<li class=" <?php if(preg_match("^".base_url()."help^",current_url())) echo "active";?>"><a href="<?php echo base_url()."help";?>" ><i class="fa fa-question"></i> Help</a></li>
-
-
-
+                        		<li class="dropdown  <?php if(preg_match("^".base_url()."help^",current_url())){ echo "active";}?>">
+						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><i class="fa fa-question"></i> Help <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+			                        			<li><a href="<?php echo base_url()."issue_tracker";?>"><i class="fa fa-phone"> </i> Issue Tracker</a></li>
+                                                                        <li><a href="<?php echo base_url()."contact_us";?>"><i class="fa fa-question"> </i> Contact us</a></li>
+						
+                                              </ul>
+					</li>
+					
+			
+                       
 			<?php } ?>
 					
 		</ul>

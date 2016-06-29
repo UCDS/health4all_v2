@@ -6,9 +6,7 @@ class User_panel extends CI_Controller {
 		$this->load->model('bloodbank/reports_model');		
 		$this->load->model('bloodbank/register_model');	
         $this->load->model('bloodbank/inventory_model');		
-		$this->load->model('staff_model');
-        $this->load->library('pagination');
-		$this->load->library('table');		
+		$this->load->model('staff_model');	
 		if($this->session->userdata('logged_in')){
 		$userdata=$this->session->userdata('logged_in');
 		$user_id=$userdata['user_id'];
@@ -186,7 +184,7 @@ class User_panel extends CI_Controller {
 		}
 	}
 
-	function report_donations($camp="t",$blood_group=0,$sex=0,$donation_date=0,$from_date=0,$to_date=0,$from_num=0,$to_num=0){
+	function report_donations($camp="t",$blood_group=0,$sex=0,$donation_date=0,$from_date=0,$to_date=0){
 		if($this->session->userdata('logged_in')){
 		$this->load->helper('form');
 		$this->data['title']="Donations detailed report";
@@ -194,9 +192,7 @@ class User_panel extends CI_Controller {
 		$this->data['camps']=$this->register_model->get_camps();
 		$this->data['from_date']=$from_date;
 		$this->data['to_date']=$to_date;
-		$this->data['from_num']=$from_num;
-		$this->data['to_num']=$to_num;
-		$this->data['donated']=$this->reports_model->get_donated_blood($camp,$blood_group,$sex,$donation_date,$from_date,$to_date,$from_num=0,$to_num=0);
+		$this->data['donated']=$this->reports_model->get_donated_blood($camp,$blood_group,$sex,$donation_date,$from_date,$to_date);
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/reports_nav',$this->data);
 		$this->load->view('pages/bloodbank/report_donations',$this->data);
@@ -206,16 +202,12 @@ class User_panel extends CI_Controller {
 			show_404();
 		}
 	}
-	function report_inventory($blood_group=0,$component_type=0,$from_date=0,$to_date=0,$from_num=0,$to_num=0){
+	function report_inventory($blood_group=0,$component_type=0){
 		if($this->session->userdata('logged_in')){
 		$this->load->helper('form');
 		$this->data['title']="Inventory detailed report";
 		$this->data['userdata']=$this->session->userdata('logged_in');
-		$this->data['from_date']=$from_date;
-		$this->data['to_date']=$to_date;
-		$this->data['from_num']=$from_num;
-		$this->data['to_num']=$to_num;
-		$this->data['inventory']=$this->reports_model->get_inventory($blood_group,$component_type,$from_date=0,$to_date=0,$from_num=0,$to_num=0);
+		$this->data['inventory']=$this->reports_model->get_inventory($blood_group,$component_type);
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/reports_nav',$this->data);
 		$this->load->view('pages/bloodbank/report_inventory',$this->data);
@@ -225,44 +217,13 @@ class User_panel extends CI_Controller {
 			show_404();
 		}
 	}
-	function report_screening($staff=-1,$from_date=0,$to_date=0,$screened_by=-1,$offset=1){
-		
+	function report_screening(){
 		if($this->session->userdata('logged_in')){
-		$this->data['userdata']=$this->session->userdata('logged_in');		
-	  if($from_date == 0 && $to_date==0) {$from_date=date('Y-m-d',strtotime('-90 Days'));$to_date=date('Y-m-d');}
 		$this->load->helper('form');
-		$this->data['title']="User Panel";
 		$this->data['staff']=$this->staff_model->staff_list();
-		$this->load->helper('form');
-		$this->load->library('form_validation');
-		$screening_result = $this->reports_model->get_screened_blood($staff,$from_date,$to_date,$screened_by,$offset);
-		//To get total records
-		$this->data['screened']= $screening_result['result'];
-		$this->form_validation->set_rules('from_date', 'From Date',
-		'trim|required|xss_clean');
-	    $this->form_validation->set_rules('to_date', 'To Date', 
-	    'trim|required|xss_clean');
-		if($this->input->post('staff')) $department=$this->input->post('staff');
-		if($this->input->post('from_date')) $from_date=date("Y-m-d",strtotime($this->input->post('from_date')));		
-		if($this->input->post('to_date')) $to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
-		if($this->input->post('screened_by')) $screened_by=$this->input->post('screened_by');
-		$limit=500;
-		$num_links=7/2;
-		//To Get Number of records total count 
-		$counttotal= $screening_result['rows'];
-		$search=$this->input->post('search');
-		 $this->data['from_date']=$from_date;
-		$this->data['to_date']=$to_date;
-			$uri_segment=8;
-			$offset= $this->uri->segment(8);
-			if(!$offset)
-				$offset = 1;
-		$base_url = base_url()."bloodbank/user_panel/report_screening/"."$staff/$from_date/$to_date/$screened_by/";
-		$this->pagination_string($offset,$base_url,$counttotal,$limit,$uri_segment,$num_links);
-		$this->data['initial'] = ($offset-1)*$limit+1;
-		$this->data['offset']=$offset;
-		$this->data['counttotal']=$counttotal;
-		$this->data['limit']=$limit;
+		$this->data['title']="User Panel";
+		$this->data['userdata']=$this->session->userdata('logged_in');
+		$this->data['screened']=$this->reports_model->get_screened_blood();
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/reports_nav',$this->data);
 		$this->load->view('pages/bloodbank/report_screening',$this->data);
@@ -271,34 +232,7 @@ class User_panel extends CI_Controller {
 		else{
 			show_404();
 		}
-		}
-		// To implement Pagination Function separately 
-		private function pagination_string($offset,$base_url,$counttotal,$limit,$uri_segment,$num_links)
-		{
-		$config = array();
-		$page_url=$config['base_url'] = $base_url;
-		$counttotal=$counttotal;
-		$config['total_rows'] = $counttotal;
-		$config['per_page'] = $limit;
-		$config['uri_segment'] = $uri_segment;
-		$config['use_page_numbers'] = TRUE;
-		$config['num_links'] =$num_links;
-		$config['cur_tag_open'] = '&nbsp;<a class="current" href="'.$page_url.'">';
-        $config['cur_tag_close'] = '</a>';
-		$config['next_link'] = 'Next';
-        $config['prev_link'] = 'Previous';
-		 $this->pagination->initialize($config);
-		 if($offset){
-        $page = ($offset) ;
-          }
-        else{
-			
-               $page = $limit;
-			
-        }
-		$str_links = $this->pagination->create_links();
-		$this->data['page1'] = explode('&nbsp;',$str_links );
-		}
+	}
 	function report_issue($issue_date=0,$blood_group=0,$from_date=0,$to_date=0,$hospital=0){
 		if($this->session->userdata('logged_in')){
 		$this->load->helper('form');
@@ -379,5 +313,31 @@ class User_panel extends CI_Controller {
 		else{
 			show_404();
 		}
+	}
+         function discard_summary(){     /*discard summary function*/
+        {
+	if(!$this->session->userdata('logged_in')){                                         
+		show_404();
+                
+        }
+	$this->data['userdata']=$this->session->userdata('logged_in');
+	foreach ($this->data['functions'] as $f ){
+		if($f->user_function=="Bloodbank"){
+		$access=1;
+		}		
+		}
+		if ($access == 0) {
+                show_404();
+            }
+            $this->load->helper('form');
+		$this->data['title']="Discarded Blood";
+		$this->data['userdata']=$this->session->userdata('hospital');
+		$this->data['discard']=$this->reports_model->get_discard_inventory_detail();   /*model call in reports model*/
+		$this->load->view('templates/header',$this->data);                           /*loading header*/
+                $this->load->view('templates/reports_nav',$this->data);                     /*loading reports nav*/
+		$this->load->view('pages/bloodbank/discard_summary',$this->data);         /*loading page discard_summary in views*/
+                $this->load->view('templates/footer');		                         /*loading footer*/
+        }
+	
 	}
 }
