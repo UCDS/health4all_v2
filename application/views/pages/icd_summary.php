@@ -139,7 +139,7 @@ $(function(){
 		  $('.print').click(function(){
 			$('#table-sort').trigger('printTable');
 		  });
-		$('#icd_block').selectize({maxItems:20});
+				$('#icd_block').selectize({maxItems:20});
                 $('#icd_code').selectize({maxItems:20});
                 $('#icd_chapter').selectize({maxItems:20});
 		
@@ -204,8 +204,7 @@ $(function(){
 								<br/><br/>
 								
 				<div class="col-md-4 alt">
-                                    
-                                    <select name="icd_code[]" id="icd_code"placeholder="Select ICD Codes.." >
+                <select name="icd_code[]" id="icd_code"placeholder="Select ICD Codes.." >
 				<option value="">ICD Codes</option>
 						<?php
 						foreach ( $icd_codes as $icd_code ) {
@@ -218,9 +217,8 @@ $(function(){
 						</select>
 				</div>
 			<div class="col-md-4 alt">
-                            <select name="icd_chapter[]" id="icd_chapter" placeholder="Select ICD Chapter.."></div>
-				<option value="">ICD Chapter</option>
-                                
+            <select name="icd_chapter[]" id="icd_chapter" placeholder="Select ICD Chapter.."></div>
+			<option value="">ICD Chapter</option>
 						<?php
 						foreach ( $icd_chapters as $icd_chapter ) {
 							echo "<option value='" . $icd_chapter->chapter_title . "'";

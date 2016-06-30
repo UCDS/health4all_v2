@@ -1899,15 +1899,7 @@ else if($type=="dosage"){
 			return false;
 		}
 		else return true;
-   }
-   
-   
-function icd_code(){
-		$this->db->select("*")->from("icd_code")->order_by('icd_code');		
-		$query=$this->db->get();
-		return $query->result();
-	}
-	
+   } 	
 function icd_chapter(){
 		$this->db->select("*")->from("icd_chapter")->order_by('chapter_id');		
 		$query=$this->db->get();
@@ -1918,8 +1910,10 @@ function icd_chapter(){
 		$query=$this->db->get();
 		return $query->result();
 	}
-	
-
-
+	function icd_code(){
+		$this->db->select("*")->from("icd_code")->order_by('icd_code');		
+		$query=$this->db->get();
+		return $query->result();
+	}
 }
 ?>

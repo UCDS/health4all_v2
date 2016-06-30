@@ -129,11 +129,11 @@ class Reports extends CI_Controller {
 			$this->load->view('templates/header',$this->data);
 			$this->load->helper('form');
 			$this->data['report']=$this->reports_model->get_icd_summary();
+			$this->load->view('pages/icd_summary',$this->data);
+			$this->load->view('templates/footer');
 			$this->data['icd_codes']=$this->masters_model->icd_code();
 			$this->data['icd_chapters']=$this->masters_model->icd_chapter();			
 			$this->data['icd_blocks']=$this->masters_model->icd_block();
-			$this->load->view('pages/icd_summary',$this->data);
-			$this->load->view('templates/footer');
 		}
 		else{
 		show_404();
