@@ -628,7 +628,7 @@ class Reports_model extends CI_Model{
 	}
 	
 	/* get_issues() : Generate the report of the issues made in a given period of time. Defaults to last 10 days. */
-
+        // user panel controller is calling this method
 	function get_issues($issue_date,$blood_group,$from_date,$to_date,$hospital=0){
 
 	//	$userdata=$this->session->userdata('hospital');
@@ -674,7 +674,7 @@ class Reports_model extends CI_Model{
 			$blood_group=str_replace("neg","-",$blood_group);
 			$this->db->where('blood_donor.blood_group',$blood_group);
 		}
-		$this->db->select('blood_donor.donor_id,blood_donor.blood_group,blood_donor.sub_group,blood_request.diagnosis,donation_date,blood_issue.issue_id, issue_date,issue_time,request_type,patient.first_name,patient.last_name,blood_request.patient_name, bb_donation.blood_unit_num, bb_donation.segment_num, blood_inventory.component_type, blood_inventory.volume, blood_request.blood_group "recipient_group", 
+		$this->db->select('blood_donor.donor_id,blood_donor.name,blood_donor.blood_group,blood_donor.sub_group,patient.address,blood_request.diagnosis,donation_date,blood_issue.issue_id, issue_date,issue_time,request_type,patient.first_name,patient.last_name,blood_request.patient_name, bb_donation.blood_unit_num, bb_donation.segment_num, blood_inventory.component_type, blood_inventory.volume, blood_request.blood_group as recipient_blood_group, issued_staff_name, cross_matched_staff_name, patient_visit.final_diagnosis,
 		(CASE WHEN out_hosptial.hospital_id !="" THEN out_hosptial.hospital_id ELSE in_hosptial.hospital_id END) as hosptial_id,
 		(CASE WHEN out_hosptial.hospital_id !="" THEN out_hosptial.hospital ELSE in_hosptial.hospital END) as hosptial,
 		 issued_staff_name, cross_matched_staff_name, patient_visit.final_diagnosis,
