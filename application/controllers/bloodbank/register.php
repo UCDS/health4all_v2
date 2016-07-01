@@ -576,5 +576,41 @@ function search_patients(){
         $this->load->view('pages/bloodbank/registered_donors',$this->data);
         $this->load->view('templates/footer');
     }
-
+    
+    /* Controller for deleting donor from bleeding*/
+    function delete_donor_from_bleeding($donor_id=0){
+        if(!$this->session->userdata('logged_in')){
+            show_404();
+        }
+       $this->data['userdata']=$this->session->userdata('logged_in');
+       foreach ($this->data['functions'] as $f ){
+            if($f->user_function=="Bloodbank"){
+                $access=1;
+            }		
+        }
+        if($access==0){
+            show_404();
+        }
+        $this->data['userdata']=$this->session->userdata('hospital');
+        $this->load->helper('form');
+        $this->load->library('form_validation');
+        if($donor_id!=0 && $donor_id!='0'){
+            $this->register_model->remove_donation_from_bleeding($donor_id); //calling this method from resiter model.
+        }
+        else{
+            if($this->register_model->remove_donation_from_bleeding($donor_id)){
+                $this->data['msg']="<font color='green'>Cancelled successfully.</font>";
+            }
+            else{
+                $this->data['msg']="<font color='green'>Cancellation failed</font>";
+            }
+        }
+        $this->data['title']="Donors waiting:";
+        $this->load->view('templates/header',$this->data);
+        $this->load->view('templates/panel_nav',$this->data);
+        $donors=$this->register_model->get_checked_donors();
+        $this->data['donors']=$donors;
+        $this->load->view('pages/bloodbank/bleeding',$this->data);
+        $this->load->view('templates/footer');
+    }
 }
