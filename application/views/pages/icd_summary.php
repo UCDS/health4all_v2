@@ -1,24 +1,12 @@
-<link rel="stylesheet"
-	href="<?php echo base_url();?>assets/css/metallic.css">
-<link rel="stylesheet"
-	href="<?php echo base_url();?>assets/css/theme.default.css">
-
-<script type="text/javascript"
-	src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
-<script type="text/javascript"
-	src="<?php echo base_url();?>assets/js/table2CSV.js"></script>
-<script type="text/javascript"
-	src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
-
-<script type="text/javascript"
-	src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
-<script type="text/javascript"
-	src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
-<script type="text/javascript"
-	src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
-<link rel="stylesheet" type="text/css"
-	href="<?php echo base_url(); ?>assets/css/selectize.css">
-
+<link rel="stylesheet"href="<?php echo base_url();?>assets/css/metallic.css">
+<link rel="stylesheet"href="<?php echo base_url();?>assets/css/theme.default.css">
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/table2CSV.js"></script>
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
+<link rel="stylesheet" type="text/css"href="<?php echo base_url(); ?>assets/css/selectize.css">
 <style type="text/css">
 .selectize-control.repositories .selectize-dropdown>div {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -258,9 +246,6 @@ $(function(){
 				</select>	
 			</div>
 </div>
-
-
-
 <script>
 		var $year=$("#year").val();
 		var $visit_type=$("#visit_type").val();
@@ -327,9 +312,6 @@ $(function(){
     }
 	});
 </script>
-
-
-
 <script>
 	$(function(){
 		selectize = $("#icd_block")[0].selectize;
@@ -353,9 +335,9 @@ $(function(){
 		});
 	});
 	$('#icd_block').selectize({
-    valueField: 'icd_block',
-    labelField: 'block_title',
-    searchField: 'block_title',
+    valueField: 'icd_block''icd_code''icd_chapter',
+    labelField: 'block_title','chapter_title','chapter_title',
+    searchField: 'block_title','chapter_title','chapter_title',
     create: false,
     render: {
         option: function(item, escape) {
@@ -384,11 +366,7 @@ $(function(){
     }
 	});
 </script>
-
-
-
-
-	<center>
+<center>
 					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
 </center>					
 					
