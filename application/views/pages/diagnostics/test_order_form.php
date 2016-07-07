@@ -107,7 +107,7 @@
 		<?php } ?>
 		<div class="col-md-6 pull-right">
 			<label>Order Date-Time</label> <input class="form-control date" name="order_date" value="<?php echo date("d-M-Y");?>" size="10" />
-			<input class="form-control time" name="order_time" value="<?php echo date("g:ia");?>"  size="5" /> 
+			<input class="form-control time" name="order_time" id="order_time" value="<?php echo date("g:ia");?>"  size="5" /> 
 		</div>
 	</div>
 	</div>
@@ -137,7 +137,7 @@
 		<div class="col-md-12">
 		<div class="col-md-6">
 			<label>Specimen Type</label>
-			<select class="form-control" name="specimen_type" required>
+			<select id="specimen_type"class="form-control" name="specimen_type" required>
 				<option value="" selected disabled>Select</option>
 				<?php foreach($specimen_types as $specimen){ ?>
 					<option value="<?php echo $specimen->specimen_type_id;?>"><?php echo $specimen->specimen_type;?></option>
@@ -146,7 +146,7 @@
 		</div>
 		<div class="col-md-6">
 			<label>Source</label><!--creating a label for the new field specimen_source-->
-			<input type="text" placeholder="Specimen source" class="form-control" name="specimen_source" />
+			<input type="text" id="specimen_source" placeholder="Specimen source" class="form-control" name="specimen_source" />
 		</div>
 		</div>
 		<!--creating the input field for the specimen_source-->
@@ -155,11 +155,11 @@
 		<div class="col-md-12">
 		<div class="col-md-6">
 		<label>Sample ID<font color='red'>*</font></label>
-			<input type="text" placeholder="Sample ID" name="sample_id" class="form-control" required />
+			<input type="text" placeholder="Sample ID" id="barcode" name="sample_id" class="form-control" size="27" required />
 		</div>
 		<div class="col-md-6">
 			<label>Container Type</label>
-			<input type="text" placeholder="Sample Container Type" name="sample_container" class="form-control" />
+			<input type="text" placeholder="Sample Container Type" id="container_type" name="sample_container" class="form-control" />
 		</div>
 		</div>	
 		<hr>
@@ -320,4 +320,69 @@
         });
     }
 	});
+</script>
+<script>
+var pressed = false;
+    var chars = []; 
+    $(window).keypress(function(e) {
+        if (e.which >= 48 && e.which <= 122) {
+            chars.push(String.fromCharCode(e.which));
+        }
+        //console.log(e.which + ":" + chars.join("|"));
+		//console.log("Health saathi");
+        if (pressed == false) {
+            setTimeout(function(){
+                if (chars.length >= 10) {
+                    var barcode = chars.join("");
+                    console.log("Barcode Scanned: " + barcode);
+                    // assign value to some input (or do whatever you want)
+                    $("#barcode").val(barcode);
+                    
+                }else{
+			$("#barcode").val("");
+                    }
+                chars = [];
+                pressed = false;
+            },500);
+        }
+        pressed = true;
+    });
+$("#barcode").keypress(function(e){
+    if ( e.which === 13 ) {
+        console.log("Prevent form submit.");
+        e.preventDefault();
+    }
+});
+$("#specimen_source").keypress(function(e){
+    if ( e.which === 13 ) {
+        $("#specimen_source").val("");
+    }
+});
+$("#order_time").keypress(function(e){
+    if ( e.which === 13 ) {
+        $("#order_time").val("");
+    }
+});
+$("#visit_type").keypress(function(e){
+    if ( e.which === 13 ) {
+        $("#visit_type").val("");
+    }
+});
+$("#select-patient").keypress(function(e){
+    if ( e.which === 13 ) {
+        $drop=$("#select-patient");
+		$drop[0].selectedIndex=-1;
+    }
+});
+$("#specimen_type").keypress(function(e){
+    if ( e.which === 13 ) {
+        $("#specimen_type").val("");
+    }
+});
+$("#container_type").keypress(function(e){
+    if ( e.which === 13 ) {
+        $("#container_type").val("");
+    }
+});
+
 </script>
