@@ -1,12 +1,26 @@
-<link rel="stylesheet"href="<?php echo base_url();?>assets/css/metallic.css">
-<link rel="stylesheet"href="<?php echo base_url();?>assets/css/theme.default.css">
-<script type="text/javascript"src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
-<script type="text/javascript"src="<?php echo base_url();?>assets/js/table2CSV.js"></script>
-<script type="text/javascript"src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
-<script type="text/javascript"src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
-<script type="text/javascript"src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
-<script type="text/javascript"src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
-<link rel="stylesheet" type="text/css"href="<?php echo base_url(); ?>assets/css/selectize.css">
+<link rel="stylesheet"
+	href="<?php echo base_url();?>assets/css/metallic.css">
+<link rel="stylesheet"
+	href="<?php echo base_url();?>assets/css/theme.default.css">
+
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/table2CSV.js"></script>
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
+
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
+	
+	
+<link rel="stylesheet" type="text/css"
+	href="<?php echo base_url(); ?>assets/css/selectize.css">
+
 <style type="text/css">
 .selectize-control.repositories .selectize-dropdown>div {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -79,6 +93,9 @@
 	opacity: 0.4;
 }
 </style>
+
+<!--  added selectize javascript for search box function -->
+
 <script type="text/javascript"
 	src="<?php echo base_url();?>assets/js/jquery.selectize.js"></script>
 
@@ -139,9 +156,9 @@ $(function(){
 		  $('.print').click(function(){
 			$('#table-sort').trigger('printTable');
 		  });
-				$('#icd_block').selectize({maxItems:20});
-                $('#icd_code').selectize({maxItems:20});
-                $('#icd_chapter').selectize({maxItems:20});
+		$('#icd_block').selectize({maxItems:20});   // maximum items(20) to display in serch box while typing
+        $('#icd_code').selectize({maxItems:20});
+        $('#icd_chapter').selectize({maxItems:20});
 		
 });
 </script>
@@ -203,156 +220,137 @@ $(function(){
 								</select>			
 								<br/><br/>
 								
-				<div class="col-md-4 alt">
-			<select id="icd_code" class="repositories" placeholder="Select ICD Code.." name="icd_code" required ></div>
-			<option value="">ICD Code</option>
-			<?php
-						foreach ( $icd_codes as $icd_code ) {
-							echo "<option value='" . $icd_code->code_title . "'";
-							if ($this->input->post ( 'icd_code' )&& in_array ( $icd_code->code_title, $this->input->post ( 'code_title' ) ))
-								echo " selected ";
-							echo ">" . $icd_code->code_title . "</option>";
-						}
-						?>
-			
-						</select>
+								
+				<!--  added 3 divisions (search boxes)as ICD code, ICD chapter, ICD block -->	
+				
+				<div class="col-md-12 alt">	
+				<div class="col-md-4">
+					<select id="icd_code" class="repositories" placeholder="Search ICD codes" name="icd_code" <?php if($f->edit==1&& empty($icd_code->code_title)) echo ''; else echo ' readonly'; ?> >
+					<?php if(!!$icd_code->code_title){ ?>
+						<option value="<?php echo $icd_code->code_title;?>"><?php echo $icd_code->code_title;?></option>
+					<?php } ?>
+					</select>
 				</div>
-			<div class="col-md-4 alt">
-                            <select name="icd_chapter[]" id="icd_chapter" placeholder="Select ICD Chapter.."></div>
-				<option value="">ICD Chapter</option>
-                                
-						<?php
-						foreach ( $icd_chapters as $icd_chapter ) {
-							echo "<option value='" . $icd_chapter->chapter_title . "'";
-							if ($this->input->post ( 'icd_chapter' )&& in_array ( $icd_chapter->chapter_title, $this->input->post ( 'chapter_title' ) ))
-								echo " selected ";
-							echo ">" . $icd_chapter->chapter_title . "</option>";
-						}
-						?>
-						</select>
-                        </div>
+	
+				<div class="col-md-4">
+					<select id="icd_chapter" class="repositories" placeholder="Search ICD Chapters" name="icd_chapter" <?php if($f->edit==1&& empty($icd_chapter->chapter_title)) echo ''; else echo ' readonly'; ?> >
+					<?php if(!!$icd_chapter->chapter_title){ ?>
+						<option value="<?php echo $icd_chapter->chapter_title;?>"><?php echo $icd_chapter->chapter_title;?></option>
+					<?php } ?>
+					</select>
+				</div>
+			
+				<div class="col-md-4">
+					
+					<select id="icd_block" class="repositories" placeholder="Search ICD blocks" name="icd_block" <?php if($f->edit==1&& empty($icd_code->code_title)) echo ''; else echo ' readonly'; ?> >
+					
+					<?php if(!!$icd_block->block_title){ ?>
+						<option value="<?php echo $icd_block->block_title;?>"><?php echo $icd_block->block_title;?></option>
+					<?php } ?>
+					</select>
+				</div>
+				</div>
 
-			<div class="col-md-4 alt">			
-			<select name="icd_block[]" id="icd_block"placeholder="Select ICD Block..">
-				<option value="">ICD Block</option>
-						<?php
-						foreach ( $icd_blocks as $icd_block ) {
-							echo "<option value='" . $icd_block->block_title . "'";
-							if ($this->input->post ( 'icd_block' )&& in_array ( $icd_block->block_title, $this->input->post ( 'block_title' ) ))
-								echo " selected ";
-							echo ">" . $icd_block->block_title . "</option>";
-						}
-						?>
-				</select>	
-			</div>
-</div>
-<script>
-		var $year=$("#year").val();
-		var $visit_type=$("#visit_type").val();
-	$(function(){
-		$("#visit_type").change(function(){
-			$visit_type=$(this).val();
-			selectize = $("#icd_code")[0].selectize;
-			selectize.clear();
-			selectize.clearOptions();
-			selectize.clearCache();
-			selectize.renderCache={};
-		});
-		$("#year").change(function(){
-			$year=$(this).val();
-			selectize = $("#icd_code")[0].selectize;
-			selectize.clear();
-			selectize.clearOptions();
-			selectize.clearCache();
-			selectize.renderCache={};
-		});
-		selectize = $("#icd_code")[0].selectize;
-		selectize.on('change',function(){
-			var test = selectize.getOption(selectize.getValue());
-			test.find('.hosp_file_no').text()!=""?$(".icd_code").text(test.find('.hosp_file_no').text()+", "+test.find('.language').text()+", Age : "+test.find('.watchers').text()):$(".icd_code").text("").removeClass('well well-sm');
-			$(".icd_code").text()!=""?$(".icd_code").addClass('well well-sm') : $(".icd_code").removeClass('well well-sm');
-		});
-	});
+				
+<script type="text/javascript">
 	$('#icd_code').selectize({
-    valueField: 'hosp_file_no',
-    labelField: 'hosp_file_no',
-    searchField: 'hosp_file_no',
+    valueField: 'icd_code',
+    labelField: 'code_title',
+    searchField: 'code_title',
     create: false,
     render: {
         option: function(item, escape) {
-
+			console.log("render");
             return '<div>' +
                 '<span class="title">' +
-                    '<span class="hosp_file_no">' + escape(item.hosp_file_no) + '</span>' +
+                    '<span class="icd_code">' + escape(item.code_title) + '</span>' +
                 '</span>' +
-                '<ul class="meta">' +
-                    (item.first_name ? '<li class="language">' + escape(item.first_name) + ' ' : '') +
-                    (item.last_name ? '' + escape(item.last_name) + '</li>' : '') +
-                    '<li class="watchers"><span>' + escape(item.age_years) + '</span> yrs<span>' + 
-					(item.age_months!=0 ? escape(item.age_months) + '</span> months<span>' : '') + 
-					(item.age_days!=0 ? escape(item.age_days) + '</span> days</li>' : '') +
-                '</ul>' +
             '</div>';
         }
     },
+	
+	
     load: function(query, callback) {
+		
+		console.log("load");
         if (!query.length) return callback();
-		$.ajax({search_patients
-            url: '<?php echo base_url();?>register/search_icd_codes',
+		$.ajax({
+            url: '<?php echo base_url();?>reports/search_icd_codes',
             type: 'POST',
-			dataType : 'json',
-			data : {visit_type:$visit_type,year:$year,query:query},
+			dataType : 'JSON',
+			data : {query:query},
             error: function(res) {
+				
+				console.log("error");
                 callback();
             },
             success: function(res) {
-                callback(res.patients.slice(0, 10));
+				
+				console.log(res.icd_codes.slice(0,6));
+                callback(res.icd_codes.slice(0,6));
             }
         });
     }
 	});
-</script>
-<script>
-	$(function(){
-		selectize = $("#icd_block")[0].selectize;
-		selectize.on('change',function(){
-			var test = selectize.getOption(selectize.getValue());
-			console.log(test);
-		});
-		$i=1;
-		$("#prescription_add").click(function(){
-			$row = '<tr class="prescription">'+
-                                                                '<td>'+
-								'<select name="drug_'+$i+'" class="form-control">'+
-								'<option value="">--Select--</option>'+
-								'<?php foreach($drugs as $drug){ echo '<option value="'.$drug->item_id.'">'.$drug->item_name.'</option>';}?>'+
-								'</select>'+
-							'</td>'+
-							
-						'</tr>';
-			$i++;
-			$(".prescription").parent().append($row);
-		});
-	});
-	$('#icd_block').selectize({
-    valueField: 'icd_block''icd_code''icd_chapter',
-    labelField: 'block_title','chapter_title','chapter_title',
-    searchField: 'block_title','chapter_title','chapter_title',
+
+	$('#icd_chapter').selectize({
+    valueField: 'chapter_id',
+    labelField: 'chapter_title',
+    searchField: 'chapter_title',
     create: false,
     render: {
         option: function(item, escape) {
-
+			console.log("render" + item);
             return '<div>' +
                 '<span class="title">' +
-                    '<span class="icd_code">' + escape(item.block_title) + '</span>' +
+                    '<span class="icd_chapter">' + escape(item.chapter_title) + '</span>' +
                 '</span>' +
             '</div>';
         }
     },
     load: function(query, callback) {
+		
+		console.log("in load");
         if (!query.length) return callback();
 		$.ajax({
-            url: '<?php echo base_url();?>register/search_icd_blocks','<?php echo base_url();?>register/search_icd_codes','<?php echo base_url();?>register/search_icd_chapters',
+            url: '<?php echo base_url();?>reports/search_icd_chapters',
+            type: 'POST',
+			dataType : 'JSON',
+			data : {query:query},
+            error: function(res) {
+				
+				console.log("error");
+                callback();
+            },
+            success: function(res) {
+				
+				console.log("in success");
+                callback(res.icd_chapters.slice(0,6));
+            }
+        });
+    }
+	});
+	
+	$('#icd_block').selectize({
+    valueField: 'block_id',
+    labelField: 'block_title',
+    searchField: 'block_title',
+    create: false,
+    render: {
+        option: function(item, escape) {
+			console.log("render" + item);
+            return '<div>' +
+                '<span class="title">' +
+                    '<span class="icd_block">' + escape(item.block_title) + '</span>' +
+                '</span>' +
+            '</div>';
+        }
+    },
+    load: function(query, callback) {
+		
+        if (!query.length) return callback();
+		$.ajax({
+            url: '<?php echo base_url();?>reports/search_icd_blocks',
             type: 'POST',
 			dataType : 'JSON',
 			data : {query:query},
@@ -360,7 +358,10 @@ $(function(){
                 callback();
             },
             success: function(res) {
-                callback(res.icd_blocks.slice(0, 10));
+				
+				console.log(res.icd_blocks.slice(0,6));
+
+                callback(res.icd_blocks.slice(0,6));
             }
         });
     }

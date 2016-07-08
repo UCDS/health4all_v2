@@ -1026,5 +1026,23 @@ function get_sensitivity_summary(){
 		$resource=$this->db->get();
 		return $resource->result();
     }
+	
+	function search_icd_codes(){
+		$this->db->select('icd_code, CONCAT(icd_code," ",code_title) as code_title',false)->from('icd_code')->order_by('code_title')->like('code_title',$this->input->post('query'),'both');
+		$query=$this->db->get();
+		return $query->result_array();
+	}
+	
+	function search_icd_chapters(){
+		$this->db->select('chapter_id, CONCAT(chapter_id," ",chapter_title) as chapter_title',false)->from('icd_chapter')->order_by('chapter_title')->like('chapter_title',$this->input->post('query'),'both');
+		$query=$this->db->get();
+		return $query->result_array();
+	}
+	
+	function search_icd_blocks(){
+		$this->db->select('block_id, CONCAT(block_id," ",block_title) as block_title',false)->from('icd_block')->order_by('block_title')->like('block_title',$this->input->post('query'),'both');
+		$query=$this->db->get();
+		return $query->result_array();
+	}
 }
 ?>
