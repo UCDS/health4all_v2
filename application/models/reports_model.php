@@ -1026,7 +1026,7 @@ function get_sensitivity_summary(){
 		$resource=$this->db->get();
 		return $resource->result();
     }
-	
+	//<!--Added 3 MOdels for icd_code,icd_chapter  and icd_block-->
 	function search_icd_codes(){
 		$this->db->select('icd_code, CONCAT(icd_code," ",code_title) as code_title',false)->from('icd_code')->order_by('code_title')->like('code_title',$this->input->post('query'),'both');
 		$query=$this->db->get();

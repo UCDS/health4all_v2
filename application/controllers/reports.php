@@ -688,6 +688,7 @@ class Reports extends CI_Controller {
 		
 		
 	}
+	//<!--Added function for icd_code,icd_chapter  and icd_block-->
 	public function search_icd_blocks(){
 		if($icd_blocks = $this->reports_model->search_icd_blocks()){
 			$list=array(
