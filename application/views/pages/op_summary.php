@@ -6,11 +6,11 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-ui.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/export_to_excell.js"></script>
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery.ptTimeSelect.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
-
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >s
 <script type="text/javascript">
 $(function(){
 	$("#from_date,#to_date").Zebra_DatePicker();
@@ -155,7 +155,7 @@ $(function(){
         <!--created button which converts html table to Excel sheet-->
         <a href="#" id="test" onClick="javascript:fnExcelReport();">
             <button type="button" class="btn btn-default btn-md excel">
-                <i class="fa fa-file-excel-o"ara-hidden="true"></i> Export</button></a>
+                <i class="fa fa-file-excel-o"ara-hidden="true"></i> Export to excel</button></a>
              <table class="table table-bordered table-striped" id="table-sort">
 	 <thead>
 	  <tr>
@@ -249,17 +249,20 @@ $(function(){
 		<th class="text-right" ><?php echo $total_op;?></th>
 	</tfoot>
 	</tbody>
+
+</head>
              </table>
         <!--created a table for Excel sheet with tableid-->
             <table class="table table-bordered table-striped" id="myTable"  hidden> 
 	 <thead>
+                     <head>
 	  <tr>
               <!--aligning the headings with names-->
 		<th style="text-align:center" rowspan="2">Department</th>
 		<th style="text-align:center" colspan="3"><=14 Years</th>
 		<th style="text-align:center" colspan="3">14 to 30 Years</th>
-		<th style="text-align:center" colspan="3">30 to 50 Years</th>
-		<th style="text-align:center" colspan="3">>50 Years</th>
+		<th style="text-align:center" colspan="3">30 to <60 Years</th>
+		<th style="text-align:center" colspan="3">>=60 Years</th>
 		<th style="text-align:center" rowspan="1" colspan="3">Total OP Visits</th>
 	</tr>
 	<tr>
@@ -295,17 +298,16 @@ $(function(){
 		<td><?php echo $s->department;?></td>
 		<td class="text-right"><?php echo $s->op_mchild;?></td>
 		<td class="text-right"><?php echo $s->op_fchild;?></td>
-		<td class="text-right">
-                    <?php echo $s->op_child;?></td>
+		<td class="text-right"><?php echo $s->op_child;?></td>
 		<td class="text-right"><?php echo $s->op_m14to30;?></td>
 		<td class="text-right"><?php echo $s->op_f14to30;?></td>
 		<td class="text-right"><?php echo $s->op_14to30;?></td>
-		<td class="text-right"><?php echo $s->op_m30to50;?></td>
-		<td class="text-right"><?php echo $s->op_f30to50;?></td>
-		<td class="text-right"><?php echo $s->op_30to50;?></td>
-		<td class="text-right"><?php echo $s->op_m50plus;?></td>
-		<td class="text-right"><?php echo $s->op_f50plus;?></td>
-		<td class="text-right"><?php echo $s->op_50plus;?></td>
+		<td class="text-right"><?php echo $s->op_m30to60;?></td>
+		<td class="text-right"><?php echo $s->op_f30to60;?></td>
+		<td class="text-right"><?php echo $s->op_30to60;?></td>
+		<td class="text-right"><?php echo $s->op_m60plus;?></td>
+		<td class="text-right"><?php echo $s->op_f60plus;?></td>
+		<td class="text-right"><?php echo $s->op_60plus;?></td>
 		<td class="text-right"><?php echo $s->op_male;?></td>
 		<td class="text-right"><?php echo $s->op_female;?></td>
 		<td class="text-right"><?php echo $s->op;?></td>
@@ -318,12 +320,12 @@ $(function(){
 	$total_m14to30+=$s->op_m14to30;
 	$total_f14to30+=$s->op_f14to30;
 	$total_14to30+=$s->op_14to30;
-	$total_m30to50+=$s->op_m30to50;
-	$total_f30to50+=$s->op_f30to50;
-	$total_30to50+=$s->op_30to50;
-	$total_m50plus+=$s->op_m50plus;
-	$total_f50plus+=$s->op_f50plus;
-	$total_50plus+=$s->op_50plus;
+	$total_m30to60+=$s->op_m30to60;
+	$total_f30to60+=$s->op_f30to60;
+	$total_30to60+=$s->op_30to60;
+	$total_m60plus+=$s->op_m60plus;
+	$total_f60plus+=$s->op_f60plus;
+	$total_60plus+=$s->op_60plus;
 	$total_male+=$s->op_male;
 	$total_female+=$s->op_female;
 	$total_op+=$s->op;
@@ -337,15 +339,15 @@ $(function(){
 		<th class="text-right" ><?php echo $total_m14to30;?></th>
 		<th class="text-right" ><?php echo $total_f14to30;?></th>
 		<th class="text-right" ><?php echo $total_14to30;?></th>
-		<th class="text-right" ><?php echo $total_m30to50;?></th>
-		<th class="text-right" ><?php echo $total_f30to50;?></th>
-		<th class="text-right" ><?php echo $total_30to50;?></th>
-		<th class="text-right" ><?php echo $total_m50plus;?></th>
-		<th class="text-right" ><?php echo $total_f50plus;?></th>
-		<th class="text-right" ><?php echo $total_50plus;?></th>
+		<th class="text-right" ><?php echo $total_m30to60;?></th>
+		<th class="text-right" ><?php echo $total_f30to60;?></th>
+		<th class="text-right" ><?php echo $total_30to60;?></th>
+		<th class="text-right" ><?php echo $total_m60plus;?></th>
+		<th class="text-right" ><?php echo $total_f60plus;?></th>
+		<th class="text-right" ><?php echo $total_60plus;?></th>
 		<th class="text-right" ><?php echo $total_male;?></th>
 		<th class="text-right" ><?php echo $total_female;?></th>
-		<th class="text-left" ><?php echo $total_op;?></th>
+		<th class="text-right" ><?php echo $total_op;?></th>
 	</tfoot>
 	</tbody>
              </table>
