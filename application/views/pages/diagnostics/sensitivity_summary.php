@@ -154,6 +154,27 @@ $(function(){
 		$('#micro_organism').selectize({maxItems:20});
 		$('#antibiotic').selectize({maxItems:20});
 });
+
+function fnExcelReport() { 
+       //created a variable named tab_text where  
+     var tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">'; 
+     //row and columns arrangements 
+     tab_text = tab_text + '<head><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>'; 
+     tab_text = tab_text + '<x:Name>Excel Sheet</x:Name>'; 
+  
+     tab_text = tab_text + '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>'; 
+     tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>'; 
+  
+     tab_text = tab_text + "<table border='100px'>"; 
+     //id is given which calls the html table 
+     tab_text = tab_text + $('#table-sort').html(); 
+     tab_text = tab_text + '</table></body></html>'; 
+     var data_type = 'data:application/vnd.ms-excel'; 
+     $('#test').attr('href', data_type + ', ' + encodeURIComponent(tab_text)); 
+     //downloaded excel sheet name is given here 
+     $('#test').attr('download', 'sensitivity-summary.xls');  
+ } 
+
 </script>
 <div class="row">
 	<?php
@@ -354,6 +375,9 @@ $(function(){
 		<button type="button" class="btn btn-default btn-md print">
 		<span class="glyphicon glyphicon-print"></span> Print
 	</button>
+        <a href="#" id="test" onClick="javascript:fnExcelReport();"> 
+             <button type="button" class="btn btn-default btn-md excel"> 
+                <i class="fa fa-file-excel-o"ara-hidden="true"></i> Export</button></a>
 	<div>
 		<h3> Total Samples Tested: <?php echo sizeof($tests_reported);?></h3>
 		<h4>NBG: <?php echo $nbg." (".number_format(($nbg/sizeof($tests_reported))*100).'%)';?> and, Growth: <?php echo $total_growth.' ('.number_format(($total_growth/sizeof($tests_reported))*100).'%).';?></h4>

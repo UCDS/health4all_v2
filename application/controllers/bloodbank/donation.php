@@ -87,14 +87,14 @@ class Donation extends CI_Controller{
             )
         );
         $this->form_validation->set_rules($validations);
-	$this->form_validation->set_message('message','Please input Blood Unit Number.');
+	$this->form_validation->set_message('message','Invalid Submission.');
         if ($this->form_validation->run() === FALSE)
         {
             $this->load->view('pages/bloodbank/edit_blood_bag_details',$this->data);
         }
         else{            
             if($this->donation_model->update_blood_bag_info()){
-                $this->data['message']="Update Successful.";                
+                $this->data['message']="Bloodbag details updated.";                
                 $this->load->view('pages/bloodbank/edit_blood_bag_details.php',$this->data);
             }
             else{
@@ -106,15 +106,99 @@ class Donation extends CI_Controller{
     }
     
     function change_group(){
-        
+        $this->data['userdata']=$this->session->userdata('hospital');
+        $this->load->helper('form');
+        $this->load->library('form_validation');
+        $this->data['title']="Edit Blood Bag Details";
+        $this->load->view('templates/header',$this->data);
+        $this->load->view('templates/panel_nav',$this->data);
+        $validations=array(
+            array(
+                'field'=>'donation_id',
+                'label'=>'donation id',
+                'rules'=>'required'
+            )
+        );
+        $this->form_validation->set_rules($validations);
+	$this->form_validation->set_message('message','Invalid Submission.');
+        if ($this->form_validation->run() === FALSE)
+        {
+            $this->load->view('pages/bloodbank/edit_blood_bag_details',$this->data);
+        }
+        else{            
+            if($this->donation_model->update_blood_group_info()){
+                $this->data['message']="Blood group updated.";                
+                $this->load->view('pages/bloodbank/edit_blood_bag_details.php',$this->data);
+            }
+            else{
+                $this->data['message']= "Update failed try again later.";
+                $this->load->view('pages/bloodbank/edit_blood_bag_details.php',$this->data);
+            }
+        }
     }
     
     function change_screening_result(){
-        
+        $this->data['userdata']=$this->session->userdata('hospital');
+        $this->load->helper('form');
+        $this->load->library('form_validation');
+        $this->data['title']="Edit Blood Bag Details";
+        $this->load->view('templates/header',$this->data);
+        $this->load->view('templates/panel_nav',$this->data);
+        $validations=array(
+            array(
+                'field'=>'donation_id',
+                'label'=>'donation id',
+                'rules'=>'required'
+            )
+        );
+        $this->form_validation->set_rules($validations);
+	$this->form_validation->set_message('message','Invalid Submission.');
+        if ($this->form_validation->run() === FALSE)
+        {
+            $this->load->view('pages/bloodbank/edit_blood_bag_details',$this->data);
+        }
+        else{            
+            if($this->donation_model->update_screening_info()){
+                $this->data['message']="Screening result updated.";                
+                $this->load->view('pages/bloodbank/edit_blood_bag_details.php',$this->data);
+            }
+            else{
+                $this->data['message']= "Update failed try again later.";
+                $this->load->view('pages/bloodbank/edit_blood_bag_details.php',$this->data);
+            }
+        }
     }
     
     function revert_to_component_preparation(){
-        
+        $this->data['userdata']=$this->session->userdata('hospital');
+        $this->load->helper('form');
+        $this->load->library('form_validation');
+        $this->data['title']="Edit Blood Bag Details";
+        $this->load->view('templates/header',$this->data);
+        $this->load->view('templates/panel_nav',$this->data);
+        $validations=array(
+            array(
+                'field'=>'donation_id',
+                'label'=>'donation id',
+                'rules'=>'required'
+            )
+        );
+        $this->form_validation->set_rules($validations);
+	$this->form_validation->set_message('message','Invalid Submission.');
+        if ($this->form_validation->run() === FALSE)
+        {
+            $this->load->view('pages/bloodbank/edit_blood_bag_details',$this->data);
+        }
+        else{            
+            if($this->donation_model->revert_to_component_preparation()){
+                $this->data['message']="Reverted to component preparation.";                
+                $this->load->view('pages/bloodbank/edit_blood_bag_details.php',$this->data);
+            }
+            else{
+                $this->data['message']= "Update failed try again later.";
+                $this->load->view('pages/bloodbank/edit_blood_bag_details.php',$this->data);
+            }
+        }
     }
     
     function cancel_donation(){

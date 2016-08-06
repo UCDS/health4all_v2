@@ -323,12 +323,13 @@ class Inventory_model extends CI_Model{
 		       $number_message_string = implode('',$number_message);                   
 		//Send SMS
 		$url = "http://www.smsstriker.com/API/multi_messages.php?";
-		$data = array('username'=>'ucdsyousee',
-				'password'=>'SMS4UCDS',
-				'from'=>'IRCS',
-				'mno_msg'=>$number_message_string,
-				'type'=>1,
-				'dnd_check'=>0
+		$data = array(
+                    'username'=>'ucdsyousee',
+                    'password'=>'SMS4UCDS',
+                    'from'=>'IRCS',
+                    'mno_msg'=>$number_message_string,
+                    'type'=>1,
+                    'dnd_check'=>0
 		);
 		$options = array(
 				'http' => array(

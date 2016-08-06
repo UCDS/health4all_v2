@@ -365,14 +365,14 @@ class Staff_model extends CI_Model{
     }
 	
     function get_defaults() {
-		$this->db->select('primary_key, default_value,default_value_text')
-            ->from('default_setting');
+        $this->db->select('primary_key, default_value,default_value_text')
+        ->from('default_setting');
         $query=$this->db->get();
-		$result = $query->result();
-		if($query->num_rows()>0){
-		    return $query->result();
-		}
-		else
+        $result = $query->result();
+        if($query->num_rows()>0){
+            return $query->result();
+        }
+        else
             return false;
     }
 	

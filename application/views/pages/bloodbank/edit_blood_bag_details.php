@@ -1,5 +1,30 @@
 <script>
 	$(function(){
+            $(document).ready(function() {
+                var blood_group = $("#blood_group").val();
+                switch(blood_group){
+				case 'A+':					
+					$('#sub_group').removeClass ('sr-only');
+					break;
+				case 'A-':
+					$('#sub_group').removeClass('sr-only');					
+					break;								
+				case 'AB+':					
+					$('#sub_group').removeClass ('sr-only');					
+					break;
+				case 'AB-':					
+					$('#sub_group').removeClass ('sr-only');
+					break;
+				case 'O+':					
+					$('#sub_group').removeClass ('sr-only');
+					break;
+				case 'O-':					
+					$('#sub_group').removeClass ('sr-only');
+					break;
+				default:					
+					break;
+			}
+            });
 		var anti_a,anti_b,anti_ab,anti_d,a_cells,b_cells,o_cells,du;
 		$(".blood_group").on('change',function(){
 			var donation_id=$(this).attr('id').substring(12);
@@ -113,7 +138,7 @@
 </script>
 <div class="col-md-10 col-sm-9">
 <div class="panel panel-primary">    
-    <?php if(isset($donation)){ ?> 
+    <?php if(isset($donation) && $donation->status_id >= 3){ ?> 
         <div class="panel-heading">
             <h3 class="panel-title">Edit Blood Bag details, Donor: <?php echo $donation->name;?></h3>
         </div>
@@ -168,7 +193,7 @@
 		</tr>
                 <tr>
                     <td colspan="5">
-                        <select name="camp" id="camps" class="form-control" >
+                        <select name="camp_id" id="camp_id" class="form-control" >
                             <option value="">--Select Location--</option>
                             <?php 
                             $option = "<option size='30' value='";
@@ -188,17 +213,22 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="5">Collected By: <?php 
-                                foreach($staff as $s){
-                                    if($s->staff_id == $donation->collected_by){
-                                        echo $s->first_name." ".$s->last_name;
-                                    }
-                                }
-                                ?></td>
+                    <td colspan="1">Collected By:</td>
+                    <td colspan="4">
+                        <?php 
+                        $collected_by = '';
+                        foreach($staff as $s){
+                            if($s->staff_id == $donation->collected_by){
+                                $collected_by = $s->first_name." ".$s->last_name." ".$s->name;
+                            }
+                        } ?>
+                        <input type="text" name="grouping_date" placeholder="Staff Name" class="form-control" id="grouping_date" value="<?php echo $collected_by; ?>" form='grouping_form' readonly />
+                    </td>
                 </tr>
                 <tr>
-                    <td colspan="4">Donation Date/Time: <?php echo $donation->donation_date.'/'.$donation->donation_time; ?></td>
-                    <td><input type="submit" class="btn btn-primary" value="Update" /></td>
+                    <td colspan="1">Donation Date: </td>
+                    <td colspan="3"><input type="text" name="grouping_date" placeholder="Date" class="form-control" id="grouping_date" value="<?php echo $donation->donation_date.'/'.$donation->donation_time; ?>" form='grouping_form' readonly /></td>
+                    <td colspan="1"><input type="submit" class="btn btn-primary" value="Update" /></td>
                 </tr>
 		<?php 
 		
@@ -207,6 +237,7 @@
            
             <?php echo form_close(); ?>
         </div>
+        <?php if($donation->status_id > 4){ ?>
         <div class="panel-heading">
             <h3 class="panel-title">Edit Blood Grouping Details, Donor: <?php echo $donation->name;?></h3>
         </div>
@@ -265,41 +296,50 @@
 			
 		</tr>
 		<tr>		
-		<td colspan="3">	
+		<td colspan="10">	
 			<div class="form-group col-lg-3">
-				Forward done by: 
-				<?php                                
+				Forward by: 
+				<?php
+                                $forward_done_by ='';
                                 foreach($staff as $s){                                    
                                     if($donation->forward_done_by == $s->staff_id){
-                                        echo $s->first_name." ".$s->last_name;
+                                        $forward_done_by = $s->first_name." ".$s->last_name." ".$s->name;
                                     }                                    
 				}
                                 
 				?>
+                                <input type="text" name="grouping_date" placeholder="Staff Name" class="form-control" id="grouping_date" value="<?php echo $forward_done_by; ?>" form='grouping_form' readonly />
 			</div>
                 </td>
-                <td colspan="3">
+                </tr>
+                <tr>
+                <td colspan="10">
 			<div class="form-group col-lg-3">
-                            Reverse done by: 
-				<?php                                
+                            Reverse by: 
+				<?php   
+                                $reverse_done_by = '';
                                 foreach($staff as $s){                                   
                                     if($donation->reverse_done_by == $s->staff_id){
-                                        echo $s->first_name." ".$s->last_name;
+                                        $reverse_done_by = $s->first_name." ".$s->last_name." ".$s->name;
                                     }                                    
 				}
                                 
 				?>
+                            <input type="text" name="grouping_date" placeholder="Staff Name" class="form-control" id="grouping_date" value="<?php echo $reverse_done_by; ?>" form='grouping_form' readonly />
                         </div>
-		
-                <td colspan="2"> 
-                    <div class="form-group"><input type="text" name="grouping_date" placeholder="Date" class="form-control" id="grouping_date" value="<?php echo $donation->grouping_date; ?>" form='grouping_form' readonly /></div>
+                </tr>
+                <tr>
+                <td colspan="5">                     
+                    <div class="form-group">Grouping Date<input type="text" name="grouping_date" placeholder="Grouping Date" class="form-control" id="grouping_date" value="<?php echo $donation->grouping_date; ?>" form='grouping_form' readonly /></div>
                 </td>
-                <td colspan="2">
+                <td colspan="5">
 	<div class="form-group text-right"><input type="submit" class="btn btn-primary" name="Update" value="Update" /></div>
 		</td></tr>
 		<?php echo form_close(); ?>
         </table>   <!-- End of change bloodgroup --> 
         </div>
+        <?php } ?>
+        <?php if($donation->status_id > 5) { ?>
         <div class="panel-heading">
             <h3 class="panel-title">Edit Blood Screening details, Donor: <?php echo $donation->name;?></h3>
         </div>
@@ -361,26 +401,20 @@
                     <td><input type="checkbox" name="test_vdrl" value="1"  <?php if($donation->test_vdrl == 1) echo "checked='checked'"; ?> /></td>
                     <td><input type="checkbox" name="test_mp" value="1"  <?php if($donation->test_mp == 1) echo "checked='checked'"; ?> /></td>
                     <td><input type="checkbox" name="test_irregular_ab" value="1"  <?php if($donation->test_irregular_ab == 1) echo "checked='checked'"; ?> /></td>
-                    <td><input type="checkbox" name="test" value="<?php echo $donation->donation_id;?>" /></td>
+                    <td><input type="checkbox" name="donation_id" value="<?php echo $donation->donation_id;?>" /></td>
                 </tr>
 		
 		<tr>
                     <td colspan="3" align="right">
                         <div class="form-group col-lg-8">
-                            <select name="screened_by" class="form-control" required>
-                                <option value="" disabled>Done By</option>
-                                <?php 
-                                $options = "";
+                            <?php $screening_done_by =''; 
                                 foreach($staff as $s){
-                                    $options = '<option value='.$s->staff_id;
                                     if($donation->screened_by == $s->staff_id){
-                                        $options .= "selected";
+                                        $screening_done_by = $s->first_name." ".$s->last_name." ".$s->name;
                                     }
-                                    $options .='>'.$s->first_name." ".$s->last_name." ".'</option>';
                                 }
-                                echo $options;
-                                ?>
-                            </select>
+                            ?>
+                            <input type="text" name="grouping_date" placeholder="Staff Name" class="form-control" id="grouping_date" value="<?php echo $screening_done_by; ?>" form='grouping_form' readonly />
                         </div>
                     </td>
                     <td colspan="3" align="right">
@@ -392,11 +426,25 @@
 		</tr>
 		</table><?php echo form_close(); ?>
         </div> <!-- End of change_screening_result -->
+        <?php } ?>
         <div class="panel-heading">
             <h3 class="panel-title">Revert to component Preparation, Donor: <?php echo $donation->name;?></h3>
         </div>
         <div class="panel-body">
             <?php echo form_open('bloodbank/donation/revert_to_component_preparation',array('class'=>'form-inline')); ?>
+                <div class="form-group">
+                    
+                    <div class="form-group">
+                        <label>Please input bag volume: &nbsp;</label>
+			<select name="volume" class="form-control" required >
+			<option value="" disabled>Vol</option>
+			<option value="350" <?php if($donation->volume == "350") echo "selected";?> >350ml</option>
+			<option value="450" <?php if($donation->volume == "450") echo "selected";?> >450ml</option>
+			</select>
+                    </div>
+                    <input type="submit"  class="btn btn-primary" name="submit" value="Revert to Component Preparation"  />
+                    <input type="text" value="<?php echo $donation->donation_id; ?>" name="donation_id" hidden />
+                </div>
             <?php echo form_close(); ?>
         </div>
     <?php }?>

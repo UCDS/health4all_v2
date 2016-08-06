@@ -75,9 +75,9 @@ $(function(){
 	
 	<?php echo form_open('bloodbank/user_panel/blood_components', array('role'=>'form','class'=>'form-custom')); ?>
 	<div>
-		<input type="text" placeholder="From date" class="form-control" size="10" name="from_date" id="from_date" />
-		<input type="text" placeholder="To date" class="form-control" size="10" name="to_date" id="to_date" />
-		<select name="blood_group" class="form-control">
+		<input type="text" class="date" size="12" name="from_date" placeholder="From Date" />
+		<input type="text" class="date" size="12" name="to_date"  placeholder="To Date" />
+		<select name="blood_group">
 			<option value="" selected disabled>Blood Group</option>
 			<option value="A+">A+</option>
 			<option value="B+">B+</option>

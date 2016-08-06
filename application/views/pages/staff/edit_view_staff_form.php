@@ -65,6 +65,30 @@ $(function(){
 			$('#table-sort').trigger('printTable');
 		  });
 });
+
+//create function for  for Excel report
+  function fnExcelReport() {
+      //created a variable named tab_text where 
+      
+    var tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+    //row and columns arrangements
+    tab_text = tab_text + '<head><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>';
+    tab_text = tab_text + '<x:Name>Excel Sheet</x:Name>';
+
+    tab_text = tab_text + '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>';
+    tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>';
+
+    tab_text = tab_text + "<table border='100px'>";
+    //id is given which calls the html table
+    tab_text = tab_text + $('#table-excel').html();
+    tab_text = tab_text + '</table></body></html>';
+    var data_type = 'data:application/vnd.ms-excel';
+    $('#test').attr('href', data_type + ', ' + encodeURIComponent(tab_text));
+    //downloaded excel sheet name is given here
+    $('#test').attr('download', 'staff_detailed.xls');
+
+  }
+
 </script>
 	
 
@@ -407,6 +431,11 @@ $(function(){
 		<button type="button" class="btn btn-default btn-md print">
 		  <span class="glyphicon glyphicon-print"></span> Print
 		</button>
+                <!--created button which converts html table to Excel sheet-->
+        <a href="#" id="test" onClick="javascript:fnExcelReport();">
+            <button type="button" class="btn btn-default btn-md excel">
+            <i class="fa fa-file-excel-o"ara-hidden="true"></i>Export to Excel</button>
+        </a>
 		<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
 		<th style="text-align:center">S.no</th>
@@ -416,14 +445,15 @@ $(function(){
 		<th style="text-align:center">Staff category</th>
 		<th style="text-align:center">Name</th>
 		<th style="text-align:center">Gender</th>
-		<th style="text-align:center">MCI</th>
+                <th style="text-align:center">DOB</th>
+                <th style="text-align:center">Phone</th>
+                <th style="text-align:center">Email</th>                		
 		<th style="text-align:center">Status</th>
-		<th style="text-align:center">Phone</th>
-		
 	</thead>
 	<tbody>
 	<?php 
 	$i=1;
+        if(isset($view_staff) && $view_staff){
 	foreach($view_staff as $a){ ?>
 	<tr onclick="$('#select_staff_form_<?php echo $a->staff_id;?>').submit();" >
 		<td>	
@@ -439,19 +469,17 @@ $(function(){
 		<input type="hidden" value="<?php echo $a->staff_id; ?>" name="staff_id" />
 		<input type="hidden" value="select" name="select" />
 		</td>
-		<td><?php if($a->mci_flag==1) echo "Yes"; else echo "No"?></td>
+		<td><?php echo $a->date_of_birth; ?></td>
+                <td><?php echo $a->phone; ?></td>
+                <td><?php echo $a->email; ?></td>
 		<td><?php echo $a->hr_transaction_type;?></td>
-		<td>
-		<?php echo $a->phone;?>
-		
-			</form>
 		
 	</tr>
 	<?php } ?>
 	</tbody>
 	</table>
 	
-	<?php } ?>
+	
 
 	</div></div>
 	
@@ -476,3 +504,48 @@ $(function(){
 	   
 	</tbody>
 	</table>
+        
+        <table class="sr-only" id="table-excel">
+	<thead>
+		<th style="text-align:center">S.no</th>
+		
+		<th style="text-align:center">Department</th>
+		<th style="text-align:center">Designation</th>
+		<th style="text-align:center">Staff category</th>
+		<th style="text-align:center">Name</th>
+		<th style="text-align:center">Gender</th>
+                <th style="text-align:center">DOB</th>
+                <th style="text-align:center">Phone</th>
+                <th style="text-align:center">Email</th>                		
+		<th style="text-align:center">Status</th>
+	</thead>
+	<tbody>
+	<?php 
+	$i=1;
+	foreach($view_staff as $a){ ?>
+	<tr onclick="$('#select_staff_form_<?php echo $a->staff_id;?>').submit();" >
+		<td>	
+			
+			<?php echo $i++; ?>
+		</td>
+		
+		<td><?php echo $a->department;?></td>
+		<td><?php echo $a->designation;?> </td>
+		<td><?php echo $a->staff_category;?> </td>
+		<td><?php echo  $a->first_name." ".$a->last_name;  ?></td>
+		<td> <?php echo $a->gender;?></td>
+		<td><?php echo $a->date_of_birth; ?></td>
+                <td><?php echo $a->phone; ?></td>
+                <td><?php echo $a->email; ?></td>
+		<td><?php echo $a->hr_transaction_type;?></td>
+		<td>
+		<?php echo $a->phone;?>
+		
+			
+		
+	</tr>
+        <?php } } } ?>
+	</tbody>
+	</table>
+	
+	

@@ -91,7 +91,7 @@ pri.print();
 </script>
 		<?php if(isset($duplicate)) { ?>
 		<!-- If duplicate IP no is found then it displays the error message -->
-			<div class="alert alert-danger">Entered IP Number already exists.</div>
+			<div class="alert alert-danger">Entered IP/Patient Manual ID Number already exists.</div>
 		<?php } 
 		else if(isset($registered)){ ?>
 		<iframe id="ifmcontentstoprint" style="height: 0px; width: 0px; position: absolute;display:none"></iframe>
@@ -213,7 +213,16 @@ pri.print();
 		<div class="panel-body">
 			<?php
 			foreach($fields as $field){
-				switch($field->field_name){				
+				switch($field->field_name){	
+                                   case "patient_id_manual" ?>
+                                        <div class="<?php echo $class;?>">
+						<div class="form-group">
+						<label class="control-label">Patient ID Manual<?php if($field->mandatory) { ?><span class="mandatory">*</span><?php } ?></label>
+						<input type="text" name="patient_id_manual" class="form-control" placeholder="Patient ID Manual" value="<?php if($patient) echo $patient->patient_id_manual;?>" <?php if($patient && $patient->patient_id_manual !='') echo 'readonly'?> <?php if($field->mandatory) echo "required"; ?> />
+						</div>
+					</div>
+                                <?php
+                                    break;
 				case "first_name": ?>   
 					<div class="<?php echo $class;?>">
 						<div class="form-group">

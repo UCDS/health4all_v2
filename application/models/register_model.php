@@ -154,9 +154,24 @@ class Register_model extends CI_Model{
 			'country_code'=>$country_code,
 			'state_code'=>$state_code,
 			'district_id'=>$district,
-			'identification_marks'=>$identification_marks,
-		);
-		
+			'identification_marks'=>$identification_marks                        
+		);		
+                
+                if($this->input->post('patient_id_manual')){
+                    $patient_id_manual = $this->input->post('patient_id_manual');
+                    $this->db->select('patient_id_manual'); //Here we are selecting hosp_file_no and admit_date with year for match  from the database
+                    $this->db->from('patient');
+                    $this->db->where('patient_id_manual',$patient_id_manual);                    
+                    $query=$this->db->get();
+                    if($query->num_rows()>0)
+                    {
+                        //If there is a dupilcate patient ID.
+                        return 2; 
+                    }
+                    
+                    $data['patient_id_manual'] = $patient_id_manual;
+                }
+                
 		//Start a mysql transaction.
 		$this->db->trans_start();
 
@@ -343,6 +358,10 @@ class Register_model extends CI_Model{
 	    if($this->input->post('rs')) $rs=$this->input->post('rs'); else $rs="";
 	    if($this->input->post('pa')) $pa=$this->input->post('pa'); else $pa="";
 	    if($this->input->post('cns')) $cns=$this->input->post('cns'); else $cns="";
+            $casesheet_at_mrd_date = '';
+            if($this->input->post('casesheet_at_mrd_date')){
+                $casesheet_at_mrd_date = date("Y-m-d",strtotime($this->input->post('casesheet_at_mrd_date')));
+            }
 		$hospital=$this->session->userdata('hospital');
 		$hospital_id=$hospital['hospital_id'];
 		// $form_type=$this->input->post('form_type');                
@@ -396,6 +415,21 @@ class Register_model extends CI_Model{
                         
 		);
 		
+                if($this->input->post('patient_id_manual')){
+                    $patient_id_manual = $this->input->post('patient_id_manual');
+                    $this->db->select('patient_id_manual'); //Here we are selecting hosp_file_no and admit_date with year for match  from the database
+                    $this->db->from('patient');
+                    $this->db->where('patient_id_manual',$patient_id_manual);                    
+                    $query=$this->db->get();
+                    if($query->num_rows()>0)
+                    {
+                        //If there is a dupilcate patient ID.
+                        return 2; 
+                    }
+                    
+                    $data['patient_id_manual'] = $patient_id_manual;
+                }
+                
 		//Start a mysql transaction.
 		$this->db->trans_start();
 
@@ -455,7 +489,8 @@ class Register_model extends CI_Model{
 			'final_diagnosis'=>$final_diagnosis,
 			'decision'=>$decision,
 			'advise'=>$advise,
-			'icd_10'=>$icd_code
+			'icd_10'=>$icd_code,
+                        'casesheet_at_mrd_date' => $casesheet_at_mrd_date
 		);
                 $visit_id = '';
 		if($this->input->post('visit_id')){
