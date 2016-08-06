@@ -1,24 +1,18 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<script type="text/javascript"
- src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
- <script type="text/javascript"
- src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
- <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
-
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
-		<script type="text/javascript">
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
+<script type="text/javascript">
 $(function(){
 		var options = {
 			widthFixed : true,
 			showProcessing: true,
 			headerTemplate : '{content} {icon}', // Add icon for jui theme; new in v2.7!
 
-			widgets: [ 'default', 'zebra', 'print', 'stickyHeaders','filter,
+			widgets: [ 'default', 'zebra', 'print', 'stickyHeaders','filter'],
 
 			widgetOptions: {
 
@@ -90,20 +84,26 @@ function printDiv(i)
 <div class="col-md-10 col-sm-9">
 
 	<div>
-		<?php echo form_open('bloodbank/user_panel/report_issue'); ?>
+		<?php echo form_open('bloodbank/user_panel/report_issue', array('role'=>'form','class'=>'form-custom')); ?> <!-- To apply the css to input boxes and search boxes -->
 		<div>
-			<input type="text" placeholder="From date" size="10" name="from_date" id="from_date" />
-			<input type="text" placeholder="To date" size="10" name="to_date" id="to_date" />
-			<select name="issued_by">
-					<option value="" disabled selected>Issued By</option>
-					<?php foreach($staff as $s){
-						echo "<option value='$s->staff_id'>$s->name</option>";
-					}
-					?>
+			<input type="text" placeholder="From date" class="form-control" size="10" name="from_date" id="from_date" />
+			<input type="text" placeholder="To date" class="form-control" size="10" name="to_date" id="to_date" />
+			<select name="issued_by" class="form-control">
+                            <option value="" disabled selected>Issued By</option>
+                            <?php foreach($staff as $s){
+				echo "<option value='$s->staff_id'>$s->name</option>";
+                            }
+                            ?>
 			</select>
-			<input type="submit" value="Search" name="search" />
+			<input type="submit" value="Search" class='btn btn-primary btn-md' name="search" />
+                        
 		</div>
 		</form>
+                <br/>
+                <button type="button" class="btn btn-default btn-md print">
+		  <span class="glyphicon glyphicon-print"></span> Print
+		</button>
+                <br/>
 		<?php
 		if(isset($msg)) {
 			echo $msg;
@@ -133,7 +133,7 @@ function printDiv(i)
          
 		<table  class="table-2 table table-striped table-bordered"></table>
 		<table class="table table-bordered table-striped" id="table-sort">
-		<thead><th>S.No</th><th>Date</th><th>Time</th><th>Blood Unit No.</th><th>Component</th><th>Patient Name</th><th>Blood Group</th><th>Diagnosis</th><th>Hospital</th><th>Issued By</th><th>Cross Matched By</th></thead>
+		<thead><th>S.No</th><th>Date</th><th>Time</th><th>Blood Unit No.</th><th>Component</th><th>Patient Name</th><th>Patient Blood Group</th><th>Patient Address</th><th>Donor Blood Group</th><th>Donor Name</th><th>Quantity Of Blood</th><th>Diagnosis</th><th>Hospital</th><th>Issued By</th><th>Cross Matched By</th></thead>
 		<?php 
 		$i=1;
 		foreach($issued as $row){
@@ -145,9 +145,13 @@ function printDiv(i)
 			<td><?php echo $row->blood_unit_num;?></td>
 			<td><?php echo $row->component_type;?></td>
 			<td><?php echo $row->patient_name." ".$row->first_name." ".$row->last_name;?></td>
-			<td><?php echo $row->blood_group;?></td>
+			<td><?php echo $row->recipient_blood_group;?></td>
+                        <td><?php echo $row->address;?></td>
+                        <td><?php echo $row->blood_group;?></td>
+                        <td><?php echo $row->name;?></td>
+                        <td><?php echo $row->volume;?></td>
 			<td><?php echo $row->diagnosis." ".$row->final_diagnosis;?></td>
-			<td><?php echo $row->hosptial; ?></td>
+			<td><?php echo $row->hospital; ?></td>
 			<td><?php echo $row->issued_staff_name;?></td>
 			<td><?php echo $row->cross_matched_staff_name;?></td>
 			<td>
@@ -213,9 +217,9 @@ function printDiv(i)
 						</tr>
 						<tr>
 							<th>Blood Group</th>
-							<td><?php echo $row->donor_group;?></td>
+							<td><?php echo $row->blood_group;?></td>
 							<th>Recipient Blood Group</th>
-							<td><?php echo $row->recipient_group;?></td>
+							<td><?php echo $row->recipient_blood_group;?></td>
 						</tr>
 						<tr>
 							<th>Indication for Transfusion</th>

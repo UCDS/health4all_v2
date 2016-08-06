@@ -30,8 +30,7 @@
 			<td><?php echo $donor->phone;?></td>
 			<td>
 				<input type="submit" class="btn btn-primary btn-md" value="Update" formaction="<?php echo base_url();?>bloodbank/register/medical_checkup/0/<?php echo $donor->donation_id;?>" />
-				<input type="submit" class="btn btn-primary btn-md" value="X" formaction="<?php echo base_url();?>bloodbank/register/delete_donor/<?php echo $donor->donation_id;?>"/></td>
-
+				<input type="button" class="btn btn-primary" value="X" data-toggle="modal" data-target="#myModal" />
 		</form>
 		</tr>
 		<?php 
@@ -87,9 +86,37 @@
 	</div>
     <div class="alert alert-info" role="alert">
         <ul>
+            <li>The 'X' button above cancels the donation.</li>
             <li>Please input the medical check up details for the patient.</li>
             <li>Only the donors in the current camp show up in this page.</li>
             <li>Please set the camp to see donors of that camp. <a href="<?php echo base_url();?>bloodbank/user_panel/place">Click here.</a></li>
         </ul>
     </div>
+     <!-- code for modal popup -->
+    <div class="container">
+        <div class="modal fade" role="dialog" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <?php echo form_open("bloodbank/register/delete_donor");?>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Cancel donor</h4>
+                    </div>
+                    <div class="modal-body">
+                    Are you sure want to cancel ?
+                    <br/><br/>
+                    <div class="form-group">
+                        <label for="reason">Enter reason:</label>
+                        <textarea class="form-control" rows="5" id="reason" placeholder="Enter reason for cancelling" name="reason_for_cancel" required ></textarea>
+                    </div>
+                    <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Submit" name="submit" formaction="<?php echo base_url();?>bloodbank/register/delete_donor/<?php echo $donor->donation_id;?>"/>
+                    </div>
+                    </div>
+                </form>
+        </div>
+        </div>
+    </div>
+</div>
 </div>

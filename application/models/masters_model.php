@@ -770,7 +770,6 @@ class Masters_model extends CI_Model{
 	
 }
 
-
 function get_transactions(){
     $this->db->select('hr_transaction.hr_transaction_date, hr_transaction_type.hr_transaction_type')
     ->from('hr_transaction')
@@ -1899,7 +1898,20 @@ else if($type=="dosage"){
 			return false;
 		}
 		else return true;
-   }
-
+   } 	
+function icd_chapter(){
+		$this->db->select("*")->from("icd_chapter")->order_by('chapter_id');		
+		$query=$this->db->get();
+		return $query->result();
+	}
+	function icd_block(){
+		$this->db->select("*")->from("icd_block")->order_by('block_id');		
+		$query=$this->db->get();
+		return $query->result();
+	}
+	function icd_code(){
+		$this->db->select("*")->from("icd_code")->order_by('icd_code');		
+		$query=$this->db->get();
+		return $query->result();
+	}
 }
-?>
