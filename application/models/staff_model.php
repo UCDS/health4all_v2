@@ -50,6 +50,13 @@ class Staff_model extends CI_Model{
 		$query=$this->db->get();
 		return $query->result();
 	}
+	//physical_address() takes no parameters; returns a list of all the physcial addresses and the functions they have access to.
+	function physical_address(){
+		$this->db->select('user_function, physical_address')->from('physical_function_link')
+		->join('user_function','physical_function_link.function_id=user_function.user_function_id');
+		$query=$this->db->get();
+		return $query->result();
+	}
 	
 	//get_department() selects the clinical departments from the database and returns the result
 	function get_department($clinical=1){
