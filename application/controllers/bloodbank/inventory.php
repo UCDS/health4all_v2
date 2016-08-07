@@ -35,6 +35,7 @@ class Inventory extends CI_Controller {
 		$this->data['title']="Inventory";
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/panel_nav',$this->data);
+                $this->data['staff']=$this->staff_model->staff_list();//posting staff details to discard[view]
 		$this->form_validation->set_rules('inventory_id', 'Inventory ID',
 		'required|xss_clean');
 		if ($this->form_validation->run() === FALSE)
@@ -43,11 +44,12 @@ class Inventory extends CI_Controller {
 			$this->load->view('pages/bloodbank/discard',$this->data);
 		}
 		else{
-			if($this->input->post('discard')){
+
+			if($this->input->post('discard'))//gets discarded data
+                       {
 				if($this->inventory_model->discard_inventory()){
 					$this->data['msg']="Discarded Successfully. ";
 					$this->data['inventory']=$this->inventory_model->get_inventory();
-
 					$this->load->view('pages/bloodbank/discard',$this->data);
 				}
 				else{
@@ -144,17 +146,21 @@ class Inventory extends CI_Controller {
 				$this->data['inventory']=$this->inventory_model->get_unprepared_blood();
 				$this->load->view('pages/bloodbank/component_preparation',$this->data);
 			}
-			else{
-				if($this->inventory_model->prepare_components()){
-					$this->data['msg']="Updated Successfully. ";
-					$this->data['inventory']=$this->inventory_model->get_unprepared_blood();
-					$this->load->view('pages/bloodbank/component_preparation',$this->data);
-				}
-				else{
-					$this->data['msg']="Error in storing data. Please retry. ";
-					$this->data['inventory']=$this->inventory_model->get_unprepared_blood();
-					$this->load->view('pages/bloodbank/component_preparation',$this->data);
-				}
+                        else if(!$this->input->post('donation_id')){
+                            $this->data['inventory']=$this->inventory_model->get_unprepared_blood();
+                            $this->load->view('pages/bloodbank/component_preparation',$this->data);
+                        }
+                        else{
+                            if($this->inventory_model->prepare_components()){
+                                    $this->data['msg']="Updated Successfully. ";
+                                    $this->data['inventory']=$this->inventory_model->get_unprepared_blood();
+                                    $this->load->view('pages/bloodbank/component_preparation',$this->data);
+                            }
+                            else{
+                                    $this->data['msg']="Error in storing data. Please retry. ";
+                                    $this->data['inventory']=$this->inventory_model->get_unprepared_blood();
+                                    $this->load->view('pages/bloodbank/component_preparation',$this->data);
+                            }
 			}
 		}
 		
@@ -234,6 +240,7 @@ class Inventory extends CI_Controller {
 		
 		$this->form_validation->set_rules('request_id', 'Request ID',
 		'required|xss_clean');
+                
 		if ($this->form_validation->run() === FALSE)
 		{
 			$this->data['requests']=$this->inventory_model->get_requests();
@@ -247,7 +254,7 @@ class Inventory extends CI_Controller {
 					$this->data['count_inv']=$this->data['inventory'][1];
 					$this->load->view('pages/bloodbank/issue',$this->data);
 				}
-				else if($this->input->post('issue_request')){
+				else if($this->input->post('issue_request') && $this->input->post('inventory_id')){
 					if($this->data['donors']=$this->inventory_model->issue()){
 					$this->data['msg']="Issued Successfully.";
 					$this->load->library('email');
@@ -258,7 +265,10 @@ class Inventory extends CI_Controller {
 					$this->data['msg']="Issue failed. Please retry.";
 					$this->load->view('pages/bloodbank/issue',$this->data);
 					}	
-				}
+                                } else{
+                                    $this->data['requests']=$this->inventory_model->get_requests();
+                                    $this->load->view('pages/bloodbank/blood_issue',$this->data);
+                                }
 					
 		}
 		

@@ -1,15 +1,11 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<script type="text/javascript"
- src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
-  <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
-
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
-		<script type="text/javascript">
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
+<script type="text/javascript">
 $(function(){
 		var options = {
 			widthFixed : true,
@@ -66,7 +62,7 @@ $(function(){
 </script>
 <script>
 	$(function(){
-		$(".date").Zebra_DatePicker({
+		$("#from_date,#to_date").Zebra_DatePicker({
 			direction:false
 		});
 	});
@@ -77,7 +73,7 @@ $(function(){
 <div class="col-md-10 col-sm-9">
 
 	
-	<?php echo form_open('bloodbank/user_panel/blood_components'); ?>
+	<?php echo form_open('bloodbank/user_panel/blood_components', array('role'=>'form','class'=>'form-custom')); ?>
 	<div>
 		<input type="text" class="date" size="12" name="from_date" placeholder="From Date" />
 		<input type="text" class="date" size="12" name="to_date"  placeholder="To Date" />
@@ -92,7 +88,7 @@ $(function(){
 			<option value="O-">O-</option>
 			<option value="AB-">AB-</option>
 		</select>
-		<input type="submit" name="submit" value="Search" />
+		<input type="submit" name="submit" class='btn btn-primary btn-md' value="Search" />
 		<button type="button" class="btn btn-default btn-md print">
           <span class="glyphicon glyphicon-print"></span> Print
         </button>

@@ -112,7 +112,7 @@
 			?>
 			<tr>
 					<td>
-						<?php echo $test->test_name;?>
+						<?php echo $test->test_name;if($test->nabl == 0) echo "<b style='color:red'>*</b>"?>
 					</td>
 					<td>
 					<?php if($test->numeric_result==1){ 
@@ -324,7 +324,7 @@ if(count($orders)>0){ ?>
 											else if($order->test_status == 3){ $label = "label-danger";}
 											else if($order->test_status == 2){ $label = "label-success";}
 											else if($order->test_status == 0){ $label = "label-default";}
-											echo "<div class='label $label'>".$order->test_name."</div><br />";
+											echo "<div class='label $label'>".$order->test_name.(($order->nabl == 0)? "<b style='color:red'>*</b>":"")."</div><br />";
 										}
 									} 
 							?>

@@ -90,7 +90,7 @@ $(function(){
 	});
 </script>
 <div class="row">
-	<div class="col-md-8 col-md-offset-2">
+	<div class="col-md-10 col-md-offset-2">
 		<h4> Service Issue</h4>	
 		<?php echo form_open("equipments/view/service_record_summary",array('role'=>'form','class'=>'form-custom'));  ?>
 				
@@ -116,6 +116,27 @@ $(function(){
 					}
 					?>
 					</select>
+						<select name="unit" id="unit" class="form-control" >
+					<option value="">Unit</option>
+					<?php 
+					foreach($units as $unit){
+						echo "<option value='".$unit->unit_id."' class='".$unit->department_id."'";
+						if($this->input->post('unit') && $this->input->post('unit') == $unit->unit_id) echo " selected ";
+						echo ">".$unit->unit_name."</option>";
+					}
+					?>
+					</select>
+					<select name="area" id="area" class="form-control" >
+					<option value="">Area</option>
+					<?php 
+					foreach($areas as $area){
+						echo "<option value='".$area->area_id."' class='".$area->department_id."'";
+						if($this->input->post('area') && $this->input->post('area') == $area->area_id) echo " selected ";
+						echo ">".$area->area_name."</option>";
+					}
+					?>
+					</select>
+					<label> Working Status</label>
 					<select name="working_status" id="service_records" class="form-control" >
 					<option value="">All</option>	
 					<option value="1" <?php if($this->input->post('working_status') == '1') ?>>Working</option>
@@ -144,23 +165,24 @@ $(function(){
 		</button>
 		<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
-	<th>S.No</th><th>Call Date </th><th>Call Time</th><th>Call Information Type</th><th>Call Information</th><th>Vendor</th><th>Contact Person</th><th>Service Person Remarks</th>
+	<th>S.No</th><th>equipment type</th><th>Call Date </th><th>Call Time</th><th>Call Information Type</th><th>Call Information</th><th>Vendor</th><th>Contact Person</th><th>Service Person Remarks</th>
 	<th>Service Date</th><th>Service Time</th><th>Problem Status</th><th>Working Status</th></thead>
 	<tbody>
 	<?php 
 	$i=1;
 	foreach($service_summary as $a){ ?>
-	<?php echo form_open('equipments/view/service_record_summary',array('role'=>'form','class'=>'form-custom')); ?>
-	<tr>
+		<?php echo form_open('equipments/view/service_records_detail',array('id'=>'select_service_records_form_'.$a->request_id,'role'=>'form')); ?>
+	<tr onclick="$('#select_service_records_form_<?php echo $a->request_id;?>').submit();" >
 		<td><?php echo $i++; ?></td>
-		<td><?php echo $a->call_date; ?>
+		<td> <?php echo $a->equipment_type?></td>
+		<td><?php echo date("d-M-Y", strtotime("$a->call_date"));    ?>
 		
 		<input type="hidden" value="<?php echo $a->request_id; ?>" name="request_id" />
 		<input type="hidden" value="select" name="select" />
 		</td>
 	
 	
-		<td><?php echo $a->call_time; ?></td>
+		<td><?php echo date("h:i A", strtotime("$a->call_time")); ?></td>
 		<td><?php echo $a->call_information_type; ?></td>
 		<td><?php echo $a->call_information; ?></td>
 		<td><?php foreach($vendors as $d){
@@ -172,8 +194,8 @@ $(function(){
 		}
 		?></td>
 		<td><?php echo $a->service_person_remarks; ?></td>
-		<td><?php echo $a->service_date; ?></td>
-		<td><?php echo $a->service_time; ?></td>
+		<td><?php echo date("d-M-Y", strtotime("$a->service_date"));   ?></td>
+		<td><?php  echo date("h:i A", strtotime("$s->service_time"));  ?></td>
 		<td><?php echo $a->problem_status; ?></td>
 		<td><?php
 				if($a->working_status==1)

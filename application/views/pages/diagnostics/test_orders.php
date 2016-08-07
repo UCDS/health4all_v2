@@ -178,7 +178,8 @@
 						'test_result_text'=>$test->test_result_text,
 						'binary_positive'=>$test->binary_positive,
 						'binary_negative'=>$test->binary_negative,
-						'lab_unit'=>$test->lab_unit
+						'lab_unit'=>$test->lab_unit,
+						'nabl'=>$test->nabl
 					);
 					array_splice($order,$i,1);
 					$i--;
@@ -192,7 +193,7 @@
 						<div class="panel panel-info">
 							<div class="panel-heading">
 								<span> 
-								<div class="row" style="padding-left:15px"><h6><?php echo $test['test_name'];?></h6></div>
+								<div class="row" style="padding-left:15px"><h6><?php echo $test['test_name'];if($test['nabl'] == 0) echo "<b style='color:red'>*</b>"; ?></h6></div>
 								<div class="row">
 			<?php 		
 				$positive="";$negative="";
@@ -235,7 +236,7 @@
 			?>
 				<div class="panel panel-warning col-md-12">
 					<div class="col-md-3">
-						<?php echo $test['test_name'];?>
+						<?php echo $test['test_name'];if($test['nabl'] == 0) echo "<b style='color:red'>*</b>";?>
 					</div>
 					<?php if($test['binary_result']==1){ ?>
 					<div class="col-md-3">
@@ -258,7 +259,7 @@
 					<?php } ?>
 					<?php if($test['text_result']==1){ ?>
 					<div class="col-md-3">
-							<input rows="1" type='text' id="text_result_<?php echo $test->test_id;?>" name="text_result_<?php echo $test['test_id'];?>" class="form-control" form='order_submit' placeholder="Suggestive result" value="<?php echo $test['test_result_text'];?>"  <?php echo $readonly;?> list="SuggestiveList<?php echo $test['test_id']?>"></input>
+							<input rows="1" type='text' id="text_result_<?php echo $test['test_id'];?>" name="text_result_<?php echo $test['test_id'];?>" class="form-control" form='order_submit' placeholder="Suggestive result" value="<?php echo $test['test_result_text'];?>"  <?php echo $readonly;?> list="SuggestiveList<?php echo $test['test_id']?>"></input>
 					</div>
 					<?php } ?>
 			<input type="text" value="<?php echo $test['test_id'];?>" name="test[]" class="sr-only hidden" />
@@ -275,7 +276,7 @@
 			?>
 				<div class="panel panel-warning col-md-12">
 					<div class="col-md-3">
-						<?php echo $test->test_name;?>
+						<?php echo $test->test_name; if($test->nabl == 0) echo "<b style='color:red'>*</b>";?>
 					</div>
 					<?php if($test->binary_result==1){ ?>
 					<div class="col-md-3">
@@ -533,7 +534,7 @@ if(count($orders)>0){ ?>
 											if($order->test_status==1) 
 												$label="label-success";
 											else $label = "label-danger";
-											echo "<div class='label $label'>".$order->test_name."</div><br />";
+											echo "<div class='label $label'>".$order->test_name.(( $order->nabl == 0)? "<b style='color:red'>*</b>":'')."</div><br />";
 										}
 									} 
 							?>
@@ -585,6 +586,7 @@ if(count($orders)>0){ ?>
 	}
 } 
 ?>
+<p><b style="color:red">*</b>Not under NABL</p>
 </div>
 <script>
 	function removeRow(type,i){

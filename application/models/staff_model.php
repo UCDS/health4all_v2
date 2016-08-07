@@ -27,7 +27,8 @@ class Staff_model extends CI_Model{
 		$this->db->select('user_function_id,user_function,add,edit,view')->from('user')
 		->join('user_function_link','user.user_id=user_function_link.user_id')
 		->join('user_function','user_function_link.function_id=user_function.user_function_id')
-		->where('user_function_link.user_id',$user_id);
+		->where('user_function_link.user_id',$user_id)
+                ->where('user_function_link.active','1');
 		$query=$this->db->get();
 		return $query->result();
 	}
@@ -80,6 +81,20 @@ class Staff_model extends CI_Model{
 	//get_district() selects the districts from the database and returns the result
 	function get_district(){
 		$this->db->select("district_id,district")->from("district");
+		$query=$this->db->get();
+		return $query->result();
+	}
+	function get_district_codes(){
+		
+		if( $this->input->post('country') != null && strlen($this->input->post('country')) > 0)
+			$this->db->where('country_code',$this->input->post('country'));
+		else	
+			$this->db->where('country_code','IN');
+		if( $this->input->post('state') != null && strlen($this->input->post('state')) > 0)
+			$this->db->where('state_code',$this->input->post('state'));
+		else
+			$this->db->where('state_code','AP');
+		$this->db->select("place_code,place_name")->from("places_table");
 		$query=$this->db->get();
 		return $query->result();
 	}
@@ -174,15 +189,11 @@ class Staff_model extends CI_Model{
 	}
 	//get_form_fields() selects the form fields from the database and returns the result
 	function get_form_fields($form_id){
-		$this->db->select("field_name,mandatory")->from("form_layout")->where("form_id",$form_id)->order_by("id","asc");
+		$this->db->select("field_name,mandatory,default_value")->from("form_layout")->where("form_id",$form_id)->order_by("id","asc");
 		$query=$this->db->get();
 		
 		$result=$query->result();
-		$fields=array();
-		foreach($result as $row){
-			$fields[$row->field_name]=$row->mandatory;
-		}
-		return $fields;
+		return $result;
 	}
 	//create_user() function adds the user details and the user access details into the database.
 	function create_user(){
@@ -324,7 +335,7 @@ class Staff_model extends CI_Model{
 		  return true;
 		}
     }
-       
+
     function search_staff(){
         $name = array(
                    'LOWER(first_name)'=>strtolower($this->input->post('query')), 
@@ -360,6 +371,17 @@ class Staff_model extends CI_Model{
             return false;
     }
 	
+    function get_defaults() {
+        $this->db->select('primary_key, default_value,default_value_text')
+        ->from('default_setting');
+        $query=$this->db->get();
+        $result = $query->result();
+        if($query->num_rows()>0){
+            return $query->result();
+        }
+        else
+            return false;
+    }
 	
 		function search_hospital(){
         $name = array(

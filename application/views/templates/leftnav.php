@@ -18,7 +18,8 @@
 				<li ><a href="#"><i class="fa fa-file-text  "></i>&nbsp;&nbsp;&nbsp;AMC/CMC</a></li>
 				<li class="nav-header">View</li>
 				<li <?php if(preg_match("^view/equipments_summary^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/view/equipments_summary"> <i class="glyph-icon flaticon-medical-equipment"></i> Equipment</a></li>
-				 <li <?php if(preg_match("^view/service_record_summary^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/view/service_record_summary"> <i class="fa fa-cog "></i> Service Issue</a></li>
+				 <li <?php if(preg_match("^view/equipments_detail^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/view/equipments_detail"> <i class="fa fa-cog "></i> Equipment Detail</a></li>
+				<li <?php if(preg_match("^view/service_record_summary^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/view/service_record_summary"> <i class="fa fa-cog "></i> Service Issue</a></li>
 	<ul>
 </div>
 <?php } ?>
@@ -57,7 +58,7 @@
 			<ul>
 </div>
 <?php } ?>
-<?php if(preg_match("^staff/*^",current_url())) { ?>
+<?php if(preg_match("^staff/*^",current_url()) || preg_match("^recruitment/*^",current_url())) { ?>
 
 <div class="col-sm-3 col-md-2 sidebar-left">
     <ul class="nav nav-sidebar">
@@ -72,7 +73,24 @@
                 <li <?php if(preg_match("^edit/add_transaction^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/add_transaction">HR Transaction</a></li>
 								<li class="nav-header">View Staff</li>
 				<li <?php if(preg_match("^edit/view_staff$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/edit/view_staff"> View Staff</a></li>
-	<ul>
+                                <?php foreach($functions as $f){
+                                    if($f->user_function=="HR-Recruitment"){
+                                ?>
+                                <li class="nav-header">Recruitment</li>
+                                <li <?php if(preg_match("^staff_applicant/add_applicant$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff_applicant/add_applicant">Add Applicant</a></li>
+                                <li <?php if(preg_match("^staff_applicant/evaluate_applicant^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff_applicant/evaluate_applicant">Score Applicants</a></li>
+                                <li <?php if(preg_match("^staff_applicant/get_applicants_detailed^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff_applicant/get_applicants_detailed">Get Applicants Detailed</a></li>
+                                <li class="nav-header">Recruitment Masters</li>
+                                <li <?php if(preg_match("^recruitment_masters/add_applicant_college$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>recruitment_masters/add_applicant_college">Add Applicant College</a></li>
+                                <li <?php if(preg_match("^recruitment_masters/add_prev_institute$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>recruitment_masters/add_prev_institute">Add Applicant Prev Hospital</a></li>
+                                <li <?php if(preg_match("^recruitment_masters/add_qualification$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>recruitment_masters/add_qualification">Add Qualifications</a></li>
+                                <li <?php if(preg_match("^recruitment_masters/add_recruitment_drive$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>recruitment_masters/add_recruitment_drive">Add Recruitment Drive</a></li>
+                                <li <?php if(preg_match("^recruitment_masters/add_selection_parameter^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>recruitment_masters/add_selection_parameter">Add Selection Parameter</a></li>
+                               <?php break; } ?>
+                                <?php                                
+                                }
+                                ?>
+	</ul>
 </div>
 <?php } ?>
 

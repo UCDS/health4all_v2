@@ -105,6 +105,7 @@ $(function(){
 					}
 					?>
 					</select>
+					
 					<select name="equipment_status" id="equipment" class="form-control" >
 					<option value="">All</option>	
 					<option value="1" <?php if($this->input->post('equipment_status') == '1') echo "selected";?>>Working</option>

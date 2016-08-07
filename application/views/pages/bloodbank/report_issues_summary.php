@@ -1,6 +1,3 @@
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<script type="text/javascript"
- src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
  <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
@@ -72,22 +69,20 @@ $(function(){
 </style>
 <script type="text/javascript"
  src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
-<script>
+ <script>
 	$(function(){
-		$(".date").Zebra_DatePicker({
-			direction:false
-		});
+		$("#from_date,#to_date").Zebra_DatePicker();
 	});
 </script>
 
 <div class="col-md-10 col-sm-9">
 	
 	<h4>Report of Blood Donors at Indian Red Cross Society Bloodbank - Vidyanagar</h4>
-	<?php echo form_open('bloodbank/user_panel/issue_summary'); ?>
+	<?php echo form_open('bloodbank/user_panel/issue_summary',array('role'=>'form','class'=>'form-custom')); ?>
 	<div>
-		<input type="text" class="date" size="12" id="from_date" name="from_date" />
-		<input type="text" class="date" size="12" name="to_date" />
-		<input type="submit" name="submit" value="Search" />
+		<input type="text" class="form-control" size="12" placeholder="From Date" id="from_date" name="from_date" />
+		<input type="text" class="form-control" size="12" placeholder="To Date" id="to_date" name="to_date" />
+		<input type="submit" name="submit" class='btn btn-primary btn-md' value="Search" />
 	</div>
 	<br />
 	<?php
@@ -131,6 +126,7 @@ $(function(){
 	</thead>
 	<?php 
 	$Apos=0;$Aneg=0;$Bpos=0;$Bneg=0;$ABpos=0;$ABneg=0;$Opos=0;$Oneg=0;$total=0;
+	
 	foreach($summary as $s){
 		$day_total=0;
 		$day_total+=$s->Apos+$s->Aneg+$s->Bpos+$s->Bneg+$s->ABpos+$s->ABneg+$s->Opos+$s->Oneg;

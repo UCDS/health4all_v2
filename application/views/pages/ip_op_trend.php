@@ -3,13 +3,13 @@ This report is generated in response to the query submitted on this page.
 This view is called in reports.php ip_op_trends method-->
 
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/export_to_excell.js"></script>
 <script type="text/javascript">
 $(function(){
 	$("#from_date,#to_date").Zebra_DatePicker();
@@ -65,6 +65,29 @@ $(function(){
             $('#table-sort').trigger('printTable');
         });
 });
+
+</script>
+<script>
+function fnExcelReport() {
+      //created a variable named tab_text where 
+    var tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+    //row and columns arrangements
+    tab_text = tab_text + '<head><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>';
+    tab_text = tab_text + '<x:Name>Excel Sheet</x:Name>';
+
+    tab_text = tab_text + '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>';
+    tab_text = tab_text + '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>';
+
+    tab_text = tab_text + "<table border='100px'>";
+    //id is given which calls the html table
+    tab_text = tab_text + $('#myTable').html();
+    tab_text = tab_text + '</table></body></html>';
+    var data_type = 'data:application/vnd.ms-excel';
+    $('#test').attr('href', data_type + ', ' + encodeURIComponent(tab_text));
+    //downloaded excel sheet name is given here
+    $('#test').attr('download', 'ip_op_trend.xls');
+
+}
 </script>
 	<?php 
         
@@ -132,6 +155,10 @@ $(function(){
 		<button type="button" class="btn btn-default btn-md print">
 		  <span class="glyphicon glyphicon-print"></span> Print
 		</button>
+        <!--created button which converts html table to Excel sheet-->
+        <a href="#" id="test" onClick="javascript:fnExcelReport();">
+            <button type="button" class="btn btn-default btn-md excel">
+                <i class="fa fa-file-excel-o"ara-hidden="true"></i> Export to excel</button></a>
 	<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
 	<tr>
@@ -228,6 +255,92 @@ $(function(){
                     }
                 }
             ?>
+                <th>Median</th>
+                <th class="text-right"><?php echo round(median($male_count_per_day)); ?></th>
+                <th class="text-right"><?php echo round(median($female_count_per_day)); ?></th>
+                <th class="text-right"><?php echo round(median($total_count_per_day)); ?></th>
+        </tr>
+        <tr>
+                <th>Average</th>
+                <th class="text-right"><?php echo round(($total_male/$number_of_records)); ?></th>
+                <th class="text-right"><?php echo round(($total_female/$number_of_records));?></th>
+                <th class="text-right"><?php echo round(($total/$number_of_records));?></th>
+        </tr>
+        </tbody>
+	</table>
+         <table class="table table-bordered table-striped" id="myTable"  hidden>
+	<thead>
+	<tr>
+		<th style="text-align:center" rowspan="2">Date</th>
+		<th style="text-align:center" rowspan="1" colspan="3">Total Visits</th>
+	</tr>
+	<tr>
+		<th style="text-align:center">Male</th><th style="text-align: center">Female</th><th style="text-align: center">Total</th>
+	</tr>
+	</thead>
+	<tbody>
+	<?php 
+        // Simple total
+	$total_male=0;
+	$total_female=0;
+	$total=0;
+        
+        // To calculate average of visits made by patients in the given date range.
+        $number_of_records = 0;
+        $average = 0;
+        
+        // To calculate median of visits made by patients in the given date range.
+        $male_count_per_day = array();
+        $female_count_per_day = array();
+        $total_count_per_day= array();
+        $median_male = 0;
+        $median_female = 0;
+        $median_total = 0;
+        
+	foreach($report as $s){
+		if($this->input->post('trend_type')){
+			$trend_type=$this->input->post('trend_type');
+			if($trend_type == "Month"){
+				$date = date("M, Y",strtotime($s->date));
+			}
+			else if($trend_type == "Year"){
+				$date = $s->date;
+			}
+			else{
+				$date = date("d-M-Y",strtotime($s->date));
+			}
+		}
+		else{
+			$date = date("d-M-Y",strtotime($s->date));
+		}
+	?>
+	<tr>
+		<td><?php echo $date;?></td>
+		<td class="text-right"><?php echo $s->male;?></td>
+		<td class="text-right"><?php echo $s->female;?></td>
+		<td class="text-right"><?php echo $s->total;?></td>
+	</tr>
+	<?php
+        
+	$total_male+=$s->male;
+	$total_female+=$s->female;
+	$total+=$s->total; 
+        // Preparing an array of number of visits per day to sort and find the median.
+        $male_count_per_day[$number_of_records] = $s->male;
+        $female_count_per_day[$number_of_records] = $s->female;
+        $total_count_per_day[$number_of_records] = $s->total;
+        $number_of_records++;        
+	}
+	?>
+	</tbody>
+        <tbody class="tablesorter-no-sort">
+	<tr>
+		<th>Total </th>
+		<th class="text-right" ><?php echo number_format($total_male);?></th>
+		<th class="text-right" ><?php echo number_format($total_female);?></th>
+		<th class="text-right" ><?php echo number_format($total);?></th>
+	</tr>
+        <tr>
                 <th>Median</th>
                 <th class="text-right"><?php echo round(median($male_count_per_day)); ?></th>
                 <th class="text-right"><?php echo round(median($female_count_per_day)); ?></th>

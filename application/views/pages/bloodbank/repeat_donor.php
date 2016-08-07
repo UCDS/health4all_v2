@@ -110,7 +110,14 @@ select{
 }
 </style>
 <div class="col-md-10 col-sm-9">
-	<div style="color:red;padding:5px;font-size:14px;">
+	<?php 
+	if(isset($msg)) { ?>
+		<div class="alert alert-info">
+			<b><?php echo $msg; ?></b>
+		</div>
+	<?php 
+	}
+	?>
 		<?php 
 		$from_date=0;$to_date=0;
 		if($this->input->post('from_date')) $from_date=date("Y-m-d",strtotime($this->input->post('from_date'))); else $from_date = date("Y-m-d");
@@ -162,7 +169,7 @@ select{
 			
 			<div class=" panel-default" style="width:100%;">
 				<div class="panel-heading">
-					<input class="btn btn-sm btn-primary" type="submit" value="Search" onClick="clearall();" />
+					<input class="btn btn-sm btn-primary" type="submit" value="Search" name="search" onClick="clearall();" />
 					<input class="btn btn-sm btn-primary" type="reset" value="Reset"/>
 				</div>
 			</div>
@@ -190,15 +197,15 @@ select{
 		foreach($donors as $s){
 		?>
 		<tr>
-			<td><?php echo $s->name;?></td>
-			<td class="text-right"><a href="<?php echo base_url()."bloodbank/register/index/$s->donor_id";?>"><?php echo $s->parent_spouse;?></a></td>
-			<td class="text-right"><a href="<?php echo base_url()."bloodbank/register/index/$s->donor_id";?>"><?php echo $s->occupation;?></td>
-			<td class="text-right"><a href="<?php echo base_url()."bloodbank/register/index/$s->donor_id";?>"><?php echo $s->dob;?></td>
-			<td class="text-right"><a href="<?php echo base_url()."bloodbank/register/index/$s->donor_id";?>"><?php echo $s->sex;?></td>
-			<td class="text-right"><a href="<?php echo base_url()."bloodbank/register/index/$s->donor_id";?>"><?php echo $s->blood_group;?></td>
-			<td class="text-right"><a href="<?php echo base_url()."bloodbank/register/index/$s->donor_id";?>"><?php echo $s->phone;?></td>
-			<td class="text-right"><a href="<?php echo base_url()."bloodbank/register/index/$s->donor_id";?>"><?php echo $s->email;?></td>
-			<td class="text-right"><a href="<?php echo base_url()."bloodbank/register/index/$s->donor_id";?>"><?php echo $s->address;?></td>
+                    <td><a href="<?php echo base_url()."bloodbank/register/repeat_donor/$s->donor_id";?>"><?php echo $s->name;?></a></td>
+			<td class="text-right"><a href="<?php echo base_url()."bloodbank/register/repeat_donor/$s->donor_id";?>"><?php echo $s->parent_spouse;?></a></td>
+			<td class="text-right"><a href="<?php echo base_url()."bloodbank/register/repeat_donor/$s->donor_id";?>"><?php echo $s->occupation;?></td>
+			<td class="text-right"><a href="<?php echo base_url()."bloodbank/register/repeat_donor/$s->donor_id";?>"><?php echo $s->dob;?></td>
+			<td class="text-right"><a href="<?php echo base_url()."bloodbank/register/repeat_donor/$s->donor_id";?>"><?php echo $s->sex;?></td>
+			<td class="text-right"><a href="<?php echo base_url()."bloodbank/register/repeat_donor/$s->donor_id";?>"><?php echo $s->blood_group;?></td>
+			<td class="text-right"><a href="<?php echo base_url()."bloodbank/register/repeat_donor/$s->donor_id";?>"><?php echo $s->phone;?></td>
+			<td class="text-right"><a href="<?php echo base_url()."bloodbank/register/repeat_donor/$s->donor_id";?>"><?php echo $s->email;?></td>
+			<td class="text-right"><a href="<?php echo base_url()."bloodbank/register/repeat_donor/$s->donor_id";?>"><?php echo $s->address;?></td>
 		</tr>
 		<?php
 		}

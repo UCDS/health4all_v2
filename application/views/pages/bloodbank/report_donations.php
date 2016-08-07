@@ -1,7 +1,4 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<script type="text/javascript"
- src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
-  <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
@@ -122,6 +119,9 @@ $(function(){
 		</div>
 		</form>
 		<hr>
+                <button type="button" class="btn btn-default btn-md print">
+		  <span class="glyphicon glyphicon-print"></span> Print
+		</button>
 		<?php
 		if(isset($msg)) {
 			echo "<div class='alert alert-info'>$msg</div>";
@@ -146,9 +146,6 @@ $(function(){
 		}
 		?>
 		</b>
-		<button type="button" class="btn btn-default btn-md print">
-		  <span class="glyphicon glyphicon-print"></span> Print
-		</button>
 		<table id="header-fixed" class="table-2 table table-striped table-bordered hidden"></table>
 		<div class="pull-right">
 			<span style="width:10px;background:#C0FAB4;margin:5px;">&nbsp&nbsp&nbsp&nbsp </span> Screened. <br />

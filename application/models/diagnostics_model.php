@@ -18,10 +18,6 @@ class Diagnostics_model extends CI_Model{
 		$test_area_id=$this->input->post('test_area');
 		$order_date_time=date("Y-m-d H:i:s",strtotime($this->input->post('order_date')." ".$this->input->post('order_time')));
 		$order_status=0;
-                
-                
-                
-                
 		$this->db->trans_start();
 			$data=array(
 				'visit_id'=>$visit_id,
@@ -252,6 +248,7 @@ class Diagnostics_model extends CI_Model{
 						'group_id'=>0,
                                                 'test_range_id'=>$range_id
 					);
+                                        $range_id = '';
 				}
 			if($this->input->post('test_group')){
 				foreach($this->input->post('test_group') as $test_group){
@@ -441,19 +438,22 @@ class Diagnostics_model extends CI_Model{
 							'sample_id'=>$sample_id,
 							'group_id'=>$test_group,
 							'test_master_id'=>$row->test_master_id,
-                            'test_range_id'=>$range_id                                                        
+                                                        'test_range_id'=>$range_id                                                        
 						);
-					}					
+                                                $range_id ='';
+                                            }					
 						$data[]=array(
 							'order_id'=>$order_id,
 							'sample_id'=>$sample_id,
 							'group_id'=>$test_group,
 							'test_master_id'=>0,
-                            'test_range_id'=>$range_id
+                                                        'test_range_id'=>$range_id
 						);
+                                                $range_id ='';
 				}
 			}
 			$this->db->insert_batch('test',$data);
+		
 		$this->db->trans_complete();
 		if($this->db->trans_status()===FALSE){
 				$this->db->trans_rollback();
@@ -492,7 +492,7 @@ class Diagnostics_model extends CI_Model{
 		$this->db->select('test_id,test_order.order_id,test_sample.sample_id,test_method,
 		test_name,department,visit_type,patient.first_name, patient.last_name,
 		staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,
-		specimen_source,sample_container_type,test_status',false)
+		specimen_source,sample_container_type,test_status, ts.nabl',false)
 		->from('test_order')
 		->join('test','test_order.order_id=test.order_id')
 		->join('test_sample','test_order.order_id=test_sample.order_id')
@@ -508,6 +508,7 @@ class Diagnostics_model extends CI_Model{
 		->where('order_status <',2)
 		->where('test_order.test_area_id',$test_area);
 		$query=$this->db->get();
+		
 		return $query->result();
 	}
 	
@@ -543,7 +544,7 @@ class Diagnostics_model extends CI_Model{
 		}
 		//the above searches will get the details of the patient
 		$this->db->select('test_id,test_order.order_id,test_sample.sample_id,test_method,test_name,department,visit_type,patient.first_name, patient.last_name,
-							staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,specimen_source,sample_container_type,test_status')//adding the specimen source in the update tests
+							staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,specimen_source,sample_container_type,test_status,test_master.nabl')//adding the specimen source in the update tests
 		->from('test_order')
 		->join('test','test_order.order_id=test.order_id')
 		->join('test_sample','test_order.order_id=test_sample.order_id')
@@ -637,7 +638,7 @@ class Diagnostics_model extends CI_Model{
 			$this->db->where('visit_type',$this->input->post('patient_type_search'));
 		}
 		$this->db->select('test_id,test_order.order_id,test_sample.sample_id,test_method,test_name,department,visit_type,patient.first_name, patient.last_name,
-							staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,specimen_source,sample_container_type,test_status')//adding the specimen source in the update tests
+							staff.first_name staff_name,hosp_file_no,sample_code,specimen_type,specimen_source,sample_container_type,test_status,test_master.nabl')//adding the specimen source in the update tests
 		->from('test_order')
 		->join('test','test_order.order_id=test.order_id')
 		->join('test_sample','test_order.order_id=test_sample.order_id')
@@ -652,6 +653,7 @@ class Diagnostics_model extends CI_Model{
 		->where('test_status',2)
 		->where('test_master.test_area_id',$test_area);
 		$query=$this->db->get();
+           
 		return $query->result();
 	}
 	
@@ -677,7 +679,8 @@ class Diagnostics_model extends CI_Model{
 		test_result_text,hospital,hospital.logo,hospital.place,district,state,test_area,provisional_diagnosis,
 		IF(micro_organism_test.micro_organism_test_id!="",GROUP_CONCAT(DISTINCT CONCAT(micro_organism_test.micro_organism_test_id,",",micro_organism,",",antibiotic),",",antibiotic_result,"^"),0) micro_organism_test,
 		approved_by.first_name approved_first,approved_by.last_name approved_last,approved_by.designation approved_by_designation,
-		done_by.first_name done_first,done_by.last_name done_last,done_by.designation done_by_designation,ts.text_range,test_range.min,test_range.max,test_range.range_text,test_range.range_type,  test_range.range_text, test_sample.specimen_source, test_sample.sample_id, test_assay.assay',false)
+		done_by.first_name done_first,done_by.last_name done_last,done_by.designation done_by_designation,ts.text_range,test_range.min,test_range.max,test_range.range_text,test_range.range_type,  test_range.range_text, test_sample.specimen_source, test_sample.sample_id, test_assay.assay, ts.nabl,
+                ts.interpretation test_master_interpretation, test_group.interpretation test_group_interpretation',false)
 		->from('test_order')->join('test','test_order.order_id=test.order_id','left')->join('test_sample','test_order.order_id=test_sample.order_id','left')		
 		->join('test_group','test.group_id=test_group.group_id','left')
 		->join('test_master as ts','test.test_master_id=ts.test_master_id','left')
@@ -709,7 +712,7 @@ class Diagnostics_model extends CI_Model{
 		->group_by('test_id');
 		$this->db->where('test_order.order_id',$order_id);
 		$query=$this->db->get();
-		
+	
 		return $query->result();
 	}		
 	
@@ -735,10 +738,12 @@ class Diagnostics_model extends CI_Model{
 		if(!!$tests){
 		foreach($tests as $test){
 			if($this->input->post('binary_result_'.$test)!=NULL || $this->input->post('numeric_result_'.$test)!=NULL || $this->input->post('text_result_'.$test)!=NULL){
-				if($this->input->post('binary_result_'.$test)!=NULL) 
+				if(!is_null($this->input->post('binary_result_'.$test))) 
 					$binary_result=$this->input->post('binary_result_'.$test);
-				else $binary_result=NULL;
+				else 
+                                    $binary_result=NULL;
 				$numeric_result=$this->input->post('numeric_result_'.$test);
+                                $numeric_result  = empty($numeric_result) ? NULL : $numeric_result;
 				$text_result=$this->input->post('text_result_'.$test);
 				$data[]=array(
 					'test_id'=>$test,
