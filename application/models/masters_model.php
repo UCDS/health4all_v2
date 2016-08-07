@@ -163,7 +163,7 @@ class Masters_model extends CI_Model{
 					$this->db->where('staff.department_id',$this->input->post('department_id'));
 				if($this->input->post('designation'))
 					$this->db->like('staff.designation',$this->input->post('designation'),'both');
-				if($this->input->post('staff_category_id'))
+				if($this->input->post('staff_category'))
 					$this->db->where('staff.staff_category_id',$this->input->post('staff_category_id'));
 				if($this->input->post('gender'))
 					$this->db->where('staff.gender',$this->input->post('gender'));
@@ -181,23 +181,22 @@ class Masters_model extends CI_Model{
 			staff_category.staff_category_id,staff_category.staff_category,designation,email,phone,specialisation,research,research_area, mci_flag, hr_transaction_type.hr_transaction_type, MAX(hr_transaction.hr_transaction_date)")
 			->from("staff")
 			->join('department','staff.department_id = department.department_id','left')
-			->join('staff_category','staff_category.staff_category_id=staff.staff_category_id','left')
-			->join('hr_transaction','hr_transaction.staff_id=staff.staff_id','left')
-			->join('hr_transaction_type','hr_transaction_type.hr_transaction_type_id=hr_transaction.hr_transaction_type_id','left')
+			->join('staff_category','staff.staff_category_id=staff_category.staff_category_id','left')
+			->join('hr_transaction','staff.staff_id=hr_transaction.staff_id','left')
+			->join('hr_transaction_type','hr_transaction.hr_transaction_type_id=hr_transaction_type.hr_transaction_type_id','left')
 			->group_by('staff.staff_id');
 			
 		}
-				else if($type=='view_staff')
+		else if($type=='view_staff')
 		{
-			if($this->input->post('search'))
+			if($this->input->post('search_staff'))
 			{
-				
 				if($this->input->post('department_id'))
 					$this->db->where('staff.department_id',$this->input->post('department_id'));
 				if($this->input->post('designation'))
 					$this->db->like('staff.designation',$this->input->post('designation'),'both');
-				if($this->input->post('staff_category_id'))
-					$this->db->where('staff.staff_category_id',$this->input->post('staff_category_id'));
+				if($this->input->post('staff_category'))
+					$this->db->where('staff.staff_category_id',$this->input->post('staff_category'));
 				if($this->input->post('gender'))
 					$this->db->where('staff.gender',$this->input->post('gender'));
 				if($this->input->post('mci_flag'))
@@ -214,9 +213,9 @@ class Masters_model extends CI_Model{
 			staff_category.staff_category_id,staff_category.staff_category,designation,email,phone,specialisation,research,research_area, mci_flag, hr_transaction_type.hr_transaction_type, MAX(hr_transaction.hr_transaction_date)")
 			->from("staff")
 			->join('department','staff.department_id = department.department_id','left')
-			->join('staff_category','staff_category.staff_category_id=staff.staff_category_id','left')
-			->join('hr_transaction','hr_transaction.staff_id=staff.staff_id','left')
-			->join('hr_transaction_type','hr_transaction_type.hr_transaction_type_id=hr_transaction.hr_transaction_type_id','left')
+			->join('staff_category','staff.staff_category_id=staff_category.staff_category_id','left')
+			->join('hr_transaction','staff.staff_id=hr_transaction.staff_id','left')
+			->join('hr_transaction_type','hr_transaction.hr_transaction_type_id=hr_transaction_type.hr_transaction_type_id','left')
 			->group_by('staff.staff_id');
 			
 			
@@ -1411,7 +1410,6 @@ else if($type=="dosage"){
 	
 		
 		$query=$this->db->get();
-		echo $this->db->last_query();
 		return $query->result();
 		
 		}
@@ -1468,7 +1466,7 @@ else if($type=="dosage"){
             
 			 
 			// save to server (beware of permissions)
-			$result = file_put_contents("assets/images/staff/$staff_id.jpg", $binary_data );
+			$result = file_put_contents("/assets/images/staff/$staff_id.jpg", $binary_data );
 			if (!$result) die("Could not save image!  Check file permissions.");
 		}
 	

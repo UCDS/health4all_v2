@@ -105,7 +105,7 @@ $(function(){
 	
 	<div class="col-md-10 col-md-offset-2">
 		<h4>Search Staff</h4>	
-		<?php echo form_open("staff/edit/view_staff",array('role'=>'form','class'=>'form-custom')); ?>
+		<?php echo form_open("staff/view/view_staff",array('role'=>'form','class'=>'form-custom')); ?>
 					
 					<select name="department_id" id="department" class="form-control">
 					<option value="">Department</option>
@@ -130,12 +130,12 @@ $(function(){
 					?>
 					</select>
 					
-					<select name="staff_category_id" id="staff_category" class="form-control">
+					<select name="staff_category" id="staff_category" class="form-control">
 					<option value="">Staff Category</option>
 					<?php 
 					foreach($staff_category as $staff_cat){
-						echo "<option value='".$staff_cat.staff_cat_id."'";
-						if($this->input->post('staff_category_id') && $this->input->post('staff_category_id') == $staff_cat.staff_category_id) echo "selected ";
+						echo "<option value='".$staff_cat->staff_category_id."'";
+						if($this->input->post('staff_category') && $this->input->post('staff_category') == $staff_cat->staff_category_id) echo "selected ";
 						echo ">".$staff_cat->staff_category."</option>";
 					}
 					?>
@@ -143,17 +143,17 @@ $(function(){
 					
 					<select name="gender" id="gender" class="form-control">
 						<option value="">Gender</option>
-						<option value ="M">Male</option>
-						<option value ="F">Female</option>
+						<option value ="M" <?php if($this->input->post('gender') && $this->input->post('gender')=='M') echo "selected ";?>>Male</option>
+						<option value ="F" <?php if($this->input->post('gender') && $this->input->post('gender')=='F') echo "selected ";?>>Female</option>
 					</select>
 					
 					<select name="mci_flag" id="mci_flag" class="form-control">
 						<option value="">MCI</option>
-						<option value ="1">Yes</option>
-						<option value ="0">No</option>
+						<option value ="1" <?php if($this->input->post('mci_flag') && $this->input->post('mci_flag')==1) echo "selected ";?>>Yes</option>
+						<option value ="0" <?php if($this->input->post('mci_flag') && $this->input->post('mci_flag')==0) echo "selected ";?>>No</option>
 					</select>
 					
-					<input name="search" value="true" type="hidden"></input>
+					<input name="search_staff" value="true" type="hidden"></input>
 					<input class="btn btn-sm btn-primary" type="submit" value="search"/>
 		</form>
 		</div>
@@ -164,7 +164,7 @@ $(function(){
 	<center>	<h3>View Staff </h3></center><br>
 	<?php 
     echo validation_errors();
-	echo form_open('staff/edit/view_staff',array('class'=>'form-horizontal','role'=>'form','id'=>'staff')); 
+	echo form_open('staff/view/view_staff',array('class'=>'form-horizontal','role'=>'form','id'=>'staff')); 
 	?>
 	 <div class="col-md-2 col-xs-2 pull-right">
 		
@@ -422,7 +422,8 @@ $(function(){
 	</div>
 	
 	<?php } 
-	else{ ?>
+	else if($this->input->post('search_staff')){ ?> 
+	
 	<div class="col-md-10 col-md-offset-2">
 	<h3 class="col-md-12 ">List of Staff</h3>
 	<div class="col-md-12 offset-3 ">
@@ -457,7 +458,7 @@ $(function(){
 	foreach($view_staff as $a){ ?>
 	<tr onclick="$('#select_staff_form_<?php echo $a->staff_id;?>').submit();" >
 		<td>	
-			<?php echo form_open('staff/edit/view_staff',array('id'=>'select_staff_form_'.$a->staff_id,'role'=>'form')); ?>
+			<?php echo form_open('staff/view/view_staff',array('id'=>'select_staff_form_'.$a->staff_id,'role'=>'form')); ?>
 			<?php echo $i++; ?>
 		</td>
 		
@@ -469,7 +470,7 @@ $(function(){
 		<input type="hidden" value="<?php echo $a->staff_id; ?>" name="staff_id" />
 		<input type="hidden" value="select" name="select" />
 		</td>
-		<td><?php echo $a->date_of_birth; ?></td>
+		<td><?php echo date("d-M-Y",strtotime($a->date_of_birth)); ?></td>
                 <td><?php echo $a->phone; ?></td>
                 <td><?php echo $a->email; ?></td>
 		<td><?php echo $a->hr_transaction_type;?></td>
@@ -484,26 +485,6 @@ $(function(){
 	</div></div>
 	
 	<div class="col-md-10 col-md-offset-2">
-	<h3 class="col-md-12 ">HR Transactions</h3>
-	<table class="table table-bordered table-striped">
-	<thead>
-		<th style="text-align:center">S.no</th>
-		<th style="text-align:center">Hr Transcation</th>
-		<th style="text-align:center">Date</th>
-	</thead>
-	<tbody>
-	   
-	   <tr>
-	   	<?php $i = 1;
-	   	foreach($transaction as $trans) {?>
-	   		<td><?php echo $i;?></td>
-	   		<td><?php echo $trans->hr_transaction_type;?></td>
-	   		<td><?php echo $trans->hr_transaction_date;?></td>
-	   	<?php $i++;} ?>
-	   </tr>
-	   
-	</tbody>
-	</table>
         
         <table class="sr-only" id="table-excel">
 	<thead>
@@ -547,5 +528,5 @@ $(function(){
         <?php } } } ?>
 	</tbody>
 	</table>
-	
+	</div>
 	
