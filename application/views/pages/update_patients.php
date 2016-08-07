@@ -219,6 +219,10 @@ pri.print();
 	<?php } 
 	else if(isset($patients) && count($patients)==1){
             ?>
+<?php if(isset($duplicate)) { ?>
+		<!-- If duplicate IP no is found then it displays the error message -->
+			<div class="alert alert-danger">Entered Patient Manual ID Number already exists.</div>
+<?php } ?>
 	<?php if(isset($msg)) { ?>
 		<div class="alert alert-info"><?php echo $msg;?></div>
 	<?php } ?>
@@ -347,6 +351,11 @@ pri.print();
 			</div>
 			</div>
 			<div class="row alt">
+                        <div class="col-md-4 col-xs-12 col-lg-4">
+				<label class="control-label">Patient ID Manual
+				<input type="text" name="patient_id_manual" class="form-control" placeholder="Patient ID Manual" value="<?php if($patient) echo $patient->patient_id_manual;?>" <?php if($f->edit==1 && empty($patient->patient_id_manual)) echo ''; else echo ' readonly'; ?> />
+				</label>
+			</div>
 			<div class="col-md-4 col-xs-12 col-lg-4">
 				<label class="control-label">First Name
 				<input type="text" name="first_name" class="form-control" placeholder="First" value="<?php if($patient) echo $patient->first_name;?>" <?php if($f->edit==1 && empty($patient->first_name)) echo ' required'; else echo ' readonly'; ?> />
@@ -1714,6 +1723,21 @@ pri.print();
 				<label><input type="radio" value="Absconded" name="outcome" <?php if(!!$patient->outcome) if($patient->outcome=="Absconded") echo " checked ";?> <?php if($f->edit==1&& empty($patient->outcome)) echo ''; else echo ' readonly'; ?> />Absconded</label>
 				<label><input type="radio" value="Death" name="outcome" <?php if(!!$patient->outcome) if($patient->outcome=="Death") echo " checked ";?> <?php if($f->edit==1&& empty($patient->outcome)) echo ''; else echo ' readonly'; ?> />Death</label>
 				</div>
+			</div>
+                            <script>
+				$(function(){
+					$(".casesheet_at_mrd_date").Zebra_DatePicker({
+						direction:[false,'<?php echo date("d-M-Y",strtotime($patient->casesheet_at_mrd_date));?>']
+					});
+				});
+                            </script>
+                        <div class="col-md-12 alt">
+                            <div class="col-md-2">
+                                <label class="control-label">Case Sheet Recieved at MRD</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" name="casesheet_at_mrd_date" class="form-control casesheet_at_mrd_date" value="<?php if($patient->casesheet_at_mrd_date!=0) echo $patient->casesheet_at_mrd_date;?>" <?php if($f->edit==1&& empty($patient->casesheet_at_mrd_date)) echo ''; else echo ' readonly'; ?> />
+                            </div>
 			</div>
 			<div class="col-md-12 alt">
 				<div class="col-md-2">

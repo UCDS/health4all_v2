@@ -205,7 +205,11 @@ class Register extends CI_Controller {
 		}
 		else{
 			if($this->input->post('update_patient')){
-				$this->register_model->update();
+				$update = $this->register_model->update();
+                                if(is_int($update) && $update==2){
+                                    //If register function returns value 2 then we are setting a duplicate ip no error.
+                                    $this->data['duplicate']=1;
+				}
                                 $this->data['transfers'] = $this->patient_model->get_transfers_info();
 				$this->data['patients']=$this->register_model->search();
 				$this->data['msg'] = "Patient information has been updated successfully";

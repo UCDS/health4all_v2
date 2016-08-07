@@ -80,11 +80,11 @@ $(document).ready(function(){
 			<option value="O-" <?php if($donor->blood_group=="O-") echo "selected";?>>O-</option>
 			<option value="AB-" <?php if($donor->blood_group=="AB-") echo "selected";?>>AB-</option>
 			</select></div></td>
-			<td><div class="form-group"><input type="number" class="form-control" name="blood_unit_num" /></div></td>
-			<td><div class="form-group"><input type="text" class="form-control" name="segment_num" /></div></td>
+			<td><div class="form-group"><input type="number" class="form-control" name="blood_unit_num" required /></div></td>
+			<td><div class="form-group"><input type="text" class="form-control" name="segment_num" required /></div></td>
 			<td>
 			<div class="form-group">
-				<select name="bag_type" style="width:100px" class="form-control" >
+				<select name="bag_type" style="width:100px" class="form-control" required >
 				<option value="" disabled selected>Bag</option>
 				<option value="1">Single</option>
 				<option value="2">Double</option>
@@ -96,14 +96,14 @@ $(document).ready(function(){
                         </td>
                         <td>
 			<div class="form-group">
-			<select name="volume" class="form-control" >
+			<select name="volume" class="form-control" required >
 			<option value="" disabled selected>Vol</option>
 			<option value="350">350ml</option>
 			<option value="450">450ml</option>
 			</select></div></td>
 			<td><div class="checkbox"><input type="checkbox" value="1" name="incomplete" /></div></td>
 			<td><div class="form-group">
-			<select name="staff" class="form-control">
+			<select name="staff" class="form-control" required >
 				<option value="" disabled selected>Done By</option>
 				<?php foreach($staff as $s){
 					echo '<option value='.$s->staff_id.'>'.$s->first_name." ".$s->last_name." ".$s->name.'</option>';

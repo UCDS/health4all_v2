@@ -1,7 +1,9 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <script type="text/javascript"
  src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+ <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
 
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
@@ -14,7 +16,7 @@ $(function(){
 			showProcessing: true,
 			headerTemplate : '{content} {icon}', // Add icon for jui theme; new in v2.7!
 
-			widgets: [ 'default', 'zebra', 'print', 'stickyHeaders','filter'],
+			widgets:  'default', 'zebra', 'print', 'stickyHeaders','filter,
 
 			widgetOptions: {
 
@@ -50,7 +52,7 @@ $(function(){
 
 			  // adding zebra striping, using content and default styles - the ui css removes the background from default
 			  // even and odd class names included for this demo to allow switching themes
-			  zebra   : ["ui-widget-content even", "ui-state-default odd"],
+			  zebra   : "ui-widget-content even", "ui-state-default odd",
 			  // use uitheme widget to apply defauly jquery ui (jui) class names
 			  // see the uitheme demo for more details on how to change the class names
 			  uitheme : 'jui'
@@ -68,20 +70,24 @@ $(function(){
 	text-decoration:none;
 }
 </style>
+<script type="text/javascript"
+ src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <script>
 	$(function(){
-		$("#from_date,#to_date").Zebra_DatePicker();
+		$(".date").Zebra_DatePicker({
+			direction:false
+		});
 	});
 </script>
 
 <div class="col-md-10 col-sm-9">
 	
 	<h4>Report of Issues to hospitals by Indian Red Cross Society Bloodbank - Vidyanagar</h4>
-	<?php echo form_open('bloodbank/user_panel/hospital_issues',array('role'=>'form','class'=>'form-custom')); ?>
+	<?php echo form_open('bloodbank/user_panel/hospital_issues'); ?>
 	<div>
-		<input type="text" class="form-control" placeholder="From Date" size="12" id="from_date" name="from_date" />
-		<input type="text" class="form-control" placeholder="To Date" size="12" id="to_date" name="to_date" />
-		<input type="submit" name="submit" class="btn btn-primary btn-md" value="Search" />
+		<input type="text" class="date" size="12" id="from_date" name="from_date" />
+		<input type="text" class="date" size="12" name="to_date" />
+		<input type="submit" name="submit" value="Search" />
 	</div>
 	<br />
 	<?php
