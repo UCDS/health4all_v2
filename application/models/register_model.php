@@ -742,7 +742,11 @@ class Register_model extends CI_Model{
 	}
 	
 	function search_icd_codes(){
-		$this->db->select('icd_code, CONCAT(icd_code," ",code_title) as code_title',false)->from('icd_code')->order_by('code_title')->like('code_title',$this->input->post('query'),'both');
+		$this->db->select('icd_code, CONCAT(icd_code," ",code_title) as code_title',false)
+		->from('icd_code')
+		->order_by('code_title')
+		->like('code_title',$this->input->post('query'),'both')
+		->or_like('icd_code',$this->input->post('query'),'both');
 		$query=$this->db->get();
 		return $query->result_array();
 	}

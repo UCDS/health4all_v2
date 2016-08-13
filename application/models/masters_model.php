@@ -156,15 +156,17 @@ class Masters_model extends CI_Model{
 		}
 		else if($type=='staff')
 		{
-			if($this->input->post('search'))
+			if($this->input->post('search_staff'))
 			{
-				
 				if($this->input->post('department_id'))
 					$this->db->where('staff.department_id',$this->input->post('department_id'));
+				if($this->input->post('area_id'))
+					$this->db->where('staff.area_id',$this->input->post('area_id'));
 				if($this->input->post('designation'))
 					$this->db->like('staff.designation',$this->input->post('designation'),'both');
-				if($this->input->post('staff_category'))
-					$this->db->where('staff.staff_category_id',$this->input->post('staff_category_id'));
+				if($this->input->post('staff_category')){
+					$this->db->where('staff.staff_category_id',$this->input->post('staff_category'));
+				}
 				if($this->input->post('gender'))
 					$this->db->where('staff.gender',$this->input->post('gender'));
 				if($this->input->post('mci_flag'))
@@ -177,15 +179,15 @@ class Masters_model extends CI_Model{
 			}
 			
 			
-			$this->db->select("staff.staff_id,first_name,last_name,gender,date_of_birth,staff.department_id,department,unit_id,area_id,staff_role_id,
+			$this->db->select("staff.staff_id,first_name,last_name,gender,date_of_birth,staff.department_id,staff.area_id, area_name,department,unit_id,staff_role_id,
 			staff_category.staff_category_id,staff_category.staff_category,designation,email,phone,specialisation,research,research_area, mci_flag, hr_transaction_type.hr_transaction_type, MAX(hr_transaction.hr_transaction_date)")
 			->from("staff")
 			->join('department','staff.department_id = department.department_id','left')
+			->join('area','staff.area_id = area.area_id','left')
 			->join('staff_category','staff.staff_category_id=staff_category.staff_category_id','left')
 			->join('hr_transaction','staff.staff_id=hr_transaction.staff_id','left')
 			->join('hr_transaction_type','hr_transaction.hr_transaction_type_id=hr_transaction_type.hr_transaction_type_id','left')
 			->group_by('staff.staff_id');
-			
 		}
 		else if($type=='view_staff')
 		{
@@ -193,6 +195,8 @@ class Masters_model extends CI_Model{
 			{
 				if($this->input->post('department_id'))
 					$this->db->where('staff.department_id',$this->input->post('department_id'));
+				if($this->input->post('area_id'))
+					$this->db->where('staff.area_id',$this->input->post('area_id'));
 				if($this->input->post('designation'))
 					$this->db->like('staff.designation',$this->input->post('designation'),'both');
 				if($this->input->post('staff_category'))
@@ -209,10 +213,11 @@ class Masters_model extends CI_Model{
 			}
 			
 			
-			$this->db->select("staff.staff_id,first_name,last_name,gender,date_of_birth,staff.department_id,department,unit_id,area_id,staff_role_id,
+			$this->db->select("staff.staff_id,first_name,last_name,gender,date_of_birth,staff.department_id,staff.area_id, area_name,department,unit_id,staff_role_id,
 			staff_category.staff_category_id,staff_category.staff_category,designation,email,phone,specialisation,research,research_area, mci_flag, hr_transaction_type.hr_transaction_type, MAX(hr_transaction.hr_transaction_date)")
 			->from("staff")
 			->join('department','staff.department_id = department.department_id','left')
+			->join('area','staff.area_id = area.area_id','left')
 			->join('staff_category','staff.staff_category_id=staff_category.staff_category_id','left')
 			->join('hr_transaction','staff.staff_id=hr_transaction.staff_id','left')
 			->join('hr_transaction_type','hr_transaction.hr_transaction_type_id=hr_transaction_type.hr_transaction_type_id','left')

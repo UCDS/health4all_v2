@@ -84,62 +84,7 @@ $(function(){
 		});
 	});
 	</script>
-	
-	<div class="col-md-10 col-md-offset-2">
-		<h4>Search Staff</h4>	
-		<?php echo form_open("staff/edit/staff",array('role'=>'form','class'=>'form-custom')); ?>
-					
-					<select name="department_id" id="department" class="form-control">
-					<option value="">Department</option>
-					<?php 
-					foreach($department as $dept){
-						echo "<option value='".$dept->department_id."'";
-						if($this->input->post('department_id') && $this->input->post('department_id') == $dept->department_id) echo " selected ";
-						echo ">".$dept->department."</option>";
-					}
-					?>
-					</select>
-					
-					<select name="designation" id="designation" class="form-control">
-					<option value="">Designation</option>
-					<?php 
-					
-					foreach($designation as $des){
-						echo "<option value='".$des->designation."'";
-						if($this->input->post('designation') && $this->input->post('designation') == $des->designation) echo " selected ";
-						echo ">".$des->designation."</option>";
-					}
-					?>
-					</select>
-					
-					<select name="staff_category_id" id="staff_category" class="form-control">
-					<option value="">Staff Category</option>
-					<?php 
-					foreach($staff_category as $staff_cat){
-						echo "<option value='".$staff_cat.staff_cat_id."'";
-						if($this->input->post('staff_category_id') && $this->input->post('staff_category_id') == $staff_cat.staff_category_id) echo "selected ";
-						echo ">".$staff_cat->staff_category."</option>";
-					}
-					?>
-					</select>					
-					
-					<select name="gender" id="gender" class="form-control">
-						<option value="">Gender</option>
-						<option value ="M">Male</option>
-						<option value ="F">Female</option>
-					</select>
-					
-					<select name="mci_flag" id="mci_flag" class="form-control">
-						<option value="">MCI</option>
-						<option value ="1">Yes</option>
-						<option value ="0">No</option>
-					</select>
-					
-					<input name="search" value="true" type="hidden"></input>
-					<input class="btn btn-sm btn-primary" type="submit" value="search"/>
-		</form>
-		</div>
-	<br />
+
 <?php if(isset($mode)&& $mode=="select" || $this->input->post('update')){?>
 	<center>	<h3>Edit  Staff </h3></center><br>
 	<?php 
@@ -481,6 +426,74 @@ $(function(){
 	
 	<?php } 
 	else{ ?>
+		
+	<div class="col-md-10 col-md-offset-2">
+		<h4>Search Staff</h4>	
+		<?php echo form_open("staff/edit/staff",array('role'=>'form','class'=>'form-custom')); ?>
+					
+					<select name="department_id" id="department" class="form-control">
+					<option value="">Department</option>
+					<?php 
+					foreach($department as $dept){
+						echo "<option value='".$dept->department_id."'";
+						if($this->input->post('department_id') && $this->input->post('department_id') == $dept->department_id) echo " selected ";
+						echo ">".$dept->department."</option>";
+					}
+					?>
+					</select>
+					<select name="area_id" id="area" class="form-control">
+					<option value="">Area</option>
+					<?php 
+					foreach($area as $ar){
+						echo "<option value='".$ar->area_id."'";
+						if($this->input->post('area_id') && $this->input->post('area_id') == $ar->area_id) echo " selected ";
+						echo ">".$ar->area_name."</option>";
+					}
+					?>
+					</select>
+					
+					<select name="designation" id="designation" class="form-control">
+					<option value="">Designation</option>
+					<?php 
+					
+					foreach($designation as $des){
+						echo "<option value='".$des->designation."'";
+						if($this->input->post('designation') && $this->input->post('designation') == $des->designation) echo " selected ";
+						echo ">".$des->designation."</option>";
+					}
+					?>
+					</select>
+					
+					<select name="staff_category" id="staff_category" class="form-control">
+					<option value="">Staff Category</option>
+					<?php 
+					foreach($staff_category as $staff_cat){
+						echo "<option value='".$staff_cat->staff_category_id."'";
+						if($this->input->post('staff_category') && $this->input->post('staff_category') == $staff_cat->staff_category_id) echo "selected ";
+						echo ">".$staff_cat->staff_category."</option>";
+					}
+					?>
+					</select>					
+					
+					<select name="gender" id="gender" class="form-control">
+						<option value="">Gender</option>
+						<option value ="M" <?php if($this->input->post('gender') && $this->input->post('gender')=='M') echo "selected ";?>>Male</option>
+						<option value ="F" <?php if($this->input->post('gender') && $this->input->post('gender')=='F') echo "selected ";?>>Female</option>
+					</select>
+					
+					<select name="mci_flag" id="mci_flag" class="form-control">
+						<option value="">MCI</option>
+						<option value ="1" <?php if($this->input->post('mci_flag') && $this->input->post('mci_flag')==1) echo "selected ";?>>Yes</option>
+						<option value ="0" <?php if($this->input->post('mci_flag') && $this->input->post('mci_flag')==0) echo "selected ";?>>No</option>
+					</select>
+					
+					<input name="search_staff" value="true" type="hidden"></input>
+					<input class="btn btn-sm btn-primary" type="submit" value="search"/>
+		</form>
+		</div>
+	<br />
+    <?php 
+    if(isset($staff) && $staff){ ?>
 	<div class="col-md-10 col-md-offset-2">
 	<h3 class="col-md-12 ">List of Staff</h3>
 	<div class="col-md-12 offset-3 ">
@@ -490,17 +503,19 @@ $(function(){
 		  <span class="glyphicon glyphicon-print"></span> Print
 		</button>
 		<table class="table table-bordered table-striped" id="table-sort">
-	<thead>
+<thead>
 		<th style="text-align:center">S.no</th>
 		
 		<th style="text-align:center">Department</th>
+		<th style="text-align:center">Area</th>
 		<th style="text-align:center">Designation</th>
 		<th style="text-align:center">Staff category</th>
 		<th style="text-align:center">Name</th>
 		<th style="text-align:center">Gender</th>
-		<th style="text-align:center">MCI</th>
+                <th style="text-align:center">DOB</th>
+                <th style="text-align:center">Phone</th>
+                <th style="text-align:center">Email</th>                		
 		<th style="text-align:center">Status</th>
-		<th style="text-align:center">Phone</th>			
 	</thead>
 	<tbody>
 	<?php 
@@ -513,6 +528,7 @@ $(function(){
 		</td>
 		
 		<td><?php echo $a->department;?></td>
+		<td><?php echo $a->area_name;?></td>
 		<td><?php echo $a->designation;?> </td>
 		<td><?php echo $a->staff_category;?> </td>
 		<td><?php echo  $a->first_name." ".$a->last_name;  ?></td>
@@ -520,15 +536,13 @@ $(function(){
 		<input type="hidden" value="<?php echo $a->staff_id; ?>" name="staff_id" />
 		<input type="hidden" value="select" name="select" />
 		</td>
-		<td><?php if($a->mci_flag==1) echo "Yes"; else echo "No"?></td>
-		<td><?php echo $a->hr_transaction_type;?></td>
-		<td>
-		<?php echo $a->phone;?> </td>
-		
-			</form>
+		<td><?php echo date("d-M-Y",strtotime($a->date_of_birth)); ?></td>
+                <td><?php echo $a->phone; ?></td>
+                <td><?php echo $a->email; ?></td>
+		<td><?php echo $a->hr_transaction_type;?></form></td>
 		
 	</tr>
-	<?php } ?>
+	<?php } } ?>
 	</tbody>
 	</table>
 	

@@ -208,35 +208,10 @@ class Staff extends CI_Controller {
 			$this->data['area']=$this->masters_model->get_data("area");
 		//	$this->data['staff_category']=$this->masters_model->get_data("staff_category",$mode='all');
 			$this->data['staff_role']=$this->masters_model->get_data("staff_role",$mode='all');
-			$this->data[$type]=$this->masters_model->get_data($type);
+		//	$this->data[$type]=$this->masters_model->get_data($type);
 			$this->data['designation']=$this->masters_model->get_designation();
 			$this->data['staff_category']=$this->masters_model->get_data("staff_category");
 				
-		}
-		else if($type=="view_staff"){
-			$title="View Staff";
-			$config=array(
-               array(
-                     'field'   => 'staff',
-                     'label'   => 'Staff',
-                     'rules'   => 'trim|xss_clean'
-                  ),
-               array(
-                     'field'   => 'description',
-                     'label'   => 'Description',
-                     'rules'   => 'trim|xss_clean'
-                  )
-		
-			);
-			$this->data['department']=$this->masters_model->get_data("department");
-			$this->data['unit']=$this->masters_model->get_data("unit");
-			$this->data['area']=$this->masters_model->get_data("area");
-			$this->data['staff_category']=$this->masters_model->get_data("staff_category",$mode='all');
-			$this->data['staff_role']=$this->masters_model->get_data("staff_role",$mode='all');
-			$this->data[$type]=$this->masters_model->get_data($type);
-			$this->data['designation']=$this->masters_model->get_designation();
-			$this->data['staff_category']=$this->masters_model->get_data("staff_category");
-			$this->data['transaction'] = $this->masters_model->get_transactions();
 		}
 		
 		else if($type == 'staff_role')
@@ -266,28 +241,6 @@ class Staff extends CI_Controller {
 			
 		}
         
-		else if($type=="view_staff"){
-			$title=" Staff";
-			$config=array(
-               array(
-                     'field'   => 'staff',
-                     'label'   => 'Staff',
-                     'rules'   => 'trim|xss_clean'
-                  ),
-               array(
-                     'field'   => 'description',
-                     'label'   => 'Description',
-                     'rules'   => 'trim|xss_clean'
-                  )
-		
-			);
-			$this->data['department']=$this->masters_model->get_data("department");
-			$this->data['unit']=$this->masters_model->get_data("unit");
-			$this->data['area']=$this->masters_model->get_data("area");
-			$this->data['staff_category']=$this->masters_model->get_data("staff_category",$mode='all');
-			$this->data['staff_role']=$this->masters_model->get_data("staff_role",$mode='all');
-			$this->data[$type]=$this->masters_model->get_data($type);
-		}
 		// if none of the options is selected (i.e. any invalid url modifications) 404 error is shown
 		else
 		{
@@ -317,7 +270,7 @@ class Staff extends CI_Controller {
 			// 3. User enter some data and updates the record.
 			
 			// step 1. 
-			if($this->input->post('search'))
+			if($this->input->post('search') || $this->input->post('search_staff'))
 			{
 				//search results are retrieved from the master_model class
 				$this->data['mode'] = 'search';
