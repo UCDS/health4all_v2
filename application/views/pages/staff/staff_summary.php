@@ -204,10 +204,13 @@ $(function(){
 		<?php 
 		$i=1;
 		$sub_category=array();
+		$total=0;
 		foreach($summary as $s){
 		if(!in_array($s->$sub_by,$sub_category)){
 			$sub_category[]=$s->$sub_by;
-			if($i>1){ ?>
+			if($i>1){ 
+				$total += ${$sub_by.'_sub_total'};
+			?>
 				<tr>
 					<th colspan="6" class="text-right">Sub Total</th>
 					<th class="text-right"><?php echo ${$sub_by.'_sub_total'};?></th> 
@@ -243,10 +246,16 @@ $(function(){
 		</tr>
 		<?php
 			$i++;
-			if($i>count($summary)){ ?>
+			if($i>count($summary)){ 				
+			$total += ${$sub_by.'_sub_total'};
+		?>
 				<tr>
 					<th colspan="6" class="text-right">Sub Total</th>
 					<th class="text-right"><?php echo ${$sub_by.'_sub_total'};?></th> 
+				</tr>
+				<tr>
+					<th colspan="6" class="text-right">Total</th>
+					<th class="text-right"><?php echo $total;?></th> 
 				</tr>
 			<?php 
 			}

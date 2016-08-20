@@ -414,8 +414,8 @@ class Staff_model extends CI_Model{
 		if($this->input->post('designation')){
 			$this->db->where('staff.designation',$this->input->post('designation'));
 		}
-		if($this->input->post('staff_category_id')){
-			$this->db->where('staff.staff_category_id',$this->input->post('staff_category_id'));
+		if($this->input->post('staff_category')){
+			$this->db->where('staff.staff_category_id',$this->input->post('staff_category'));
 		}
 		if($this->input->post('gender')){
 			$this->db->where('staff.gender',$this->input->post('gender'));
