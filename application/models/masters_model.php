@@ -193,13 +193,20 @@ class Masters_model extends CI_Model{
 		{
 			if($this->input->post('search_staff'))
 			{
-				if($this->input->post('department_id'))
+				if($this->input->post('department_id')!="")
 					$this->db->where('staff.department_id',$this->input->post('department_id'));
-				if($this->input->post('area_id'))
+				if($this->input->post('area_id')!="")
 					$this->db->where('staff.area_id',$this->input->post('area_id'));
-				if($this->input->post('designation'))
+				if($this->input->post('unit_id')!="")
+					$this->db->where('staff.unit_id',$this->input->post('unit_id'));
+				if($this->input->post('designation')!='0'){
+					if(!!$this->input->post('designation')){
 					$this->db->like('staff.designation',$this->input->post('designation'),'both');
-				if($this->input->post('staff_category'))
+					}
+					else
+					$this->db->where('staff.designation',$this->input->post('designation'));
+				}
+				if($this->input->post('staff_category')!="")
 					$this->db->where('staff.staff_category_id',$this->input->post('staff_category'));
 				if($this->input->post('gender'))
 					$this->db->where('staff.gender',$this->input->post('gender'));

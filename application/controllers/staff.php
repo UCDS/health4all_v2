@@ -367,7 +367,6 @@ class Staff extends CI_Controller {
       	$this->load->view('templates/leftnav',$this->data);
 		//form configuration is set based on the option selected from the menu
 		$this->form_validation->set_rules($config);
-
 		//if the form contains any invalid data same page along with error msg is shown.
 		if ($this->form_validation->run() === FALSE)
 		{
@@ -541,4 +540,61 @@ class Staff extends CI_Controller {
 		else 
 			return false;
     }
+	
+	function summary(){
+        if($this->session->userdata('logged_in'))
+		    $this->data['userdata']=$this->session->userdata('logged_in');
+        else
+            show_404();
+		$access=0;
+		foreach($this->data['functions'] as $function){
+			if($function->user_function=="HR"){
+				$access=1;
+			}
+		}
+		if($access==1){
+        $this->load->helper('form');
+		$this->load->library('form_validation');
+		$user=$this->session->userdata('logged_in');
+		$this->data['user_id']=$user['user_id'];
+        $title = 'View Staff Summary';
+		$this->data['title']=$title;
+		$this->load->view('templates/header',$this->data);
+      	$this->load->view('templates/leftnav',$this->data);
+		$this->data['summary']=$this->staff_model->get_staff_summary();
+		$this->data['department']=$this->masters_model->get_data("department");
+		$this->data['staff_category']=$this->masters_model->get_data("staff_category");
+		$this->data['unit']=$this->masters_model->get_data("unit");
+		$this->data['area']=$this->masters_model->get_data("area");
+		$this->data['designation']=$this->masters_model->get_designation();
+		//form configuration is set based on the option selected from the menu
+
+		//if the form contains any invalid data same page along with error msg is shown.
+			if ($this->form_validation->run() === FALSE)
+			{
+				$this->load->view('pages/staff/staff_summary',$this->data);
+			}
+			else
+			{
+				//Data from the input fields are retrieved from view and updates into database
+				if($this->staff_model->add_data('transaction_type'))
+				{
+					$this->data['msg']="Updated Successfully";
+					$this->data['mode'] = 'update';
+					$this->load->view($page,$this->data);
+				}
+				//if any failures occurs Failed msg is shown
+				else
+				{
+					$this->data['msg']="Failed";
+					$this->load->view($page,$this->data);
+				}
+			}
+		}else{
+		    show_404();
+		}
+		
+	}
+	
+	
 }

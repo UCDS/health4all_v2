@@ -73,6 +73,7 @@
                 <li <?php if(preg_match("^edit/add_transaction^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/add_transaction">HR Transaction</a></li>
 								<li class="nav-header">View Staff</li>
 				<li <?php if(preg_match("^view/view_staff$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/view/view_staff"> View Staff</a></li>
+				<li <?php if(preg_match("^summary$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/summary"> Summary</a></li>
                                 <?php foreach($functions as $f){
                                     if($f->user_function=="HR-Recruitment"){
                                 ?>

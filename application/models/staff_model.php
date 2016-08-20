@@ -401,6 +401,44 @@ class Staff_model extends CI_Model{
             return false;
     }
 	
+	function get_staff_summary(){
+		if($this->input->post('department_id')){
+			$this->db->where('staff.department_id',$this->input->post('department_id'));
+		}
+		if($this->input->post('area_id')){
+			$this->db->where('staff.area_id',$this->input->post('area_id'));
+		}
+		if($this->input->post('unit_id')){
+			$this->db->where('staff.unit_id',$this->input->post('unit_id'));
+		}
+		if($this->input->post('designation')){
+			$this->db->where('staff.designation',$this->input->post('designation'));
+		}
+		if($this->input->post('staff_category_id')){
+			$this->db->where('staff.staff_category_id',$this->input->post('staff_category_id'));
+		}
+		if($this->input->post('gender')){
+			$this->db->where('staff.gender',$this->input->post('gender'));
+		}
+		if($this->input->post('mci_flag')){
+			$this->db->where('staff.mci_flag',$this->input->post('mci_flag'));
+		}
+		if($this->input->post('sub_by')){
+			$sub_by = $this->input->post('sub_by');
+		}
+		else $sub_by = 'area_name';
+		$this->db->select('count(staff_id) count,staff.department_id, staff.area_id, staff.unit_id,
+					department, area_name,unit_name, designation, staff.staff_category_id,staff_category.staff_category')
+		->from('staff')
+		->join('department','staff.department_id = department.department_id','left')
+		->join('area','staff.area_id = area.area_id','left')
+		->join('unit','staff.unit_id = unit.unit_id','left')
+		->join('staff_category','staff.staff_category_id = staff_category.staff_category_id','left')
+		->group_by('staff.department_id,staff.unit_id,staff.area_id,designation,staff.staff_category_id')
+		->order_by("$sub_by,designation,staff_category");
+		$query = $this->db->get();
+		return $query->result();
+	}
 	
     		
 }
