@@ -742,11 +742,17 @@ class Register_model extends CI_Model{
 	}
 	
 	function search_icd_codes(){
+		if($this->input->post('block')){
+			$this->db->where('icd_block.block_id',$this->input->post('block'));
+		}
+		if($this->input->post('chapter')){
+			$this->db->where('icd_block.chapter_id',$this->input->post('chapter'));
+		}
 		$this->db->select('icd_code, CONCAT(icd_code," ",code_title) as code_title',false)
 		->from('icd_code')
+		->join('icd_block','icd_code.block_id = icd_block.block_id')
 		->order_by('code_title')
-		->like('code_title',$this->input->post('query'),'both')
-		->or_like('icd_code',$this->input->post('query'),'both');
+		->where("(code_title LIKE '%".$this->input->post('query')."%' OR icd_code LIKE '%".$this->input->post('query')."%')");
 		$query=$this->db->get();
 		return $query->result_array();
 	}

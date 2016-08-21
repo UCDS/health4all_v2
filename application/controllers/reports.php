@@ -131,14 +131,10 @@ class Reports extends CI_Controller {
 			$this->load->view('templates/header',$this->data);
 			$this->load->helper('form');
 			$this->data['report']=$this->reports_model->get_icd_summary();
-			$this->data['icd_codes']=$this->masters_model->icd_code();  // retrives the values from the function icd_code in master model
 			$this->data['icd_chapters']=$this->masters_model->icd_chapter();	//retrives the values from the function icd_chapter	 in master model
 			$this->data['icd_blocks']=$this->masters_model->icd_block();      //retrives the values from the function icd_block  in master model
 			$this->load->view('pages/icd_summary',$this->data);
 			$this->load->view('templates/footer');
-			$this->data['icd_codes']=$this->masters_model->icd_code();
-			$this->data['icd_chapters']=$this->masters_model->icd_chapter();			
-			$this->data['icd_blocks']=$this->masters_model->icd_block();
 		}
 		else{
 		show_404();

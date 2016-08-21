@@ -178,6 +178,16 @@ class Reports_model extends CI_Model{
 		if($this->input->post('visit_name')){
 			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
 		}
+		if($this->input->post('icd_code')){
+			$icd_code = substr($this->input->post('icd_code'),0,strpos($this->input->post('icd_code')," "));
+			$this->db->where('icd_code.icd_code',$icd_code);
+		}
+		if($this->input->post('icd_block')){
+			$this->db->where('icd_block.block_id',$this->input->post('icd_block'));
+		}
+		if($this->input->post('icd_chapter')){
+			$this->db->where('icd_chapter.chapter_id',$this->input->post('icd_chapter'));
+		}
         //Selection of visit type OP/IP
 		if($this->input->post('visit_type')){
 			$this->db->where('patient_visit.visit_type',$this->input->post('visit_type'));
