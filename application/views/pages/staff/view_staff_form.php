@@ -123,7 +123,18 @@ $(function(){
 	<?php
 	}
 	?>
-	
+
+<div>
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">General</a></li>
+    <li role="presentation"><a href="#bank" aria-controls="bank" role="tab" data-toggle="tab">Bank</a></li>
+  </ul>
+  
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="home">
 
 	<div class="form-group">
 		<input type='hidden' name='staff_id' value='<?php echo $view_staff[0]->staff_id; ?>' />
@@ -359,7 +370,53 @@ $(function(){
 			value='<?php echo $view_staff[0]->research ?>' readonly/>
 		</div>
 	</div>		
-	
+		
+	</div>
+    <div role="tabpanel" class="tab-pane" id="bank">
+		
+		<div class="form-group">
+			<div class="col-md-3">
+				<label for="account_name" class="control-label">Account Name</label>
+			</div>
+			<div class="col-md-6">
+				<input type="text" class="form-control" placeholder="Bank Account Name" id="account_name" name="account_name" value="<?php echo $view_staff[0]->account_name ?>" readonly />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-3">
+				<label for="bank" class="control-label">Bank Name</label>
+			</div>
+			<div class="col-md-6">
+				<input type="text" class="form-control" placeholder="Bank" id="bank" name="bank" value="<?php echo $view_staff[0]->bank; ?>" readonly />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-3">
+				<label for="bank_branch" class="control-label">Branch</label>
+			</div>
+			<div class="col-md-6">
+				<input type="text" class="form-control" placeholder="Branch" id="bank_branch" name="bank_branch" value="<?php echo $view_staff[0]->bank_branch ?>" readonly />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-3">
+				<label for="account_number" class="control-label">Account Number</label>
+			</div>
+			<div class="col-md-6">
+				<input type="text" class="form-control" placeholder="Account Number" id="account_number" name="account_number" value="<?php echo $view_staff[0]->account_number ?>" readonly />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-3">
+				<label for="ifsc_code" class="control-label">IFSC Code</label>
+			</div>
+			<div class="col-md-6">
+				<input type="text" class="form-control" placeholder="IFSC Code" id="ifsc_code" name="ifsc_code" value="<?php echo $view_staff[0]->ifsc_code ?>" readonly />
+			</div>
+		</div>
+	</div>
+</div>
+</div>
 		
 	</form>
 	</div>
@@ -438,6 +495,39 @@ $(function(){
 	<h3 class="col-md-12 ">List of Staff</h3>
 	<div class="col-md-12 offset-3 ">
 	</div>	
+		<div style="float:right">
+		<?php echo form_open('staff/view/view_staff',array('id'=>'search_staff')); ?>	
+		<?php
+		if($this->input->post('department_id')==0) $department_id = ""; else $department_id = $this->input->post('department_id'); 
+		if($this->input->post('area_id')==0) $area_id = ""; else $area_id = $this->input->post('area_id'); 
+		if($this->input->post('unit_id')==0) $unit_id = ""; else $unit_id = $this->input->post('unit_id'); 
+		if($this->input->post('staff_category')==0) $staff_category = ""; else $staff_category = $this->input->post('staff_category'); 
+		if($this->input->post('designation')=="") $designation = ""; else $designation = $this->input->post('designation'); 
+		?>
+		<input type="text" hidden class="sr-only" value="<?php echo $department_id; ?>"  name="department_id" />
+		<input type="text" hidden class="sr-only" value="<?php echo $area_id; ?>"  name="area_id" />
+		<input type="text" hidden class="sr-only" value="<?php echo $unit_id; ?>"  name="unit_id" />
+		<input type="text" hidden class="sr-only" value="<?php echo $designation; ?>"  name="designation" />
+		<input type="text" hidden class="sr-only" value="<?php echo $staff_category; ?>"  name="staff_category" />
+		<input type="text" hidden class="sr-only" value="<?php echo $this->input->post('gender'); ?>"  name="gender" />
+		<input type="text" hidden class="sr-only" value="<?php echo $this->input->post('mci_flag'); ?>"  name="mci_flag" />
+		<input type="text" hidden class="sr-only" value="<?php echo $this->input->post('search_staff'); ?>"  name="search_staff" />
+		<?php 
+			$this->input->post('bank_details')? $bank_details = 0 : $bank_details = 1;
+		?>
+		<input type="text" hidden class="sr-only" value="<?php echo $bank_details;?>"  name="bank_details" />
+		<?php if(!!$bank_details){ ?>
+		<button type="submit" class="btn btn-default btn-md">
+		  <span class="fa fa-rupee"></span> Bank Details
+		</button>
+		<?php }
+		else { ?>
+		<button type="submit" class="btn btn-default btn-md">
+		  <span class="fa fa-user"></span> Staff Details
+		</button>
+		<?php } ?>
+		</form>
+		</div>
 		<h3><?php if(isset($msg)) echo $msg;?></h3>	
 		<button type="button" class="btn btn-default btn-md print">
 		  <span class="glyphicon glyphicon-print"></span> Print
@@ -450,17 +540,25 @@ $(function(){
 		<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
 		<th style="text-align:center">S.no</th>
-		
 		<th style="text-align:center">Department</th>
 		<th style="text-align:center">Area</th>
 		<th style="text-align:center">Designation</th>
 		<th style="text-align:center">Staff category</th>
+		<?php if(!!$bank_details) { ?>
 		<th style="text-align:center">Name</th>
 		<th style="text-align:center">Gender</th>
 		<th style="text-align:center">DOB</th>
 		<th style="text-align:center">Phone</th>
 		<th style="text-align:center">Email</th>                		
 		<th style="text-align:center">Status</th>
+		<?php } 
+		else { ?>
+		<th style="text-align:center">Account Name</th>
+		<th style="text-align:center">Bank</th>
+		<th style="text-align:center">Branch</th>
+		<th style="text-align:center">Account #</th>
+		<th style="text-align:center">IFSC</th>                		
+		<?php } ?>
 	</thead>
 	<tbody>
 	<?php 
@@ -476,17 +574,26 @@ $(function(){
 		<td><?php echo $a->department;?></td>
 		<td><?php echo $a->area_name;?></td>
 		<td><?php echo $a->designation;?> </td>
-		<td><?php echo $a->staff_category;?> </td>
+		<td><?php echo $a->staff_category;?>
+		<input type="hidden" value="<?php echo $a->staff_id; ?>" name="staff_id" />
+		<input type="hidden" value="select" name="select" /> </td>		
+		<?php if(!!$bank_details) { ?>
 		<td><?php echo  $a->first_name." ".$a->last_name;  ?></td>
 		<td> <?php echo $a->gender;?>
-		<input type="hidden" value="<?php echo $a->staff_id; ?>" name="staff_id" />
-		<input type="hidden" value="select" name="select" />
 		</td>
 		<td><?php echo date("d-M-Y",strtotime($a->date_of_birth)); ?></td>
                 <td><?php echo $a->phone; ?></td>
                 <td><?php echo $a->email; ?></td>
-		<td><?php echo $a->hr_transaction_type;?></form></td>
-		
+		<td><?php echo $a->hr_transaction_type;?></td>
+		<?php } 
+		else { ?>
+		<td><?php echo $a->account_name;?></td>
+		<td><?php echo $a->bank;?></td>
+		<td><?php echo $a->bank_branch;?> </td>
+		<td><?php echo $a->account_number;?> </td>
+		<td><?php echo $a->ifsc_code;?> </td>
+		<?php } ?>
+		</form>
 	</tr>
 	<?php } ?>
 	</tbody>
@@ -506,12 +613,21 @@ $(function(){
 		<th style="text-align:center">Area</th>
 		<th style="text-align:center">Designation</th>
 		<th style="text-align:center">Staff category</th>
+		<?php if(!!$bank_details) { ?>
 		<th style="text-align:center">Name</th>
 		<th style="text-align:center">Gender</th>
-                <th style="text-align:center">DOB</th>
-                <th style="text-align:center">Phone</th>
-                <th style="text-align:center">Email</th>                		
+		<th style="text-align:center">DOB</th>
+		<th style="text-align:center">Phone</th>
+		<th style="text-align:center">Email</th>                		
 		<th style="text-align:center">Status</th>
+		<?php } 
+		else { ?>
+		<th style="text-align:center">Account Name</th>
+		<th style="text-align:center">Bank</th>
+		<th style="text-align:center">Branch</th>
+		<th style="text-align:center">Account #</th>
+		<th style="text-align:center">IFSC</th>                		
+		<?php } ?>
 	</thead>
 	<tbody>
 	<?php 
@@ -526,13 +642,25 @@ $(function(){
 		<td><?php echo $a->department;?></td>
 		<td><?php echo $a->area_name;?></td>
 		<td><?php echo $a->designation;?> </td>
-		<td><?php echo $a->staff_category;?> </td>
+		<td><?php echo $a->staff_category;?> </td>		
+		<?php if(!!$bank_details) { ?>
 		<td><?php echo  $a->first_name." ".$a->last_name;  ?></td>
-		<td> <?php echo $a->gender;?></td>
-		<td><?php echo $a->date_of_birth; ?></td>
+		<td> <?php echo $a->gender;?>
+		<input type="hidden" value="<?php echo $a->staff_id; ?>" name="staff_id" />
+		<input type="hidden" value="select" name="select" />
+		</td>
+		<td><?php echo date("d-M-Y",strtotime($a->date_of_birth)); ?></td>
                 <td><?php echo $a->phone; ?></td>
                 <td><?php echo $a->email; ?></td>
-		<td><?php echo $a->hr_transaction_type;?></td>
+		<td><?php echo $a->hr_transaction_type;?></form></td>
+		<?php } 
+		else { ?>
+		<td><?php echo $a->account_name;?></td>
+		<td><?php echo $a->bank;?></td>
+		<td><?php echo $a->bank_branch;?> </td>
+		<td><?php echo $a->account_number;?> </td>
+		<td><?php echo $a->ifsc_code;?> </td>
+		<?php } ?>
 		
 	</tr>
         <?php } } } } ?>

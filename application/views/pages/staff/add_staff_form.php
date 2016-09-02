@@ -25,6 +25,9 @@ $(function(){
 			$("#unit option,#area option").hide();
 			$("#unit option[class="+department_id+"],#area option[class="+department_id+"]").show();
 		});
+		$("#first_name,#last_name").change(function(){
+			$("#account_name").val($("#first_name").val()+" "+$("#last_name").val())
+		});
 	});
 </script>
 <div class="row">
@@ -42,6 +45,18 @@ $(function(){
 	echo form_open('staff/add/staff',array('class'=>'form-horizontal','role'=>'form','id'=>'add_staff')); 
 	?>
     <input type="hidden" class="form-control" placeholder="First Name" id="staff_id" name="staff_id" required />
+
+<div>
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">General</a></li>
+    <li role="presentation"><a href="#bank" aria-controls="bank" role="tab" data-toggle="tab">Bank</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="home">
 	<div class="form-group">
 		<div class="col-md-3">
 			<label for="first_name" class="control-label">First Name</label>
@@ -320,7 +335,53 @@ $(function(){
                   <button type="submit" name="file_upload" value="Upload" class="btn btn-group btn-default btn-animated" >Upload<i class="fa fa-user"></i></button>
                 </section>
             </fieldset>-->
+	</div>
+    <div role="tabpanel" class="tab-pane" id="bank">
 		
+		<div class="form-group">
+			<div class="col-md-3">
+				<label for="account_name" class="control-label">Account Name</label>
+			</div>
+			<div class="col-md-6">
+				<input type="text" class="form-control" placeholder="Bank Account Name" id="account_name" name="account_name" />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-3">
+				<label for="bank" class="control-label">Bank Name</label>
+			</div>
+			<div class="col-md-6">
+				<input type="text" class="form-control" placeholder="Bank" id="bank" name="bank" />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-3">
+				<label for="bank_branch" class="control-label">Branch</label>
+			</div>
+			<div class="col-md-6">
+				<input type="text" class="form-control" placeholder="Branch" id="bank_branch" name="bank_branch" />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-3">
+				<label for="account_number" class="control-label">Account Number</label>
+			</div>
+			<div class="col-md-6">
+				<input type="text" class="form-control" placeholder="Account Number" id="account_number" name="account_number" />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-3">
+				<label for="ifsc_code" class="control-label">IFSC Code</label>
+			</div>
+			<div class="col-md-6">
+				<input type="text" class="form-control" placeholder="IFSC Code" id="ifsc_code" name="ifsc_code" />
+			</div>
+		</div>
+	</div>
+  </div>
+
+</div>	
    	<div class="form-group col-md-9">
 		<button class="btn btn-lg btn-primary btn-block" type="submit" value="submit">Submit</button>
 	</div>

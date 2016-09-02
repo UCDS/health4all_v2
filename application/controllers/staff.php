@@ -297,6 +297,7 @@ class Staff extends CI_Controller {
 				{
 					$this->data['msg']="Updated Successfully";
 					$this->data['mode'] = 'update';
+					$this->data[$type]=$this->masters_model->get_data($type);
 					$this->load->view($page,$this->data);
 				}
 				//if any failures occurs Failed msg is shown
