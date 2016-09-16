@@ -4,7 +4,7 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
-script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-ui.js"></script>
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery.ptTimeSelect.css">

@@ -190,7 +190,11 @@ pri.print();
 				<?php if($update){ ?>
 				<input type="text" name="visit_id" class="form-control sr-only" size="3" value="<?php echo $patient->visit_id;?>" readonly />
 				<?php } ?>
-				<input type="text" name="hosp_file_no" <?php if($update){?> value="<?php echo $patient->hosp_file_no;?>" <?php } ?> class="form-control" size="5" required />
+                                <input type="text" name="hosp_file_no" <?php if($ip_count[0]->auto_increment == "YES"){?> readonly <?php if(!$update){ ?> value='<?php echo $ip_count[0]->count; ?>' <?php } } ?><?php if($update){?> value="<?php echo $patient->hosp_file_no;?>" <?php } ?> class="form-control" size="5" required />
+                                <?php if($ip_count[0]->auto_increment == "YES"){ ?> 
+                                <input type="hidden" name="auto_increment" value='YES'/>
+                                <?php } ?>                         
+                                
 				<?php } ?>
 				<label class="control-label">Date</label>
 				<?php 

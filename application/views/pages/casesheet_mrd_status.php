@@ -21,13 +21,31 @@
             foreach($patient_record_status as $pr_status){
                 $mrd_status["$pr_status->hosp_file_no"] = array(
                     "outcome_date" => $pr_status->outcome_date,
-                    "casesheet_at_mrd_date" => $pr_status->casesheet_at_mrd_date
+                    "casesheet_at_mrd_date" => $pr_status->casesheet_at_mrd_date,
+                    "visit_id" => $pr_status->visit_id
                 );
             }
         ?>
 		<button type="button" class="btn btn-default btn-md print">
 		  <span class="glyphicon glyphicon-print"></span> Print
 		</button>
+        <table class='table'> 
+            <tr>
+                <td bgcolor='green'>Data Input Done</td>
+            </tr>
+            <tr>
+                <td bgcolor='yellow'>MRD Date not set</td>
+            </tr>
+            <tr>
+                <td bgcolor='brown'>Outcome Date not set</td>
+            </tr>
+            <tr>
+                <td bgcolor='orange'>MRD and Outcome not set</td>
+            </tr>
+            <tr>
+                <td bgcolor='gray'>Unused Hospital file number</td>
+            </tr>              
+        </table>
 	<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
 	<tr>
@@ -44,22 +62,26 @@
                         <td style="text-align:center" bgcolor="<?php 
                         if(array_key_exists($i, $mrd_status))
                         {                             
-                            if($mrd_status[$i]['casesheet_at_mrd_date'] != '0000-00-00' && $mrd_status[$i]['casesheet_at_mrd_date'] != '0000-00-00')
+                            if($mrd_status[$i]['outcome_date'] != '0000-00-00' && $mrd_status[$i]['casesheet_at_mrd_date'] != '0000-00-00')
                             { 
                                 echo 'green';                                    
-                            }else if($mrd_status[$i]['casesheet_at_mrd_date'] != '0000-00-00' && $mrd_status[$i]['casesheet_at_mrd_date'] == '0000-00-00')
+                            }else if($mrd_status[$i]['outcome_date'] != '0000-00-00' && $mrd_status[$i]['casesheet_at_mrd_date'] == '0000-00-00')
                             { 
                                 echo 'yellow';                                    
-                            }else if($mrd_status[$i]['casesheet_at_mrd_date'] == '0000-00-00' && $mrd_status[$i]['casesheet_at_mrd_date'] != '0000-00-00')
+                            }else if($mrd_status[$i]['outcome_date'] == '0000-00-00' && $mrd_status[$i]['casesheet_at_mrd_date'] != '0000-00-00')
                             { 
                                 echo 'brown';                                     
-                            }else if($mrd_status[$i]['casesheet_at_mrd_date'] == '0000-00-00' && $mrd_status[$i]['casesheet_at_mrd_date'] == '0000-00-00'){
+                            }else if($mrd_status[$i]['outcome_date'] == '0000-00-00' && $mrd_status[$i]['casesheet_at_mrd_date'] == '0000-00-00'){
                                 echo 'orange';
                             }
                         }else
                         { 
                             echo 'gray';
-                        } ?>" > <?php echo $i; ?></td>
+                        } ?>" <?php if(array_key_exists($i, $mrd_status)) { ?> onclick="$('#select_patient_<?php echo $mrd_status[$i]['visit_id'];?>').submit()" <?php } ?> > 
+                            <?php if(array_key_exists($i, $mrd_status)) { echo form_open('register/update_patients',array('role'=>'form','id'=>'select_patient_'.$mrd_status[$i]['visit_id']));?>
+			<input type="text" class="sr-only" hidden value="<?php echo $mrd_status[$i]['visit_id'];?>" form="select_patient_<?php echo $mrd_status[$i]['visit_id'];?>" name="selected_patient" />
+			</form>
+                            <?php } echo $i; ?></td>
                     <?php                    
                     if($j == 10) {
                         ?>

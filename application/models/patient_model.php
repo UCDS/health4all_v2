@@ -180,7 +180,7 @@ class patient_model extends CI_Model {
         }else{
             return false;
         }
-        $this->db->select('patient_visit.outcome_date, patient_visit.hosp_file_no, patient_visit.casesheet_at_mrd_date')
+        $this->db->select('patient_visit.outcome_date, patient_visit.visit_id, patient_visit.hosp_file_no, patient_visit.casesheet_at_mrd_date')
                 ->from('patient_visit')
                 ->where('visit_type','IP');
         

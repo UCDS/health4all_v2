@@ -1,16 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of patient
- *
- * @author gokul
- */
 class Patient extends CI_Controller {    
     function __construct() {
         parent::__construct();
@@ -27,7 +16,7 @@ class Patient extends CI_Controller {
         $this->data['departments']=$this->staff_model->user_department($user_id);
         
 	foreach ($this->data['functions'] as $f ){
-            if($f->user_function=="Bloodbank"){
+            if($f->user_function=="Bloodbank" || $f->user_function=="IP Summary"){
 		$access=1;
             }		
         }

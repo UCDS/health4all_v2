@@ -94,8 +94,8 @@ class Register_model extends CI_Model{
 		if($this->input->post('congenital_anomalies')) $congenital_anomalies=$this->input->post('congenital_anomalies'); else $congenital_anomalies="";
 		if($this->input->post('visit_name')) $visit_name_id=$this->input->post('visit_name'); else $visit_name_id=0;
 		if($form_type=="IP"){
-			$hosp_file_no=$this->input->post('hosp_file_no');
-			if(!$this->input->post('visit_id')){
+			$hosp_file_no=$this->input->post('hosp_file_no');                        
+			if(!$this->input->post('visit_id') && !$this->input->post('auto_increment')){
 			//If it's an IP form, get the hospital file number from the input field.
 			$this->db->select('hosp_file_no,admit_date'); //Here we are selecting hosp_file_no and admit_date with year for match  from the database
 			$this->db->where('hosp_file_no',$hosp_file_no);
@@ -159,7 +159,7 @@ class Register_model extends CI_Model{
                 
                 if($this->input->post('patient_id_manual')){
                     $patient_id_manual = $this->input->post('patient_id_manual');
-                    $this->db->select('patient_id_manual'); //Here we are selecting hosp_file_no and admit_date with year for match  from the database
+                    $this->db->select('patient_id_manual'); 
                     $this->db->from('patient');
                     $this->db->where('patient_id_manual',$patient_id_manual);                    
                     $query=$this->db->get();
@@ -265,7 +265,13 @@ class Register_model extends CI_Model{
 		$this->db->update('patient_visit',array('admit_id'=>$visit_id));
 		//update the counter table with the new hospital file number.
 		$this->db->where('counter_name',$form_type);
-		$this->db->update('counter',array('count'=>$hosp_file_no));
+                if($this->input->post('auto_increment') && !$this->input->post('visit_id')){
+                    $hosp_file_no++;
+                    $this->db->update('counter',array('count'=>$hosp_file_no));        
+                }else{
+                    $this->db->update('counter',array('count'=>$hosp_file_no));
+                }
+		
 		
 		//Transaction ends here.
 		$this->db->trans_complete();

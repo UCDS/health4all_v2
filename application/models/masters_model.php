@@ -100,7 +100,7 @@ class Masters_model extends CI_Model{
 		->join("equipment","service_record.equipment_id=equipment.equipment_id")
 		->join("vendor","service_record.vendor_id=vendor.vendor_id",'left')
 		->join("contact_person","service_record.contact_person_id=contact_person.contact_person_id",'left')
-		->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id")
+		//->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id")
 		//->join("department","equipment.department_id=department.department_id" )
 		->group_by("equipment_id")
 		->order_by("equipment_id");
@@ -1898,20 +1898,7 @@ else if($type=="dosage"){
 			return false;
 		}
 		else return true;
-   } 	
-function icd_chapter(){
-		$this->db->select("*")->from("icd_chapter")->order_by('chapter_id');		
-		$query=$this->db->get();
-		return $query->result();
-	}
-	function icd_block(){
-		$this->db->select("*")->from("icd_block")->order_by('block_id');		
-		$query=$this->db->get();
-		return $query->result();
-	}
-	function icd_code(){
-		$this->db->select("*")->from("icd_code")->order_by('icd_code');		
-		$query=$this->db->get();
-		return $query->result();
-	}
+   }
+
 }
+?>

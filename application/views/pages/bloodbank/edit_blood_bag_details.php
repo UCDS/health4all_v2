@@ -195,16 +195,16 @@
                     <td colspan="5">
                         <select name="camp_id" id="camp_id" class="form-control" >
                             <option value="">--Select Location--</option>
-                            <?php 
-                            $option = "<option size='30' value='";
+                            <?php                            
                             foreach($camps as $camp){
+                                    $option = "<option size='30' value='";
                                     $option .= $camp->camp_id."'";
                                     if($camp->camp_id == $donation->camp_id){
                                         $option .= " selected ";
                                     }
                                     echo $option.">".$camp->camp_name.", ".$camp->location."</option>";
-                            ?>
-
+                                    $option = '';
+                            ?>                                    
                             <?php
                             }
                             ?>
