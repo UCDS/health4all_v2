@@ -57,8 +57,6 @@ function test_order($departments=0){
 	$this->load->view('templates/footer');
 }
 
-
-
 function view_orders($access=1){
 	if(!$this->session->userdata('logged_in')){
 		show_404();
@@ -138,6 +136,51 @@ function view_orders($access=1){
 	$this->load->view('templates/footer');
 }
 
+function view_updated_tests(){
+	if(!$this->session->userdata('logged_in')){
+		show_404();
+	}
+	$this->load->library('email');
+	$this->load->helper('form');
+	$this->load->library('form_validation');
+	$user=$this->session->userdata('logged_in');
+	$this->data['user_id']=$user['user_id'];	  
+	$this->data['title']="View Updated Tests";
+	$page="pages/diagnostics/view_updated_tests";
+	$this->load->view('templates/header',$this->data);
+	$this->load->view('templates/leftnav');
+	$this->form_validation->set_rules('order_id','Order','trim|xss_clean');
+	$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
+	$this->data['test_methods']=$this->masters_model->get_data("test_method");
+	if(count($this->data['test_areas'])>1){
+		if ($this->form_validation->run() === FALSE){
+			$this->load->view($page,$this->data);
+		}
+		else{
+			if($this->input->post('select_order')){
+				$this->data['order']=$this->diagnostics_model->get_order();
+				$this->load->view($page,$this->data);
+			}		
+			else{
+				$this->data['orders']=$this->diagnostics_model->get_tests_completed($this->data['test_areas']);
+				$this->load->view($page,$this->data);
+			}
+		}
+	}
+	else{
+		if($this->input->post('select_order')){
+			$this->data['order']=$this->diagnostics_model->get_order();
+			$this->load->view($page,$this->data);
+		}	
+		else{
+			$this->data['orders']=$this->diagnostics_model->get_tests_completed($this->data['test_areas']);
+			$this->load->view($page,$this->data);
+		}
+	}
+	
+	$this->load->view('templates/footer');
+    
+}
 
 function view_results(){
 	if(!$this->session->userdata('logged_in')){
@@ -667,5 +710,27 @@ function edit($type="")
 		$this->load->view('templates/footer');
 
 	}
+    
+    function lab_turnaround_time(){
+        if(!$this->session->userdata('logged_in')){
+            show_404();
+	}
+        $this->load->helper('form');
+        $this->data['user_id']=$user['user_id'];
+        $this->data['title'] ="Lab Turn Around Time";
+        $this->data['mode'] = "search";
+        $this->load->view('templates/header',$this->data);
+        $page = "pages/diagnostics/lab_turnaround_time.php";
+        $this->data['lab_turnaround_time'] = $this->diagnostics_model->lab_turnaround_time();
+        $this->data['all_departments']=$this->staff_model->get_department();
+        $this->data['lab_departments']=$this->masters_model->get_data('test_area');
+        $this->data['specimen_types']=$this->masters_model->get_data('specimen_type');
+        $this->data['test_methods']=$this->masters_model->get_data("test_method");
+        $this->data['test_masters']=$this->masters_model->get_data("test_name");
+        $this->data['units']=$this->staff_model->get_unit();
+        $this->data['areas']=$this->staff_model->get_area();
+        $this->load->view($page,$this->data);
+        $this->load->view('templates/footer');
+    }
 }
 ?>

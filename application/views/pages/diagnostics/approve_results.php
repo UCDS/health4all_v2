@@ -1,4 +1,9 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+<style>
+.modal-body,.modal-header{
+	background:#111;
+}
+</style>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/theme.default.css">
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
@@ -181,13 +186,33 @@
 
 						if($test->test_status == 0) { 
 							$result="Test not done";
+							echo $result;
 						} 
 						else{	
 							$result = $test->test_result_text;
+						?>
+							<textarea name="text_result" class="form-control"><?php echo $result;?></textarea>
+						<?php
 						}
-						echo $result;
 					 }
 								else echo "-"; ?>
+								
+	
+					<?php if($test->test_area=="Radiology"){
+							if($test->study_id != "") { ?>
+								&nbsp &nbsp <a data-toggle="modal" data-target="#myModal" href="#" ><span  class="glyphicon glyphicon-eye-open" ></span> View Image</a>
+								<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+								  <div class="modal-dialog" role="document" style="width:90%">
+									<div class="modal-content">
+									  <div class="modal-body">
+									  <button type="button" class="close" data-dismiss="modal" style="color:white;opacity:0.8" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<object type="text/html" data="http://localhost/dwv/viewers/simplistic/index.php?input=http%3A%2F%2Flocalhost%2F<?php echo $test->filepath;?>" width="100%" height="800px" style="overflow:auto;border:3px ridge #ccc"></object>
+									  </div>
+									</div>
+								  </div>
+								</div>
+					<?php	}
+						} ?>
 					 </td>
 					 <td>
 					<?php if($test->test_status == 2){ ?>

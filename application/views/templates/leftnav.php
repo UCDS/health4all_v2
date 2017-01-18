@@ -147,7 +147,7 @@
 }
 ?>
 
-<?php if(preg_match("^diagnostics/*^",current_url())) { ?>
+<?php if(preg_match("^diagnostics/*^",current_url()) || preg_match("^pacs/*^",current_url())) { ?>
 <div class="col-sm-3 col-md-2 sidebar-left">
     <ul class="nav nav-sidebar">
 	<?php 
@@ -192,6 +192,12 @@
 	 foreach($functions as $f){
 		if($f->user_function=="Diagnostics"){ ?>
 			<li <?php if(preg_match("^view_results^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/view_results">View Results</a></li>
+		</li>
+	<?php }
+	} 
+	 foreach($functions as $f){
+		if($f->user_function=="Diagnostics"){ ?>
+			<li <?php if(preg_match("^pacs^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>pacs/import">Import from PACS</a></li>
 		</li>
 	<?php }
 	} 

@@ -553,6 +553,7 @@ $(function(){
 		<th style="text-align:center">Status</th>
 		<?php } 
 		else { ?>
+		<th style="text-align:center">Name</th>
 		<th style="text-align:center">Account Name</th>
 		<th style="text-align:center">Bank</th>
 		<th style="text-align:center">Branch</th>
@@ -587,6 +588,7 @@ $(function(){
 		<td><?php echo $a->hr_transaction_type;?></td>
 		<?php } 
 		else { ?>
+		<td><?php echo  $a->first_name." ".$a->last_name;  ?></td>
 		<td><?php echo $a->account_name;?></td>
 		<td><?php echo $a->bank;?></td>
 		<td><?php echo $a->bank_branch;?> </td>
@@ -622,6 +624,7 @@ $(function(){
 		<th style="text-align:center">Status</th>
 		<?php } 
 		else { ?>
+		<th style="text-align:center">Name</th>
 		<th style="text-align:center">Account Name</th>
 		<th style="text-align:center">Bank</th>
 		<th style="text-align:center">Branch</th>
@@ -655,6 +658,7 @@ $(function(){
 		<td><?php echo $a->hr_transaction_type;?></form></td>
 		<?php } 
 		else { ?>
+		<td><?php echo  $a->first_name." ".$a->last_name;  ?></td>
 		<td><?php echo $a->account_name;?></td>
 		<td><?php echo $a->bank;?></td>
 		<td><?php echo $a->bank_branch;?> </td>

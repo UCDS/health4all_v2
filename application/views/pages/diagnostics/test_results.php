@@ -8,6 +8,12 @@ src="<?php echo base_url(); ?>assets/js/zebra_datepicker.js"></script>
 src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript"
 src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></script>
+<style>
+
+.modal-body,.modal-header{
+	background:#111;
+}
+</style>
 <script>
     $(function () {
         $(".date").Zebra_DatePicker();
@@ -370,6 +376,7 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
                                             $result = "Tests not yet done.";
                                         echo $result;
                                         ?>
+												
                                     </td>
                                     <?php 
                                         if($test_range_flag == 1 ){ ?>
@@ -465,6 +472,22 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
                                     if ($nabl_flag == 1 && $test->nabl == 0)
                                         echo "<b style='color:red'>*</b>";
                                     ?>
+									
+									<?php if($test->test_area=="Radiology"){
+											if($test->study_id != "") { ?>
+												&nbsp &nbsp <a data-toggle="modal" data-target="#myModal" href="#" ><span  class="glyphicon glyphicon-eye-open" ></span> View Image</a>
+												<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+												  <div class="modal-dialog" role="document" style="width:90%">
+													<div class="modal-content">
+													  <div class="modal-body">
+													  <button type="button" class="close" data-dismiss="modal" style="color:white;opacity:0.8" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+														<object type="text/html" data="http://localhost/dwv/viewers/simplistic/index.php?input=http%3A%2F%2Flocalhost%2F<?php echo $test->filepath;?>" width="100%" height="800px" style="overflow:auto;border:3px ridge #ccc"></object>
+													  </div>
+													</div>
+												  </div>
+												</div>
+									<?php	}
+										} ?>
                                     </td>
                                     <?php if ($assay_set == 1) { ?>
                                     <td>
@@ -497,6 +520,7 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
                                             $result = "Tests not yet done.";
                                         echo $result;
                                         ?>
+										
                                     </td>
                                     <?php 
                                     
@@ -559,6 +583,7 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
                                                     if($flag_1==1)
                                                         $positive_for.=", ";
                                                     $positive_for.=$sensitivity_test['micro_organism'];
+                                                    $positive_for.= (!is_null($sensitivity_test['test_result_text']) && !empty($sensitivity_test['test_result_text'])) ? ", ".$sensitivity_test['test_result_text'] : "";
                                                     $flag_1=1;
                                                 }
                                                 $result = $sensitivity_test['binary_positive']." ";
@@ -1062,6 +1087,7 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
                                                     if($flag_1==1)
                                                         $positive_for.=", ";
                                                     $positive_for.=$sensitivity_test['micro_organism'];
+                                                    $positive_for.= (!is_null($sensitivity_test['test_result_text']) && !empty($sensitivity_test['test_result_text'])) ? ", ".$sensitivity_test['test_result_text'] : "";
                                                     $flag_1=1;
                                                 }
                                                 $result = $sensitivity_test['binary_positive']." ";
