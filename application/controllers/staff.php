@@ -208,35 +208,10 @@ class Staff extends CI_Controller {
 			$this->data['area']=$this->masters_model->get_data("area");
 		//	$this->data['staff_category']=$this->masters_model->get_data("staff_category",$mode='all');
 			$this->data['staff_role']=$this->masters_model->get_data("staff_role",$mode='all');
-			$this->data[$type]=$this->masters_model->get_data($type);
+		//	$this->data[$type]=$this->masters_model->get_data($type);
 			$this->data['designation']=$this->masters_model->get_designation();
 			$this->data['staff_category']=$this->masters_model->get_data("staff_category");
 				
-		}
-		else if($type=="view_staff"){
-			$title="View Staff";
-			$config=array(
-               array(
-                     'field'   => 'staff',
-                     'label'   => 'Staff',
-                     'rules'   => 'trim|xss_clean'
-                  ),
-               array(
-                     'field'   => 'description',
-                     'label'   => 'Description',
-                     'rules'   => 'trim|xss_clean'
-                  )
-		
-			);
-			$this->data['department']=$this->masters_model->get_data("department");
-			$this->data['unit']=$this->masters_model->get_data("unit");
-			$this->data['area']=$this->masters_model->get_data("area");
-			$this->data['staff_category']=$this->masters_model->get_data("staff_category",$mode='all');
-			$this->data['staff_role']=$this->masters_model->get_data("staff_role",$mode='all');
-			$this->data[$type]=$this->masters_model->get_data($type);
-			$this->data['designation']=$this->masters_model->get_designation();
-			$this->data['staff_category']=$this->masters_model->get_data("staff_category");
-			$this->data['transaction'] = $this->masters_model->get_transactions();
 		}
 		
 		else if($type == 'staff_role')
@@ -266,28 +241,6 @@ class Staff extends CI_Controller {
 			
 		}
         
-		else if($type=="view_staff"){
-			$title=" Staff";
-			$config=array(
-               array(
-                     'field'   => 'staff',
-                     'label'   => 'Staff',
-                     'rules'   => 'trim|xss_clean'
-                  ),
-               array(
-                     'field'   => 'description',
-                     'label'   => 'Description',
-                     'rules'   => 'trim|xss_clean'
-                  )
-		
-			);
-			$this->data['department']=$this->masters_model->get_data("department");
-			$this->data['unit']=$this->masters_model->get_data("unit");
-			$this->data['area']=$this->masters_model->get_data("area");
-			$this->data['staff_category']=$this->masters_model->get_data("staff_category",$mode='all');
-			$this->data['staff_role']=$this->masters_model->get_data("staff_role",$mode='all');
-			$this->data[$type]=$this->masters_model->get_data($type);
-		}
 		// if none of the options is selected (i.e. any invalid url modifications) 404 error is shown
 		else
 		{
@@ -317,7 +270,121 @@ class Staff extends CI_Controller {
 			// 3. User enter some data and updates the record.
 			
 			// step 1. 
-			if($this->input->post('search'))
+			if($this->input->post('search') || $this->input->post('search_staff'))
+			{
+				//search results are retrieved from the master_model class
+				$this->data['mode'] = 'search';
+				$this->data[$type]=$this->masters_model->get_data($type);
+				
+				$this->load->view($page,$this->data);
+			}
+			// step 2.
+			else if($this->input->post('select'))
+			{
+				//selected record's id is taken from  input in master_model
+				//all the fields are retrieved and sent to the view
+				$this->data['mode'] = 'select';
+			   	$this->data[$type]=$this->masters_model->get_data($type);
+         		$this->load->view($page,$this->data);
+			}
+			
+			//step 3.
+			else if($this->input->post('update'))
+			{
+				//Data from the input fields are retrieved from view and updates into database
+				
+				if($this->masters_model->update_data($type))
+				{
+					$this->data['msg']="Updated Successfully";
+					$this->data['mode'] = 'update';
+					$this->data[$type]=$this->masters_model->get_data($type);
+					$this->load->view($page,$this->data);
+				}
+				//if any failures occurs Failed msg is shown
+				else
+				{
+					$this->data['msg']="Failed";
+					$this->load->view($page,$this->data);
+				}
+			}
+		}
+		
+		$this->load->view('templates/footer');}
+        else{
+            show_404();
+        }
+	}
+     
+	function view($type=""){
+        if($this->session->userdata('logged_in'))
+		    $this->data['userdata']=$this->session->userdata('logged_in');
+        else
+            show_404();
+		$access=0;
+		foreach($this->data['functions'] as $function){
+			if($function->user_function=="HR"){
+				$access=1;
+			}
+		}
+		if($access==1){
+	 	$this->load->helper('form');
+		$this->load->library('form_validation');
+		$user=$this->session->userdata('logged_in');
+		$this->data['user_id']=$user['user_id'];
+		$this->data['type']=$type;
+		if($type=="view_staff"){
+			$title="View Staff";
+			$config=array(
+               array(
+                     'field'   => 'staff',
+                     'label'   => 'Staff',
+                     'rules'   => 'trim|xss_clean'
+                  ),
+               array(
+                     'field'   => 'description',
+                     'label'   => 'Description',
+                     'rules'   => 'trim|xss_clean'
+                  )
+		
+			);
+			$this->data['department']=$this->masters_model->get_data("department");
+			$this->data['unit']=$this->masters_model->get_data("unit");
+			$this->data['area']=$this->masters_model->get_data("area");
+			$this->data['staff_category']=$this->masters_model->get_data("staff_category",$mode='all');
+			$this->data['staff_role']=$this->masters_model->get_data("staff_role",$mode='all');
+			$this->data['designation']=$this->masters_model->get_designation();
+			$this->data['staff_category']=$this->masters_model->get_data("staff_category");
+			$this->data['transaction'] = $this->masters_model->get_transactions();
+		}
+		// if none of the options is selected (i.e. any invalid url modifications) 404 error is shown
+		else
+		{
+			show_404();
+		}
+		
+		$page="pages/staff/".$type."_form";
+		$this->data['title']=$title;
+		$this->load->view('templates/header',$this->data);
+      	$this->load->view('templates/leftnav',$this->data);
+		//form configuration is set based on the option selected from the menu
+		$this->form_validation->set_rules($config);
+		//if the form contains any invalid data same page along with error msg is shown.
+		if ($this->form_validation->run() === FALSE)
+		{
+			$this->data['mode'] = 'mode';
+			$this->load->view($page,$this->data);
+		}
+		//if form does not contain any errors
+		else
+		{
+			//there are 3 steps for updating
+			// 1. User searches for the record to be updated.
+			//    1.1 User can directly press search button without entering any data.
+			// 2. User selects the required record.
+			// 3. User enter some data and updates the record.
+			
+			// step 1. 
+			if($this->input->post('search') || $this->input->post('search_staff'))
 			{
 				//search results are retrieved from the master_model class
 				$this->data['mode'] = 'search';
@@ -354,16 +421,8 @@ class Staff extends CI_Controller {
 				}
 			}
 		}
-		
-		$this->load->view('templates/footer');}
-        else{
-            show_404();
-        }
+		}
 	}
-     
-
-      
-	 
     function add_transaction(){
         if($this->session->userdata('logged_in'))
 		    $this->data['userdata']=$this->session->userdata('logged_in');
@@ -482,7 +541,8 @@ class Staff extends CI_Controller {
 		else 
 			return false;
     }
-	function view($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=0){	
+	
+	function summary(){
         if($this->session->userdata('logged_in'))
 		    $this->data['userdata']=$this->session->userdata('logged_in');
         else
@@ -494,27 +554,48 @@ class Staff extends CI_Controller {
 			}
 		}
 		if($access==1){
-		$this->load->helper('form_helper');
-		switch($type){
-			case "staff" : 
-				$this->data['title']="Staff Member Details";
-				$this->data['equipments']=$this->masters_model->get_data("staff");
-				break;
-			case "staff_role" :
-				$this->data['title']="Staff Role Details";
-				$this->data['summary']=$this->reports_model->get_equipments_summary();
-				break;
-			case "staff_category" :
-				$this->data['title']="Staff Category Details";
-				$this->data['summary']=$this->reports_model->get_equipments_summary();
-				break;
-		}				
+        $this->load->helper('form');
+		$this->load->library('form_validation');
+		$user=$this->session->userdata('logged_in');
+		$this->data['user_id']=$user['user_id'];
+        $title = 'View Staff Summary';
+		$this->data['title']=$title;
 		$this->load->view('templates/header',$this->data);
-		$this->load->view('templates/leftnav',$this->data);
-		$this->load->view("pages/inventory/report_$type",$this->data);
-		$this->load->view('templates/footer');
-	}else {
-	    show_404();
+      	$this->load->view('templates/leftnav',$this->data);
+		$this->data['summary']=$this->staff_model->get_staff_summary();
+		$this->data['department']=$this->masters_model->get_data("department");
+		$this->data['staff_category']=$this->masters_model->get_data("staff_category");
+		$this->data['unit']=$this->masters_model->get_data("unit");
+		$this->data['area']=$this->masters_model->get_data("area");
+		$this->data['designation']=$this->masters_model->get_designation();
+		//form configuration is set based on the option selected from the menu
+
+		//if the form contains any invalid data same page along with error msg is shown.
+			if ($this->form_validation->run() === FALSE)
+			{
+				$this->load->view('pages/staff/staff_summary',$this->data);
+			}
+			else
+			{
+				//Data from the input fields are retrieved from view and updates into database
+				if($this->staff_model->add_data('transaction_type'))
+				{
+					$this->data['msg']="Updated Successfully";
+					$this->data['mode'] = 'update';
+					$this->load->view($page,$this->data);
+				}
+				//if any failures occurs Failed msg is shown
+				else
+				{
+					$this->data['msg']="Failed";
+					$this->load->view($page,$this->data);
+				}
+			}
+		}else{
+		    show_404();
+		}
+		
 	}
-}
+	
+	
 }

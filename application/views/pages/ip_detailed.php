@@ -170,7 +170,7 @@ $(document).ready(function(){$("#from_date").datepicker({
 	<tr>
 		<td><?php echo $i++;?></td>
 		<td><?php if($s->admit_date!=0) echo date("d-M-Y",strtotime($s->admit_date));?></td>
-		<td><?php if($s->admit_time!=0) echo date("g:iA",strtotime($s->admit_time));?></td>
+		<td><?php if(!!$s->admit_time) echo date("g:iA",strtotime($s->admit_time));?></td>
 		<td><?php echo $s->hosp_file_no;?></td>
 		<td><?php echo $s->gender;?></td>
 		<td><?php echo $s->name;?></td>

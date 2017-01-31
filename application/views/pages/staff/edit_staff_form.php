@@ -84,62 +84,7 @@ $(function(){
 		});
 	});
 	</script>
-	
-	<div class="col-md-10 col-md-offset-2">
-		<h4>Search Staff</h4>	
-		<?php echo form_open("staff/edit/staff",array('role'=>'form','class'=>'form-custom')); ?>
-					
-					<select name="department_id" id="department" class="form-control">
-					<option value="">Department</option>
-					<?php 
-					foreach($department as $dept){
-						echo "<option value='".$dept->department_id."'";
-						if($this->input->post('department_id') && $this->input->post('department_id') == $dept->department_id) echo " selected ";
-						echo ">".$dept->department."</option>";
-					}
-					?>
-					</select>
-					
-					<select name="designation" id="designation" class="form-control">
-					<option value="">Designation</option>
-					<?php 
-					
-					foreach($designation as $des){
-						echo "<option value='".$des->designation."'";
-						if($this->input->post('designation') && $this->input->post('designation') == $des->designation) echo " selected ";
-						echo ">".$des->designation."</option>";
-					}
-					?>
-					</select>
-					
-					<select name="staff_category_id" id="staff_category" class="form-control">
-					<option value="">Staff Category</option>
-					<?php 
-					foreach($staff_category as $staff_cat){
-						echo "<option value='".$staff_cat.staff_cat_id."'";
-						if($this->input->post('staff_category_id') && $this->input->post('staff_category_id') == $staff_cat.staff_category_id) echo "selected ";
-						echo ">".$staff_cat->staff_category."</option>";
-					}
-					?>
-					</select>					
-					
-					<select name="gender" id="gender" class="form-control">
-						<option value="">Gender</option>
-						<option value ="M">Male</option>
-						<option value ="F">Female</option>
-					</select>
-					
-					<select name="mci_flag" id="mci_flag" class="form-control">
-						<option value="">MCI</option>
-						<option value ="1">Yes</option>
-						<option value ="0">No</option>
-					</select>
-					
-					<input name="search" value="true" type="hidden"></input>
-					<input class="btn btn-sm btn-primary" type="submit" value="search"/>
-		</form>
-		</div>
-	<br />
+
 <?php if(isset($mode)&& $mode=="select" || $this->input->post('update')){?>
 	<center>	<h3>Edit  Staff </h3></center><br>
 	<?php 

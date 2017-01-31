@@ -155,15 +155,17 @@ class Masters_model extends CI_Model{
 		}
 		else if($type=='staff')
 		{
-			if($this->input->post('search'))
+			if($this->input->post('search_staff'))
 			{
-				
 				if($this->input->post('department_id'))
 					$this->db->where('staff.department_id',$this->input->post('department_id'));
+				if($this->input->post('area_id'))
+					$this->db->where('staff.area_id',$this->input->post('area_id'));
 				if($this->input->post('designation'))
 					$this->db->like('staff.designation',$this->input->post('designation'),'both');
-				if($this->input->post('staff_category_id'))
-					$this->db->where('staff.staff_category_id',$this->input->post('staff_category_id'));
+				if($this->input->post('staff_category')){
+					$this->db->where('staff.staff_category_id',$this->input->post('staff_category'));
+				}
 				if($this->input->post('gender'))
 					$this->db->where('staff.gender',$this->input->post('gender'));
 				if($this->input->post('mci_flag'))
@@ -178,27 +180,36 @@ class Masters_model extends CI_Model{
 			}
 			
 			
-			$this->db->select("staff.staff_id,first_name,last_name,gender,date_of_birth,staff.department_id,department,unit_id,area_id,staff_role_id,
-			staff_category.staff_category_id,staff_category.staff_category,designation,email,phone,specialisation,research,research_area, mci_flag, hr_transaction_type.hr_transaction_type, MAX(hr_transaction.hr_transaction_date)")
+			$this->db->select("staff.staff_id,first_name,last_name,gender,date_of_birth,staff.department_id,staff.area_id, area_name,department,unit_id,staff_role_id,
+			staff_category.staff_category_id,staff_category.staff_category,designation,email,phone,specialisation,research,research_area, mci_flag, hr_transaction_type.hr_transaction_type, MAX(hr_transaction.hr_transaction_date),
+			bank,bank_branch,ifsc_code,account_number,account_name")
 			->from("staff")
 			->join('department','staff.department_id = department.department_id','left')
-			->join('staff_category','staff_category.staff_category_id=staff.staff_category_id','left')
-			->join('hr_transaction','hr_transaction.staff_id=staff.staff_id','left')
-			->join('hr_transaction_type','hr_transaction_type.hr_transaction_type_id=hr_transaction.hr_transaction_type_id','left')
+			->join('area','staff.area_id = area.area_id','left')
+			->join('staff_category','staff.staff_category_id=staff_category.staff_category_id','left')
+			->join('hr_transaction','staff.staff_id=hr_transaction.staff_id','left')
+			->join('hr_transaction_type','hr_transaction.hr_transaction_type_id=hr_transaction_type.hr_transaction_type_id','left')
 			->group_by('staff.staff_id');
-			
 		}
-				else if($type=='view_staff')
+		else if($type=='view_staff')
 		{
-			if($this->input->post('search'))
+			if($this->input->post('search_staff'))
 			{
-				
-				if($this->input->post('department_id'))
+				if($this->input->post('department_id')!="")
 					$this->db->where('staff.department_id',$this->input->post('department_id'));
-				if($this->input->post('designation'))
+				if($this->input->post('area_id')!="")
+					$this->db->where('staff.area_id',$this->input->post('area_id'));
+				if($this->input->post('unit_id')!="")
+					$this->db->where('staff.unit_id',$this->input->post('unit_id'));
+				if($this->input->post('designation')!='0'){
+					if(!!$this->input->post('designation')){
 					$this->db->like('staff.designation',$this->input->post('designation'),'both');
-				if($this->input->post('staff_category_id'))
-					$this->db->where('staff.staff_category_id',$this->input->post('staff_category_id'));
+					}
+					else
+					$this->db->where('staff.designation',$this->input->post('designation'));
+				}
+				if($this->input->post('staff_category')!="")
+					$this->db->where('staff.staff_category_id',$this->input->post('staff_category'));
 				if($this->input->post('gender'))
 					$this->db->where('staff.gender',$this->input->post('gender'));
 				if($this->input->post('mci_flag'))
@@ -211,13 +222,15 @@ class Masters_model extends CI_Model{
 			}
 			
 			
-			$this->db->select("staff.staff_id,first_name,last_name,gender,date_of_birth,staff.department_id,department,unit_id,area_id,staff_role_id,
-			staff_category.staff_category_id,staff_category.staff_category,designation,email,phone,specialisation,research,research_area, mci_flag, hr_transaction_type.hr_transaction_type, MAX(hr_transaction.hr_transaction_date)")
+			$this->db->select("staff.staff_id,first_name,last_name,gender,date_of_birth,staff.department_id,staff.area_id, area_name,department,unit_id,staff_role_id,
+			staff_category.staff_category_id,staff_category.staff_category,designation,email,phone,specialisation,research,research_area, mci_flag, hr_transaction_type.hr_transaction_type, MAX(hr_transaction.hr_transaction_date),
+			bank,bank_branch,ifsc_code,account_number,account_name")
 			->from("staff")
 			->join('department','staff.department_id = department.department_id','left')
-			->join('staff_category','staff_category.staff_category_id=staff.staff_category_id','left')
-			->join('hr_transaction','hr_transaction.staff_id=staff.staff_id','left')
-			->join('hr_transaction_type','hr_transaction_type.hr_transaction_type_id=hr_transaction.hr_transaction_type_id','left')
+			->join('area','staff.area_id = area.area_id','left')
+			->join('staff_category','staff.staff_category_id=staff_category.staff_category_id','left')
+			->join('hr_transaction','staff.staff_id=hr_transaction.staff_id','left')
+			->join('hr_transaction_type','hr_transaction.hr_transaction_type_id=hr_transaction_type.hr_transaction_type_id','left')
 			->group_by('staff.staff_id');
 			
 			
@@ -767,6 +780,7 @@ class Masters_model extends CI_Model{
 			->where('area.area_id',$this->input->post('area'));
 		}
 		$query=$this->db->get();
+		
 		return $query->result();
 	
 }
@@ -1168,7 +1182,12 @@ else if($type=="dosage"){
 					  'phone'=>$this->input->post('phone'),
 					  'specialisation'=>$this->input->post('specialisation'),
 					  'research_area'=>$this->input->post('research_area'),
-					  'research'=>$this->input->post('research')
+					  'research'=>$this->input->post('research'),
+					  'bank'=>$this->input->post('bank'),
+					  'bank_branch'=>$this->input->post('bank_branch'),
+					  'account_name'=>$this->input->post('account_name'),
+					  'account_number'=>$this->input->post('account_number'),
+					  'ifsc_code'=>$this->input->post('ifsc_code')
 					);
 					
 			//get the patient id from the inserted row.
@@ -1412,7 +1431,6 @@ else if($type=="dosage"){
 	
 		
 		$query=$this->db->get();
-		echo $this->db->last_query();
 		return $query->result();
 		
 		}
@@ -1439,7 +1457,7 @@ else if($type=="dosage"){
 					  'first_name'=>$this->input->post('first_name'),
 					  'last_name'=>$this->input->post('last_name'),
 					  'gender'=>$this->input->post('gender'),
-					  'date_of_birth'=>$this->input->post('date_of_birth'),
+					  'date_of_birth'=>date("Y-m-d",strtotime($this->input->post('date_of_birth'))),
 					  'hospital_id'=>$this->input->post('hospital'),
 					  'department_id'=>$this->input->post('department'),
 					  'unit_id'=>$this->input->post('unit'),
@@ -1455,6 +1473,11 @@ else if($type=="dosage"){
 					  'research_area'=>$this->input->post('research_area'),
 					  'research'=>$this->input->post('research'),
 					  'ima_registration_number'=>$this->input->post('ima_registration_number')
+					  'bank'=>$this->input->post('bank'),
+					  'bank_branch'=>$this->input->post('bank_branch'),
+					  'account_name'=>$this->input->post('account_name'),
+					  'account_number'=>$this->input->post('account_number'),
+					  'ifsc_code'=>$this->input->post('ifsc_code')
 		);
 		    $staff_id = 0 ;
          	
@@ -1469,8 +1492,8 @@ else if($type=="dosage"){
             
 			 
 			// save to server (beware of permissions)
-			$result = file_put_contents("assets/images/staff/$staff_id.jpg", $binary_data );
-			if (!$result) die("Could not save image!  Check file permissions.");
+			// $result = file_put_contents("/assets/images/staff/$staff_id.jpg", $binary_data );
+			// if (!$result) die("Could not save image!  Check file permissions.");
 		}
 	
 		

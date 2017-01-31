@@ -14,6 +14,12 @@
 <script type="text/javascript">
 $(function(){
 	$("#from_date,#to_date").Zebra_DatePicker();
+
+	$("#generate-csv").click(function(){
+		$(".table").table2CSV();
+	});
+	$("#icd_block").chained("#icd_chapter");
+
 		var options = {
 			widthFixed : true,
 			showProcessing: true,
@@ -65,6 +71,40 @@ $(function(){
 		  $('.print').click(function(){
 			$('#table-sort').trigger('printTable');
 		  });
+
+	
+	$('#icd_code').selectize({
+    valueField: 'code_title',
+    labelField: 'code_title',
+    searchField: 'code_title',
+    create: false,
+    render: {
+        option: function(item, escape) {
+
+            return '<div>' +
+                '<span class="title">' +
+                    '<span class="icd_code">' + escape(item.code_title) + '</span>' +
+                '</span>' +
+            '</div>';
+        }
+    },
+    load: function(query, callback) {
+        if (!query.length) return callback();
+		$.ajax({
+            url: '<?php echo base_url();?>register/search_icd_codes',
+            type: 'POST',
+			dataType : 'JSON',
+			data : {query:query,block:$("#icd_block").val(),chapter:$("#icd_chapter").val()},
+            error: function(res) {
+                callback();
+            },
+            success: function(res) {
+                callback(res.icd_codes.slice(0, 10));
+            }
+        });
+    }
+	});
+		
 });
 </script>
 	<?php 
@@ -75,7 +115,7 @@ $(function(){
 	?>
 	<div class="row">
 		<h4>ICD Code - Summary Report</h4>	
-		<?php echo form_open("reports/icd_summary",array('role'=>'form','class'=>'form-custom')); ?>
+		<?php echo form_open("reports/icd_summary",array('role'=>'form','id'=>'search_form','class'=>'form-custom')); ?>
 					From Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y",strtotime($from_date)); ?>" name="from_date" id="from_date" size="15" />
 					To Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y",strtotime($to_date)); ?>" name="to_date" id="to_date" size="15" />
 					<select name="department" id="department" class="form-control">
@@ -118,12 +158,90 @@ $(function(){
 					}
 					?>
 					</select>
+
 					Visit Type : <select class="form-control" name="visit_type">
 									<option value="" >All</option>
 									<option value="OP" <?php if($visit_type == "OP") echo " selected ";?>>OP</option>
 									<option value="IP" <?php if($visit_type == "IP" || $visit_type != 'OP') echo " selected ";?>>IP</option>
 								</select>
+
 					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
+					<br />
+					<br />
+					<div class="col-md-12">
+					<div class="col-md-4">
+					<select name="icd_chapter" id="icd_chapter" class="form-control" style="width:300px;" >
+					<option value="">ICD Chapter</option>
+					<?php 
+					foreach($icd_chapters as $v){
+						echo "<option value='".$v->chapter_id."'";
+						if($this->input->post('icd_chapter') && $this->input->post('icd_chapter') == $v->chapter_id) echo " selected ";
+						echo ">".$v->chapter_id." - ".$v->chapter_title."</option>";
+					}
+					?>
+					</select>
+					</div>
+					<div class="col-md-4">
+					<select name="icd_block" id="icd_block" class="form-control" style="width:300px;" >
+					<option value="">ICD Block</option>
+					<?php 
+					foreach($icd_blocks as $v){
+						echo "<option value='".$v->block_id."' class='".$v->chapter_id."' ";
+						if($this->input->post('icd_block') && $this->input->post('icd_block') == $v->block_id) echo " selected ";
+						echo ">".$v->block_id." - ".$v->block_title."</option>";
+					}
+					?>
+					</select>	
+					</div>
+					<div class="col-md-4">
+					<select id="icd_code" class="repositories" style="width:300px;display:inline;" placeholder="Select ICD Code.." name="icd_code" >
+						<?php if($this->input->post('icd_code')) { ?>
+							<option value="<?php echo $this->input->post('icd_code');?>"><?php echo $this->input->post('icd_code');?></option>
+						<?php } ?>
+					</select>	
+					</div>
+					</div>
+					<br/><br/>
+<script>
+		var $year=$("#year").val();
+		var $visit_type=$("#visit_type").val();
+	$(function(){
+		$("#visit_type").change(function(){
+			$visit_type=$(this).val();
+			selectize = $("#icd_code")[0].selectize;
+			selectize.clear();
+			selectize.clearOptions();
+			selectize.clearCache();
+			selectize.renderCache={};
+		});
+		$("#year").change(function(){
+			$year=$(this).val();
+			selectize = $("#icd_code")[0].selectize;
+			selectize.clear();
+			selectize.clearOptions();
+			selectize.clearCache();
+			selectize.renderCache={};
+		});
+		$i=1;
+		$("#prescription_add").click(function(){
+			$row = '<tr class="prescription">'+
+                                                                '<td>'+
+								'<select name="drug_'+$i+'" class="form-control">'+
+								'<option value="">--Select--</option>'+
+								'<?php foreach($drugs as $drug){ echo '<option value="'.$drug->item_id.'">'.$drug->item_name.'</option>';}?>'+
+								'</select>'+
+							'</td>'+
+							
+						'</tr>';
+			$i++;
+			$(".prescription").parent().append($row);
+		});
+	});
+</script>
+<center>
+	<input class="btn btn-sm btn-primary" type="submit" value="Submit" form="search_form" />
+</center>					
+					
 		</form>
 	<br />
 	<?php if(isset($report) && count($report)>0){ ?>
