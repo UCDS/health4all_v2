@@ -72,7 +72,8 @@
 				<li <?php if(preg_match("^edit/staff_category^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/edit/staff_category">Staff Category</a></li>
                 <li <?php if(preg_match("^edit/add_transaction^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/add_transaction">HR Transaction</a></li>
 								<li class="nav-header">View Staff</li>
-				<li <?php if(preg_match("^edit/view_staff$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/edit/view_staff"> View Staff</a></li>
+				<li <?php if(preg_match("^view/view_staff$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/view/view_staff"> View Staff</a></li>
+				<li <?php if(preg_match("^summary$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>staff/summary"> Summary</a></li>
                                 <?php foreach($functions as $f){
                                     if($f->user_function=="HR-Recruitment"){
                                 ?>
@@ -146,7 +147,7 @@
 }
 ?>
 
-<?php if(preg_match("^diagnostics/*^",current_url())) { ?>
+<?php if(preg_match("^diagnostics/*^",current_url()) || preg_match("^pacs/*^",current_url())) { ?>
 <div class="col-sm-3 col-md-2 sidebar-left">
     <ul class="nav nav-sidebar">
 	<?php 
@@ -191,6 +192,12 @@
 	 foreach($functions as $f){
 		if($f->user_function=="Diagnostics"){ ?>
 			<li <?php if(preg_match("^view_results^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/view_results">View Results</a></li>
+		</li>
+	<?php }
+	} 
+	 foreach($functions as $f){
+		if($f->user_function=="Diagnostics"){ ?>
+			<li <?php if(preg_match("^pacs^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>pacs/import">Import from PACS</a></li>
 		</li>
 	<?php }
 	} 

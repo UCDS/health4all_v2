@@ -3,6 +3,7 @@
 	<?php echo form_open('bloodbank/inventory/discard');?>
 	<input type="text" placeholder="Blood Unit Number" name="blood_unit_num" />
 	<input type="submit" value="Search" name="search" />
+	</form>
 	<?php
 	$search="";
 	$expired="";

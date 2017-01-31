@@ -416,9 +416,12 @@ function make_request(){
         //$bloodbank_id = $hospitaldata['hospital_id'];
         $patient_id = 0;
         $visit_id = 0;
+	$ward_unit = '';
+	$referred_by_doctor = '';
         $patient_type = $this->input->post('patient_type');
         $doctor_name = $this->input->post('doctor_name');
         $patient_visit = $this->input->post('hospital_internal_id');
+	if($this->input->post('referred_by_doctor')) $referred_by_doctor = $this->input->post('referred_by_doctor'); else $referred_by_doctor="";
         if($patient_type=='Internal' && isset($patient_visit) && $request_type!=1){
             $this->db->select('visit_id,hospital_id,patient_id')->from('patient_visit')
             ->where('hosp_file_no',$this->input->post('hosp_file_no'));
@@ -480,6 +483,8 @@ function make_request(){
 		$district=$this->input->post('district');
 		$department=$this->input->post('department');
 		$unit=$this->input->post('unit');
+		
+		if($this->input->post('ward_unit')) $ward_unit = $this->input->post('ward_unit'); else $ward_unit="";
 		$area=$this->input->post('area');
 		if($this->input->post('presenting_complaints')) $presenting_complaints=$this->input->post('presenting_complaints'); else $presenting_complaints="";
 		if($this->input->post('provisional_diagnosis')) $provisional_diagnosis=$this->input->post('provisional_diagnosis'); else $provisional_diagnosis="";
@@ -498,37 +503,37 @@ function make_request(){
 		if($this->input->post('visit_name')) $visit_name_id=$this->input->post('visit_name'); else $visit_name_id=0;
                 //Creating an array with the database column names as keys and the post values as values. 
 		$data=array(
-	        'first_name'=>$first_name,
-			'last_name'=>$last_name,
-			'age_years'=>$age_years,
-			'age_months'=>$age_months,
-			'age_days'=>$age_days,
-			'gender'=>$gender,
-			'spouse_name'=>$spouse_name,
-			'father_name'=>$father_name,
-			'mother_name'=>$mother_name,
-			'id_proof_type_id'=>$id_proof_type,
-			'id_proof_number'=>$id_proof_no,
-			'occupation_id'=>$occupation,
-			'education_level'=>$education_level,
-			'education_qualification'=>$education_qualification,
-			'blood_group'=>'',
-			'gestation'=>$gestation, 
-			'gestation_type'=>$gestation_type,
-			'hospital_type'=>$hospital_type,
-			'delivery_location_type'=>$delivery_location_type,
-			'delivery_mode'=>$delivery_mode,
-			'delivery_place'=>$delivery_place,
-			'delivery_plan'=>$delivery_plan,
-			'delivery_location'=>$delivery_location,
-			'congenital_anomalies'=>$congenital_anomalies,
-			'birth_weight'=>$birth_weight,
-			'dob'=>$dob,
-			'address'=>$address,
-			'place'=>$place,
-			'phone'=>$phone,
-			'alt_phone'=>$alt_phone,
-			'district_id'=>$district
+		    'first_name'=>$first_name,
+		    'last_name'=>$last_name,
+		    'age_years'=>$age_years,
+		    'age_months'=>$age_months,
+		    'age_days'=>$age_days,
+		    'gender'=>$gender,
+		    'spouse_name'=>$spouse_name,
+		    'father_name'=>$father_name,
+		    'mother_name'=>$mother_name,
+		    'id_proof_type_id'=>$id_proof_type,
+		    'id_proof_number'=>$id_proof_no,
+		    'occupation_id'=>$occupation,
+		    'education_level'=>$education_level,
+		    'education_qualification'=>$education_qualification,
+		    'blood_group'=>'',
+		    'gestation'=>$gestation, 
+		    'gestation_type'=>$gestation_type,
+		    'hospital_type'=>$hospital_type,
+		    'delivery_location_type'=>$delivery_location_type,
+		    'delivery_mode'=>$delivery_mode,
+		    'delivery_place'=>$delivery_place,
+		    'delivery_plan'=>$delivery_plan,
+		    'delivery_location'=>$delivery_location,
+		    'congenital_anomalies'=>$congenital_anomalies,
+		    'birth_weight'=>$birth_weight,
+		    'dob'=>$dob,
+		    'address'=>$address,
+		    'place'=>$place,
+		    'phone'=>$phone,
+		    'alt_phone'=>$alt_phone,
+		    'district_id'=>$district
 		);
                 $this->db->insert('patient',$data);
 		$patient_id=$this->db->insert_id();
@@ -591,8 +596,10 @@ function make_request(){
         $data[]=array(
         'staff_id'=>$staff_id,
         'request_type'=>$request_type,
-        'hospital_id'=>$this->input->post('hospital'),
+        'hospital_id'=>$hospital_id,
         //'bloodbank_id'=>$bloodbank_id,
+	'ward_unit' => $ward_unit,
+	'referred_by_doctor' => $referred_by_doctor,
         'patient_id'=>$patient_id,
         'visit_id' => $visit_id,
         'blood_group'=>$blood_group,

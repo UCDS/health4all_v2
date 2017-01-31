@@ -27,6 +27,7 @@
       <div class="container">
         <div class="navbar-header">
 		<!-- Bootstrap toggle menu for mobile devices, only visible on small screens --> 
+		<a class="navbar-brand" href="http://www.yousee.in" target="_blank"><img src="<?php echo base_url();?>assets/images/uc-logo.png" alt="Yousee Logo" height="22" width="22"></a>	  
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
@@ -239,6 +240,8 @@
 					if($f->user_function=="IP Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/ip_summary";?>">IP Summary</a></li>
                                                   <li><a href="<?php echo base_url()."patient/casesheet_mrd_status";?>">MRD Report</a></li>
+                                                  <li><a href="<?php echo base_url()."staff_report/get_patient_records";?>">Staff Activity OP/IP</a></li>
+                                                  <li><a href="<?php echo base_url()."staff_report/get_lab_records";?>">Diagnostics Staff Activity</a></li>
 						  <li><a href="<?php echo base_url()."reports/ip_op_trends";?>">IP/OP Trends</a></li>
 						  <li><a href="<?php echo base_url()."reports/icd_summary";?>">ICD Code Summary</a></li>
                    
@@ -250,12 +253,13 @@
 					if($f->user_function=="Diagnostics - Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/order_summary/department";?>">Orders Summary</a></li>
 						  <li><a href="<?php echo base_url()."reports/sensitivity_summary";?>">Sensitivity Report</a></li>
+                                                  <li><a href="<?php echo base_url()."diagnostics/lab_turnaround_time";?>">Diagnostics Turn Around Time</a></li>
 				<?php	}                
 					if($f->user_function=="Bloodbank"){ ?>
 						  <li><a href="<?php echo base_url()."bloodbank/user_panel/donation_summary";?>">Bloodbank Reports</a></li>
 				<?php	} 
 					if($f->user_function=="Bloodbank"){ ?>
-						  <li><a href="<?php echo base_url()."reports/audiology_summary";?>">Audiology Report</a></li>
+						  <li><a href="<?php echo base_url()."reports/audiology_summary";?>">Diagnostics Audiology Report</a></li>
 				<?php	}
 					if($f->user_function=="Masters - Sanitation" || $f->user_function == "Sanitation Summary"){ ?>
 						<li><a href="<?php echo base_url()."sanitation/view_summary";?>">Sanitation Evaluation</a></li>

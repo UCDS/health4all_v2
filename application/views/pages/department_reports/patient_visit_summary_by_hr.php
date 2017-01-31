@@ -5,7 +5,24 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/export_to_excell.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-ui.js"></script>
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.css">
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery.ptTimeSelect.css">
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
+<style>
+
+.chart div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+}
+
+</style>
+
 <script type="text/javascript">
 $(function(){
 	$("#from_date,#to_date").Zebra_DatePicker();
@@ -15,6 +32,7 @@ $(function(){
 			headerTemplate : '{content} {icon}', // Add icon for jui theme; new in v2.7!
 
 			widgets: [ 'default', 'zebra', 'print', 'stickyHeaders','filter'],
+
 			widgetOptions: {
 
 		  print_title      : 'table',          // this option > caption > table id > "table"
@@ -59,10 +77,9 @@ $(function(){
 		  $('.print').click(function(){
 			$('#table-sort').trigger('printTable');
 		  });
-});
-</script>
-<script>
-function fnExcelReport() {
+  }); 
+  //create function for  for Excel report
+  function fnExcelReport() {
       //created a variable named tab_text where 
     var tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
     //row and columns arrangements
@@ -74,26 +91,30 @@ function fnExcelReport() {
 
     tab_text = tab_text + "<table border='100px'>";
     //id is given which calls the html table
-    tab_text = tab_text + $('#myTable').html();
+    tab_text = tab_text + $('#table-sort').html();
     tab_text = tab_text + '</table></body></html>';
     var data_type = 'data:application/vnd.ms-excel';
     $('#test').attr('href', data_type + ', ' + encodeURIComponent(tab_text));
     //downloaded excel sheet name is given here
-    $('#test').attr('download', 'icd_detailed.xls');
+    $('#test').attr('download', 'op_summary.xls');
 
 }
 </script>
-
 	<?php 
 	$from_date=0;$to_date=0;
 	if($this->input->post('from_date')) $from_date=date("Y-m-d",strtotime($this->input->post('from_date'))); else $from_date = date("Y-m-d");
 	if($this->input->post('to_date')) $to_date=date("Y-m-d",strtotime($this->input->post('to_date'))); else $to_date = date("Y-m-d");
+        $from_time=0;$to_time=0;
+	if($this->input->post('from_time')) $from_time=date("H:i",strtotime($this->input->post('from_time'))); else $from_time = date("00:00");
+	if($this->input->post('to_time')) $to_time=date("H:i",strtotime($this->input->post('to_time'))); else $to_time = date("23:59");
 	?>
-	<div class="row">
-		<h4>ICD Code - Detailed report</h4>	
-		<?php echo form_open("reports/icd_detail",array('role'=>'form','class'=>'form-custom')); ?> 
+	
+		<h4><CENTER>Patient Visit Summary Report</CENTER></h4>	
+		<?php echo form_open("department/visit_summary_by_hour",array('role'=>'form','class'=>'form-custom')); ?>
 					From Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y",strtotime($from_date)); ?>" name="from_date" id="from_date" size="15" />
 					To Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y",strtotime($to_date)); ?>" name="to_date" id="to_date" size="15" />
+                                        From Time:<input  class="form-control" style = "background-color:#EEEEEE" type="text" value="<?php echo date("h:i A",strtotime($from_time)); ?>" name="from_time" id="from_time" size="7px"/>
+                                        To Time:<input class="form-control" style = "background-color:#EEEEEE" type="text" value="<?php echo date("h:i A",strtotime($to_time)); ?>" name="to_time" id="to_time" size="7px"/>
 					<select name="department" id="department" class="form-control">
 					<option value="">Department</option>
 					<?php 
@@ -125,7 +146,7 @@ function fnExcelReport() {
 					?>
 					</select>
 					<select name="visit_name" id="visit_name" class="form-control" >
-					<option value="">All</option>
+					<option value="">Visit Type</option>
 					<?php 
 					foreach($visit_names as $v){
 						echo "<option value='".$v->visit_name_id."'";
@@ -133,132 +154,41 @@ function fnExcelReport() {
 						echo ">".$v->visit_name."</option>";
 					}
 					?>
-					</select>
 					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
 		</form>
 	<br />
+        <!--table is displayed only when there is atleast one registration is done-->
+	<?php if(isset($patient_visit_summary_by_hr) && count($patient_visit_summary_by_hr)>0){ ?>
 	
-	<?php 
-	if(isset($report) && count($report)>0){ ?>
-		<button type="button" class="btn btn-default btn-md print">
-		  <span class="glyphicon glyphicon-print"></span> Print
+	<button type="button" class="btn btn-default btn-md print">
+           <span class="glyphicon glyphicon-print"></span> Print
 		</button>
-	<table class="table table-bordered table-striped" id="table-sort">
-	<thead>
-              <!--created button which converts html table to Excel sheet-->
+        <!--frontend-->
+        <!--created button which converts html table to Excel sheet-->
         <a href="#" id="test" onClick="javascript:fnExcelReport();">
             <button type="button" class="btn btn-default btn-md excel">
-                <i class="fa fa-file-excel-o"ara-hidden="true"></i> Export to excel</button></a>
-	<table class="table table-bordered table-striped" id="table-sort">
-		<th>Sno</th>
-		<th>Admit Date</th>
-		<th>Admit Time</th>
-		<th>IP No.</th>
-		<th>Gender</th>
-		<th>Name</th>
-		<th>Age</th>
-		<th>Parent / Spouse</th>
-		<th>Address</th>
-		<th>Phone</th>
-		<th>Department</th>
-		<th>Unit/ Area</th>
-		<th>MLC Number</th>
-	</thead>
-	<tbody>
-	<?php 
-	$total_count=0;
-	$i=1;
-	foreach($report as $s){
-		$age="";
-		if($s->age_years!=0) $age.=$s->age_years."Y ";
-		if($s->age_months!=0) $age.=$s->age_months."M ";
-		if($s->age_days!=0) $age.=$s->age_days."D ";
-		if($s->age_days==0 && $s->age_months==0 && $s->age_years==0) $age.="0D";
-	?>
-	<tr>
-		<td><?php echo $i++;?></td>
-		<td><?php if($s->admit_date!=0) echo date("d-M-Y",strtotime($s->admit_date));?></td>
-		<td><?php if($s->admit_time!=0) echo date("g:iA",strtotime($s->admit_time));?></td>
-		<td><?php echo $s->hosp_file_no;?></td>
-		<td><?php echo $s->gender;?></td>
-		<td><?php echo $s->name;?></td>
-		<td><?php echo $age;?></td>
-		<td><?php echo $s->parent_spouse;?></td>
-		<td><?php if($s->address!="") echo $s->address.", "; if($s->place!="") echo $s->place;?></td>
-		<td><?php echo $s->phone;?></td>
-		<td><?php echo $s->department;?></td>
-		<td>
-			<?php echo $s->unit_name;
-				if(!!$s->unit_name && !!$s->area_name) echo  "/ ";
-				echo $s->area_name;
-			?>
-		</td>
-		<td><?php echo $s->mlc_number;?></td>
-	</tr>
-	<?php
-	$total_count++;
-	}
-	?>
-	</tbody>
-	</table>
-		<table class="table table-bordered table-striped" id="table-sort">
-		<th>Sno</th>
-		<th>Admit Date</th>
-		<th>Admit Time</th>
-		<th>IP No.</th>
-		<th>Gender</th>
-		<th>Name</th>
-		<th>Age</th>
-		<th>Parent / Spouse</th>
-		<th>Address</th>
-		<th>Phone</th>
-		<th>Department</th>
-		<th>Unit/ Area</th>
-		<th>MLC Number</th>
-                 <!--created button which converts html table to Excel sheet-->
-        <a href="#" id="test" onClick="javascript:fnExcelReport();">
-            <button type="button" class="btn btn-default btn-md excel">
-                <i class="fa fa-file-excel-o"ara-hidden="true"></i>Export to excel</button></a>
-	<table class="table table-bordered table-striped" id="myTable"  hidden">
-	</thead>
-	<tbody>
-	<?php 
-	$total_count=0;
-	$i=1;
-	foreach($report as $s){
-		$age="";
-		if($s->age_years!=0) $age.=$s->age_years."Y ";
-		if($s->age_months!=0) $age.=$s->age_months."M ";
-		if($s->age_days!=0) $age.=$s->age_days."D ";
-		if($s->age_days==0 && $s->age_months==0 && $s->age_years==0) $age.="0D";
-	?>
-	<tr>
-		<td><?php echo $i++;?></td>
-		<td><?php if($s->admit_date!=0) echo date("d-M-Y",strtotime($s->admit_date));?></td>
-		<td><?php if($s->admit_time!=0) echo date("g:iA",strtotime($s->admit_time));?></td>
-		<td><?php echo $s->hosp_file_no;?></td>
-		<td><?php echo $s->gender;?></td>
-		<td><?php echo $s->name;?></td>
-		<td><?php echo $age;?></td>
-		<td><?php echo $s->parent_spouse;?></td>
-		<td><?php if($s->address!="") echo $s->address.", "; if($s->place!="") echo $s->place;?></td>
-		<td><?php echo $s->phone;?></td>
-		<td><?php echo $s->department;?></td>
-		<td>
-			<?php echo $s->unit_name;
-				if(!!$s->unit_name && !!$s->area_name) echo  "/ ";
-				echo $s->area_name;
-			?>
-		</td>
-		<td><?php echo $s->mlc_number;?></td>
-	</tr>
-	<?php
-	$total_count++;
-	}
-	?>
-	</tbody>
-	</table>
-	<?php } else { ?>
+            <i class="fa fa-file-excel-o"ara-hidden="true"></i> Export</button></a>
+            <?php foreach($patient_visit_summary_by_hr as $date => $patient_visit){ 
+                    $i = 1;
+                    $max = 0;
+                    foreach($patient_visit as $count){
+                        if($count->patient_visits > $max){
+                            $max = $count->patient_visits;
+                        }
+                    }
+                ?>
+            <table>
+                <th colspan="24"><?php echo $date; ?></th>
+                <tr>
+                    <?php foreach($patient_visit as $visit) {?>
+                    <td><?php echo $visit->time_intreval_start; ?><div class="chart"><div style="height: <?php  if($max >0 ){ echo ($visit->patient_visits * 1500)/$max; } else{ echo 0;}?>px;"><?php  echo number_format($visit->patient_visits); ?></div></div></td>
+                    <?php } ?>
+                </tr>
+                    
+            </table>
+            <?php } ?>
+        <!--if no patients are registered in the selected date-->
+        <?php } else { ?>
 	No patient registrations on the given date.
 	<?php } ?>
 	</div>

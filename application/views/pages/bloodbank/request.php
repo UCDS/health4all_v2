@@ -68,7 +68,7 @@
 	$(function(){
 		var i=2;
 		$("#add_blood_group").click(function(){
-			var row='<tr class="bulk" id="row_'+i+'"><td><select name="blood_group[]" ><option value="" disabled selected>Select</option><option value="A+">A+</option><option value="B+">B+</option><option value="O+">O+</option><option value="AB+">AB+</option><option value="A-">A-</option><option value="B-">B-</option><option value="O-">O-</option><option value="AB-">AB-</option></select></td>';
+			var row='<tr class="bulk" id="row_'+i+'"><td><select name="blood_group[]" class="blood_group" ><option value="" disabled selected>Select</option><option value="A+">A+</option><option value="B+">B+</option><option value="O+">O+</option><option value="AB+">AB+</option><option value="A-">A-</option><option value="B-">B-</option><option value="O-">O-</option><option value="AB-">AB-</option></select></td>';
 			row+='<td><input type="text" name="whole_blood_units[]" size="3" /></td><td><input type="text" name="packed_cell_units" size="3" /></td>';
 			row+='<td><input type="text" name="fp_units[]" size="3" /></td>';
 			row+='<td><input type="text" name="ffp_units[]" size="3" /></td>';
@@ -86,7 +86,17 @@
 			$("tr.bulk").remove();
 			$(".bulk").hide();
 			$(".patient").show();
-                         $(".enter-hospital").addClass('sr-only');
+			if($("#patient_type").val() === 'Internal'){
+			    $(".enter-hospital").addClass('sr-only');
+			    $(".enter-patient").addClass('sr-only');
+			    $(".select-patient").removeClass('sr-only');
+			}
+			else{
+			    $(".enter-hospital").removeClass('sr-only');
+			    $(".enter-patient").removeClass('sr-only');
+			    $(".select-patient").addClass('sr-only');
+			}
+			 
 		});
 		$("#bulk_request").click(function(){
 			$(".patient").hide();
@@ -104,9 +114,10 @@
 			}
 			else{
 				$(".enter-patient input").attr("name","")
+                                $(".enter-hospital").addClass('sr-only');
 				$(".enter-patient").addClass('sr-only');
 				$("#select-patient").attr("name","hosp_file_no");
-				$(".enter-patient input").attr("name","hospital_id");
+//				$(".enter-patient input").attr("name","hospital_id");
 				$("#select-patient").attr("form","request_form");
 				$(".select-patient").removeClass('sr-only');
 			}
@@ -130,7 +141,7 @@
 	}
 	?>
 	<div>
-		<?php echo form_open('bloodbank/register/request',array('role'=>'form','class'=>'form-custom','id'=>'request_form'));
+		<?php echo form_open('bloodbank/register/request',array('role'=>'form','class'=>'form-custom','id'=>'request_form','onSubmit'=>'return validateFields();'));
 		if(validation_errors()) echo "<div class='alert alert-info'>".validation_errors()."</div>";?>
 		<h4>Request Form</h4>
 		<table class="table table-striped table-bordered">
@@ -160,7 +171,7 @@
 				<td>
 				<div class="col-md-12">
 					<div class="col-md-12">
-					<input class="form-control sr-only enter-patient" type="hidden" name="hospital_internal_id" size="50px" />
+					<input class="form-control sr-only enter-patient" type="hidden" name="hospital_internal_id" />
 					<font color='red'>*</font>
 					</div>
 					<div class="col-md-6 select-patient">
@@ -168,19 +179,19 @@
 					</div>
 					
 					<div class="col-md-8 sr-only enter-patient">
-						<input class="form-control" placeholder="Patient First Name" name="patient_first_name" size="50px"/>
+						<input class="form-control" placeholder="Patient First Name" name="patient_first_name" size="50"/>
 					</div>
 					<div class="col-md-8 sr-only enter-patient">
-						<input class="form-control" placeholder="Patient Last Name" name="patient_last_name" size="50px"/>
+						<input class="form-control" placeholder="Patient Last Name" name="patient_last_name" size="50"/>
 					</div>
 					<div class="col-md-8 sr-only enter-patient">
-						<input class="form-control" placeholder="Age" name="patient_age" size="50px" />
+						<input class="form-control" placeholder="Age" name="patient_age" size="50" />
 					</div>
 					<div class="col-md-8 sr-only enter-patient">
-						<input class="form-control" placeholder="Diagnosis" name="patient_diagnosis" size="50px" />
+						<input class="form-control" placeholder="Diagnosis" name="patient_diagnosis" size="50" />
 					</div>
 					<div class="col-md-8 sr-only enter-patient">
-						<input class="form-control" placeholder="Ward/Unit" name="ward_unit" size="50px" />
+						<input class="form-control" placeholder="Ward/Unit" name="ward_unit" size="50" />
 					</div>
 					<div class="col-md-8 sr-only enter-patient">
 						<label><input type="radio" value="0" name="gender" id="male" checked />Male</label>
@@ -205,8 +216,8 @@
      <!--  					 <div class="col-md-6">
          <select id="select_doctor" class="repositories" placeholder="Select a Doctor..." name="staff_id"  ></select> 
             </div> -->
-			 <div class="col-md-4 sr-only enter-patient ">
-			        <input class="form-control" placeholder="Enter Doctor Name" name="doctor_name" size="50px" />
+			 <div class="col-md-4 ">
+			        <input class="form-control" placeholder="Enter Doctor Name" name="referred_by_doctor" size="50" />
 			</div>
 			 <div class='col-md-10 selected_doctor'>
 		    </div>
@@ -247,7 +258,7 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td><select name="blood_group[]" >
+					<td><select name="blood_group[]" class="blood_group" >
 						<option value="" disabled selected>Select</option>
 						<option value="A+">A+</option>
 						<option value="B+">B+</option>
@@ -479,5 +490,38 @@
         });
     }
 	});
-    </script>	
+        
+    function validateFields(){
+	var vResult = true;
+	$(".blood_group").css("background-color","#fff");
+	$(".required_blood tbody tr").find(":text").css("background-color","#FFF");
+	$(".blood_group").each(function(){
+	    if(! $(this).val()){
+		    $(this).css("background-color","#da9090");
+		    $(this).focus();
+		    vResult = false;
+		    return false;
+	    }
+	});
+	if(vResult){
+	    $(".required_blood tbody tr").each(function(){
+		var vAllEmpty = true;
+		if($(this).find(":text").length>0){
+		    $(this).find(":text").each(function(){
+			if($(this).val().length > 0) vAllEmpty = false;
+		    });
+
+		    if(vAllEmpty){
+			$(this).find(":text").css("background-color","#da9090");
+			$(this).find(":text").first().focus();
+			vResult = false;
+			alert("Please input number of units atleasat for one component");
+		    }
+		    if(vResult === false) return false;
+		}
+	    });
+	}
+	return vResult;
+    }// validateFields
+</script>
 	

@@ -190,12 +190,22 @@ pri.print();
 				<?php if($update){ ?>
 				<input type="text" name="visit_id" class="form-control sr-only" size="3" value="<?php echo $patient->visit_id;?>" readonly />
 				<?php } ?>
-                                <input type="text" name="hosp_file_no" <?php if($ip_count[0]->auto_increment == "YES"){?> readonly <?php if(!$update){ ?> value='<?php echo $ip_count[0]->count; ?>' <?php } } ?><?php if($update){?> value="<?php echo $patient->hosp_file_no;?>" <?php } ?> class="form-control" size="5" required />
-                                <?php if($ip_count[0]->auto_increment == "YES"){ ?> 
-                                <input type="hidden" name="auto_increment" value='YES'/>
-                                <?php } ?>                         
+                                <input type="text" name="hosp_file_no" <?php if(!$update){ ?> value='<?php echo $ip_count[0]->count; ?>' <?php } ?><?php if($update){?> readonly value="<?php echo $patient->hosp_file_no;?>" <?php } ?> class="form-control" size="5" required />
+                               
+				<?php } 
+                                    foreach($fields as $field){
+					if($field->field_name == "patient_id_manual")
+					{
+					
+                                    ?>
+						<label class="control-label">Patient ID Manual<?php if($field->mandatory) { ?><span class="mandatory">*</span><?php } ?></label>
+						<input type="text" name="patient_id_manual" class="form-control" placeholder="Patient ID Manual" value="<?php if($patient) echo $patient->patient_id_manual;?>" <?php if($field->mandatory) echo "required"; if($form_type=="IP") echo "disabled";?> />
+						
+                                    <?php 
+						break;
+					}
+                                    }?>
                                 
-				<?php } ?>
 				<label class="control-label">Date</label>
 				<?php 
 					if($update) $date = date("d-M-Y",strtotime($patient->admit_date));
@@ -217,16 +227,7 @@ pri.print();
 		<div class="panel-body">
 			<?php
 			foreach($fields as $field){
-				switch($field->field_name){	
-                                   case "patient_id_manual" ?>
-                                        <div class="<?php echo $class;?>">
-						<div class="form-group">
-						<label class="control-label">Patient ID Manual<?php if($field->mandatory) { ?><span class="mandatory">*</span><?php } ?></label>
-						<input type="text" name="patient_id_manual" class="form-control" placeholder="Patient ID Manual" value="<?php if($patient) echo $patient->patient_id_manual;?>" <?php if($patient && $patient->patient_id_manual !='') echo 'readonly'?> <?php if($field->mandatory) echo "required"; ?> />
-						</div>
-					</div>
-                                <?php
-                                    break;
+				switch($field->field_name){
 				case "first_name": ?>   
 					<div class="<?php echo $class;?>">
 						<div class="form-group">

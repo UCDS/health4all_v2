@@ -59,7 +59,7 @@ $(document).ready(function(){
 		<h4>Available samples : </h4>
 
 		<table id="header-fixed" class="table-2 table table-striped table-bordered"></table>
-		<table class="table-2 table table-striped table-bordered" id="table-1">
+		<table class="table-2 table table-bordered" id="table-1">
 		<thead>
 			<th>S.No</th>
 			<th><div data-toggle="popover" data-placement="bottom" data-content="Blood Unit No.">
@@ -92,13 +92,13 @@ $(document).ready(function(){
 		?>
 		<tr>
 			<td><?php echo $j++; ?></td>
-			<td><?php echo $blood->blood_unit_num;?></td>
-			<td><input type="checkbox" name="test_hiv_<?php echo $blood->donation_id;?>" value="1" /></td>
-			<td><input type="checkbox" name="test_hbsag_<?php echo $blood->donation_id;?>" value="1" /></td>
-			<td><input type="checkbox" name="test_hcv_<?php echo $blood->donation_id;?>" value="1" /></td>
-			<td><input type="checkbox" name="test_vdrl_<?php echo $blood->donation_id;?>" value="1" /></td>
-			<td><input type="checkbox" name="test_mp_<?php echo $blood->donation_id;?>" value="1" /></td>
-			<td><input type="checkbox" name="test_irregular_ab_<?php echo $blood->donation_id;?>" value="1" /></td>
+			<td class="blood_unit_num"><?php echo $blood->blood_unit_num;?></td>
+			<td><input type="checkbox" class="positive" name="test_hiv_<?php echo $blood->donation_id;?>" value="1" /></td>
+			<td><input type="checkbox" class="positive" name="test_hbsag_<?php echo $blood->donation_id;?>" value="1" /></td>
+			<td><input type="checkbox" class="positive" name="test_hcv_<?php echo $blood->donation_id;?>" value="1" /></td>
+			<td><input type="checkbox" class="positive" name="test_vdrl_<?php echo $blood->donation_id;?>" value="1" /></td>
+			<td><input type="checkbox" class="positive" name="test_mp_<?php echo $blood->donation_id;?>" value="1" /></td>
+			<td><input type="checkbox" class="positive" name="test_irregular_ab_<?php echo $blood->donation_id;?>" value="1" /></td>
 			<td><input type="checkbox" name="test[]" value="<?php echo $blood->donation_id;?>" /></td>
 				</tr>
 		<?php 
@@ -145,3 +145,35 @@ $(document).ready(function(){
     </div>
 </div>
 
+<script type="text/javascript"
+ src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<script>
+    $(function(){
+	$("#screened_date").Zebra_DatePicker({
+		direction:false
+	});
+	$(".positive").change(function(){
+	    var vChecked=false;
+	    $(this).closest('tr').find(".positive").each(function(){
+		if($(this).is(":checked")){
+		    vChecked=true;
+		    return true;
+		}
+	    });
+	    if(vChecked){
+		
+		$(this).closest('tr').find(".blood_unit_num").css("text-decoration","line-through");
+		$(this).closest('tr').css("background-color","#ce6161");
+	    }else{
+		console.log("unchecked");
+		$(this).closest('tr').find(".blood_unit_num").css("text-decoration","");
+		$(this).closest('tr').css("background-color","");
+		
+	    }
+	});
+    });
+
+    $(document).ready(function(){
+	$('[data-toggle="tooltip"]').tooltip();   
+    });
+</script>

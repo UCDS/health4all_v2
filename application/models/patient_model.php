@@ -189,6 +189,91 @@ class patient_model extends CI_Model {
         
         return $result;
     }
+    
+    function add_child(){
+        $patient_obg_data = array();
+        $post = (array)json_decode($this->security->xss_clean($this->input->raw_input_stream));
+        
+        if(key_exists('patient_id', $post)){
+            $this->party_information['patient_id'] = $post['patient_id'];        
+        }
+        if(key_exists('conception_type', $post)){
+            $this->party_information['conception_type'] = $post['conception_type'];        
+        }
+        if(key_exists('pregnancy_number', $post)){
+            $this->party_information['pregnancy_number'] = $post['pregnancy_number'];        
+        }
+        if(key_exists('delivered', $post)){
+            $this->party_information['delivered'] = $post['delivered'];        
+        }
+        if(key_exists('lmp_date', $post)){
+            $this->party_information['lmp_date'] = $post['lmp_date'];        
+        }
+        if(key_exists('edd_date', $post)){
+            $this->party_information['edd_date'] = $post['edd_date'];        
+        }
+        if(key_exists('delivery_outcome', $post)){
+            $this->party_information['delivery_outcome'] = $post['delivery_outcome'];        
+        }
+        if(key_exists('booked', $post)){
+            $this->party_information['booked'] = $post['booked'];        
+        }
+        if(key_exists('delivery_mode_id', $post)){
+            $this->party_information['delivery_mode_id'] = $post['delivery_mode_id'];        
+        }
+        if(key_exists('date_of_birth', $post)){
+            $this->party_information['date_of_birth'] = $post['date_of_birth'];        
+        }
+        if(key_exists('gender', $post)){
+            $this->party_information['gender'] = $post['gender'];        
+        }
+        if(key_exists('weight_at_birth', $post)){
+            $this->party_information['weight_at_birth'] = $post['weight_at_birth'];        
+        }
+        if(key_exists('apgar', $post)){
+            $this->party_information['apgar'] = $post['apgar'];        
+        }
+        if(key_exists('nicu_admission', $post)){
+            $this->party_information['nicu_admission'] = $post['nicu_admission'];        
+        }
+        if(key_exists('nicu_admission_reason', $post)){
+            $this->party_information['nicu_admission_reason'] = $post['nicu_admission_reason'];        
+        }
+        if(key_exists('alive', $post)){
+            $this->party_information['alive'] = $post['alive'];        
+        }if(key_exists('date_of_death', $post)){
+            $this->party_information['date_of_death'] = $post['date_of_death'];        
+        }
+        if(key_exists('cause_of_death', $post)){
+            $this->party_information['cause_of_death'] = $post['cause_of_death'];        
+        }
+        
+        $this->db->insert('patient_obstetric_history',$patient_obg_data,false);
+	$obstetric_history_id = $this->db->insert_id(); //store the visit_id from the inserted record
+        
+        return $obstetric_history_id;
+    }
+    
+    function get_obg_history($patient_id){
+        
+        if($patient_id)
+        {
+            
+        }else{
+            return -1;
+        }
+        
+        $this->db->select('*')
+            ->from('patient_obstetric_history')
+            ->where('patient_id', $patient_id);
+        
+        $query = $this->db->get();        
+        echo $this->db->last_query();
+        $result = $query->result();
+        
+        return $result;
+    }
+    
 }
 
 ?>

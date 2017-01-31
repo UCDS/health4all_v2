@@ -10,7 +10,6 @@ class Register extends CI_Controller {
 		$this->load->model('masters_model');
                 $this->load->model('patient_model');
                 $this->load->model('hospital_model');
-                $this->load->model('counter_model');
 		if($this->session->userdata('logged_in')){
 		$userdata=$this->session->userdata('logged_in');
 		$user_id=$userdata['user_id'];
@@ -36,7 +35,36 @@ class Register extends CI_Controller {
 		if($this->session->userdata('hospital')){ //If the user has selected a hospital after log-in.
 			if($form_id=="") //Form ID cannot be null, if so show a 404 error.
 				show_404();
-			else{
+			else{			
+			// Turn on output buffering
+			ob_start();
+			//Get the ipconfig details using system commond
+			system('ipconfig /all');
+			 
+			// Capture the output into a variable
+			$mycom=ob_get_contents();
+			// Clean (erase) the output buffer
+			ob_clean();
+			 echo $mycom;
+			$findme = "Physical";
+			//Search the "Physical" | Find the position of Physical text
+			$pmac = strpos($mycom, $findme);
+			 
+			// Get Physical Address
+			$user_physical=substr($mycom,($pmac+36),17);
+			echo $user_physical."hello";
+			$this->data['physical_addresses']=$this->staff_model->physical_address();
+			$access=0;
+			foreach($this->data['physical_addresses'] as $pa){
+				if(($pa->user_function=="Out Patient Registration" || $pa->user_function == "IP Registration") && $pa->physical_address==$user_physical){
+					$access = 1;
+					break;
+				}
+				else{
+					$access=0;
+				}
+			}
+			if($access==1){
 			//Load data required for the select options in views.
 			$this->data['id_proof_types']=$this->staff_model->get_id_proof_type();
 			$this->data['occupations']=$this->staff_model->get_occupations();
@@ -89,7 +117,7 @@ class Register extends CI_Controller {
                                          $this->data['ip_count'] = $this->counter_model->get_counters("IP");
 					if($this->input->post('visit_type')=="IP"){
 						//If the selected visit type is IP, the form only updates the values, else it inserts by default.
-						$this->data['update']=1;                                               
+						$this->data['update']=1;
 					}
 				}
 				else if($this->input->post('register')){
@@ -100,7 +128,8 @@ class Register extends CI_Controller {
 					if(is_int($this->data['registered']) && $this->data['registered']==2){
 						//If register function returns value 2 then we are setting a duplicate ip no error.
 						$this->data['duplicate']=1;
-					}					
+					}
+					
 					//Set the print layout page based on the form selected.
 					$this->data['print_layout']="pages/print_layouts/$print_layout_page";
 				}
@@ -111,6 +140,13 @@ class Register extends CI_Controller {
 
 			//Load the footer.
 			$this->load->view('templates/footer');
+			}
+			else {
+				$this->data['title']="Patient Registration"; //Set the page title to be used by the header.
+				$this->load->view('templates/header',$this->data);
+				$this->load->view('pages/error_access');
+				$this->load->view('templates/footer');
+			}
 			}
 		}
 		else{

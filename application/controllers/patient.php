@@ -104,4 +104,19 @@ class Patient extends CI_Controller {
         }        
         $this->load->view('pages/casesheet_mrd_status',$this->data);
     }
+    
+    function get_obg_history($patient_id){
+        $obg_history = $this->patient_model->get_obg_history($patient_id);
+        echo json_encode($obg_history);
+    }
+    
+    function get_obg_summary($patient_id){
+        echo json_encode("Work in progress");
+    }
+    
+    function add_child(){
+        $child_id = $this->patient_model->add_child();
+        echo json_encode($child_id);
+    }
+    
 }
