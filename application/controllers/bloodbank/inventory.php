@@ -44,19 +44,17 @@ class Inventory extends CI_Controller {
 			$this->load->view('pages/bloodbank/discard',$this->data);
 		}
 		else{
-
-			if($this->input->post('discard'))//gets discarded data
-                       {
-				if($this->inventory_model->discard_inventory()){
-					$this->data['msg']="Discarded Successfully. ";
-					$this->data['inventory']=$this->inventory_model->get_inventory();
-					$this->load->view('pages/bloodbank/discard',$this->data);
-				}
-				else{
-					$this->data['inventory']=$this->inventory_model->get_inventory();
-					$this->data['msg']="Error in storing data. Please retry. ";
-					$this->load->view('pages/bloodbank/discard',$this->data);
-				}
+			if($this->input->post('discard')){
+                            if($this->inventory_model->discard_inventory()){
+                                    $this->data['msg']="Discarded Successfully. ";
+                                    $this->data['inventory']=$this->inventory_model->get_inventory();
+                                    $this->load->view('pages/bloodbank/discard',$this->data);
+                            }
+                            else{
+                                    $this->data['inventory']=$this->inventory_model->get_inventory();
+                                    $this->data['msg']="Error in storing data. Please retry. ";
+                                    $this->load->view('pages/bloodbank/discard',$this->data);
+                            }
 			}
 			else if($this->input->post('search')){
 				$this->data['inventory']=$this->inventory_model->get_inventory();

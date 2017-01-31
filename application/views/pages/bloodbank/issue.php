@@ -162,7 +162,7 @@
         <span class="">Note:</span>
         <ul>
             <li>Blood Unit is the Blood bag number</li>            
-            <li>Staff name shows up in Forward/Reverse done by only if the staff name is added to the database to add staff <a href="<?php echo base_url()."staff/add/staff";?>">click here.</a>
+            <li>Staff name shows up in Forward/Reverse done by only if the staff name is added to the database. To add staff <a href="<?php echo base_url()."staff/add/staff";?>">click here.</a>
                 <ul><li>When adding staff make sure you select his/her department as Blood Bank, you get the department after selecting hospital</li></ul>
                 <ul><li>Only fields with a '*' are mandatory</li></ul>
             </li>

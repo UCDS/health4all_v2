@@ -216,7 +216,8 @@ class Reports_model extends CI_Model{
 			$this->db->select('"0" as area',false);
 		}
 		$this->db->select("patient_visit.icd_10,code_title,icd_code.block_id, block_title, 
-		icd_block.chapter_id, chapter_title, patient_visit.visit_name_id, department 'department',
+		icd_block.chapter_id, chapter_title, patient_visit.visit_name_id, department 'department',                
+                patient.district_id,
           SUM(CASE WHEN 1  THEN 1 ELSE 0 END) 'total',
 		SUM(CASE WHEN gender = 'F'  THEN 1 ELSE 0 END) 'female',
 		SUM(CASE WHEN gender = 'M'  THEN 1 ELSE 0 END) 'male',
@@ -235,7 +236,7 @@ class Reports_model extends CI_Model{
 		 ->join('icd_chapter','icd_block.chapter_id=icd_chapter.chapter_id','left')
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')")
 		 ->group_by('icd_10');
-		$resource=$this->db->get();
+		$resource=$this->db->get();                
 		return $resource->result();
 	}
         
@@ -315,6 +316,7 @@ class Reports_model extends CI_Model{
 		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')")
 		->group_by('test_method.test_method,test_master.test_master_id');
 		$resource=$this->db->get();
+                
 		return $resource->result();
 	}
 		

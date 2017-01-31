@@ -84,8 +84,7 @@ class Staff_Applicant_Model extends CI_Model {
                         'from_date' => date("Y-m-d",strtotime($qualification_from_date)),
                         'to_date' => date("Y-m-d",strtotime($qualification_to_date))
                     );
-                }                
-                
+                }
             }
         }
         

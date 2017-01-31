@@ -401,4 +401,5 @@ if(count($orders)>0){ ?>
 	}
 } 
 ?>
+<p><b style="color:red">*</b>Not under NABL</p>
 </div>
