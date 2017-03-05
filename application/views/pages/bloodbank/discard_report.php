@@ -16,6 +16,7 @@
 			<input type="text" placeholder="To date" class="form-control" size="10" name="to_date" id="to_date" />
 			<input type="submit" name="submit" class='btn btn-primary btn-md' value="Search" />
 		</div>
+		</form>
 			<?php
 	$search="";
 	$expired="";

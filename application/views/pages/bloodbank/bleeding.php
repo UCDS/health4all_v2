@@ -67,7 +67,7 @@ $(document).ready(function(){
 
 			<td>
 				<input type="text" value="<?php echo $donor->donation_id;?>" size="4" name="donation_id" hidden />
-				<?php echo $donor->name;?>
+				<span class="blood_donor_name"><?php echo $donor->name;?></span>
 			</td>
 			<td><div class="form-group"><select name="blood_group" class="form-control" >
 			<option value="" selected disabled>----</option>
@@ -80,7 +80,7 @@ $(document).ready(function(){
 			<option value="O-" <?php if($donor->blood_group=="O-") echo "selected";?>>O-</option>
 			<option value="AB-" <?php if($donor->blood_group=="AB-") echo "selected";?>>AB-</option>
 			</select></div></td>
-			<td><div class="form-group"><input type="number" class="form-control" name="blood_unit_num" required /></div></td>
+			<td><div class="form-group"><input type="number" class="form-control blood_donor_name" name="blood_unit_num" required /></div></td>
 			<td><div class="form-group"><input type="text" class="form-control" name="segment_num" required /></div></td>
 			<td>
 			<div class="form-group">
@@ -101,7 +101,7 @@ $(document).ready(function(){
 			<option value="350">350ml</option>
 			<option value="450">450ml</option>
 			</select></div></td>
-			<td><div class="checkbox"><input type="checkbox" value="1" name="incomplete" /></div></td>
+			<td><div class="checkbox"><input type="checkbox" value="1" name="incomplete" class='under_collection' /></div></td>
 			<td><div class="form-group">
 			<select name="staff" class="form-control" required >
 				<option value="" disabled selected>Done By</option>
@@ -164,3 +164,16 @@ $(document).ready(function(){
     </div>
 </div>
 </div>
+<script>
+    $(".under_collection").change(function(){
+	if($(this).is(":checked")){
+	    $(this).closest('tr').find(".blood_donor_name").css("text-decoration","line-through");
+	    $(this).closest('tr').find("td").css("background-color","#f2dede");
+	}else{
+	    console.log("unchecked");
+	    $(this).closest('tr').find(".blood_donor_name").css("text-decoration","");
+	    $(this).closest('tr').find("td").css("background-color","");
+
+	}
+    });
+</script>

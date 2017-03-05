@@ -2,39 +2,41 @@
 		<table style="width:98%;padding:5px">
 				<tr>
 				<td colspan="3">
-				<img style="float:right" style="margin-top:-20px" src="<?php echo base_url();?>assets/images/ap-logo.png" width="60px" />
-				<img style="float:left" src="<?php echo base_url();?>assets/images/<?php $hospital=$this->session->userdata('hospital');echo $hospital['logo'];?>" width="60px" />
+				<img style="float:right" style="margin-top:-20px" src="<?php echo base_url();?>assets/images/telangana-logo.jpg" width="60px" />
+				<img style="float:left" src="<?php echo base_url();?>assets/images/<?php $hospital=$this->session->userdata('hospital'); echo $hospital['logo'];?>" width="60px" />
 				<div style="float:middle;text-align:center">
-			<!--	<b>Government of Telangana</b><br /> -->
-				<font size="4"><?php echo $hospital['hospital'];?></font>
+				<!-- <b>Government of Telangana</b><br /> -->
+				<font size="4"><?php echo $hospital['hospital'];?></font><br />
 					<?php echo $hospital['description'];?> 
 					@ 
-					<?php echo $hospital['district'];?>
-					<br />
-					<br />
-				<span style="border:1px solid #ccc;padding:5px;margin:5px;"><u><b>OUT PATIENT TICKET <?php if(!!$registered->visit_name) echo "- ".$registered->visit_name;?></b></u></span>
-				<br />
-				<br />
+					<?php echo $hospital['place']; ?>, 
+					<?php echo $hospital['district']; ?>,
+					<?php echo date("d-M-Y",strtotime($registered->admit_date)); ?>,
+					<?php echo date("g:iA",strtotime($registered->admit_time)); ?>
 				</div>
 				</td>
 				</tr>
 				<tbody height="10%" style="border:1px solid black;">
 				<tr width="95%">
 						<td style="padding:5px;">Name: <?php echo $registered->name; ?></td>
-						<td>Age/ Sex: 	
+						<td>Gender: <?php echo $registered->gender; ?></td>
+						<td>Age: 	
 							<?php 
-							if($registered->age_years!=0){ echo $registered->age_years." Years "; } 
-							if($registered->age_months!=0){ echo $registered->age_months." Months "; }
+							if($registered->age_years!=0){ echo $registered->age_years." Yrs "; } 
+							if($registered->age_months!=0){ echo $registered->age_months." Mths "; }
 							if($registered->age_days!=0){ echo $registered->age_days." Days "; }
-							if($registered->age_years==0 && $registered->age_months == 0 && $registered->age_days==0) echo "0 Days ";
-							?>/ <?php echo $registered->gender; ?></td>
-						<td style="padding:5px;">Date, Time:  
-							<?php echo date("d-M-Y",strtotime($registered->admit_date)); ?>,
-							<?php echo date("g:iA",strtotime($registered->admit_time)); ?></td>
+							if($registered->age_years==0 && $registered->age_months == 0 && $registered->age_days==0) echo "0 Days";
+							?>
+						</td>
 				</tr>
 				<tr width="95%">
-						<td  style="padding:5px;"> <b style="font-size:1.3em;"> OP number: <?php echo $registered->hosp_file_no; ?></b></td>
-						<td style="padding:5px;">Department : <?php echo $registered->department; ?></td>
+						<td  style="padding:5px;">Father / Spouse Name :  <?php echo $registered->parent_spouse; ?></td>
+						<td>Address: <?php echo $registered->place; ?></td>
+						<td>Phone : <?php echo $registered->phone; ?></td>
+				</tr>
+				<tr width="95%">
+						<td  style="padding:5px;">OP number : <?php echo $registered->hosp_file_no; ?></td>
+						<td>Department : <?php echo $registered->department; ?> </td>
 						<td> 
 						<?php 
 						if(!!$registered->unit_name) echo "Unit";
@@ -43,30 +45,26 @@
 						?>
 						</td>
 				</tr>
-				<tr width="95%">
-						<td></td>
-						<td> <b style="font-size:1.3em;"> Room Number:<?php echo $registered->op_room_no;?></b> </td>
-						<td></td>
-				</tr>
 				</tbody>
 				<tr class="print-element" width="95%" height="100px">
 					<td colspan="2">
 						Chief Complaint:
 					</td>
-					<td style="padding:5px;padding-left:120px;">Weight : <br /> <br />
-						Investigations:<br />
-						<small style="font-size:10px;color:#666;">Provisional Diagnosis is <br />
-						mandatory for investigations.</small>
-					</td>
+					<td style="padding:5px;">Weight : </td>
 				</tr>
-				<tr class="print-element" width="95%" height="150px">
-					<td colspan="2">
+				<tr class="print-element" width="95%" height="120px">
+					<td>
 						Examination:
 					</td>
 				</tr>
 				<tr class="print-element" width="95%" height="70px">
 					<td>
 						Provisional Diagnosis:
+					</td>
+				</tr>
+				<tr class="print-element" width="95%" height="70px">
+					<td>
+						Investigations:
 					</td>
 				</tr>
 				<tr class="print-element" width="95%">
@@ -81,7 +79,7 @@
 							<td rowspan="2" width="30px">S.no</td>
 							<td rowspan="2" width="45%;">
 							<img src="<?php echo base_url();?>assets/images/medicines.jpg" width="30px" alt="" />
-							Medicine (Generic)
+							Medicine
 							<img src="<?php echo base_url();?>assets/images/syrup.jpg" width="30px" alt="" />
 							<br />(CAPITAL LETTERS PLEASE)</td>
 							<td rowspan="2" width="50px">Strength</td>
@@ -97,9 +95,9 @@
 							<td width="30px"><img src="<?php echo base_url();?>assets/images/night.jpg" width="30px" height="20px" />
 							<span style="top:-10px;position:relative;">Evening</span></td>
 						</tr>
-						<?php for($i=1;$i<7;$i++){ ?>
+						<?php for($i=0;$i<5;$i++){ ?>
 						<tr height="40px" align="center" valign="center">
-							<td><?php echo $i; ?></td>
+							<td><?= $i+1 ?></td>
 							<td></td>
 							<td></td>
 							<td></td>
@@ -112,12 +110,11 @@
 				</td>
 				</tr>
 				<tr class="print-element" width="95%" height="80px">
-				<td colspan="2">
-						<br /><br /><br /><br />Follow up advice:
+				<td>
+						<br />Follow up advice:
 				</td>
-				<td align="middle">
-				<br /><br /><br /><br />Doctor: </td>
 				</tr>
 				<tr>
+				<td colspan="2" align="right">Doctor :</td>
 				</tr>
 		</table>

@@ -10,6 +10,7 @@ class Register extends CI_Controller {
 		$this->load->model('masters_model');
                 $this->load->model('patient_model');
                 $this->load->model('hospital_model');
+                $this->load->model('counter_model');
 		if($this->session->userdata('logged_in')){
 		$userdata=$this->session->userdata('logged_in');
 		$user_id=$userdata['user_id'];
@@ -35,8 +36,7 @@ class Register extends CI_Controller {
 		if($this->session->userdata('hospital')){ //If the user has selected a hospital after log-in.
 			if($form_id=="") //Form ID cannot be null, if so show a 404 error.
 				show_404();
-			else{			
-			
+			else{	
 			$access=0;
 			foreach($this->data['functions'] as $f){
 				if(($f->user_function=="Out Patient Registration" || $f->user_function == "IP Registration")){
@@ -88,12 +88,16 @@ class Register extends CI_Controller {
 					if(count($this->data['patients'])==1) {
 						$visit_id = $this->data['patients'][0]->visit_id;
 						$this->data['patient']=$this->register_model->select($visit_id);
-						if($this->data['patient']->visit_type == "IP") $this->data['update']=1;
+                                                $this->data['ip_count'] = $this->counter_model->get_counters("IP");
+						if($this->data['patient']->visit_type == "IP") {
+                                                    $this->data['update']=1;                                                    
+                                                }
 					}
 				}
 				else if($this->input->post('select_patient') && $visit_id!=0){
 					//else if the user has selected a patient after searching, get the patient details.
 					$this->data['patient']=$this->register_model->select($visit_id);
+                                         $this->data['ip_count'] = $this->counter_model->get_counters("IP");
 					if($this->input->post('visit_type')=="IP"){
 						//If the selected visit type is IP, the form only updates the values, else it inserts by default.
 						$this->data['update']=1;

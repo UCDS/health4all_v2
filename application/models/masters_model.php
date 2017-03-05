@@ -100,7 +100,7 @@ class Masters_model extends CI_Model{
 		->join("equipment","service_record.equipment_id=equipment.equipment_id")
 		->join("vendor","service_record.vendor_id=vendor.vendor_id",'left')
 		->join("contact_person","service_record.contact_person_id=contact_person.contact_person_id",'left')
-		->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id")
+		//->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id")
 		//->join("department","equipment.department_id=department.department_id" )
 		->group_by("equipment_id")
 		->order_by("equipment_id");
@@ -150,8 +150,7 @@ class Masters_model extends CI_Model{
 				if($this->input->post('select')) $user_id = $this->input->post('user_id');
 				else if($this->input->post('update')) $user_id = $this->input->post('user');
 				$this->db->select('function_id,add,edit,view')->where('user.user_id',$user_id)
-				->join('user_function_link','user.user_id=user_function_link.user_id');
-				
+				->join('user_function_link','user.user_id=user_function_link.user_id');				
 			}
 		}
 		else if($type=='staff')
@@ -171,6 +170,8 @@ class Masters_model extends CI_Model{
 					$this->db->where('staff.gender',$this->input->post('gender'));
 				if($this->input->post('mci_flag'))
 					$this->db->where('staff.mci_flag',$this->input->post('mci_flag'));
+				if($this->input->post('ima_registration_number'))
+					$this->db->where('staff.ima_registration_number',$this->input->post('ima_registration_number'));
 			}
 			if($this->input->post('select'))
 			{
@@ -1450,8 +1451,7 @@ else if($type=="dosage"){
 			$data = array('vendor_type'=>$this->input->post('vendor_type'));
 			$table="vendor_type";
 		}
-		elseif($type=="staff"){
-			
+		elseif($type=="staff"){			
 		$data = array(
 		
 					  'first_name'=>$this->input->post('first_name'),
@@ -1472,6 +1472,7 @@ else if($type=="dosage"){
 					  'specialisation'=>$this->input->post('specialisation'),
 					  'research_area'=>$this->input->post('research_area'),
 					  'research'=>$this->input->post('research'),
+					  'ima_registration_number'=>$this->input->post('ima_registration_number')
 					  'bank'=>$this->input->post('bank'),
 					  'bank_branch'=>$this->input->post('bank_branch'),
 					  'account_name'=>$this->input->post('account_name'),
@@ -1921,20 +1922,7 @@ else if($type=="dosage"){
 			return false;
 		}
 		else return true;
-   } 	
-function icd_chapter(){
-		$this->db->select("*")->from("icd_chapter")->order_by('chapter_id');		
-		$query=$this->db->get();
-		return $query->result();
-	}
-	function icd_block(){
-		$this->db->select("*")->from("icd_block")->order_by('block_id');		
-		$query=$this->db->get();
-		return $query->result();
-	}
-	function icd_code(){
-		$this->db->select("*")->from("icd_code")->order_by('icd_code');		
-		$query=$this->db->get();
-		return $query->result();
-	}
+   }
+
 }
+?>

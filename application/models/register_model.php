@@ -15,6 +15,8 @@ class Register_model extends CI_Model{
 		$age_months=$this->input->post('age_months');
 		$age_days=$this->input->post('age_days');
 		$gender=$this->input->post('gender');
+                $userdata = $this->session->userdata('logged_in');
+                $user_id = $userdata['user_id'];
 		if($this->input->post('dob'))$dob=date("Y-m-d",strtotime($this->input->post('dob'))); else $dob=0;
 		if($this->input->post('spouse_name'))$spouse_name=$this->input->post('spouse_name'); else $spouse_name="";
 		if($this->input->post('father_name'))$father_name=$this->input->post('father_name'); else $father_name="";
@@ -94,8 +96,8 @@ class Register_model extends CI_Model{
 		if($this->input->post('congenital_anomalies')) $congenital_anomalies=$this->input->post('congenital_anomalies'); else $congenital_anomalies="";
 		if($this->input->post('visit_name')) $visit_name_id=$this->input->post('visit_name'); else $visit_name_id=0;
 		if($form_type=="IP"){
-			$hosp_file_no=$this->input->post('hosp_file_no');
-			if(!$this->input->post('visit_id')){
+			$hosp_file_no=$this->input->post('hosp_file_no');                        
+			if(!$this->input->post('visit_id') && !$this->input->post('auto_increment')){
 			//If it's an IP form, get the hospital file number from the input field.
 			$this->db->select('hosp_file_no,admit_date'); //Here we are selecting hosp_file_no and admit_date with year for match  from the database
 			$this->db->where('hosp_file_no',$hosp_file_no);
@@ -154,9 +156,14 @@ class Register_model extends CI_Model{
 			'country_code'=>$country_code,
 			'state_code'=>$state_code,
 			'district_id'=>$district,
-			'identification_marks'=>$identification_marks                        
+			'identification_marks'=>$identification_marks,
+                        'insert_by_user_id'=>$user_id,
+                        'insert_datetime'=>date("Y-m-d H:i:s")
 		);		
-                
+        	if($form_type != "IP"){
+			if($this->input->post('patient_id_manual')) $patient_id_manual=$this->input->post('patient_id_manual'); else $patient_id_manual="";
+			$data['patient_id_manual'] = $patient_id_manual;
+		}
                 if($this->input->post('patient_id_manual')){
                     $patient_id_manual = $this->input->post('patient_id_manual');
                     $this->db->select('patient_id_manual'); //Here we are selecting hosp_file_no and admit_date with year for match  from the database
@@ -224,7 +231,9 @@ class Register_model extends CI_Model{
 			'outcome'=>$outcome,
 			'outcome_date'=>$outcome_date,
 			'outcome_time'=>$outcome_time,
-			'final_diagnosis'=>$final_diagnosis
+			'final_diagnosis'=>$final_diagnosis,
+                        'insert_by_user_id'=>$user_id,
+                        'insert_datetime'=>date("Y-m-d H:i:s")
 		);
 		if($this->input->post('visit_id')){
 			//if it's an update form, use the visit id from the post variables and update the record in the patient_visit table
@@ -265,7 +274,13 @@ class Register_model extends CI_Model{
 		$this->db->update('patient_visit',array('admit_id'=>$visit_id));
 		//update the counter table with the new hospital file number.
 		$this->db->where('counter_name',$form_type);
-		$this->db->update('counter',array('count'=>$hosp_file_no));
+                if($this->input->post('auto_increment') && !$this->input->post('visit_id')){
+                    $hosp_file_no++;
+                    $this->db->update('counter',array('count'=>$hosp_file_no));        
+                }else{
+                    $this->db->update('counter',array('count'=>$hosp_file_no));
+                }
+		
 		
 		//Transaction ends here.
 		$this->db->trans_complete();
@@ -277,12 +292,14 @@ class Register_model extends CI_Model{
 		//Select the inserted or updated patient record with the visit_id 
 		$this->db->select('patient.*,patient_visit.*,
 		patient.patient_id,patient_visit.visit_id visit_id1,
-		CONCAT(IF(first_name=NULL,"",first_name)," ",IF(last_name=NULL,"",last_name)) name,
+		CONCAT(IF(patient.first_name=NULL,"",patient.first_name)," ",IF(patient.last_name=NULL,"",patient.last_name)) name,
 		IF(father_name=NULL OR father_name="",spouse_name,father_name) parent_spouse,visit_name,visit_name.visit_name_id,
-		department,unit_name,area_name,district,op_room_no,mlc.*,occupation',false)
+		department,unit_name,unit.unit_head_staff_id,
+		CONCAT(staff.first_name," ",staff.last_name) as unit_head_name ,area_name,district,op_room_no,mlc.*,occupation',false)
 		->from('patient')->join('patient_visit','patient.patient_id=patient_visit.patient_id')
 		->join('department','patient_visit.department_id=department.department_id','left')
 		->join('unit','patient_visit.unit=unit.unit_id','left')
+		->join('staff','unit.unit_head_staff_id=staff.staff_id','left')
 		->join('area','patient_visit.area=area.area_id','left')
 		->join('district','patient.district_id=district.district_id','left')
 		->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
@@ -299,6 +316,7 @@ class Register_model extends CI_Model{
 	function update(){
 		//// All the post variables are stored in local variables; 
 		// based on the field type we modify the data as required before storing in the variables.
+		if($this->input->post('patient_id_manual')) $patient_id_manual=$this->input->post('patient_id_manual'); else $patient_id_manual="";
 		if($this->input->post('first_name')) $first_name=$this->input->post('first_name'); else $first_name="";
                 if($this->input->post('middle_name')) $middle_name=$this->input->post('middle_name'); else $middle_name="";
 		if($this->input->post('last_name')) $last_name=$this->input->post('last_name'); else $last_name="";
@@ -378,8 +396,9 @@ class Register_model extends CI_Model{
 
 		//Creating an array with the database column names as keys and the post values as values. 
 		$data=array(
-                        'first_name'=>$first_name,
-                        'middle_name'=>$middle_name,
+			'patient_id_manual'=>$patient_id_manual,
+			'first_name'=>$first_name,
+            		'middle_name'=>$middle_name,
 			'last_name'=>$last_name,
 			'age_years'=>$age_years,
 			'age_months'=>$age_months,

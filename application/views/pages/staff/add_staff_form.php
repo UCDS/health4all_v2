@@ -212,6 +212,14 @@ $(function(){
 			<input type ='radio' id="mci_flag" name="mci_flag" value ='0' checked>No</input>
 		</div>
 	</div>
+	<div class="form-group">
+		<div class="col-md-3">
+			<label for="staff_type" class="control-label">IMA Registration Number</label>
+		</div>
+		<div class="col-md-6">
+		<input type="text" class="form-control" placeholder="IMA Registration Number" id="designation" name="ima_registration_number" />
+		</div>
+	</div>
 	
 	<div class="form-group">
 		<div class="col-md-3">

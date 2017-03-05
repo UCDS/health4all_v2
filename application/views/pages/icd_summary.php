@@ -90,10 +90,12 @@
 <script type="text/javascript">
 $(function(){
 	$("#from_date,#to_date").Zebra_DatePicker();
+
 	$("#generate-csv").click(function(){
 		$(".table").table2CSV();
 	});
 	$("#icd_block").chained("#icd_chapter");
+
 		var options = {
 			widthFixed : true,
 			showProcessing: true,
@@ -145,6 +147,7 @@ $(function(){
 		  $('.print').click(function(){
 			$('#table-sort').trigger('printTable');
 		  });
+
 	
 	$('#icd_code').selectize({
     valueField: 'code_title',
@@ -231,10 +234,10 @@ $(function(){
 					}
 					?>
 					</select>
-								
+
 					Visit Type : <select class="form-control" name="visit_type">
 									<option value="" >All</option>
-									<option value="OP" <?php if($visit_type == "OP") echo " selected ";?>>OP</option>
+f									<option value="OP" <?php if($visit_type == "OP") echo " selected ";?>>OP</option>
 									<option value="IP" <?php if($visit_type == "IP" || $visit_type != 'OP') echo " selected ";?>>IP</option>
 								</select>
 					<br />
@@ -358,12 +361,12 @@ $(function(){
 	?>
 	<tr>
         <td><?php echo $serial_number++;?></td>
-		<td><?php echo $s->chapter_id." - ".$s->chapter_title;?></td>
-		<td><?php echo $s->block_id." - ".$s->block_title;?></td>
-		<td><?php echo $s->icd_10." - ".$s->code_title;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/icd_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/M/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type";?>"><?php echo $s->male;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/icd_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/F/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type";?>"><?php echo $s->female;?></td>
-		<td class="text-right"><a href="<?php echo base_url()."reports/icd_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type";?>"><?php echo $s->total;?></td>
+        <td><?php echo $s->chapter_id." - ".$s->chapter_title;?></td>
+        <td><?php echo $s->block_id." - ".$s->block_title;?></td>
+        <td><?php echo $s->icd_10." - ".$s->code_title;?></td>
+        <td class="text-right"><a href="<?php echo base_url()."reports/icd_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/M/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type";?>"><?php echo $s->male;?></td>
+        <td class="text-right"><a href="<?php echo base_url()."reports/icd_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/F/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type";?>"><?php echo $s->female;?></td>
+        <td class="text-right"><a href="<?php echo base_url()."reports/icd_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type";?>"><?php echo $s->total;?></td>
         <td class="text-right"><a href="<?php echo base_url()."reports/icd_outcome_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type/'Discharge'";?>"><?php echo $s->total_discharge;?></td>
         <td class="text-right"><?php echo round(($s->total_discharge/$s->total)*100).'%';?></td>
         <td class="text-right"><a href="<?php echo base_url()."reports/icd_outcome_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type/'LAMA'";?>"><?php echo $s->total_lama;?></td>
@@ -410,4 +413,6 @@ $(function(){
 	<?php } else { ?>
 	No patient registrations on the given date.
 	<?php } ?>
+       
+         
 	</div>

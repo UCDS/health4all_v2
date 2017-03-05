@@ -122,7 +122,7 @@ class Reports extends CI_Controller {
 		}
 		
 		
-		if($access==1){
+		if($access==1){                        
 			$this->data['title']="ICD 10 Summary Report";
 			$this->data['all_departments']=$this->staff_model->get_department();
 			$this->data['units']=$this->staff_model->get_unit();
