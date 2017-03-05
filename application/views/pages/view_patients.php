@@ -96,6 +96,7 @@ pri.print();
 	<table class="table table-bordered table-hover table-striped" id="table-sort">
 	<thead>
 		<th style="text-align:center">#</th>
+		<th style="text-align:center">Hospital</th>
 		<th style="text-align:center">IP/OP No.</th>
 		<th style="text-align:center">Patient</th>
 		<th style="text-align:center">Admit Date</th>
@@ -119,6 +120,7 @@ pri.print();
 			</form>
 			<?php echo $i++;?>
 		</td>
+		<td><?php echo $p->hospital;?></td>
 		<td><?php echo $p->visit_type." #".$p->hosp_file_no;?></td>
 		<td><?php echo $p->first_name." ".$p->last_name." | ".$age." | ".$p->gender;?></td>
 		<td><?php echo date("d-M-Y",strtotime($p->admit_date));?></td>
@@ -535,6 +537,7 @@ pri.print();
 		<table class="table table-bordered table-striped">
 			<thead>
 			<th>Date</th>
+			<th>Hospital</th>
 			<th>Type</th>
 			<th>Number</th>
 			<th>Department</th>
@@ -553,6 +556,7 @@ pri.print();
 					if($visit->visit_id == $patient->visit_id) echo "<i class='fa fa-eye'></i> ";?>
 					<?php echo date("d-M-Y",strtotime($visit->admit_date));?>
 					</td>
+					<td><?php echo $visit->hospital;?></td>
 					<td><?php echo $visit->visit_type;?></td>
 					<td><?php echo $visit->hosp_file_no;?></td>
 					<td><?php echo $visit->department;?></td>

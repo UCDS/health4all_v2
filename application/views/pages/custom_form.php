@@ -1112,6 +1112,7 @@ pri.print();
 									<thead>
 										<tr>
 											<th>#</th>
+											<th>Hospital</th>
 											<th>Visit Type</th>
 											<th>Name</th>
 											<th>Age</th>
@@ -1134,6 +1135,7 @@ pri.print();
 												</form>
 												<?php echo $i++; ?>
 											</td>
+											<td><?php echo $patient->hospital; ?></td>
 											<td><?php echo $patient->visit_type; ?></td>
 											<td><?php echo $patient->name; ?></td>
 											<td>

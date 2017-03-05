@@ -3,6 +3,7 @@ class Masters_model extends CI_Model{
 	
 	
 	function get_data($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=-1,$hospitals=0,$vendor_id=0){
+		$hospital=$this->session->userdata('hospital');
 		if($type=="equipment_types"){
 			$this->db->select("equipment_type_id,equipment_type")->from("equipment_type");
 			$this->db->order_by("equipment_type");
@@ -15,7 +16,9 @@ class Masters_model extends CI_Model{
 			$this->db->select("hospital_id,hospital")->from("hospital");
 		}
 		else if($type=="department"){
-			$this->db->select("department_id,hospital_id,department")->from("department")->order_by('department');
+		 $this->db->where('hospital_id',$hospital['hospital_id']);
+		$this->db->select("department_id,hospital_id,department")->from("department")
+		 ->order_by('department');
 		}
 		elseif($type=="equipment_filter")
 		{
@@ -779,6 +782,7 @@ class Masters_model extends CI_Model{
 			->join("(SELECT activity_id month_activity_done,date month_activity_date,time month_activity_time,score monthly_score,comments FROM activity_done JOIN facility_activity USING(activity_id) JOIN area_activity USING(area_activity_id) WHERE frequency_type='Monthly' AND MONTH(date)=MONTH('$week_start') AND YEAR(date)=YEAR('$week_start')) month_done",'facility_activity.activity_id=month_done.month_activity_done','left')
 			->where('area.area_id',$this->input->post('area'));
 		}
+		
 		$query=$this->db->get();
 		
 		return $query->result();
@@ -1472,7 +1476,7 @@ else if($type=="dosage"){
 					  'specialisation'=>$this->input->post('specialisation'),
 					  'research_area'=>$this->input->post('research_area'),
 					  'research'=>$this->input->post('research'),
-					  'ima_registration_number'=>$this->input->post('ima_registration_number')
+					  'ima_registration_number'=>$this->input->post('ima_registration_number'),
 					  'bank'=>$this->input->post('bank'),
 					  'bank_branch'=>$this->input->post('bank_branch'),
 					  'account_name'=>$this->input->post('account_name'),

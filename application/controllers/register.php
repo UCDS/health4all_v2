@@ -88,7 +88,7 @@ class Register extends CI_Controller {
 					if(count($this->data['patients'])==1) {
 						$visit_id = $this->data['patients'][0]->visit_id;
 						$this->data['patient']=$this->register_model->select($visit_id);
-                                                $this->data['ip_count'] = $this->counter_model->get_counters("IP");
+                        $this->data['ip_count'] = $this->counter_model->get_counters("IP");
 						if($this->data['patient']->visit_type == "IP") {
                                                     $this->data['update']=1;                                                    
                                                 }
