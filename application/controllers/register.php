@@ -10,6 +10,7 @@ class Register extends CI_Controller {
 		$this->load->model('masters_model');
                 $this->load->model('patient_model');
                 $this->load->model('hospital_model');
+                $this->load->model('counter_model');
 		if($this->session->userdata('logged_in')){
 		$userdata=$this->session->userdata('logged_in');
 		$user_id=$userdata['user_id'];
@@ -52,9 +53,9 @@ class Register extends CI_Controller {
 			 
 			// Get Physical Address
 			$user_physical=substr($mycom,($pmac+36),17);
-			echo $user_physical."hello";
+			
 			$this->data['physical_addresses']=$this->staff_model->physical_address();
-			$access=0;
+			$access=1;          //Change this back when you figure out IP based access.
 			foreach($this->data['physical_addresses'] as $pa){
 				if(($pa->user_function=="Out Patient Registration" || $pa->user_function == "IP Registration") && $pa->physical_address==$user_physical){
 					$access = 1;

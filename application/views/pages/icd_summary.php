@@ -1,16 +1,92 @@
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
-<style>
-    #map {
-	      height: 300px;
 
-	}
+<link rel="stylesheet"href="<?php echo base_url();?>assets/css/metallic.css">
+<link rel="stylesheet"href="<?php echo base_url();?>assets/css/theme.default.css">
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/table2CSV.js"></script>
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
+<script type="text/javascript"src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
+<link rel="stylesheet" type="text/css"href="<?php echo base_url(); ?>assets/css/selectize.css">
+<style type="text/css">
+.selectize-control.repositories .selectize-dropdown>div {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.selectize-control.repositories .selectize-dropdown .by {
+	font-size: 11px;
+	opacity: 0.8;
+}
+
+.selectize-control.repositories .selectize-dropdown .by::before {
+	content: 'by ';
+}
+
+.selectize-control.repositories .selectize-dropdown .name {
+	font-weight: bold;
+	margin-right: 5px;
+}
+
+.selectize-control.repositories .selectize-dropdown .title {
+	display: block;
+}
+
+.selectize-control.repositories .selectize-dropdown .description {
+	font-size: 12px;
+	display: block;
+	color: #a0a0a0;
+	white-space: nowrap;
+	width: 100%;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.selectize-control.repositories .selectize-dropdown .meta {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	font-size: 10px;
+}
+
+.selectize-control.repositories .selectize-dropdown .meta li {
+	margin: 0;
+	padding: 0;
+	display: inline;
+	margin-right: 10px;
+}
+
+.selectize-control.repositories .selectize-dropdown .meta li span {
+	font-weight: bold;
+}
+
+.selectize-control.repositories::before {
+	-moz-transition: opacity 0.2s;
+	-webkit-transition: opacity 0.2s;
+	transition: opacity 0.2s;
+	content: ' ';
+	z-index: 2;
+	position: absolute;
+	display: block;
+	top: 12px;
+	right: 34px;
+	width: 16px;
+	height: 16px;
+	background: url(<?php echo base_url(); ?> assets /images/spinner.gif);
+	background-size: 16px 16px;
+	opacity: 0;
+}
+
+.selectize-control.repositories.loading::before {
+	opacity: 0.4;
+}
 </style>
+
+
+<!--  added selectize javascript for search box function -->
+
+<script type="text/javascript"
+	src="<?php echo base_url();?>assets/js/jquery.selectize.js"></script>
+
 <script type="text/javascript">
 $(function(){
 	$("#from_date,#to_date").Zebra_DatePicker();
@@ -25,7 +101,7 @@ $(function(){
 			showProcessing: true,
 			headerTemplate : '{content} {icon}', // Add icon for jui theme; new in v2.7!
 
-			widgets: [ 'default', 'zebra', 'print', 'stickyHeaders','filter'],
+			widgets: [ 'default', 'zebra', 'print', 'stickyHeaders'],
 
 			widgetOptions: {
 
@@ -161,11 +237,9 @@ $(function(){
 
 					Visit Type : <select class="form-control" name="visit_type">
 									<option value="" >All</option>
-									<option value="OP" <?php if($visit_type == "OP") echo " selected ";?>>OP</option>
+f									<option value="OP" <?php if($visit_type == "OP") echo " selected ";?>>OP</option>
 									<option value="IP" <?php if($visit_type == "IP" || $visit_type != 'OP') echo " selected ";?>>IP</option>
 								</select>
-
-					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
 					<br />
 					<br />
 					<div class="col-md-12">
@@ -243,7 +317,7 @@ $(function(){
 </center>					
 					
 		</form>
-	<br />
+	<br /><br /><br /><br /><br />
 	<?php if(isset($report) && count($report)>0){ ?>
 	
 		<button type="button" class="btn btn-default btn-md print">
@@ -252,7 +326,7 @@ $(function(){
 	<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
 	<tr>
-        <td stype="text-align:center" rowspan="2">SNo</td>
+        <td style="text-align:center" rowspan="2">SNo</td>
 		<td style="text-align:center" rowspan="2">ICD Chapter</th>
 		<td style="text-align:center" rowspan="2">ICD Block</th>
 		<td style="text-align:center" rowspan="2">ICD Code</th>
@@ -342,44 +416,3 @@ $(function(){
        
          
 	</div>
-
- <div class="row">
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="map">
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<script type="text/javascript">
-      var map;
-      function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 16.3067, lng: 80.4365 },
-          zoom: 6
-        });
-        // 15.9129, 79.7400        
-        <?php foreach($pins as $pin){  ?>
-            
-        contentString_<?php echo $pin->district_id; ?> = 'Disease: <table><?php foreach($report as $r){ if($r->district_id == $pin->district_id){ echo "<tr><td>$r->code_title</td><td>$r->total</td></tr>"; } }?></table>';
-        
-        var infowindow_<?php echo $pin->district_id; ?> = new google.maps.InfoWindow({
-            content: contentString_<?php echo $pin->district_id; ?>
-        });
-        
-        var location_<?php echo $pin->district_id; ?> = {lat: <?php echo $pin->lattitude ?>, lng: <?php echo $pin->longitude ?>};
-        var marker_<?php echo $pin->district_id; ?> = new google.maps.Marker({
-            position: location_<?php echo $pin->district_id; ?>,
-            map: map                       
-        });
-        
-        marker_<?php echo $pin->district_id; ?>.addListener('mouseover', function() {
-            infowindow_<?php echo $pin->district_id; ?>.open(map, marker_<?php echo $pin->district_id; ?>);
-        });        
-        <?php } ?> 
-        alert('Exiting maps');
-      }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjJpNmyVYE2h87rRXWZe5-ia-nW5A5vX4&callback=initMap" async defer></script>

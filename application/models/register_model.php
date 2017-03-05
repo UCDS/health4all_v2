@@ -294,12 +294,12 @@ class Register_model extends CI_Model{
 		patient.patient_id,patient_visit.visit_id visit_id1,
 		CONCAT(IF(patient.first_name=NULL,"",patient.first_name)," ",IF(patient.last_name=NULL,"",patient.last_name)) name,
 		IF(father_name=NULL OR father_name="",spouse_name,father_name) parent_spouse,visit_name,visit_name.visit_name_id,
-		department,unit_name,unit_head_staff_id,
+		department,unit_name,unit.unit_head_staff_id,
 		CONCAT(staff.first_name," ",staff.last_name) as unit_head_name ,area_name,district,op_room_no,mlc.*,occupation',false)
 		->from('patient')->join('patient_visit','patient.patient_id=patient_visit.patient_id')
 		->join('department','patient_visit.department_id=department.department_id','left')
 		->join('unit','patient_visit.unit=unit.unit_id','left')
-		->join('staff','unit_head_staff_id=staff.staff_id','left')
+		->join('staff','unit.unit_head_staff_id=staff.staff_id','left')
 		->join('area','patient_visit.area=area.area_id','left')
 		->join('district','patient.district_id=district.district_id','left')
 		->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
