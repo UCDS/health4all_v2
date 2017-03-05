@@ -4,9 +4,19 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/selectize.css">
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.mousewheel.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.timeentry.min.js"></script>
-
-<!--  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> <!-- load jquery via CDN -->
-
+<style>
+    .obstetric_history_table { 
+        border-collapse: collapse; 
+    }
+    .obstetric_history_table tr{
+        display: block; float: left;
+    }
+    .obstetric_history_table td{
+        display: block; 
+        border: 1px solid black;
+        height: 55px;
+    }
+</style>
 <style>
 	.row{
 		margin-bottom: 1.5em;
@@ -128,8 +138,41 @@ pri.print();
           $("#insurance_no").prop("disabled", false);
       }
    });
+   var counter = 1;
+   $("#add_obstetric_history").click(function(){
+    var newRow = document.createElement('tr');
+    alert('In add');
+    newRow.innerHTML = '<td><input type="text" name="pregnancy_number[]" class="form-control pregnancy_number" id="pregnancy_number" placeholder="Pregnancy Number" /></td>'+
+            '<td><input type="text" name="conception_type[]" class="form-control conception_type" id="conception_type" placeholder="Conception Type" /></td>'+
+            '<td><input type="radio" name="delivered[]" class="form-control delivered" value="1" id="delivered" />Delivered <input type="radio" name="delivered[]" class="form-control delivered" value="-1" id="delivered" />Abortion'+
+            '<td><input type="text" name="imp_date[]" class="form-control imp_date" id="imp_date" style="width:150px" /></td>' +
+            '<td><input type="text" name="edd_date[]" class="form-control edd_date'+counter.toString()+'" id="edd_date'+counter.toString()+'" style="width:150px" /></td>' +            
+            '<td><input type="text" name="delivery_outcome[]" class="form-control delivery_outcome" id="delivery_outcome" placeholder="Delivery Outcome" /></td>'+
+            '<td><input type="radio" name="booked[]" class="form-control booked" value="1" id="booked" />Delivered <input type="radio" name="booked[]" class="form-control booked" value="-1" id="booked" />Abortion</td>' +
+            '<td><input type="text" name="delivery_mode[]" class="form-control delivery_mode" id="delivery_mode" placeholder="Delivery Mode" /></td>' +
+            '<td><input type="text" name="date_of_birth" class="form-control date_of_birth" id="date_of_birth" style="width:150px" /></td>' +
+            '<td><input type="radio" name="gender[]" class="form-control gender" value="2" id="gender" />Male <input type="radio" name="gender[]" class="form-control gender" value="1" id="gender" />Female <input type="radio" name="gender[]" class="form-control gender" value="3" id="gender" />Other </td>' +
+            '<td><input type="text" name="weight_at_birth[]" class="form-control weight_at_birth" id="weight_at_birth" placeholder="Weight at birth" /></td>'+
+            '<td><input type="text" name="apgar[]" class="form-control apgar" id="apgar" placeholder="APGR" /></td>'+
+            '<td><input type="radio" name="nicu_admission[]" class="form-control booked" value="1" id="booked" />Yes <input type="radio" name="nicu_admission[]" class="form-control booked" value="-1" id="booked" />No </td>' +
+            '<td><input type="text" name="nicu_admission_reason[]" class="form-control nicu_admission_reason" id="nicu_admission_reason" placeholder="NICU Admission Reason" /></td>' +
+            '<td><input type="radio" name="alive[]" class="form-control alive" value="1" id="alive" />Alive <input type="radio" name="alive[]" class="form-control alive" value="-1" id="alive" />Dead </td>' +
+            '<td><input type="text" name="date_of_death" class="form-control date_of_death" id="date_of_death" style="width:150px" /></td>'+
+            '<td><input type="text" name="cause_of_death[]" class="form-control cause_of_death" id="cause_of_death" placeholder="Cause of death" /></td>';
+    $(".edd_date"+counter.toString()).Zebra_DatePicker();
+    $('#obstetric_history').append(newRow);    
+    counter++;
+    document.getElementById('child_count') = counter;
+    
+   });
 });
 </script>
+<!-- $("#remove_obstetric_history").click(function(){
+       alert('In remove');
+       var rowCount = $("#obstetric_history").rows.length;
+       var row = $("#obstetric_history").rows.[rowCount - 1];
+       $("#obstetric_history").deleteRow(row);
+   }); -->
 <br />
 	<?php 
         $pic_set = 1;
@@ -928,9 +971,9 @@ pri.print();
                       <div class="col-md-4 col-xs-6">
                           <label class="control-label">Declaration Required</label>
                           <input type="text" name="declaration_required" class="form-control mlc" id="declaration_required" value="<?php echo $patient->declaration_required;?>" <?php if($f->edit==1 && ((empty($patient->declaration_required) && $patient->mlc!='-1') || $patient->mlc==0)) echo ''; else echo ' readonly'; ?> />
-                      </div>
+                      </div>                                            
                   </div>
-              </div>
+              </div>              
                         <?php
                         break;
                     }
@@ -940,8 +983,7 @@ pri.print();
                 foreach($functions as $f){
                     if($f->user_function== "obg"){
                         ?>
-              <div role="tabpanel" class="tab-pane" id="obg" ng-app ="obgApp" >
-                  <div ng-controller ="PatientCtrl as patientCtrl">
+              <div role="tabpanel" class="tab-pane" id="obg">
                   <div class="row alt">
                                 <div class="col-md-4 col-xs-6">
                                     <b>Patient ID: <?php echo $patient->patient_id; ?> </b>
@@ -969,12 +1011,19 @@ pri.print();
                                              <td><b>Living Children</b></td>
                                          </tr>
                                          
-                                         <tr ng-repeat="patient in patientCtrl.obg_history_summary">
-                                            <td ng-bind="patient.gravida"></td>
-                                            <td ng-bind="patient.para"></td>
-                                            <td ng-bind="patient.abortions"></td>
-                                            <td ng-bind="patient.live_births"></td>
-                                            <td ng-bind="patient.living_children"></td>
+                                         <tr>
+                                         <td>
+                                         </td>            
+                                         <td>                                             
+                                         </td>
+                                         <td>                                            
+                                         </td>
+                                         <td>                                             
+                                         </td>
+                                         <td>                                             
+                                         </td>
+                                         
+                                                 
                                          </tr>
                                          
                                      </table>
@@ -985,195 +1034,159 @@ pri.print();
                                  <div class="col-md-12 col-xs-12">
                                      <table class="table table-striped table-bordered obstetric_history_table" id="obstetric_history">
                                          <thead>
-                                            <th colspan="17">Obstetric History</th>
+                                            <th colspan="17">Table (obstetric_history)</th>
                                          </thead>
                                          <tr>
-                                             <td><b>Conception</b></td>
-                                             <td><b>Conception type</b></td>
-                                             <td><b>Delivery/Abortion(0)</b></td>
+                                             <td><b>Conception ( pregnancy_number )</b></td>
+                                             <td><b>conception_type (1,2,3,4)</b></td>
+                                             <td><b>Delivery(1) / Abortion(0) - add field</b></td>
                                              <td><b>LMP (date)</b></td>
                                              <td><b>EDD (date)</b></td>
-                                             <td><b>Live Birth/Still Birth</b></td>
-                                             <td><b>Booked/Unbooked</b></td>
-                                             <td><b>Delivery Mode</b></td>
+                                             <td><b>Live Birth (1) / Still Birth (0) - change field to delivery_outcome</b></td>
+                                             <td><b>Booked (1) / Unbooked (0)</b></td>
+                                             <td><b>Delivery Mode (lov)</b></td>
                                              <td><b>Date of Birth</b></td>
-                                             <td><b>Girl/Boy/Other</b></td>
+                                             <td><b>Girl (1) / Boy (0) / Other ( 2)</b></td>
                                              <td><b>Birth Weight</b></td>
                                              <td><b>APGAR</b></td>
-                                             <td><b>NICU Admission Y, N</b></td>
+                                             <td><b>NICU Admission Y-1, N-0</b></td>NICU Admission reason
                                              <td><b>NICU Admission reason</b></td>
-                                             <td><b>Alive/Dead</b></td>
+                                             <td><b>Alive (1) / Dead (0) - add field living_status</b></td>
                                              <td><b>Date of Death</b></td>
                                              <td><b>Cause of Death</b></td>
                                          </tr>
-                                         <tr ng-repeat="patient in patientCtrl.obg_history">
-                                             <td ng-bind="patient.pregnancy_number"></td>
-                                             <td ng-bind="patient.conception_type"></td>
-                                             <td ng-bind="patient.delivered"></td>
-                                             <td ng-bind="patient.imp_date"></td>
-                                             <td ng-bind="patient.edd_date"></td>
-                                             <td ng-bind="patient.delivery_outcome"></td>
-                                             <td ng-bind="patient.booked"></td>
-                                             <td ng-bind="patient.delivery_mode"></td>
-                                             <td ng-bind="patient.date_of_birth"></td>
-                                             <td ng-bind="patient.gender"></td>
-                                             <td ng-bind="patient.weight_at_birth"></td>
-                                             <td ng-bind="patient.apgar"></td>
-                                             <td ng-bind="patient.nicu_admission"></td>
-                                             <td ng-bind="patient.nicu_admission_reason"></td>
-                                             <td ng-bind="patient.alive"></td>
-                                             <td ng-bind="patient.date_of_death"></td>
-                                             <td ng-bind="patient.cause_of_death"></td>
+                                         <?php if(isset($obstetric_history)){ 
+                                             foreach($obstetric_history as $history){ ?>
+                                         <tr>
+                                         <td>
+                                             <?php echo $history->pregnancy_number ; ?>
+                                         </td>
+                                         <td>
+                                             <?php echo $history->conception_type ; ?>
+                                         </td>                                         
+                                         <td>
+                                             <?php if($history->delivered == '1') echo "Delivered"; else echo "Abortion"; ?>
+                                         </td>
+                                         <td>
+                                             <?php echo Date('d-M-Y',strtotime($history->imp_date)); ?>
+                                         </td>
+                                         <td>
+                                             <?php echo Date('d-M-Y',strtotime($history->edd_date)); ?>
+                                         </td>
+                                         <td>
+                                             <?php echo $history->delivery_outcome ; ?>
+                                         </td>
+                                         <td>
+                                             <?php if($history->booked == '1') echo "Booked"; else echo "Unbooked"; ?>
+                                         </td>
+                                         <td>
+                                             <?php echo $history->delivery_mode ; ?>
+                                         </td>
+                                         <td>
+                                             <?php echo Date('d-M-Y',strtotime($history->date_of_birth)); ?> 
+                                         </td>
+                                         <td>
+                                             <?php if($history->gender == '1') echo "Female"; else if($history->gender =='2') echo "Male"; else echo "Other";?>
+                                         </td>
+                                         <td>
+                                             <?php echo $history->weight_at_birth ; ?>
+                                         </td>
+                                         <td>
+                                             <?php echo $history->apgar ; ?>
+                                         </td>
+                                         <td>
+                                             <?php if($history->nicu_admission == '1') echo "Yes"; else echo "No"; ?>
+                                         </td>
+                                         <td>
+                                             <?php echo $history->nicu_admission_reason; ?>
+                                         </td>
+                                         <td>
+                                             <?php if($history->alive == '1') echo "Alive"; else echo "Dead"; ?> 
+                                         </td>
+                                         <td>
+                                             <?php echo Date('d-M-Y',strtotime($history->date_of_death)); ?> 
+                                         </td>
+                                         <td>
+                                             <?php echo $history->cause_of_death; ?>
+                                         </td>   
                                          </tr>
-                                         </table>
-                                         <form class="form-inline" ng-submit="patientCtrl.addChild()" id="addChild" name="addChild">
-                                         <div class="row alt">
-                                            <div class="col-md-4 col-xs-6">
-                                                <label class="control-label">Conception </label>
-                                                <input type="hidden" ng-model="patientCtrl.newChild.patient_id" value="<?php echo $patient->patient_id;  ?>" class="form-control" />
-                                                <input type="text" ng-model="patientCtrl.newChild.pregnancy_number" class="form-control" />
-                                            </div>
-                                             <div class="col-md-4 col-xs-6">
-                                                <label class="control-label">Conception Type</label>
-                                                <input type="text" ng-model="patientCtrl.newChild.conception_type" class="form-control" />
-                                            </div>
-                                        </div>
-                                        <div class="row alt">
-                                            <div class="col-md-4 col-xs-6">
-                                                <label class="control-label">Delivery/Abortion </label>
-                                                <input type="radio" ng-model="patientCtrl.newChild.delivered" class="form-control" value="1" />Delivered
-                                                <input type="radio" ng-model="patientCtrl.newChild.delivered" class="form-control" value="-1" />Abortion
-                                            </div>
-                                             <div class="col-md-4 col-xs-6">
-                                                <label class="control-label">LMP(date)</label>
-                                                <input type="text" ng-model="patientCtrl.newChild.lmp_date" class="form-control lmp_date" />
-                                            </div>
-                                        </div>
-                                        <div class="row alt">
-                                             <div class="col-md-4 col-xs-6">
-                                                <label class="control-label">EDD(date)</label>
-                                                <input type="text" ng-model="patientCtrl.newChild.edd_date" class="form-control edd_date" />
-                                            </div>
-                                            <div class="col-md-4 col-xs-6">
-                                                <label class="control-label">Live Birth/Still Birth </label>
-                                                <input type="radio" ng-model="patientCtrl.newChild.delivery_outcome" class="form-control" value="1" />Delivered
-                                                <input type="radio" ng-model="patientCtrl.newChild.delivery_outcome" class="form-control" value="-1" />Abortion
-                                            </div>
-                                        </div>
-                                        <div class="row alt">
-                                             <div class="col-md-4 col-xs-6">
-                                                <label class="control-label">Booked/Unbooked</label>
-                                                <input type="radio" ng-model="patientCtrl.newChild.booked" class="form-control" value="1"/>Booked
-                                                <input type="radio" ng-model="patientCtrl.newChild.booked" class="form-control" value="-1"/>Un-booked
-                                            </div>
-                                            <div class="col-md-4 col-xs-6">
-                                                <label class="control-label">Delivery Mode </label>
-                                                <input type="text" ng-model="patientCtrl.newChild.delivery_mode" class="form-control"/>
-                                            </div>
-                                        </div>
-                                        <div class="row alt">
-                                             <div class="col-md-4 col-xs-6">
-                                                <label class="control-label">Date of birth</label>
-                                                <input type="text" ng-model="patientCtrl.newChild.booked" class="form-control date_of_birth"/>
-                                            </div>
-                                            <div class="col-md-4 col-xs-6">
-                                                <label class="control-label">Gender </label>
-                                                <input type="radio" ng-model="patientCtrl.newChild.gender" class="form-control" value="1"/>Girl
-                                                <input type="radio" ng-model="patientCtrl.newChild.gender" class="form-control" value="2"/>Boy
-                                                <input type="radio" ng-model="patientCtrl.newChild.gender" class="form-control" value="3"/>Other
-                                            </div>
-                                        </div>
-                                        <div class="row alt">
-                                             <div class="col-md-4 col-xs-6">
-                                                <label class="control-label">Weight at Birth</label>
-                                                <input type="text" ng-model="patientCtrl.newChild.weight_at_birth" class="form-control"/>
-                                            </div>
-                                            <div class="col-md-4 col-xs-6">
-                                                <label class="control-label">APGAR </label>
-                                                <input type="text" ng-model="patientCtrl.newChild.apgar" class="form-control"/>
-                                            </div>
-                                        </div>
-                                        <div class="row alt">
-                                             <div class="col-md-4 col-xs-6">
-                                                <label class="control-label">NICU Admission</label>
-                                                <input type="radio" ng-model="patientCtrl.newChild.nicu_admission" class="form-control" value="1"/>Yes
-                                                <input type="radio" ng-model="patientCtrl.newChild.nicu_admission" class="form-control" value="-1"/>No
-                                            </div>
-                                            <div class="col-md-4 col-xs-6">
-                                                <label class="control-label">NICU Admission reason </label>
-                                                <input type="text" ng-model="patientCtrl.newChild.nicu_admission_reason" class="form-control" />
-                                            </div>
-                                        </div>
-                                        <div class="row alt">
-                                             <div class="col-md-4 col-xs-6">
-                                                <label class="control-label">Alive/Dead</label>
-                                                <input type="radio" ng-model="patientCtrl.newChild.alive" class="form-control" value="1"/>Alive
-                                                <input type="radio" ng-model="patientCtrl.newChild.alive" class="form-control" value="-1"/>Dead
-                                            </div>
-                                            <div class="col-md-4 col-xs-6">
-                                                <label class="control-label">Date of Death </label>
-                                                <input type="text" ng-model="patientCtrl.newChild.date_of_death" class="form-control" />
-                                            </div>
-                                        </div>
-                                        <div class="row alt">
-                                             <div class="col-md-4 col-xs-6">
-                                                <label class="control-label">Cause of Death</label>
-                                                <input type="text" ng-model="patientCtrl.newChild.cause_of_death" class="form-control" />
-                                            </div>
-                                            <div class="col-md-4 col-xs-6">
-                                                <div class="btn-group" role="group">
-                                                    <button onclick="$('#addChild').submit()" class="btn btn-default" value="add_child" id="add_child_button">Add</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                 </form>
+                                         <?php }                                         
+                                         } ?>
+                                         <?php if($f->edit==1){ ?>
+                                         <tr>
+                                         <td>
+                                             <input type="text" name="pregnancy_number[]" class="form-control pregnancy_number" id="pregnancy_number" placeholder="Pregnancy Number" />
+                                         </td>
+                                         <td>
+                                             <input type="text" name="conception_type[]" class="form-control conception_type" id="conception_type" placeholder="Conception Type" />                                             
+                                         </td>                                                     
+                                         <td>
+                                             <input type="radio" name="delivered[]" class="form-control delivered" value="1" id="delivered" />Delivered
+                                             <input type="radio" name="delivered[]" class="form-control delivered" value="-1" id="delivered" />Abortion                                             
+                                         </td>
+                                         <td>
+                                             <input type="text" name="imp_date[]" class="form-control imp_date" id="imp_date" style="width:150px" />                                             
+                                         </td>
+                                         <td>
+                                             <input type="text" name="edd_date[]" class="form-control edd_date" id="edd_date" style="width:150px" />                                             
+                                         </td>
+                                         <td>
+                                             <input type="text" name="delivery_outcome[]" class="form-control delivery_outcome" id="delivery_outcome" placeholder="Delivery Outcome" />                                             
+                                         </td>
+                                         <td>
+                                             <input type="radio" name="booked[]" class="form-control booked" value="1" id="booked" />Delivered
+                                             <input type="radio" name="booked[]" class="form-control booked" value="-1" id="booked" />Abortion                                             
+                                         </td>
+                                         <td>
+                                             <input type="text" name="delivery_mode[]" class="form-control delivery_mode" id="delivery_mode" placeholder="Delivery Mode" />
+                                         </td>
+                                         <td>
+                                             <input type="text" name="date_of_birth" class="form-control date_of_birth" id="date_of_birth" style="width:150px" />                                             
+                                         </td>
+                                         <td>
+                                             <input type="radio" name="gender[]" class="form-control gender" value="2" id="gender" />Male
+                                             <input type="radio" name="gender[]" class="form-control gender" value="1" id="gender" />Female
+                                             <input type="radio" name="gender[]" class="form-control gender" value="3" id="gender" />Other                                             
+                                         </td>
+                                         <td>
+                                             <input type="text" name="weight_at_birth[]" class="form-control weight_at_birth" id="weight_at_birth" placeholder="Weight at birth" />                                             
+                                         </td>
+                                         <td>
+                                             <input type="text" name="apgar[]" class="form-control apgar" id="apgar" placeholder="APGR" />                                             
+                                         </td>
+                                         <td>
+                                             <input type="radio" name="nicu_admission[]" class="form-control booked" value="1" id="booked" />Yes
+                                             <input type="radio" name="nicu_admission[]" class="form-control booked" value="-1" id="booked" />No                                             
+                                         </td>
+                                         <td>
+                                             <input type="text" name="nicu_admission_reason[]" class="form-control nicu_admission_reason" id="nicu_admission_reason" placeholder="NICU Admission Reason" />                                                                                          
+                                         </td>
+                                         <td>
+                                             <input type="radio" name="alive[]" class="form-control alive" value="1" id="alive" />Alive
+                                             <input type="radio" name="alive[]" class="form-control alive" value="-1" id="alive" />Dead                                             
+                                         </td>
+                                         <td>
+                                             <input type="text" name="date_of_death" class="form-control date_of_death" id="date_of_death" style="width:150px" />                                             
+                                         </td>
+                                         <td>
+                                             <input type="text" name="cause_of_death[]" class="form-control cause_of_death" id="cause_of_death" placeholder="Cause of death" />                                             
+                                         </td>   
+                                         </tr>
+                                         <?php } ?>
+                                     </table>
+                                     <?php if($f->edit==1) { ?>
+                                     <div class="btn-group" role="group">
+                                         <input type="hidden" name="child_count" id="child_count" value="1" />
+                                        <button type="button" id='add_obstetric_history'>Add</button>
+                                        <button type="button" id='remove_obstetric_history'>Remove Last</button>
+                                    </div>
+                                     <?php } ?>
                                  </div>
-                        </div>
-                  
-              </div>
-              </div>
-              <script  src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.js"></script>
-                <script>
-                  angular.module('obgApp', [])
-                    .controller('PatientCtrl', ['$http', function($http) {
-                      var self = this;
-                      self.summary = [];
-                      self.obstetric_history = [];
-                      self.newChild = {};
-
-                      var fetch_obg_summary = function() {
-                        return $http.get('<?php echo base_url();?>patient/get_obg_summary/<?php echo $patient->patient_id; ?>').then(
-                            function(response) {
-                          self.summary = response.data;
-                          console.log('In fetch obg');
-                        }, function(errResponse) {
-                          console.error(errResponse.data.msg);
-                        });
-                      };
-
-                      var fetch_obg_history = function() {
-                        return $http.get('<?php echo base_url();?>patient/get_obg_history/<?php echo $patient->patient_id; ?>').then(
-                            function(response) {
-                          self.obstetric_history = response.data;
-                        }, function(errResponse) {
-                          console.error(errResponse.data.msg);
-                        });
-                      };
-
-                      fetch_obg_summary();
-                      fetch_obg_history();
-
-                      self.add_child = function() {
-                        $http.post('<?php echo base_url();?>patient/add_child', self.newChild)
-                            .then(fetch_obg_summary)
-                            .then(fetch_obg_history)
-                            .then(function(response) {
-                              self.newChild = {};
-                            });
-                      };
-
-                    }]);
-                </script>
+		</div>
+                  <div class="row alt">
+                                            
+                  </div>
+              </div>              
                         <?php
                         break;
                     }
