@@ -315,7 +315,7 @@ class Reports_model extends CI_Model{
 		SUM(CASE WHEN test.test_status = 3 THEN 1 ELSE 0 END) tests_rejected,
 		test_method.test_method_id,test_master.test_master_id,test_master.test_name,test_area.test_area_id",false)
 		->from('test_order')
-		->join('test_sample','test_order.order_id = test_sample.order_id')
+		->join('test_sample','test_order.order_id = test_sample.order_id','left')
 		->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
 		->join('department','patient_visit.department_id = department.department_id')
 		->join('test_area','test_order.test_area_id = test_area.test_area_id')
@@ -437,7 +437,7 @@ class Reports_model extends CI_Model{
 			if($this->input->post('department')) $department=$this->input->post('department');
 			$this->db->where('department.department_id',$department);
 		}
-		if(!!$unit){
+		if(!!$unit || $this->input->post('unit')){
 			if($this->input->post('unit')) $unit=$this->input->post('unit');
 			$this->db->select('IF(unit!="",unit,0) unit',false);
 			$this->db->where('patient_visit.unit',$unit);
@@ -445,7 +445,7 @@ class Reports_model extends CI_Model{
 		else{
 			$this->db->select('"0" as unit_id',false);
 		}
-		if(!!$area){
+		if(!!$area || $this->input->post('area')){
 			if($this->input->post('area')) $area=$this->input->post('area');
 			$this->db->select('IF(area!="",area,0) area',false);
 			$this->db->where('patient_visit.area',$area);
@@ -630,7 +630,7 @@ class Reports_model extends CI_Model{
 		visit_type,sample_code,specimen_type,sample_container_type,test_status,binary_positive,binary_negative')
 		->from('test_order')
 		->join('test','test_order.order_id=test.order_id')
-		->join('test_sample','test_order.order_id=test_sample.order_id')
+		->join('test_sample','test_order.order_id=test_sample.order_id','left')
 		->join('test_master','test.test_master_id=test_master.test_master_id')
 		->join('lab_unit','test_master.numeric_result_unit=lab_unit.lab_unit_id','left')
 		->join('test_method','test_master.test_method_id=test_method.test_method_id')
@@ -641,7 +641,7 @@ class Reports_model extends CI_Model{
 		->join('department','patient_visit.department_id=department.department_id')
 		->join('unit','patient_visit.unit=unit.unit_id','left')
 		->join('area','patient_visit.area=area.area_id','left')
-		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id')
+		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id','left')
 		 ->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')")
 		 ->group_by('test.test_id');		  
 		
