@@ -71,11 +71,11 @@ class Register_model extends CI_Model{
 		if($this->input->post('mlc')==1){
                     //if a manual mlc number has been entered, use it and ignore the auto counter		
                     $mlc_number_manual=$this->input->post('mlc_number_manual');
-                    $this->db->select('count')->from('counter')->where('counter_name','MLC');
+                    $this->db->select('count')->from('counter')->where('counter_name','MLC')->where('hospital_id',$hospital['hospital_id']);
                     $query = $this->db->get();
                     $result = $query->row();
                     $mlc_number = ++$result->count;
-                    $this->db->where('counter_name','MLC');
+                    $this->db->where('counter_name','MLC')->where('hospital_id',$hospital['hospital_id']);
                     $this->db->update('counter',array('count'=>$mlc_number));
 
                     $ps_name=$this->input->post('ps_name');
@@ -115,7 +115,7 @@ class Register_model extends CI_Model{
 		else{
 			//else, select the counter from the database to check the last OP number, increment it and 
 			//use it as the hospital file number for out patients.
-			$this->db->select('count')->from('counter')->where('counter_name',$form_type);
+			$this->db->select('count')->from('counter')->where('counter_name',$form_type)->where('hospital_id',$hospital['hospital_id']);
 			$query=$this->db->get();
 			$result=$query->row();
 			$hosp_file_no=++$result->count;
@@ -273,7 +273,7 @@ class Register_model extends CI_Model{
 		$this->db->where('visit_id',$visit_id);
 		$this->db->update('patient_visit',array('admit_id'=>$visit_id));
 		//update the counter table with the new hospital file number.
-		$this->db->where('counter_name',$form_type);
+		$this->db->where('counter_name',$form_type)->where('hospital_id',$hospital['hospital_id']);
                 if($this->input->post('auto_increment') && !$this->input->post('visit_id')){
                     $hosp_file_no++;
                     $this->db->update('counter',array('count'=>$hosp_file_no));        
@@ -548,7 +548,7 @@ class Register_model extends CI_Model{
                     $query = $this->db->get();
                     $result = $query->row();
                     $mlc_number = ++$result->count;
-                    $this->db->where('counter_name','MLC');
+                    $this->db->where('counter_name','MLC')->where('hospital_id',$hospital['hospital_id']);
                     $this->db->update('counter',array('count'=>$mlc_number));
                     $mlc_number_manual=$this->input->post('mlc_number_manual');
                     $ps_name=$this->input->post('ps_name');
@@ -706,7 +706,7 @@ class Register_model extends CI_Model{
 		//Build the query to retrieve the patient records based on the search query.
 		$this->db->select("patient.*,patient_visit.*,CONCAT(first_name,' ',last_name) name,
 		IF(father_name IS NULL OR father_name='',spouse_name,father_name) parent_spouse,patient.*,patient_visit.*,mlc.*,occupation.occupation,id_proof_type,
-		area_name,state.state_id,state.state,unit_name,unit.unit_id,code_title,area.area_id,district,department,patient.patient_id,patient_visit.visit_id, 
+		area_name,state.state_id,state.state,hospital,unit_name,unit.unit_id,code_title,area.area_id,district.district,department,patient.patient_id,patient_visit.visit_id, 
                 patient_procedure.procedure_duration, patient_procedure.procedure_note, patient_procedure.procedure_findings, visit_name.visit_name",false)
 		->from('patient')
 		->join('patient_visit','patient.patient_id=patient_visit.patient_id')
@@ -721,6 +721,7 @@ class Register_model extends CI_Model{
 		->join('occupation','patient.occupation_id=occupation.occupation_id','left')
 		->join('id_proof_type','patient.id_proof_type_id=id_proof_type.id_proof_type_id','left')
 		->join('icd_code','patient_visit.icd_10=icd_code.icd_code','left')
+		->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
 		->order_by('name','ASC');
 		$query=$this->db->get();
 		//return the search results
@@ -731,12 +732,13 @@ class Register_model extends CI_Model{
 			$this->db->where('patient_visit.visit_id',$visit_id);
 		else return false; 
 		
-		$this->db->select('patient.*,patient_visit.*,department.department,unit.unit_id,unit.unit_name,area.area_id,area.area_name,mlc.mlc_number,mlc.mlc_number_manual,mlc.ps_name')
+		$this->db->select('patient.*,patient_visit.*,hospital,department.department,unit.unit_id,unit.unit_name,area.area_id,area.area_name,mlc.mlc_number,mlc.mlc_number_manual,mlc.ps_name')
 		->from('patient')->join('patient_visit','patient.patient_id=patient_visit.patient_id')
 		->join('department','patient_visit.department_id=department.department_id','left')
 		->join('unit','patient_visit.unit=unit.unit_id','left')
 		->join('area','patient_visit.area=area.area_id','left')
-		->join('mlc','patient_visit.visit_id=mlc.visit_id','left');
+		->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
+		->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left');
 	    $query=$this->db->get();
 		//return the patient details in a single row.
 		return $query->row();
@@ -747,12 +749,13 @@ class Register_model extends CI_Model{
 			$this->db->where('patient_visit.patient_id',$patient_id);
 		else return false; 
 		
-		$this->db->select('patient.*,patient_visit.*,department.department,unit.unit_id,unit.unit_name,area.area_id,area.area_name,mlc.mlc_number,mlc.ps_name')
+		$this->db->select('patient.*,patient_visit.*,hospital,department.department,unit.unit_id,unit.unit_name,area.area_id,area.area_name,mlc.mlc_number,mlc.ps_name')
 		->from('patient')->join('patient_visit','patient.patient_id=patient_visit.patient_id')
 		->join('department','patient_visit.department_id=department.department_id','left')
 		->join('unit','patient_visit.unit=unit.unit_id','left')
 		->join('area','patient_visit.area=area.area_id','left')
 		->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
+		->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
 		->order_by('admit_date','desc')
 		->order_by('admit_time','desc');
 	    $query=$this->db->get();

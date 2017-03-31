@@ -4,6 +4,7 @@ class Reports_model extends CI_Model{
 		parent::__construct();
 	}
 	function get_op_summary(){
+		$hospital=$this->session->userdata('hospital');
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));           
@@ -74,6 +75,8 @@ class Reports_model extends CI_Model{
 		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
+		 ->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
+		 ->where('patient_visit.hospital_id',$hospital['hospital_id'])
 		 ->where('visit_type','OP')
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')")
 		 ->group_by('department');
@@ -82,6 +85,7 @@ class Reports_model extends CI_Model{
 		return $resource->result();
 	}
 	function get_ip_summary(){
+		$hospital=$this->session->userdata('hospital');
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -154,6 +158,8 @@ class Reports_model extends CI_Model{
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
 		 ->join('visit_name','patient_visit.visit_name_id=visit_name.visit_name_id','left')
+		 ->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
+		 ->where('patient_visit.hospital_id',$hospital['hospital_id'])
 		 ->where('patient_visit.visit_type','IP')         
 		 ->where("(patient_visit.admit_date BETWEEN '$from_date' AND '$to_date')")
 		 ->group_by('department');
@@ -163,6 +169,7 @@ class Reports_model extends CI_Model{
 	}
 	
 	function get_icd_summary(){
+		$hospital=$this->session->userdata('hospital');
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -234,6 +241,8 @@ class Reports_model extends CI_Model{
 		 ->join('icd_code','patient_visit.icd_10=icd_code.icd_code','left')
 		 ->join('icd_block','icd_code.block_id=icd_block.block_id','left')
 		 ->join('icd_chapter','icd_block.chapter_id=icd_chapter.chapter_id','left')
+		 ->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
+		 ->where('patient_visit.hospital_id',$hospital['hospital_id'])
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')")
 		 ->group_by('icd_10');
 		$resource=$this->db->get();                
@@ -306,7 +315,7 @@ class Reports_model extends CI_Model{
 		SUM(CASE WHEN test.test_status = 3 THEN 1 ELSE 0 END) tests_rejected,
 		test_method.test_method_id,test_master.test_master_id,test_master.test_name,test_area.test_area_id",false)
 		->from('test_order')
-		->join('test_sample','test_order.order_id = test_sample.order_id')
+		->join('test_sample','test_order.order_id = test_sample.order_id','left')
 		->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
 		->join('department','patient_visit.department_id = department.department_id')
 		->join('test_area','test_order.test_area_id = test_area.test_area_id')
@@ -321,6 +330,7 @@ class Reports_model extends CI_Model{
 	}
 		
 	function get_op_detail(){
+		$hospital=$this->session->userdata('hospital');
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -374,19 +384,22 @@ class Reports_model extends CI_Model{
 
 		$this->db->select("hosp_file_no,patient_visit.visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,
 		gender,IF(gender='F' AND father_name=NULL,spouse_name,father_name) parent_spouse,unit_name,area_name,
-		age_years,age_months,age_days,place,phone,department,unit_name,area_name, admit_date, admit_time, mlc_number, mlc_number_manual",false);
+		age_years,age_months,age_days,patient.place,phone,department,unit_name,area_name, admit_date, admit_time, mlc_number, mlc_number_manual",false);
 		 $this->db->from('patient_visit')
 		 ->join('patient','patient_visit.patient_id=patient.patient_id')
 		 ->join('mlc','mlc.visit_id=patient_visit.visit_id','left')
 		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
+		 ->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
+		 ->where('patient_visit.hospital_id',$hospital['hospital_id'])
 		 ->where('visit_type','OP')
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')");		  
 		$resource=$this->db->get();
 		return $resource->result();
 	}
 	function get_ip_detail($department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date,$visit_name){
+		$hospital=$this->session->userdata('hospital');
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -424,7 +437,7 @@ class Reports_model extends CI_Model{
 			if($this->input->post('department')) $department=$this->input->post('department');
 			$this->db->where('department.department_id',$department);
 		}
-		if(!!$unit){
+		if(!!$unit || $this->input->post('unit')){
 			if($this->input->post('unit')) $unit=$this->input->post('unit');
 			$this->db->select('IF(unit!="",unit,0) unit',false);
 			$this->db->where('patient_visit.unit',$unit);
@@ -432,7 +445,7 @@ class Reports_model extends CI_Model{
 		else{
 			$this->db->select('"0" as unit_id',false);
 		}
-		if(!!$area){
+		if(!!$area || $this->input->post('area')){
 			if($this->input->post('area')) $area=$this->input->post('area');
 			$this->db->select('IF(area!="",area,0) area',false);
 			$this->db->where('patient_visit.area',$area);
@@ -455,12 +468,14 @@ class Reports_model extends CI_Model{
 		}
 		$this->db->select("hosp_file_no,patient_visit.visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,
 		gender,IF(gender='F' AND father_name ='',spouse_name,father_name) parent_spouse,
-		age_years,age_months,age_days,place,phone,address,admit_date,admit_time, department,unit_name,area_name,mlc_number,mlc_number_manual",false);
+		age_years,age_months,age_days,patient.place,phone,address,admit_date,admit_time, department,unit_name,area_name,mlc_number,mlc_number_manual",false);
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
 		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
 		 ->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
+		 ->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
+		 ->where('patient_visit.hospital_id',$hospital['hospital_id'])
 		 ->where('visit_type','IP')
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')")
 		 ->order_by('hosp_file_no','ASC');		  
@@ -469,6 +484,7 @@ class Reports_model extends CI_Model{
 	}
 	
 	function get_icd_detail($icd_10,$department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date,$visit_name,$visit_type){
+		$hospital=$this->session->userdata('hospital');
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -525,12 +541,14 @@ class Reports_model extends CI_Model{
 		}
 		$this->db->select("hosp_file_no,patient_visit.visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,
 		gender,IF(gender='F' AND father_name ='',spouse_name,father_name) parent_spouse,
-		age_years,age_months,age_days,place,phone,address,admit_date,admit_time, department,unit_name,area_name,mlc_number",false);
+		age_years,age_months,age_days,patient.place,phone,address,admit_date,admit_time, department,unit_name,area_name,mlc_number",false);
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
 		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
 		 ->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
+		 ->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
+		 ->where('patient_visit.hospital_id',$hospital['hospital_id'])
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')")
 		 ->order_by('hosp_file_no','ASC');		  
 		$resource=$this->db->get();
@@ -612,7 +630,7 @@ class Reports_model extends CI_Model{
 		visit_type,sample_code,specimen_type,sample_container_type,test_status,binary_positive,binary_negative')
 		->from('test_order')
 		->join('test','test_order.order_id=test.order_id')
-		->join('test_sample','test_order.order_id=test_sample.order_id')
+		->join('test_sample','test_order.order_id=test_sample.order_id','left')
 		->join('test_master','test.test_master_id=test_master.test_master_id')
 		->join('lab_unit','test_master.numeric_result_unit=lab_unit.lab_unit_id','left')
 		->join('test_method','test_master.test_method_id=test_method.test_method_id')
@@ -623,7 +641,7 @@ class Reports_model extends CI_Model{
 		->join('department','patient_visit.department_id=department.department_id')
 		->join('unit','patient_visit.unit=unit.unit_id','left')
 		->join('area','patient_visit.area=area.area_id','left')
-		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id')
+		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id','left')
 		 ->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')")
 		 ->group_by('test.test_id');		  
 		
@@ -805,6 +823,7 @@ function get_sensitivity_summary(){
         // This function is used to get number of OP/IP patients during a specified period, in days, months and years.
         // This function returns an array of objects containing the records from the database.
     function get_ip_op_trends(){
+			$hospital=$this->session->userdata('hospital');
             //First time ip_op_trends page is opened all records for today will be opened.
             /*Query is being built from the data input from the user*/
             
@@ -880,6 +899,8 @@ function get_sensitivity_summary(){
 		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
+		 ->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
+		 ->where('patient_visit.hospital_id',$hospital['hospital_id'])
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')");
 		$resource=$this->db->get();
 		return $resource->result();
@@ -972,6 +993,7 @@ function get_sensitivity_summary(){
 	}
 
     function get_outcome_summary(){
+		$hospital=$this->session->userdata('hospital');
         if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));            
@@ -1032,6 +1054,8 @@ function get_sensitivity_summary(){
 		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
+		 ->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
+		 ->where('patient_visit.hospital_id',$hospital['hospital_id'])
          ->where('visit_type','IP')		 
 		 ->group_by('department');
 		  

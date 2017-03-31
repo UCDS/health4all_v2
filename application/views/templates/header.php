@@ -27,7 +27,7 @@
       <div class="container">
         <div class="navbar-header">
 		<!-- Bootstrap toggle menu for mobile devices, only visible on small screens --> 
-		<a class="navbar-brand" href="http://www.yousee.in" target="_blank"><img src="<?php echo base_url();?>assets/images/uc-logo.png" alt="Yousee Logo" height="22" width="22"></a>	  
+		<a class="navbar-brand" href="http://www.yousee.in" target="_blank"><img src="<?php echo base_url();?>assets/images/uc-logo.png" alt="" height="22" width="22"></a>	  
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
@@ -311,7 +311,11 @@
 		</ul>
 	<?php if($this->session->userdata('logged_in')) { ?>
           <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown  <?php if(preg_match("^".base_url()."user_panel^",current_url())){ echo "active";}?>"><a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><?php $logged_in=$this->session->userdata('logged_in');echo $logged_in['username']; ?> <b class="caret"></b></a>
+            <li class="dropdown  <?php if(preg_match("^".base_url()."user_panel^",current_url())){ echo "active";}?>"><a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">
+				<?php 
+					$logged_in=$this->session->userdata('logged_in');
+					$hospital=$this->session->userdata('hospital');
+					echo $hospital['hospital']." | ".$logged_in['username']; ?> <b class="caret"></b></a>
                 <ul class="dropdown-menu">
 				<?php
 				foreach($functions as $f){
