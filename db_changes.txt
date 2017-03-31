@@ -1,0 +1,649 @@
+1. CREATE TABLE IF NOT EXISTS `attendance` (
+  `attendance_id` int(11) NOT NULL AUTO_INCREMENT,
+  `roaster_id` int(11) NOT NULL,
+  `time_in` timestamp NULL DEFAULT NULL,
+  `time_out` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`attendance_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+2. ALTER TABLE  `bb_donation` ADD  `donation_time` TIME NOT NULL AFTER  `screening_result` ;
+
+3. ALTER TABLE  `blood_request` ADD  `visit_id` INT( 10 ) NOT NULL AFTER  `request_id` ;
+
+4. CREATE TABLE IF NOT EXISTS `dicom` (
+  `dicom_id` int(11) NOT NULL AUTO_INCREMENT,
+  `visit_id` int(11) NOT NULL,
+  `test_id` int(11) NOT NULL,
+  `study_datetime` datetime NOT NULL,
+  `modality` varchar(64) NOT NULL,
+  `study_id` varchar(64) NOT NULL,
+  `filepath` varchar(250) NOT NULL,
+  PRIMARY KEY (`dicom_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+5. equipment.supplier varchar(100) DEFAULT NULL,  `contact_person_id` int(6) NOT NULL COMMENT 'Contact person id',`service_engineer` varchar(50) NOT NULL,
+  `service_engineer_contact` varchar(20) NOT NULL, `user_id` int(4) NOT NULL,
+  
+6. ALTER TABLE  `form_layout` ADD  `default_value` VARCHAR( 150 ) NOT NULL AFTER  `field_name` ;
+
+7. ALTER TABLE  `icd_chapter` ADD INDEX (  `chapter_title` ) ;
+ALTER TABLE  `icd_code` ADD INDEX (  `code_title` ) ;
+
+8. icd_code KEY `icd_code_2` (`icd_code`),  KEY `code_title` (`code_title`)
+
+9. CREATE TABLE IF NOT EXISTS `internal_transfer` (
+  `transfer_id` int(11) NOT NULL AUTO_INCREMENT,
+  `visit_id` int(11) NOT NULL,
+  `department_id` int(3) NOT NULL,
+  `area_id` int(3) NOT NULL,
+  `transfer_date` date NOT NULL,
+  `transfer_time` time NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`transfer_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=29 ;
+
+10. item `serial_number` int(11) NOT NULL, `asset_number` int(11) NOT NULL,  `procured_by` varchar(30) NOT NULL,  `cost` float NOT NULL, `contact_person_id` int(11) NOT NULL,
+  `hospital_id` int(11) NOT NULL,  `department_id` int(11) NOT NULL,  `item_status` varchar(50) NOT NULL,  `dosage_id` int(6) NOT NULL,  `form_id` int(6) NOT NULL,
+  
+11. CREATE TABLE IF NOT EXISTS `item_batch` (
+  `batch_id` int(11) NOT NULL AUTO_INCREMENT,
+  `item_id` int(11) NOT NULL,
+  `item_quantity` int(11) NOT NULL,
+  `batch_number` int(11) NOT NULL,
+  PRIMARY KEY (`batch_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+12. CREATE TABLE IF NOT EXISTS `leave` (
+  `leave_id` int(11) NOT NULL AUTO_INCREMENT,
+  `staff_id` int(11) NOT NULL,
+  `leave_status` int(1) NOT NULL,
+  `leave_submission_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `leave_date` date NOT NULL,
+  `comment` varchar(200) NOT NULL,
+  `leave_type_id` int(11) NOT NULL,
+  PRIMARY KEY (`leave_id`),
+  KEY `staff_id` (`staff_id`),
+  KEY `staff_id_2` (`staff_id`),
+  KEY `leave_type_id` (`leave_type_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `leave_status`
+--
+
+CREATE TABLE IF NOT EXISTS `leave_status` (
+  `swap_status` int(11) NOT NULL,
+  `swap_status_description` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `leave_type`
+--
+
+CREATE TABLE IF NOT EXISTS `leave_type` (
+  `leave_type_id` int(11) NOT NULL AUTO_INCREMENT,
+  `leave_type` varchar(20) NOT NULL,
+  `note` varchar(60) NOT NULL,
+  PRIMARY KEY (`leave_type_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+13. CREATE TABLE IF NOT EXISTS `otp_log` (
+  `staff_id` int(11) NOT NULL,
+  `phone` varchar(11) NOT NULL,
+  `otp` varchar(7) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `otp_status` varchar(11) NOT NULL DEFAULT 'Generated'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+14. 
+ALTER TABLE  `patient` ADD  `patient_id_manual` VARCHAR( 15 ) NOT NULL AFTER  `patient_id` ;
+ALTER TABLE  `patient` ADD  `country_code` VARCHAR( 5 ) NOT NULL AFTER  `district_id` ;
+ALTER TABLE  `patient` ADD  `state_code` VARCHAR( 5 ) NOT NULL AFTER  `district_id` ;
+ALTER TABLE  `patient` ADD  `identification_mark_1` TEXT NOT NULL AFTER  `gender` ;
+ALTER TABLE  `patient` ADD  `identification_mark_2` TEXT NOT NULL AFTER  `identification_mark_1` ;
+ALTER TABLE  `patient` ADD  `identification_marks` VARCHAR( 200 ) NOT NULL AFTER  `identification_mark_2` ;
+ALTER TABLE  `patient` ADD  `insert_by_user_id` INT( 11 ) NOT NULL ;
+ALTER TABLE  `patient` ADD  `update_by_user_id` INT( 11 ) NOT NULL ;
+ALTER TABLE  `patient` ADD  `insert_datetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ;
+ALTER TABLE  `patient` ADD  `update_datetime` DATETIME NOT NULL ,
+ADD INDEX (  `update_datetime` ) ;
+ALTER TABLE  `patient` ADD  `insert_by_staff_id` INT( 11 ) NOT NULL AFTER  `congenital_anomalies` ;
+ALTER TABLE  `patient` ADD INDEX (  `insert_by_staff_id` ) ;
+
+  
+15. CREATE TABLE IF NOT EXISTS `patient_arrival_mode` (
+  `arrival_id` int(11) NOT NULL,
+  `arrival_mode` varchar(25) NOT NULL,
+  PRIMARY KEY (`arrival_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+16. 
+ALTER TABLE  `patient_procedure` ADD  `procedure_duration` VARCHAR( 12 ) NOT NULL ;
+ALTER TABLE  `patient_procedure` ADD  `procedure_note` TEXT NOT NULL ;
+ALTER TABLE  `patient_procedure` ADD  `procedure_findings` LONGTEXT NOT NULL ;
+ALTER TABLE  `patient_procedure` ADD  `post_procedure` INT NOT NULL ;
+
+
+17. CREATE TABLE IF NOT EXISTS `patient_treatment` (
+  `treatment_id` int(10) NOT NULL AUTO_INCREMENT,
+  `visit_id` bigint(10) NOT NULL,
+  `treatment_type` varchar(20) NOT NULL,
+  `treatment` varchar(50) NOT NULL,
+  `treatment_date` date NOT NULL,
+  `treatment_time` time NOT NULL,
+  `duration` varchar(12) NOT NULL,
+  `notes` varchar(300) NOT NULL,
+  PRIMARY KEY (`treatment_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+18. 
+ALTER TABLE  `patient_visit` ADD  `arrival_mode` VARCHAR( 25 ) NOT NULL AFTER  `visit_type` ;
+ALTER TABLE  `patient_visit` ADD  `refereal_hospital_id` INT( 11 ) NOT NULL AFTER  `arrival_mode` ;
+ALTER TABLE  `patient_visit` ADD  `casesheet_at_mrd_date` DATE NOT NULL ;
+ALTER TABLE  `patient_visit` ADD  `insert_by_user_id` INT( 11 ) NOT NULL COMMENT  'User ID';
+ALTER TABLE  `patient_visit` ADD  `update_by_user_id` INT( 11 ) NOT NULL COMMENT  'User ID';
+ALTER TABLE  `patient_visit` ADD  `insert_datetime` DATETIME NOT NULL ;
+ALTER TABLE  `patient_visit` ADD  `update_datetime` DATETIME NOT NULL ;
+  
+20. CREATE TABLE IF NOT EXISTS `procedure_plan` (
+  `procedure_plan_id` int(11) NOT NULL AUTO_INCREMENT,
+  `visit_id` int(11) NOT NULL,
+  `procedure_id` int(11) NOT NULL,
+  `plan_date` date NOT NULL,
+  `status` tinyint(4) NOT NULL,
+  PRIMARY KEY (`procedure_plan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `procedure_staff`
+--
+
+CREATE TABLE IF NOT EXISTS `procedure_staff` (
+  `procedure_staff_id` int(11) NOT NULL AUTO_INCREMENT,
+  `patient_procedure_id` int(11) NOT NULL,
+  `staff_id` int(11) NOT NULL,
+  `staff_role` varchar(20) NOT NULL,
+  PRIMARY KEY (`procedure_staff_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `procedure_type`
+--
+
+CREATE TABLE IF NOT EXISTS `procedure_type` (
+  `procedure_type_id` int(3) NOT NULL AUTO_INCREMENT,
+  `procedure_type` varchar(50) NOT NULL,
+  PRIMARY KEY (`procedure_type_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+21. CREATE TABLE IF NOT EXISTS `roaster` (
+  `roaster_id` int(11) NOT NULL AUTO_INCREMENT,
+  `staff_id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `shift_id` int(11) NOT NULL,
+  `swap_status` int(1) NOT NULL,
+  `original_shift_id` int(11) NOT NULL,
+  PRIMARY KEY (`roaster_id`),
+  KEY `staff_id` (`staff_id`),
+  KEY `shift_id` (`shift_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+22. service_record `user_id` int(4) NOT NULL,
+`vendor_id` int(10) NOT NULL,
+  `contact_person_id` varchar(50) NOT NULL,
+  `service_provider` varchar(50) DEFAULT NULL,
+  `service_person` varchar(50) DEFAULT NULL,
+  
+23. CREATE TABLE IF NOT EXISTS `shift` (
+  `shift_id` int(11) NOT NULL AUTO_INCREMENT,
+  `shift` varchar(10) NOT NULL,
+  `description` varchar(20) NOT NULL,
+  `time_in` time NOT NULL,
+  `time_out` time NOT NULL,
+  PRIMARY KEY (`shift_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+24. staff_id
+ALTER TABLE  `staff` ADD  `bank` VARCHAR( 100 ) NOT NULL ;
+ALTER TABLE  `staff` ADD  `bank_branch` VARCHAR( 100 ) NOT NULL ;
+ALTER TABLE  `staff` ADD  `account_name` VARCHAR( 100 ) NOT NULL ;
+ALTER TABLE  `staff` ADD  `account_number` VARCHAR( 50 ) NOT NULL ;
+ALTER TABLE  `staff` ADD  `ifsc_code` VARCHAR( 11 ) NOT NULL ;
+
+ `mci_flag` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'Medical Council of India, 1- Reported, 0- NonReported',
+  `ima_registration_number` varchar(15) NOT NULL,
+  `doctor_reg_no` varchar(1) NOT NULL COMMENT 'Delete',
+  `qualification_id` int(6) NOT NULL,
+  `area_of_responsibility` varchar(100) NOT NULL,
+    `staff_status` varchar(30) NOT NULL,
+  `bank` varchar(100) NOT NULL,
+  `bank_branch` varchar(100) NOT NULL,
+  `account_name` varchar(100) NOT NULL,
+  `account_number` varchar(50) NOT NULL,
+  `ifsc_code` varchar(11) NOT NULL,
+  
+25.
+CREATE TABLE IF NOT EXISTS `staff_applicant` (
+  `applicant_id` int(11) NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `gender` text NOT NULL,
+  `date_of_birth` date NOT NULL,
+  `fathers_name` varchar(70) NOT NULL,
+  `mothers_name` varchar(70) NOT NULL,
+  `husbands_name` varchar(70) NOT NULL,
+  `address` varchar(200) NOT NULL,
+  `place` varchar(60) NOT NULL,
+  `district_id` int(6) NOT NULL,
+  `phone` varchar(15) NOT NULL,
+  `phone_alternate` varchar(15) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `drive_id` int(11) NOT NULL,
+  `staff_id` int(3) NOT NULL DEFAULT '-1',
+  PRIMARY KEY (`applicant_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `staff_applicant_college`
+--
+
+CREATE TABLE IF NOT EXISTS `staff_applicant_college` (
+  `college_id` int(11) NOT NULL AUTO_INCREMENT,
+  `college_name` varchar(150) NOT NULL,
+  `affiliated_to` int(11) NOT NULL,
+  `address` varchar(250) NOT NULL,
+  `district_id` int(11) NOT NULL,
+  `email` varchar(70) NOT NULL,
+  `university_flag` tinyint(1) NOT NULL,
+  `public_institution_flag` tinyint(1) NOT NULL,
+  PRIMARY KEY (`college_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `staff_applicant_qualification`
+--
+
+CREATE TABLE IF NOT EXISTS `staff_applicant_qualification` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `applicant_id` int(11) NOT NULL,
+  `qualification_id` int(3) NOT NULL,
+  `college_id` int(11) NOT NULL,
+  `registration_number` int(11) NOT NULL,
+  `from_date` date NOT NULL,
+  `to_date` date NOT NULL,
+  `staff_id` int(3) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `staff_applicant_qualification_master`
+--
+
+CREATE TABLE IF NOT EXISTS `staff_applicant_qualification_master` (
+  `qualification_id` int(11) NOT NULL AUTO_INCREMENT,
+  `qualification` varchar(75) NOT NULL,
+  `qualification_level_id` int(11) NOT NULL,
+  PRIMARY KEY (`qualification_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `staff_applicant_score`
+--
+
+CREATE TABLE IF NOT EXISTS `staff_applicant_score` (
+  `score_id` int(11) NOT NULL AUTO_INCREMENT,
+  `parameter_id` int(11) NOT NULL,
+  `applicant_id` int(11) NOT NULL,
+  `drive_id` int(11) NOT NULL,
+  `score` varchar(300) NOT NULL,
+  PRIMARY KEY (`score_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT= 1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `staff_applicant_work_expriance`
+--
+
+CREATE TABLE IF NOT EXISTS `staff_applicant_work_expriance` (
+  `experiance_id` int(11) NOT NULL AUTO_INCREMENT,
+  `applicant_id` int(11) NOT NULL,
+  `hospital_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  `experiance_years` varchar(2) NOT NULL,
+  `from_date` date NOT NULL,
+  `to_date` date NOT NULL,
+  `staff_id` int(11) NOT NULL,
+  PRIMARY KEY (`experiance_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT= 1 ;
+
+-- --------------------------------------------------------
+
+26. 
+CREATE TABLE IF NOT EXISTS `swap_request` (
+  `swap_id` int(11) NOT NULL AUTO_INCREMENT,
+  `roaster_id_requested` int(11) NOT NULL,
+  `shift_id_requested` int(11) NOT NULL,
+  `request_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `swap_status` int(1) NOT NULL,
+  `roaster_id_accepted` int(11) DEFAULT NULL,
+  PRIMARY KEY (`swap_id`),
+  KEY `roaster_id_requested` (`roaster_id_requested`),
+  KEY `shift_id_requested` (`shift_id_requested`),
+  KEY `roaster_id_accepted` (`roaster_id_accepted`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+27.
+CREATE TABLE IF NOT EXISTS `swap_request_sent` (
+  `swap_request_sent_id` int(11) NOT NULL AUTO_INCREMENT,
+  `swap_id` int(11) NOT NULL,
+  `staff_id_sent_to` int(11) NOT NULL,
+  PRIMARY KEY (`swap_request_sent_id`),
+  KEY `swap_id` (`swap_id`),
+  KEY `staff_id_sent_to` (`staff_id_sent_to`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `swap_rule`
+--
+
+CREATE TABLE IF NOT EXISTS `swap_rule` (
+  `max_swaps_per_month` int(5) NOT NULL,
+  `max_swaps_per_week` int(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+28.
+CREATE TABLE IF NOT EXISTS `test_assay` (
+  `assay_id` int(11) NOT NULL AUTO_INCREMENT,
+  `assay` varchar(100) NOT NULL,
+  PRIMARY KEY (`assay_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+29. 
+ALTER TABLE  `test_group` ADD  `interpretation` TEXT NOT NULL AFTER  `binary_negative` ;
+
+30. 
+ALTER TABLE  `test_master` ADD  `assay_id` INT( 10 ) NOT NULL AFTER  `method` ;
+ALTER TABLE  `test_master` ADD  `text_range` INT( 1 ) NULL DEFAULT  '0';
+ALTER TABLE  `test_master` CHANGE  `text_result`  `text_result` TEXT NOT NULL ;
+ALTER TABLE  `test_master` ADD  `nabl` TINYINT( 1 ) NOT NULL COMMENT  '1 NABL accredited, 0 Not accredited';
+ALTER TABLE  `test_master` ADD  `interpretation` TEXT NOT NULL AFTER  `text_result` ;
+
+31. 
+ALTER TABLE  `test_range` ADD  `range_text` VARCHAR( 100 ) NOT NULL AFTER  `max` ;
+
+32. 
+CREATE TABLE IF NOT EXISTS `test_result_suggestion` (
+  `suggestion_id` int(11) NOT NULL AUTO_INCREMENT,
+  `test_master_id` int(5) NOT NULL,
+  `suggestion` varchar(250) NOT NULL,
+  PRIMARY KEY (`suggestion_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+33.
+CREATE TABLE IF NOT EXISTS `treatment_type` (
+  `treatment_type_id` int(3) NOT NULL AUTO_INCREMENT,
+  `treatment_type` varchar(50) NOT NULL,
+  PRIMARY KEY (`treatment_type_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+
+34.
+ALTER TABLE  `unit` ADD  `unit_head_staff_id` INT( 11 ) NOT NULL COMMENT  'Unit Head - Staff ID' AFTER  `beds` ;
+
+35.
+ALTER TABLE  `user_function_link` ADD  `active` INT( 1 ) NOT NULL COMMENT  '1- Function active with user, 0- Function disabled.';
+ 
+36.
+--
+-- Constraints for table `leave`
+--
+ALTER TABLE `leave`
+  ADD CONSTRAINT `leave_ibfk_2` FOREIGN KEY (`leave_type_id`) REFERENCES `leave_type` (`leave_type_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `roaster`
+--
+ALTER TABLE `roaster`
+  ADD CONSTRAINT `roaster_ibfk_2` FOREIGN KEY (`shift_id`) REFERENCES `shift` (`shift_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `swap_request`
+--
+ALTER TABLE `swap_request`
+  ADD CONSTRAINT `swap_request_ibfk_1` FOREIGN KEY (`roaster_id_requested`) REFERENCES `roaster` (`roaster_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `swap_request_ibfk_2` FOREIGN KEY (`shift_id_requested`) REFERENCES `shift` (`shift_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `swap_request_ibfk_3` FOREIGN KEY (`roaster_id_accepted`) REFERENCES `roaster` (`roaster_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `swap_request_sent`
+--
+ALTER TABLE `swap_request_sent`
+  ADD CONSTRAINT `swap_request_sent_ibfk_1` FOREIGN KEY (`swap_id`) REFERENCES `swap_request` (`swap_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+37.
+CREATE TABLE IF NOT EXISTS `bb_donation_cancel` (
+  `donation_id` int(100) NOT NULL,
+  `reason` varchar(160) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+38.
+CREATE TABLE IF NOT EXISTS `bloodbank_edit_log` (
+  `bb_log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `trail` varchar(250) NOT NULL,
+  `staff_id` int(4) NOT NULL,
+  PRIMARY KEY (`bb_log_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+39.
+ALTER TABLE  `blood_inventory` ADD  `component_perparation_time` TIME NOT NULL ;
+ALTER TABLE  `blood_inventory` ADD  `discarded_by` INT( 3 ) NOT NULL ;
+
+40.
+ALTER TABLE  `blood_request` ADD  `referred_by_doctor` VARCHAR( 50 ) NOT NULL COMMENT  'Prescribing doctors name';
+ALTER TABLE  `blood_request` ADD  `rdp_units` VARCHAR( 50 ) NOT NULL ;
+
+
+42.
+CREATE TABLE IF NOT EXISTS `country` (
+  `country_id` int(11) NOT NULL AUTO_INCREMENT,
+  `country` varchar(100) NOT NULL,
+  PRIMARY KEY (`country_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+43.
+CREATE TABLE IF NOT EXISTS `default_setting` (
+  `setting_id` int(11) NOT NULL AUTO_INCREMENT,
+  `table` varchar(30) NOT NULL,
+  `primary_key` varchar(50) NOT NULL,
+  `default_value` int(11) NOT NULL,
+  `default_value_text` varchar(25) NOT NULL,
+  PRIMARY KEY (`setting_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+44.
+ALTER TABLE  `district` ADD  `lattitude` VARCHAR( 10 ) NOT NULL ;
+ALTER TABLE  `district` ADD  `longitude` VARCHAR( 10 ) NOT NULL ;
+
+45.
+ALTER TABLE  `equipment` ADD  `supplier` VARCHAR( 100 ) NOT NULL ;
+ALTER TABLE  `equipment` ADD  `service_engineer` VARCHAR( 50 ) NOT NULL ;
+ALTER TABLE  `equipment` ADD  `service_engineer_contact` VARCHAR( 30 ) NOT NULL ;
+
+46.
+ALTER TABLE  `mlc` ADD  `mlc_number_manual` VARCHAR( 10 ) NOT NULL ;
+ALTER TABLE  `mlc` ADD  `brought_by` VARCHAR( 200 ) NOT NULL ;
+ALTER TABLE  `mlc` ADD  `police_intimation` TINYINT( 1 ) NOT NULL ;
+ALTER TABLE  `mlc` ADD  `declaration_required` TINYINT( 1 ) NOT NULL ;
+ALTER TABLE  `mlc` ADD  `pc_number` INT( 11 ) NOT NULL ;
+
+47.
+CREATE TABLE IF NOT EXISTS `physical_function_link` (
+  `link_id` int(11) NOT NULL AUTO_INCREMENT,
+  `function_id` int(11) NOT NULL,
+  `physical_address` varchar(20) NOT NULL,
+  PRIMARY KEY (`link_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `places_table`
+--
+
+CREATE TABLE IF NOT EXISTS `places_table` (
+  `place_id` int(11) NOT NULL AUTO_INCREMENT,
+  `col_change` varchar(1) DEFAULT NULL,
+  `country_code` varchar(2) NOT NULL,
+  `place_code` varchar(3) DEFAULT NULL,
+  `place_name` varchar(100) DEFAULT NULL,
+  `place_name_without_diacritics` varchar(100) DEFAULT NULL,
+  `state_code` varchar(3) DEFAULT NULL,
+  `place_function` varchar(8) DEFAULT NULL,
+  `place_status` varchar(2) DEFAULT NULL,
+  `place_date` varchar(4) DEFAULT NULL,
+  `place_iata` varchar(3) DEFAULT NULL,
+  `subsidiary_loc` varchar(12) DEFAULT NULL,
+  `support_codes` varchar(25) DEFAULT NULL,
+  PRIMARY KEY (`place_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+48.
+staff_category  `seniority` int(5) NOT NULL,
+
+49.
+CREATE TABLE IF NOT EXISTS `staff_previous_hospital` (
+  `hospital_id` int(11) NOT NULL AUTO_INCREMENT,
+  `hospital_name` varchar(150) NOT NULL,
+  `address` varchar(300) NOT NULL,
+  `district_id` int(6) NOT NULL,
+  `public_institution_flag` tinyint(1) NOT NULL,
+  PRIMARY KEY (`hospital_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `staff_recruitment_drive`
+--
+
+CREATE TABLE IF NOT EXISTS `staff_recruitment_drive` (
+  `drive_id` int(11) NOT NULL AUTO_INCREMENT,
+  `place` varchar(160) NOT NULL,
+  `name` varchar(70) NOT NULL,
+  `start_date` date NOT NULL,
+  PRIMARY KEY (`drive_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+50.
+CREATE TABLE IF NOT EXISTS `staff_selection_parameter` (
+  `parameter_id` int(11) NOT NULL AUTO_INCREMENT,
+  `drive_id` int(11) NOT NULL,
+  `parameter_label` varchar(250) NOT NULL,
+  `parameter_max_value` varchar(10) NOT NULL,
+  `parameter_rank` int(2) NOT NULL,
+  PRIMARY KEY (`parameter_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+51.
+CREATE TABLE IF NOT EXISTS `swap_request` (
+  `swap_id` int(11) NOT NULL AUTO_INCREMENT,
+  `roaster_id_requested` int(11) NOT NULL,
+  `shift_id_requested` int(11) NOT NULL,
+  `request_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `swap_status` int(1) NOT NULL,
+  `roaster_id_accepted` int(11) DEFAULT NULL,
+  PRIMARY KEY (`swap_id`),
+  KEY `roaster_id_requested` (`roaster_id_requested`),
+  KEY `shift_id_requested` (`shift_id_requested`),
+  KEY `roaster_id_accepted` (`roaster_id_accepted`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `swap_request_sent`
+--
+
+CREATE TABLE IF NOT EXISTS `swap_request_sent` (
+  `swap_request_sent_id` int(11) NOT NULL AUTO_INCREMENT,
+  `swap_id` int(11) NOT NULL,
+  `staff_id_sent_to` int(11) NOT NULL,
+  PRIMARY KEY (`swap_request_sent_id`),
+  KEY `swap_id` (`swap_id`),
+  KEY `staff_id_sent_to` (`staff_id_sent_to`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `swap_rule`
+--
+
+CREATE TABLE IF NOT EXISTS `swap_rule` (
+  `max_swaps_per_month` int(5) NOT NULL,
+  `max_swaps_per_week` int(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+52.
+ALTER TABLE  `user_function` ADD  `user_function_display` VARCHAR( 100 ) NOT NULL ;
+
+53.
+ALTER TABLE  `staff` ADD  `ima_registration_number` VARCHAR( 20 ) NOT NULL ;
+
+53.
+
+CREATE TABLE IF NOT EXISTS `country_codes` (
+  `country_id` int(11) NOT NULL AUTO_INCREMENT,
+  `country` varchar(2) NOT NULL DEFAULT '',
+  `latitude` decimal(10,8) DEFAULT NULL,
+  `longitude` decimal(10,8) DEFAULT NULL,
+  `name` varchar(44) DEFAULT NULL,
+  `priority` int(10) unsigned zerofill NOT NULL,
+  PRIMARY KEY (`country_id`),
+  UNIQUE KEY `country` (`country`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=246 ;
+
+CREATE TABLE IF NOT EXISTS `state_codes` (
+  `state_id` int(11) NOT NULL AUTO_INCREMENT,
+  `country_code` varchar(2) NOT NULL,
+  `state_code` varchar(3) NOT NULL,
+  `state_name` varchar(77) NOT NULL,
+  `type` varchar(51) DEFAULT NULL,
+  PRIMARY KEY (`state_id`),
+  UNIQUE KEY `country_code` (`country_code`,`state_code`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+54.
+ALTER TABLE  `counter` ADD  `auto_increment` VARCHAR( 3 ) NOT NULL ;
+
+
+
+
+
+
+
+
+
+
+
+

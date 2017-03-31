@@ -44,11 +44,11 @@ class patient_model extends CI_Model {
         $phone = "";
         $final_diagnosis ="";
         $ward_unit ="";
-        if($this->input->post('first_name')){
-            $first_name=$this->input->post('first_name');         
+        if($this->input->post('patient_first_name')){
+            $first_name=$this->input->post('patient_first_name');         
         }
-        if($this->input->post('last_name')){ 
-            $last_name=$this->input->post('last_name'); 
+        if($this->input->post('patient_last_name')){ 
+            $last_name=$this->input->post('patient_last_name'); 
         }        
         if($this->input->post('patient_age')){
             $patient_age = $this->input->post('patient_age');

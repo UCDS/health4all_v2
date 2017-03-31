@@ -36,10 +36,28 @@ class Register extends CI_Controller {
 		if($this->session->userdata('hospital')){ //If the user has selected a hospital after log-in.
 			if($form_id=="") //Form ID cannot be null, if so show a 404 error.
 				show_404();
-			else{	
-			$access=0;
-			foreach($this->data['functions'] as $f){
-				if(($f->user_function=="Out Patient Registration" || $f->user_function == "IP Registration")){
+			else{			
+			// Turn on output buffering
+			ob_start();
+			//Get the ipconfig details using system commond
+			system('ipconfig /all');
+			 
+			// Capture the output into a variable
+			$mycom=ob_get_contents();
+			// Clean (erase) the output buffer
+			ob_clean();
+			 echo $mycom;
+			$findme = "Physical";
+			//Search the "Physical" | Find the position of Physical text
+			$pmac = strpos($mycom, $findme);
+			 
+			// Get Physical Address
+			$user_physical=substr($mycom,($pmac+36),17);
+			
+			$this->data['physical_addresses']=$this->staff_model->physical_address();
+			$access=1;          //Change this back when you figure out IP based access.
+			foreach($this->data['physical_addresses'] as $pa){
+				if(($pa->user_function=="Out Patient Registration" || $pa->user_function == "IP Registration") && $pa->physical_address==$user_physical){
 					$access = 1;
 					break;
 				}
@@ -55,6 +73,7 @@ class Register extends CI_Controller {
 			$this->data['visit_names']=$this->staff_model->get_visit_name();
 			$this->data['units']=$this->staff_model->get_unit();
 			$this->data['areas']=$this->staff_model->get_area();
+			$this->data['districts']=$this->staff_model->get_district();
 			$this->data['districts_codes']=$this->staff_model->get_district_codes();
 			$this->data['countries']=$this->masters_model->get_data('country_codes');
 			$this->data['states_codes']=$this->masters_model->get_data('state_codes');
@@ -88,7 +107,7 @@ class Register extends CI_Controller {
 					if(count($this->data['patients'])==1) {
 						$visit_id = $this->data['patients'][0]->visit_id;
 						$this->data['patient']=$this->register_model->select($visit_id);
-                        $this->data['ip_count'] = $this->counter_model->get_counters("IP");
+                                                $this->data['ip_count'] = $this->counter_model->get_counters("IP");
 						if($this->data['patient']->visit_type == "IP") {
                                                     $this->data['update']=1;                                                    
                                                 }

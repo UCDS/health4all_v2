@@ -190,7 +190,7 @@ pri.print();
 				<?php if($update){ ?>
 				<input type="text" name="visit_id" class="form-control sr-only" size="3" value="<?php echo $patient->visit_id;?>" readonly />
 				<?php } ?>
-                                <input type="text" name="hosp_file_no" <?php if(!$update){ ?> value='<?php echo $ip_count[0]->count; ?>' <?php } ?><?php if($update){?> readonly value="<?php echo $patient->hosp_file_no;?>" <?php } ?> class="form-control" size="5" required />
+                                <input type="text" name="hosp_file_no" <?php if(!$update){ ?> value='<?php// echo $ip_count[0]->count; ?>' <?php } ?><?php if($update){?> readonly value="<?php  echo $patient->hosp_file_no;?>" <?php } ?> class="form-control" size="5" required />
                                
 				<?php } 
                                     foreach($fields as $field){
@@ -351,11 +351,16 @@ pri.print();
 						<label class="control-label">District<?php if($field->mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<select name="district" id="district" class="form-control" <?php if($field->mandatory) echo "required"; ?> style="width:200px;">
 						<option value="">--Select--</option>
-						<?php  						
+						<?php /* 						
 						foreach($districts_codes as $district){
 							echo "<option value='".$district->place_code."'";
 							if($district->place_code==$this->session->userdata('district_id')) echo " selected ";
 							echo ">".$district->place_name."</option>";
+						} */
+                                                foreach($districts as $district){
+							echo "<option value='".$district->district_id."'";
+							if($patient) if($district->district_id==$patient->district_id) echo " selected ";
+							echo ">".$district->district."</option>";
 						}
 						?>
 						</select>

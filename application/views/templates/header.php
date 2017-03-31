@@ -27,7 +27,7 @@
       <div class="container">
         <div class="navbar-header">
 		<!-- Bootstrap toggle menu for mobile devices, only visible on small screens --> 
-		<a class="navbar-brand" href="http://www.yousee.in" target="_blank"><img src="<?php echo base_url();?>assets/images/uc-logo.png" alt="" height="22" width="22"></a>	  
+		<a class="navbar-brand" href="http://www.yousee.in" target="_blank"><img src="<?php echo base_url();?>assets/images/uc-logo.png" alt="Yousee Logo" height="22" width="22"></a>	  
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
