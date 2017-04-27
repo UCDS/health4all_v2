@@ -131,8 +131,8 @@ class Reports extends CI_Controller {
 			$this->load->view('templates/header',$this->data);
 			$this->load->helper('form');
 			$this->data['report']=$this->reports_model->get_icd_summary();
-			$this->data['icd_chapters']=$this->masters_model->icd_chapter();	//retrives the values from the function icd_chapter	 in master model
-			$this->data['icd_blocks']=$this->masters_model->icd_block();      //retrives the values from the function icd_block  in master model
+			$this->data['icd_chapters']=$this->masters_model->get_data('icd_chapters');	//retrives the values from the function icd_chapter	 in master model
+			$this->data['icd_blocks']=$this->masters_model->get_data('icd_blocks');      //retrives the values from the function icd_block  in master model
 			$this->load->view('pages/icd_summary',$this->data);
 			$this->load->view('templates/footer');
 		}
@@ -187,7 +187,8 @@ class Reports extends CI_Controller {
 		show_404();
 		}
 		
-	}
+	}	
+	
 	public function ip_detail($department=-1,$unit=0,$area=0,$gender=0,$from_age=0,$to_age=0,$from_date=0,$to_date=0,$visit_name=-1)
 	{
 		if($this->session->userdata('logged_in')){
@@ -231,8 +232,7 @@ class Reports extends CI_Controller {
 		}
 	}
 	
-	
-	public function icd_detail($icd_10=0,$department=-1,$unit=0,$area=0,$gender=0,$from_age=0,$to_age=0,$from_date=0,$to_date=0,$visit_name=-1,$visit_type=0)
+	public function outcome_detail($department=-1,$unit=0,$area=0,$gender=0,$from_age=0,$to_age=0,$from_date=0,$to_date=0,$visit_name=-1,$date_type=0,$outcome=0)
 	{
 		if($this->session->userdata('logged_in')){
 		$this->data['userdata']=$this->session->userdata('logged_in');
@@ -244,14 +244,58 @@ class Reports extends CI_Controller {
 		}
 		if($access==1){
 		if($from_date == 0 && $to_date==0) {$from_date=date("Y-m-d");$to_date=$from_date;}
-		$this->data['title']="In-Patient Detailed Report";
+		$this->data['title']="Outcome Detailed Report";
 		$this->data['all_departments']=$this->staff_model->get_department();
 		$this->data['units']=$this->staff_model->get_unit();
 		$this->data['areas']=$this->staff_model->get_area();
 		$this->data['visit_names']=$this->staff_model->get_visit_name();
 		$this->load->view('templates/header',$this->data);
 		$this->load->helper('form');
-		$this->data['report']=$this->reports_model->get_icd_detail($icd_10,$department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date,$visit_name,$visit_type);
+		$this->load->library('form_validation');
+		$this->data['report']=$this->reports_model->get_ip_detail($department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date,$visit_name,$date_type,$outcome);
+		$this->form_validation->set_rules('from_date', 'From Date',
+		'trim|required|xss_clean');
+	    $this->form_validation->set_rules('to_date', 'To Date', 
+	    'trim|required|xss_clean');
+		if ($this->form_validation->run() === FALSE)
+		{
+			$this->load->view('pages/outcome_detailed',$this->data);
+		}
+		else{
+			$this->load->view('pages/outcome_detailed',$this->data);
+		}
+		$this->load->view('templates/footer');
+		}
+		else{
+		show_404();
+		}
+		}
+		else{
+		show_404();
+		}
+	}
+	
+	
+	public function icd_detail($icd_10=0,$department=-1,$unit=0,$area=0,$gender=0,$from_age=0,$to_age=0,$from_date=0,$to_date=0,$visit_name=-1,$visit_type=0,$outcome=0)
+	{
+		if($this->session->userdata('logged_in')){
+		$this->data['userdata']=$this->session->userdata('logged_in');
+		$access=0;
+		foreach($this->data['functions'] as $function){
+			if($function->user_function=="IP Detail"){
+				$access=1;
+			}
+		}
+		if($access==1){
+		if($from_date == 0 && $to_date==0) {$from_date=date("Y-m-d");$to_date=$from_date;}
+		$this->data['title']="ICD Code Detailed Report";
+		$this->data['all_departments']=$this->staff_model->get_department();
+		$this->data['units']=$this->staff_model->get_unit();
+		$this->data['areas']=$this->staff_model->get_area();
+		$this->data['visit_names']=$this->staff_model->get_visit_name();
+		$this->load->view('templates/header',$this->data);
+		$this->load->helper('form');
+		$this->data['report']=$this->reports_model->get_icd_detail($icd_10,$department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date,$visit_name,$visit_type,$outcome);
 		$this->load->view('pages/icd_detailed',$this->data);
 		$this->load->view('templates/footer');
 		}
@@ -462,6 +506,47 @@ class Reports extends CI_Controller {
 	}
 	
 
+	public function transfer_summary()
+	{
+		if($this->session->userdata('logged_in')){
+		$this->data['userdata']=$this->session->userdata('logged_in');
+		$access=0;
+		foreach($this->data['functions'] as $function){
+			if($function->user_function=="IP Summary"){
+				$access=1;
+			}
+		}
+		if($access==1){
+		$this->data['title']="Transfers Summary Report";
+		$this->load->view('templates/header',$this->data);
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+		$this->data['report']=$this->reports_model->get_transfers_summary();
+		$this->data['all_departments']=$this->staff_model->get_department();
+		$this->data['units']=$this->staff_model->get_unit();
+		$this->data['areas']=$this->staff_model->get_area();
+		$this->form_validation->set_rules('from_date', 'From Date',
+		'trim|required|xss_clean');
+	    $this->form_validation->set_rules('to_date', 'To Date', 
+	    'trim|required|xss_clean');
+		if ($this->form_validation->run() === FALSE)
+		{
+			$this->load->view('pages/transfers_summary',$this->data);
+		}
+		else{
+			$this->load->view('pages/transfers_summary',$this->data);
+		}
+		$this->load->view('templates/footer');
+		}
+		else{
+		show_404();
+		}
+		}
+		else{
+		show_404();
+		}
+	}
+
 	public function sensitivity_summary()
 	{
 		if($this->session->userdata('logged_in')){
@@ -662,4 +747,91 @@ class Reports extends CI_Controller {
             show_404();
         }
     }
+	
+	
+	public function transport_detail()
+	{
+		if($this->session->userdata('logged_in')){
+		$this->data['userdata']=$this->session->userdata('logged_in');
+		$access=0;
+		foreach($this->data['functions'] as $function){
+			if($function->user_function=="Patient Transport Report"){
+				$access=1;
+			}
+		}
+		if($access==1){
+		$this->data['title']="Patient Transport Detailed Report";
+		$this->data['all_departments']=$this->staff_model->get_department();
+		$this->data['units']=$this->staff_model->get_unit();
+		$this->data['areas']=$this->staff_model->get_area();
+		$this->data['visit_names']=$this->staff_model->get_visit_name();
+		$this->load->view('templates/header',$this->data);
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+		$this->data['report']=$this->reports_model->get_transport_detail();
+		$this->form_validation->set_rules('from_date', 'From Date', 'trim|required|xss_clean');
+	    $this->form_validation->set_rules('to_date', 'To Date', 'trim|required|xss_clean');
+		if ($this->form_validation->run() === FALSE)
+		{
+			$this->load->view('pages/transport_detailed',$this->data);
+		}
+		else{
+			$this->load->view('pages/transport_detailed',$this->data);
+		}
+		$this->load->view('templates/footer');
+		}
+		else{
+		show_404();
+		}
+		}
+		else{
+		show_404();
+		}
+		
+	}
+	
+		public function transport_summary()
+	{
+            if($this->session->userdata('logged_in')){
+                $this->data['userdata']=$this->session->userdata('logged_in');
+                $access=0;
+                foreach($this->data['functions'] as $function){
+                    if($function->user_function=="Patient Transport Report"){
+                            $access=1;
+                    }
+                }
+                if($access==1){
+                    $this->data['title']="Transport Summary Report";
+                    $this->data['all_departments']=$this->staff_model->get_department();
+                    $this->data['units']=$this->staff_model->get_unit();
+                    $this->data['areas']=$this->staff_model->get_area();
+                    $this->data['visit_names']=$this->staff_model->get_visit_name();
+                    $this->load->view('templates/header',$this->data);
+                    $this->load->helper('form');
+                    $this->load->library('form_validation');
+                    $this->data['area_report']=$this->reports_model->get_transport_summary("area");
+                    $this->data['person_report']=$this->reports_model->get_transport_summary("person");
+                    $this->form_validation->set_rules('from_date', 'From Date',
+                    'trim|required|xss_clean');
+                    $this->form_validation->set_rules('to_date', 'To Date', 
+                    'trim|required|xss_clean');
+                    if ($this->form_validation->run() === FALSE)
+                    {
+                        $this->load->view('pages/transport_summary',$this->data);
+                    }
+                    else{
+                        $this->load->view('pages/transport_summary',$this->data);
+                    }
+                    $this->load->view('templates/footer');
+                }
+                else{
+                    show_404();
+                }
+            }
+        else{
+            show_404();
+        }
+    }
+	
+	
 }

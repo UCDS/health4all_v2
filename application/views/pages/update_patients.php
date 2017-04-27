@@ -4,6 +4,9 @@
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/selectize.css">
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.mousewheel.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.timeentry.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/moment.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/bootstrap-datetimepicker.js"></script>
+<link rel="stylesheet"  type="text/css" href="<?php echo base_url();?>assets/css/bootstrap_datetimepicker.css"></script>
 <style>
     .obstetric_history_table { 
         border-collapse: collapse; 
@@ -94,7 +97,6 @@
 <script type="text/javascript">
 $(function(){
 	$(".date").Zebra_DatePicker();
-	$(".time").timeEntry();
 	$("#from_date,#to_date").Zebra_DatePicker();
 });
 <!-- Scripts for printing output table -->
@@ -165,6 +167,10 @@ pri.print();
     document.getElementById('child_count') = counter;
     
    });
+   
+		$("#transfer_area").chained("#transfer_department");
+		$("#from_area").chained("#from_department");
+		$("#to_area").chained("#to_department");
 });
 </script>
 <!-- $("#remove_obstetric_history").click(function(){
@@ -240,10 +246,19 @@ pri.print();
 				} 
 			}
 		?>
-                <?php 
+		<?php 
 			foreach($functions as $f){ 
-				if($f->user_function == "patient_visit") { ?>
+				if($f->user_function == "Update Patients") { ?>
 					<li role="presentation"><a href="#patient_visit" aria-controls="patient_visit" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Patient Visit</a></li>
+				<?php 
+				break;
+				} 
+			}
+		?>
+		<?php 
+			foreach($functions as $f){ 
+				if($f->user_function == "Patient Transport") { ?>
+					<li role="presentation"><a href="#patient_transport" aria-controls="patient_transport" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Patient Transport</a></li>
 				<?php 
 				break;
 				} 
@@ -837,8 +852,7 @@ pri.print();
                                          <tr>
                                              <td><b>Department</b></td>
                                              <td><b>Area</b></td>
-                                             <td><b>Transfer date</b></td>
-                                             <td><b>Transfer time</b></td>
+                                             <td><b>Transfer Date & Time</b></td>
                                          </tr>
                                          <?php
                                             if(isset($transfers) && $transfers!=false){
@@ -866,9 +880,7 @@ pri.print();
                                          </td>
                                          <td>
                                             <?php echo date("d-M-Y",strtotime($transfer->transfer_date)); ?>
-                                         </td>
-                                         <td>
-                                             <?php echo $transfer->transfer_time; ?>
+                                             <?php echo date("g:iA",strtotime($transfer->transfer_time)); ?>
                                          </td>
                                                     <?php
                                                 }
@@ -897,11 +909,8 @@ pri.print();
                                             </select>
                                          </td>
                                          <td>
-                                         <input type="text" name="transfer_date" class="form-control transfer_date" value= '<?php echo date("d-M-Y",strtotime($transfers[sizeof($transfers)-1]->transfer_date));?>' id="transfer_date" style="width:150px" />
+                                         <input type="text" name="transfer_date" class="form-control transfer_date" value="<?php echo date("d-M-Y g:iA");?>" id="transfer_date" />
                                    
-                                         </td>
-                                         <td>                                      
-                                         <input type="text" name="transfer_time" class="form-control transfer_time" value='<?php echo date('h:ia');?>' id="transfer_time" />
                                          </td>
                                          </tr>
                                      </table>
@@ -912,6 +921,80 @@ pri.print();
                             break;
                         }
                     }
+              ?>
+              <?php 
+                foreach($functions as $f){
+                    if($f->user_function== "Patient Transport"){
+                        ?>
+              <div role="tabpanel" class="tab-pane" id="patient_transport">
+                  <div class="row alt">
+                                <div class="col-md-4 col-xs-6">
+                                    <b>Patient ID: <?php echo $patient->patient_id; ?> </b>
+                                </div>
+                                <div class="col-md-4 col-xs-6">
+                                    <b><?php echo $patient->visit_type; ?> Number: </b><?php echo $patient->hosp_file_no;?>
+                                </div>
+                                <div class="col-md-4 col-xs-6">
+                                    <b><?php if( $patient->visit_type == "IP") echo "Admit Date:"; else echo "Visit Date:";?></b>
+                                    <?php echo date("d-M-Y", strtotime($patient->admit_date)).", ".date("g:ia", strtotime($patient->admit_time));?>
+                                </div>
+                  </div>
+                  <div class="row alt">
+					
+					 <!--Patient transfers-->
+					 <div class="col-md-12 col-xs-12">
+						 <table class="table table-striped table-bordered">
+							 <thead>
+								<th colspan="4">Patient Transport Information</th>
+							 </thead>
+							 <tr>
+								 <td><b>From Area</b></td>
+								 <td><b>To Area</b></td>
+								 <td><b>Transported By</b></td>
+								 <td><b>Transport Start Date & Time</b></td>
+								 <td><b>Transport End Date & Time</b></td>
+							 </tr>
+							 <?php
+								if(isset($transport) && $transport!=false){
+									foreach($transport as $t){
+										?>
+							 <tr>
+							 <td>
+								 <?php 
+										echo $t->from_area;
+								 ?>
+							 </td>            
+							 <td>
+								 <?php 
+										echo $t->to_area;
+								 ?>
+							 </td>      
+							 <td>
+								 <?php 
+										echo $t->transported_by;
+								 ?>
+							 </td>
+							 <td>
+								<?php echo date("d-M-Y",strtotime($t->start_date_time)); ?>
+								 <?php echo date("g:iA",strtotime($t->start_date_time)); ?>
+							 </td>
+							 <td>
+								<?php echo date("d-M-Y",strtotime($t->end_date_time)); ?>
+								 <?php echo date("g:iA",strtotime($t->end_date_time)); ?>
+							 </td>
+							 </tr>
+										<?php
+									}
+								}
+							 ?>
+						 </table>
+					 </div>
+				</div>
+              </div>              
+                        <?php
+                        break;
+                    }
+                }
               ?>
               <?php 
                 foreach($functions as $f){
@@ -1726,63 +1809,54 @@ pri.print();
 			</div>
                             <script>
 				$(function(){
-					$(".casesheet_at_mrd_date").Zebra_DatePicker({
-						direction:[false,'<?php echo date("d-M-Y",strtotime($patient->casesheet_at_mrd_date));?>']
+					$(".ip_file_received").Zebra_DatePicker({
+						direction:[false,'<?php echo date("d-M-Y",strtotime($patient->ip_file_received));?>']
 					});
 				});
                             </script>
                         <div class="col-md-12 alt">
                             <div class="col-md-2">
-                                <label class="control-label">Case Sheet Recieved at MRD</label>
+                                <label class="control-label">Case Sheet Recieved at MRD on </label>
                             </div>
                             <div class="col-md-8">
-                                <input type="text" name="casesheet_at_mrd_date" class="form-control casesheet_at_mrd_date" value="<?php if($patient->casesheet_at_mrd_date!=0) echo $patient->casesheet_at_mrd_date;?>" <?php if($f->edit==1&& empty($patient->casesheet_at_mrd_date)) echo ''; else echo ' readonly'; ?> />
+                                <input type="text" name="ip_file_received" class="form-control ip_file_received" value="<?php if($patient->ip_file_received!=0) echo $patient->ip_file_received;?>" <?php if($f->edit==1&& empty($patient->ip_file_received)) echo ''; else echo ' readonly'; ?> />
                             </div>
 			</div>
 			<div class="col-md-12 alt">
 				<div class="col-md-2">
 				<script>
 				$(function(){
-					$(".outcome_date").Zebra_DatePicker({
-						direction:[false,'<?php echo date("d-M-Y",strtotime($patient->admit_date));?>']
+					<?php if($patient->outcome_date == 0){ ?>
+					$('.outcome_date').datetimepicker({
+						format : "D-MMM-YYYY h:ssA",
+						minDate : "<?php echo date("Y/m/d ",strtotime($patient->admit_date)).date("g:i A",strtotime($patient->admit_time));?>",
+						defaultDate : false
 					});
-				});
-                                $(function(){
-					$(".transfer_date").Zebra_DatePicker({
-                                            direction:['<?php if(isset($transfers) && sizeof($transfers) !=0) echo date("d-M-Y",strtotime($transfers[sizeof($transfers)-1]->transfer_date)); else echo date("d-M-Y",strtotime($patient->admit_date));?>',false]
-                                        });
-				});
-                                $(function(){
+					<?php } ?>
+					$(".transfer_date").datetimepicker({
+						format : "D-MMM-YYYY h:ssA",
+                        minDate:'<?php if(isset($transfers) && sizeof($transfers) !=0) echo date("Y/m/d ",strtotime($transfers[sizeof($transfers)-1]->transfer_date)).date("g:i A",strtotime($transfers[sizeof($transfers)-1]->transfer_time)); else echo date("Y/m/d ",strtotime($patient->admit_date)).date("g:i A",strtotime($patient->admit_time));?>',
+						defaultDate : false
+                    });
+					$(".transport_start_date,.transport_end_date").datetimepicker({
+						format : "D-MMM-YYYY h:ssA",
+						defaultDate : false
+                    });
 					$(".imp_date").Zebra_DatePicker();
-				});
-                                $(function(){
 					$(".edd_date").Zebra_DatePicker();
-				});
-                                $(function(){
 					$(".date_of_birth").Zebra_DatePicker();
-				});
-                                $(function(){
 					$(".date_of_death").Zebra_DatePicker();
-				});
-                                $(function(){
 					$(".dob").Zebra_DatePicker({
 						direction:[false,'<?php echo date("d-M-Y",strtotime($patient->dob));?>']
 					});
-				});
                                 $(".transfer_time").timeEntry();
+					$(".time").timeEntry({minTime: new Date(<?php echo date("Y,m,d",strtotime($patient->admit_date)).date(",h,i,s",strtotime($patient->admit_time));?>)});
+				});
 				</script>
-				<label>Outcome Date</label>
-				</div>
+				<label>Outcome Date & Time</label>
+				</div> 
 				<div class="col-md-8">
-				<input type="text" name="outcome_date" class="form-control outcome_date" value="<?php if($patient->outcome_date!=0) echo $patient->outcome_date;?>" <?php if($f->edit==1&& empty($patient->outcome_date)) echo ''; else echo ' readonly'; ?> />
-				</div>
-			</div>
-			<div class="col-md-12 alt">
-				<div class="col-md-2">
-				<label class="control-label">Outcome Time</label>
-				</div>
-				<div class="col-md-8">
-				<input type="text" name="outcome_time" class="form-control time" value="<?php if($patient->outcome_time != '00:00:00') echo $patient->outcome_time;?>" <?php if($f->edit==1&& empty($patient->outcome_time)) echo ''; else echo ' readonly'; ?> />
+				<input type="text" name="outcome_date" class="form-control outcome_date" value="<?php if($patient->outcome_date!=0) echo date("d-M-Y",strtotime($patient->outcome_date))." ".date("g:iA",strtotime($patient->outcome_time));?>" <?php if($f->edit==1 && $patient->outcome_date==0) echo ' '; else echo ' readonly '; ?> />
 				</div>
 			</div>
 			<div class="col-md-12 alt ">
@@ -1816,7 +1890,7 @@ pri.print();
 				<div class="col-md-8">
 					<select id="icd_code" class="repositories" placeholder="Search ICD codes" name="icd_code" <?php if($f->edit==1&& empty($patient->icd_10)) echo ''; else echo ' readonly'; ?> >
 					<?php if(!!$patient->icd_10){ ?>
-						<option value="<?php echo $patient->icd_10;?>"><?php echo $patient->icd_10;?></option>
+						<option value="<?php echo $patient->icd_10;?>"><?php echo $patient->icd_10." ".$patient->code_title;?></option>
 					<?php } ?>
 					</select>
 				</div>

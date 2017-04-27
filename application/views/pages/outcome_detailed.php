@@ -1,19 +1,14 @@
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.ptTimeSelect.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-ui.js"></script>
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.css">
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery.ptTimeSelect.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript">
-$(document).ready(function(){$("#from_date").datepicker({
-		dateFormat:"dd-M-yy",changeYear:1,changeMonth:1,onSelect:function(sdt)
-		{$("#to_date").datepicker({dateFormat:"dd-M-yy",changeYear:1,changeMonth:1})
-		$("#to_date").datepicker("option","minDate",sdt)}})
+$(document).ready(function(){
+		$("#from_date").Zebra_DatePicker();
+		$("#to_date").Zebra_DatePicker();
 		var options = {
 			widthFixed : true,
 			showProcessing: true,
@@ -84,12 +79,10 @@ $(document).ready(function(){$("#from_date").datepicker({
 	if($this->input->post('to_time')) $to_time=date("H:i",strtotime($this->input->post('to_time'))); else $to_time = date("23:59");
 	?>
 	<div class="row">
-		<h4>In-Patient Detailed report</h4>	
+		<h4>Outcome Detailed report</h4>	
 		<?php echo form_open("reports/ip_detail",array('role'=>'form','class'=>'form-custom')); ?> 
-					From Date : <input class="form-control" style = "background-color:#EEEEEE" type="text" value="<?php echo date("d-M-Y",strtotime($from_date)); ?>" name="from_date" id="from_date" size="15" />
-					To Date : <input class="form-control" type="text" style = "background-color:#EEEEEE" value="<?php echo date("d-M-Y",strtotime($to_date)); ?>" name="to_date" id="to_date" size="15" />
-					From Time:<input  class="form-control" style = "background-color:#EEEEEE" type="text" value="<?php echo date("h:i A",strtotime($from_time)); ?>" name="from_time" id="from_time" size="7px"/>
-                   To Time:<input class="form-control" style = "background-color:#EEEEEE" type="text" value="<?php echo date("h:i A",strtotime($to_time)); ?>" name="to_time" id="to_time" size="7px"/>
+					From Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y",strtotime($from_date)); ?>" name="from_date" id="from_date" size="15" />
+					To Date : <input class="form-control" type="text" value="<?php echo date("d-M-Y",strtotime($to_date)); ?>" name="to_date" id="to_date" size="15" />
 					<select name="department" id="department" class="form-control">
 					<option value="">Department</option>
 					<?php 
@@ -154,6 +147,8 @@ $(document).ready(function(){$("#from_date").datepicker({
 		<th>Department</th>
 		<th>Unit/ Area</th>
 		<th>MLC Number</th>
+		<th>Outcome</th>
+		<th>Outcome Date/Time</th>
 	</thead>
 	<tbody>
 	<?php 
@@ -185,6 +180,8 @@ $(document).ready(function(){$("#from_date").datepicker({
 			?>
 		</td>
 		<td><?php if($s->mlc_number_manual=='') echo $s->mlc_number; else echo $s->mlc_number_manual;?></td>
+		<td><?php echo $s->outcome;?></td>
+		<td><?php if($s->outcome_date!=0) echo date("d-M-Y",strtotime($s->outcome_date))." ".date("g:iA",strtotime($s->outcome_time));?></td>
 	</tr>
 	<?php
 	$total_count++;

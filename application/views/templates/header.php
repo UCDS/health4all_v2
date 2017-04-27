@@ -138,6 +138,14 @@
 								}
 							}
 						?>	
+						<?php foreach($functions as $f){
+								if($f->user_function=="Patient Transport"){ ?>
+									<li><a href="<?php echo base_url();?>register/transport">Transport</a></li>
+						<?php
+									break;
+								}
+							}
+						?>	
 						
 						<?php 
 						$evaluate=0;
@@ -239,16 +247,21 @@
 				foreach($functions as $f){
 					if($f->user_function=="IP Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/ip_summary";?>">IP Summary</a></li>
-                                                  <li><a href="<?php echo base_url()."patient/casesheet_mrd_status";?>">MRD Report</a></li>
-                                                  <li><a href="<?php echo base_url()."staff_report/get_patient_records";?>">Staff Activity OP/IP</a></li>
-                                                  <li><a href="<?php echo base_url()."staff_report/get_lab_records";?>">Diagnostics Staff Activity</a></li>
+						  <li><a href="<?php echo base_url()."patient/casesheet_mrd_status";?>">MRD Report</a></li>
+						  <li><a href="<?php echo base_url()."staff_report/get_patient_records";?>">Staff Activity OP/IP</a></li>
+						  <li><a href="<?php echo base_url()."staff_report/get_lab_records";?>">Diagnostics Staff Activity</a></li>
 						  <li><a href="<?php echo base_url()."reports/ip_op_trends";?>">IP/OP Trends</a></li>
 						  <li><a href="<?php echo base_url()."reports/icd_summary";?>">ICD Code Summary</a></li>
+						  <li><a href="<?php echo base_url()."reports/transfer_summary";?>">Transfers Summary</a></li>
                    
 				<?php	} 
                       if($f->user_function=="Outcome Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/outcome_summary";?>">Outcome Summary</a></li>
-				<?php                      }             }
+				<?php                      }     
+                      if($f->user_function=="Patient Transport Report"){ ?>
+						  <li><a href="<?php echo base_url()."reports/transport_summary";?>">Transport Summary</a></li>
+				<?php                      }             
+				}
 				foreach($functions as $f){
 					if($f->user_function=="Diagnostics - Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/order_summary/department";?>">Orders Summary</a></li>
@@ -286,6 +299,10 @@
 			<?php }
 			if($f->user_function=="Sanitation Evaluation"){ ?>
 								<li><a href="<?php echo base_url()."sanitation/view_scores";?>">Sanitation Evaluation</a></li>
+					<?php	}  
+					
+			if($f->user_function=="Patient Transport Report"){ ?>
+								<li><a href="<?php echo base_url()."reports/transport_detail";?>">Transport Detailed</a></li>
 					<?php	}  
 					
 			} ?>

@@ -84,8 +84,7 @@
 
 <!--  added selectize javascript for search box function -->
 
-<script type="text/javascript"
-	src="<?php echo base_url();?>assets/js/jquery.selectize.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.selectize.js"></script>
 
 <script type="text/javascript">
 $(function(){
@@ -363,19 +362,19 @@ f									<option value="OP" <?php if($visit_type == "OP") echo " selected ";?>>
         <td><?php echo $serial_number++;?></td>
         <td><?php echo $s->chapter_id." - ".$s->chapter_title;?></td>
         <td><?php echo $s->block_id." - ".$s->block_title;?></td>
-        <td><?php echo $s->icd_10." - ".$s->code_title;?></td>
+        <td><?php echo $s->icd_10." - ".$s->code_title; if($s->icd_10=="") $s->icd_10="-1";?></td>
         <td class="text-right"><a href="<?php echo base_url()."reports/icd_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/M/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type";?>"><?php echo $s->male;?></td>
         <td class="text-right"><a href="<?php echo base_url()."reports/icd_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/F/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type";?>"><?php echo $s->female;?></td>
         <td class="text-right"><a href="<?php echo base_url()."reports/icd_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type";?>"><?php echo $s->total;?></td>
-        <td class="text-right"><a href="<?php echo base_url()."reports/icd_outcome_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type/'Discharge'";?>"><?php echo $s->total_discharge;?></td>
+        <td class="text-right"><a href="<?php echo base_url()."reports/icd_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type/Discharge";?>"><?php echo $s->total_discharge;?></td>
         <td class="text-right"><?php echo round(($s->total_discharge/$s->total)*100).'%';?></td>
-        <td class="text-right"><a href="<?php echo base_url()."reports/icd_outcome_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type/'LAMA'";?>"><?php echo $s->total_lama;?></td>
+        <td class="text-right"><a href="<?php echo base_url()."reports/icd_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type/LAMA";?>"><?php echo $s->total_lama;?></td>
         <td class="text-right"><?php echo round(($s->total_lama/$s->total)*100).'%';?></td>
-        <td class="text-right"><a href="<?php echo base_url()."reports/icd_outcome_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type/'Absconded'";?>"><?php echo $s->total_absconded;?></td>
+        <td class="text-right"><a href="<?php echo base_url()."reports/icd_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type/Absconded";?>"><?php echo $s->total_absconded;?></td>
         <td class="text-right"><?php echo round(($s->total_absconded/$s->total)*100).'%';?></td>
-        <td class="text-right"><a href="<?php echo base_url()."reports/icd_outcome_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type/'Death'";?>"><?php echo $s->total_death;?></td>
+        <td class="text-right"><a href="<?php echo base_url()."reports/icd_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type/Death";?>"><?php echo $s->total_death;?></td>
         <td class="text-right"><?php echo round(($s->total_death/$s->total)*100).'%';?></td>
-        <td class="text-right"><a href="<?php echo base_url()."reports/icd_outcome_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type/'Unupdated'";?>"><?php echo $s->total_unupdated;?></td>
+        <td class="text-right"><a href="<?php echo base_url()."reports/icd_detail/$s->icd_10/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$s->visit_name_id/$visit_type/Unupdated";?>"><?php echo $s->total_unupdated;?></td>
         <td class="text-right"><?php echo round(($s->total_unupdated/$s->total)*100).'%';?></td>
 	</tr>
 	<?php

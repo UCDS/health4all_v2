@@ -66,6 +66,18 @@ $(function(){
 	$from_date=0;$to_date=0;
 	if($this->input->post('from_date')) $from_date=date("Y-m-d",strtotime($this->input->post('from_date'))); else $from_date = date("Y-m-d");
 	if($this->input->post('to_date')) $to_date=date("Y-m-d",strtotime($this->input->post('to_date'))); else $to_date = date("Y-m-d");
+	if($this->input->post('date_type_selection')){
+		$date_type = $this->input->post('date_type_selection');
+	}
+	else{
+		$date_type = "admit_date";
+	}
+	if($this->input->post('visit_name')){
+		$visit_name = $this->input->post('visit_name');
+	}
+	else{
+		$visit_name = "0";
+	}
 	?>
 	<div class="row">
 		<h4>Outcome- Summary Report</h4>	
@@ -114,6 +126,24 @@ $(function(){
 					}
 					?>
 					</select>
+					<select name="outcome_type" id="outcome_type" class="form-control" >
+					<option value="">All</option>
+					<option value="Discharge" 
+					<?php if($this->input->post('outcome_type') && $this->input->post('outcome_type') == "Discharge") echo " selected ";?>
+					>Discharge</option>
+					<option value="LAMA"
+					<?php if($this->input->post('outcome_type') && $this->input->post('outcome_type') == "LAMA") echo " selected ";?>
+					>LAMA</option>
+					<option value="Absconded"
+					<?php if($this->input->post('outcome_type') && $this->input->post('outcome_type') == "Absconded") echo " selected ";?>					
+					>Absconded</option>
+					<option value="Death"
+					<?php if($this->input->post('outcome_type') && $this->input->post('outcome_type') == "Death") echo " selected ";?>					
+					>Death</option>
+					<option value="Unupdated"
+					<?php if($this->input->post('outcome_type') && $this->input->post('outcome_type') == "Unupdated") echo " selected ";?>					
+					>Unupdated</option>
+					</select>
                     <select name="date_type_selection" id="date_type_selection" class="form-control">
                         <option value="admit_date" selected>Admit date</option>
                         <option value="outcome_date">Outcome Date</option>
@@ -130,19 +160,29 @@ $(function(){
 	<thead>
 	<tr>
 		<th style="text-align:center" rowspan="2">Department</th>
+		<?php if($this->input->post('outcome_type')){ ?>
+        <th style="text-align:center" colspan="3"><?php echo $this->input->post('outcome_type'); ?></th>
+		<?php } 
+		else { ?>
         <th style="text-align:center" colspan="3">Discharge</th>
         <th style="text-align:center" colspan="3">LAMA</th>
         <th style="text-align:center" colspan="3">Absconded</th>
         <th style="text-align:center" colspan="3">Death</th>
         <th style="text-align:center" colspan="3">Unupdated records</th>
+		<?php } ?>
         <th style="text-align:center" colspan="3">Total Visits</th>
     </tr>
     <tr>
+		<?php if($this->input->post('outcome_type')){ ?>
+        <th>Male</th><th>Female</th><th>Total</th>
+		<?php } 
+		else { ?>
         <th>Male</th><th>Female</th><th>Total</th>
         <th>Male</th><th>Female</th><th>Total</th>
         <th>Male</th><th>Female</th><th>Total</th>
         <th>Male</th><th>Female</th><th>Total</th>
         <th>Male</th><th>Female</th><th>Total</th>
+		<?php } ?>
 		<th>Male</th><th>Female</th><th>Total</th>
 	</tr>
 	
@@ -162,50 +202,85 @@ $(function(){
     $total_male_death=0;
     $total_death=0;
     $total_female=0;
-    $total_unupdated_male=0;
-    $total_unupdated_female=0;
+    $total_male_unupdated=0;
+    $total_female_unupdated=0;
     $total_unupdated=0;
 	$total_male=0;	
 	$total_outcome=0;
+	$outcome_types = array('Discharge','LAMA','Absconded','Death','Unupdated');
 	foreach($report as $s){
 	?>
 	<tr>
 		<td><?php echo $s->department;?></td>
-        <td class="text-right"><?php echo $s->male_discharge;?></td>
-        <td class="text-right"><?php echo $s->female_discharge;?></td>
-        <td class="text-right"><?php echo $s->total_discharge;?></td>
-        <td class="text-right"><?php echo $s->male_lama;?></td>
-        <td class="text-right"><?php echo $s->female_lama;?></td>
-        <td class="text-right"><?php echo $s->total_lama;?></td>
-        <td class="text-right"><?php echo $s->male_absconded;?></td>
-        <td class="text-right"><?php echo $s->female_absconded;?></td>
-        <td class="text-right"><?php echo $s->total_absconded;?></td>
-        <td class="text-right"><?php echo $s->male_death;?></td>
-        <td class="text-right"><?php echo $s->female_death;?></td>
-        <td class="text-right"><?php echo $s->total_death;?></td>
-        <td class="text-right"><?php echo $s->male_unupdated;?></td>
-        <td class="text-right"><?php echo $s->female_unupdated;?></td>
-        <td class="text-right"><?php echo $s->total_unupdated;?></td>
-		<td class="text-right"><?php echo $s->outcome_male;?></td>
-		<td class="text-right"><?php echo $s->outcome_female;?></td>
-		<td class="text-right"><?php echo $s->outcome;?></td>
+		<?php 
+			if($this->input->post('outcome_type')){ 
+			$outcome = $this->input->post('outcome_type'); 
+		?>
+        <td class="text-right">
+			<a href="<?php echo base_url()."reports/outcome_detail/$s->department_id/$s->unit/$s->area/M/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+			<?php echo $s->{'male_'.strtolower($this->input->post('outcome_type'))};?>
+			</a>
+		</td>
+        <td class="text-right">
+			<a href="<?php echo base_url()."reports/outcome_detail/$s->department_id/$s->unit/$s->area/F/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+			<?php echo $s->{'female_'.strtolower($this->input->post('outcome_type'))};?>
+			</a>
+		</td>
+        <td class="text-right">
+			<a href="<?php echo base_url()."reports/outcome_detail/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+			<?php echo $s->{'total_'.strtolower($this->input->post('outcome_type'))};?>
+			</a>
+		</td>
+		<?php } 
+		else {
+			foreach($outcome_types as $outcome) { ?>
+			
+			<td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/$s->department_id/$s->unit/$s->area/M/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+				<?php echo $s->{'male_'.strtolower($outcome)};?>
+				</a>
+			</td>
+			<td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/$s->department_id/$s->unit/$s->area/F/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+				<?php echo $s->{'female_'.strtolower($outcome)};?>
+				</a>
+			</td>
+			<td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+				<?php echo $s->{'total_'.strtolower($outcome)};?>
+				</a>
+			</td>
+		<?php }
+		} ?>
+		
+		<td class="text-right">
+			<a href="<?php echo base_url()."reports/outcome_detail/$s->department_id/$s->unit/$s->area/M/0/0/$from_date/$to_date/$visit_name/$date_type/"?>">
+			<?php echo $s->outcome_male;?>
+			</a>
+		</td>
+		<td class="text-right">
+			<a href="<?php echo base_url()."reports/outcome_detail/$s->department_id/$s->unit/$s->area/F/0/0/$from_date/$to_date/$visit_name/$date_type/"?>">
+			<?php echo $s->outcome_female;?>
+			</a>
+		</td>
+		<td class="text-right">
+			<a href="<?php echo base_url()."reports/outcome_detail/$s->department_id/$s->unit/$s->area/0/0/0/$from_date/$to_date/$visit_name/$date_type/"?>">
+			<?php echo $s->outcome;?>
+			</a>
+		</td>
 	</tr>
-	<?php
-	$total_female_discharge+=$s->female_discharge;
-    $total_male_discharge+=$s->male_discharge;
-    $total_discharge+=$s->total_discharge;
-    $total_female_lama+=$s->female_lama;
-    $total_male_lama+=$s->male_lama;
-    $total_lama+=$s->total_lama;
-    $total_female_absconded+=$s->female_absconded;
-    $total_male_absconded+=$s->male_absconded;
-    $total_absconded+=$s->total_absconded;
-    $total_female_death+=$s->female_death;
-    $total_male_death+=$s->male_death;
-    $total_death+=$s->total_death;
-    $total_unupdated_male+=$s->male_unupdated;
-    $total_unupdated_female+=$s->female_unupdated;
-    $total_unupdated+=$s->total_unupdated;
+	<?php if($this->input->post('outcome_type')){ 
+	${'total_female_'.strtolower($this->input->post('outcome_type'))}+=$s->{'female_'.strtolower($this->input->post('outcome_type'))};
+	${'total_male_'.strtolower($this->input->post('outcome_type'))}+=$s->{'male_'.strtolower($this->input->post('outcome_type'))};
+	${'total_'.strtolower($this->input->post('outcome_type'))}+=$s->{'total_'.strtolower($this->input->post('outcome_type'))};
+	}
+	else {
+		foreach($outcome_types as $outcome) {			
+			${'total_female_'.strtolower($outcome)}+=$s->{'female_'.strtolower($outcome)};
+			${'total_male_'.strtolower($outcome)}+=$s->{'male_'.strtolower($outcome)};
+			${'total_'.strtolower($outcome)}+=$s->{'total_'.strtolower($outcome)};
+		}
+	}
     $total_female+=$s->outcome_female;
 	$total_male+=$s->outcome_male;	
 	$total_outcome+=$s->outcome;
@@ -215,45 +290,113 @@ $(function(){
 	<tbody class="tablesorter-no-sort">
         <tr>
 		    <th>Total </th>
-		    <td class="text-right"><?php echo $total_male_discharge;?></td>
-            <td class="text-right"><?php echo $total_female_discharge;?></td>
-            <td class="text-right"><?php echo $total_discharge;?></td>
-            <td class="text-right"><?php echo $total_male_lama;?></td>
-            <td class="text-right"><?php echo $total_female_lama;?></td>
-            <td class="text-right"><?php echo $total_lama;?></td>
-            <td class="text-right"><?php echo $total_male_absconded;?></td>
-            <td class="text-right"><?php echo $total_female_absconded;?></td>
-            <td class="text-right"><?php echo $total_absconded;?></td>
-            <td class="text-right"><?php echo $total_male_death;?></td>
-            <td class="text-right"><?php echo $total_female_death;?></td>
-            <td class="text-right"><?php echo $total_death;?></td>
-            <td class="text-right"><?php echo $total_unupdated_male;?></td>
-            <td class="text-right"><?php echo $total_unupdated_female;?></td>
-            <td class="text-right"><?php echo $total_unupdated;?></td>
-		    <td class="text-right"><?php echo $total_male;?></td>
-		    <td class="text-right"><?php echo $total_female;?></td>
-		    <td class="text-right"><?php echo $total_outcome;?></td>
+			<?php if(strtolower($this->input->post('outcome_type'))){ ?>	
+		    <td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/M/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+				<?php echo ${'total_male_'.strtolower($this->input->post('outcome_type'))};?>
+				</a>
+			</td>
+            <td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/F/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+				<?php echo ${'total_female_'.strtolower($this->input->post('outcome_type'))};?>
+				</a>
+			</td>
+            <td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/0/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+				<?php echo ${'total_'.strtolower($this->input->post('outcome_type'))};?>
+				</a>
+			</td>
+			<?php } 
+			else { 
+				foreach($outcome_types as $outcome) { 
+			?>
+		    <td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/M/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+				<?php echo ${'total_male_'.strtolower($outcome)};?>
+				</a>
+			</td>
+            <td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/F/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+				<?php echo ${'total_female_'.strtolower($outcome)};?>
+				</a>
+			</td>
+            <td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/0/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+				<?php echo ${'total_'.strtolower($outcome)};?>
+				</a>
+			</td>
+			<?php }
+			} ?>
+		    <td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/M/0/0/$from_date/$to_date/$visit_name/$date_type"?>">
+				<?php echo $total_male;?>
+				</a>
+			</td>
+            <td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/F/0/0/$from_date/$to_date/$visit_name/$date_type"?>">
+				<?php echo $total_female;?>
+				</a>
+			</td>
+            <td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/0/0/0/$from_date/$to_date/$visit_name/$date_type"?>">
+				<?php echo $total_outcome;?>
+				</a>
+			</td>
         </tr>
         <tr>
             <th>Percentage of total</th>
-            <td class="text-right"><?php echo round(($total_male_discharge/$total_outcome)*100).'%';?></td>
-            <td class="text-right"><?php echo round(($total_female_discharge/$total_outcome)*100).'%';?></td>
-            <td class="text-right"><?php echo round(($total_discharge/$total_outcome)*100).'%';?></td>
-            <td class="text-right"><?php echo round(($total_male_lama/$total_outcome)*100).'%';?></td>
-            <td class="text-right"><?php echo round(($total_female_lama/$total_outcome)*100).'%';?></td>
-            <td class="text-right"><?php echo round(($total_lama/$total_outcome)*100).'%';?></td>
-            <td class="text-right"><?php echo round(($total_male_absconded/$total_outcome)*100).'%';?></td>
-            <td class="text-right"><?php echo round(($total_female_absconded/$total_outcome)*100).'%';?></td>
-            <td class="text-right"><?php echo round(($total_absconded/$total_outcome)*100).'%';?></td>
-            <td class="text-right"><?php echo round(($total_male_death/$total_outcome)*100).'%';?></td>
-            <td class="text-right"><?php echo round(($total_female_death/$total_outcome)*100).'%';?></td>
-            <td class="text-right"><?php echo round(($total_death/$total_outcome)*100).'%';?></td>
-            <td class="text-right"><?php echo round(($total_unupdated_male/$total_outcome)*100).'%';?></td>
-            <td class="text-right"><?php echo round(($total_unupdated_female/$total_outcome)*100).'%';?></td>
-            <td class="text-right"><?php echo round(($total_unupdated/$total_outcome)*100).'%';?></td>
-		    <td class="text-right"><?php echo round(($total_male/$total_outcome)*100).'%';?></td>
-		    <td class="text-right"><?php echo round(($total_female/$total_outcome)*100).'%';?></td>
-		    <td class="text-right"><?php echo round(($total_outcome/$total_outcome)*100).'%';?></td>
+			<?php if(strtolower($this->input->post('outcome_type'))){ ?>	
+		    <td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/M/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+				<?php echo round((${'total_male_'.strtolower($this->input->post('outcome_type'))}/$total_outcome)*100)."%";?>
+				</a>
+			</td>
+		    <td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/F/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+				<?php echo round((${'total_female_'.strtolower($this->input->post('outcome_type'))}/$total_outcome)*100)."%";?>
+				</a>
+			</td>
+		    <td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/0/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+				<?php echo round((${'total_'.strtolower($this->input->post('outcome_type'))}/$total_outcome)*100)."%";?>
+				</a>
+			</td>
+			<?php } 
+			else { 
+				foreach($outcome_types as $outcome) { ?>
+				<td class="text-right">
+					<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/M/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+					<?php echo round((${'total_male_'.strtolower($outcome)}/$total_outcome)*100).'%';?>
+					</a>
+				</td>
+				<td class="text-right">
+					<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/F/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+					<?php echo round((${'total_female_'.strtolower($outcome)}/$total_outcome)*100).'%';?>
+					</a>
+				</td>
+				<td class="text-right">
+					<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/0/0/0/$from_date/$to_date/$visit_name/$date_type/$outcome"?>">
+					<?php echo round((${'total_'.strtolower($outcome)}/$total_outcome)*100).'%';?>
+					</a>
+				</td>
+			<?php 
+				}
+			} ?>
+		    <td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/M/0/0/$from_date/$to_date/$visit_name/$date_type"?>">
+				<?php echo round(($total_male/$total_outcome)*100).'%';?>
+				</a>
+			</td>
+		    <td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/F/0/0/$from_date/$to_date/$visit_name/$date_type"?>">
+				<?php echo round(($total_female/$total_outcome)*100).'%';?>
+				</a>
+			</td>
+		    <td class="text-right">
+				<a href="<?php echo base_url()."reports/outcome_detail/0/0/0/0/0/0/$from_date/$to_date/$visit_name/$date_type"?>">
+				<?php echo round(($total_outcome/$total_outcome)*100).'%';?>
+				</a>
+			</td>
         </tr>
 	</tbody>
 	</table>

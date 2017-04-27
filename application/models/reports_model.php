@@ -397,8 +397,9 @@ class Reports_model extends CI_Model{
 		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')");		  
 		$resource=$this->db->get();
 		return $resource->result();
-	}
-	function get_ip_detail($department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date,$visit_name){
+	}	
+	
+	function get_ip_detail($department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date,$visit_name,$date_type=0,$outcome=0){
 		$hospital=$this->session->userdata('hospital');
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
@@ -430,8 +431,9 @@ class Reports_model extends CI_Model{
 		else{
 			$this->db->where("(admit_time BETWEEN '00:00' AND '23:59')");
 		}
-		if($visit_name!='-1'){
-			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
+		if(($visit_name!='-1' && $visit_name != '0') || $this->input->post('visit_name')){
+			if($this->input->post('visit_name')) $visit_name = $this->input->post('visit_name');
+			$this->db->where('patient_visit.visit_name_id',$visit_name);
 		}
 		if($department!='-1' || $this->input->post('department')){
 			if($this->input->post('department')) $department=$this->input->post('department');
@@ -466,9 +468,24 @@ class Reports_model extends CI_Model{
 		if($from_age=='0' && $to_age!='0'){
 			$this->db->where('age_years>=',$to_age,false);
 		}
+		if(!!$outcome || $this->input->post('outcome_type')){
+			if($this->input->post('outcome_type')) $outcome = $this->input->post('outcome_type');
+			if($outcome == "Unupdated") {
+				$this->db->where_not_in('outcome',array('Death','Absconded','Discharge','LAMA'));
+			}
+			else $this->db->where('outcome', $outcome);
+		}
+		if($date_type == 0) {
+			$this->db->where("(admit_date BETWEEN '$from_date' AND '$to_date')");
+		}
+		else{
+			$this->db->where("($date_type BETWEEN '$from_date' AND '$to_date')");
+		}
+
 		$this->db->select("hosp_file_no,patient_visit.visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,
 		gender,IF(gender='F' AND father_name ='',spouse_name,father_name) parent_spouse,
-		age_years,age_months,age_days,patient.place,phone,address,admit_date,admit_time, department,unit_name,area_name,mlc_number,mlc_number_manual",false);
+		age_years,age_months,age_days,patient.place,phone,address,admit_date,admit_time, department,unit_name,area_name,mlc_number,mlc_number_manual,
+		outcome,outcome_date,outcome_time",false);
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
 		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
@@ -477,13 +494,12 @@ class Reports_model extends CI_Model{
 		 ->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
 		 ->where('patient_visit.hospital_id',$hospital['hospital_id'])
 		 ->where('visit_type','IP')
-		 ->where("(admit_date BETWEEN '$from_date' AND '$to_date')")
 		 ->order_by('hosp_file_no','ASC');		  
 		$resource=$this->db->get();
 		return $resource->result();
 	}
 	
-	function get_icd_detail($icd_10,$department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date,$visit_name,$visit_type){
+	function get_icd_detail($icd_10,$department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date,$visit_name,$visit_type,$outcome){
 		$hospital=$this->session->userdata('hospital');
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
@@ -500,11 +516,21 @@ class Reports_model extends CI_Model{
 		if($visit_type!='0'){
 			$this->db->where('patient_visit.visit_type',$visit_type);
 		}
-		if($visit_name!='-1'){
+		if(!!$visit_name && $visit_name != "-1"){
 			$this->db->where('patient_visit.visit_name_id',$visit_name);
 		}
-		if($icd_10!='0'){
+		if($icd_10!="0" && $icd_10 != -1){
 			$this->db->where('patient_visit.icd_10',$icd_10);
+		}
+		if($this->input->post('icd_code')){
+			$icd_code = substr($this->input->post('icd_code'),0,strpos($this->input->post('icd_code')," "));
+			$this->db->where('icd_code.icd_code',$icd_code);
+		}
+		if($this->input->post('icd_block')){
+			$this->db->where('icd_block.block_id',$this->input->post('icd_block'));
+		}
+		if($this->input->post('icd_chapter')){
+			$this->db->where('icd_chapter.chapter_id',$this->input->post('icd_chapter'));
 		}
 		if($department!='-1' || $this->input->post('department')){
 			if($this->input->post('department')) $department=$this->input->post('department');
@@ -539,9 +565,17 @@ class Reports_model extends CI_Model{
 		if($from_age=='0' && $to_age!='0'){
 			$this->db->where('age_years>=',$to_age,false);
 		}
+		if(!!$outcome || $this->input->post('outcome_type')){
+			if($this->input->post('outcome_type')) $outcome = $this->input->post('outcome_type');
+			if($outcome == "Unupdated") {
+				$this->db->where_not_in('outcome',array('Death','Absconded','Discharge','LAMA'));
+			}
+			else $this->db->where('outcome', $outcome);
+		}
 		$this->db->select("hosp_file_no,patient_visit.visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,
 		gender,IF(gender='F' AND father_name ='',spouse_name,father_name) parent_spouse,
-		age_years,age_months,age_days,patient.place,phone,address,admit_date,admit_time, department,unit_name,area_name,mlc_number",false);
+		age_years,age_months,age_days,patient.place,phone,address,admit_date,admit_time, department,unit_name,area_name,mlc_number,icd_10,outcome,final_diagnosis,
+		outcome_date,outcome_time",false);
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
 		 ->join('department','patient_visit.department_id=department.department_id')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
@@ -758,13 +792,13 @@ function get_sensitivity_summary(){
 		$this->db->select('antibiotic_test.antibiotic_result,antibiotic,micro_organism,antibiotic.antibiotic_id,micro_organism.micro_organism_id,
 			test_area.department_id,unit,area,test_sample.specimen_type_id,test.test_id,test.test_result_binary,test_order.test_area_id',false)
 			->from('test')
-                        ->join('test_order',"test.order_id = test_order.order_id AND (DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')",'left')
-                        ->join('micro_organism_test','micro_organism_test.test_id = test.test_id','left')
-                     ->join('test_master','test_master.test_master_id = test.test_master_id AND (test_master.test_area_id = 2 AND test_master.test_method_id = 3)')
-                        ->join('test_method','test_method.test_method_id = test_master.test_method_id')
-                        ->join('test_area','test_area.test_area_id = test_master.test_area_id')                        		
-                        ->join('micro_organism','micro_organism_test.micro_organism_id = micro_organism.micro_organism_id')
-                        ->join('antibiotic_test','antibiotic_test.micro_organism_test_id=micro_organism_test.micro_organism_test_id','left')			
+			->join('test_order',"test.order_id = test_order.order_id AND (DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')",'left')
+			->join('micro_organism_test','micro_organism_test.test_id = test.test_id','left')
+			->join('test_master','test_master.test_master_id = test.test_master_id AND (test_master.test_area_id = 2 AND test_master.test_method_id = 3)')
+			->join('test_method','test_method.test_method_id = test_master.test_method_id')
+			->join('test_area','test_area.test_area_id = test_master.test_area_id')                        		
+			->join('micro_organism','micro_organism_test.micro_organism_id = micro_organism.micro_organism_id')
+			->join('antibiotic_test','antibiotic_test.micro_organism_test_id=micro_organism_test.micro_organism_test_id','left')			
 			->join('antibiotic','antibiotic_test.antibiotic_id = antibiotic.antibiotic_id')			
 			->join('test_sample','test_order.order_id = test_sample.order_id')
 			->join('specimen_type','test_sample.specimen_type_id = specimen_type.specimen_type_id')
@@ -906,6 +940,47 @@ function get_sensitivity_summary(){
 		return $resource->result();
         }
     
+	
+	function get_transfers_summary(){
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));            
+		}
+		else if($this->input->post('from_date') || $this->input->post('to_date')){
+			$this->input->post('from_date')?$from_date=$this->input->post('from_date'):$from_date=$this->input->post('to_date');
+			$to_date=$from_date;
+		}
+		else{
+			$from_date=date("Y-m-d");
+			$to_date=$from_date;          
+		}
+        if($this->input->post('date_type_selection')=='transfer_date'){
+            $this->db->where("(transfer_date BETWEEN '$from_date' AND '$to_date')");
+        }
+		else{
+            $this->db->where("(admit_date BETWEEN '$from_date' AND '$to_date')");	
+		}
+		if($this->input->post('from_department')){
+			$this->db->where_in('it.from_department_id',$this->input->post('from_department'));
+		}
+		if($this->input->post('to_department')){
+			$this->db->where_in('it.department_id',$this->input->post('to_department'));
+		}
+		$this->db->select("count(transfer_id) transfers, avg(time_in_previous_area) duration, fd.department from_department,fa.area_name from_area,
+		td.department to_department,ta.area_name to_area, 
+		it.department_id to_department_id,it.area_id to_area_id,it.from_department_id,it.from_area_id")
+		->from('internal_transfer it')
+		->join('department fd','it.from_department_id = fd.department_id')
+		->join('area fa','it.from_area_id = fa.area_id','left')
+		->join('department td','it.department_id = td.department_id')
+		->join('area ta','it.area_id = ta.area_id','left')
+		->join('patient_visit','it.visit_id = patient_visit.visit_id')
+		->group_by('from_department_id,to_department_id,from_area_id,to_area_id');
+		$query = $this->db->get();
+		return $query->result();
+		
+	}
+	
 	function get_audiology_detail(){
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
@@ -1031,7 +1106,7 @@ function get_sensitivity_summary(){
 		else{
 			$this->db->select('"0" as area',false);
 		}
-		$this->db->select("department 'department',
+		$this->db->select("department 'department', department.department_id, 
         SUM(CASE WHEN 1  THEN 1 ELSE 0 END) 'outcome',
         SUM(CASE WHEN gender = 'F'  THEN 1 ELSE 0 END) 'outcome_female',
 		SUM(CASE WHEN gender = 'M'  THEN 1 ELSE 0 END) 'outcome_male',	
@@ -1062,5 +1137,144 @@ function get_sensitivity_summary(){
 		$resource=$this->db->get();
 		return $resource->result();
     }
+	
+	
+	
+	function get_transport_summary($report_type){
+		$hospital=$this->session->userdata('hospital');
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+		}
+		else if($this->input->post('from_date') || $this->input->post('to_date')){
+			$this->input->post('from_date')?$from_date=$this->input->post('from_date'):$from_date=$this->input->post('to_date');
+			$to_date=$from_date;
+		}
+		else{
+			$from_date=date("Y-m-d");
+			$to_date=$from_date;
+		}
+		if($this->input->post('visit_name')){
+			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
+		}
+		if($this->input->post('department')){
+			$this->db->where('patient_visit.department_id',$this->input->post('department'));
+		}
+		if($this->input->post('transport_type')){
+			$this->db->where('transport.transport_type',$this->input->post('transport_type'));
+		}
+		else{
+			$this->db->where('transport.transport_type',1);
+		}
+		if($this->input->post('transport_type')!=2){
+			$this->db->where('patient_visit.hospital_id',$hospital['hospital_id']);
+			$this->db->where("(admit_date BETWEEN '$from_date' AND '$to_date')");
+		}
+		else{	
+			$this->db->where("(DATE(start_date_time) BETWEEN '$from_date' AND '$to_date')");
+		}
+		if($this->input->post('unit')){
+			$this->db->select('IF(unit!="",unit,0) unit',false);
+			$this->db->where('patient_visit.unit',$this->input->post('unit'));
+		}
+		else{
+			$this->db->select('"0" as unit',false);
+		}
+		if($this->input->post('area')){
+			$this->db->select('IF(area!="",area,0) area',false);
+			$this->db->where('patient_visit.area',$this->input->post('area'));
+		}
+		else{
+			$this->db->select('"0" as area',false);
+		}
+		if($report_type == "area"){
+			$this->db->select('ta.area_name to_area');
+			$this->db->group_by('ta.area_id');
+		}
+		else if($report_type == "person"){
+			$this->db->select("CONCAT(IF(staff.first_name=NULL,'',staff.first_name),' ',IF(staff.last_name=NULL,'',staff.last_name)) staff_name",false);
+			$this->db->group_by('staff.staff_id');
+		}
+
+		$this->db->select("ta.area_name to_area,count(transport_id) count_transport, AVG(MINUTE(TIMEDIFF(end_date_time,start_date_time))) avg_time",false);
+		 $this->db->from('transport')
+		 ->join('patient_visit','transport.visit_id=patient_visit.visit_id','left')
+		 ->join('patient','patient_visit.patient_id=patient.patient_id','left')
+		 ->join('staff','transport.staff_id=staff.staff_id')
+		 ->join('area fa','transport.from_area_id=fa.area_id')
+		 ->join('department fd','fa.department_id=fd.department_id')
+		 ->join('area ta','transport.to_area_id=ta.area_id')
+		 ->join('department td','ta.department_id=td.department_id');
+		 $resource=$this->db->get();
+		return $resource->result();
+	}
+	
+	
+	
+	function get_transport_detail(){
+		$hospital=$this->session->userdata('hospital');
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
+			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
+		}
+		else if($this->input->post('from_date') || $this->input->post('to_date')){
+			$this->input->post('from_date')?$from_date=$this->input->post('from_date'):$from_date=$this->input->post('to_date');
+			$to_date=$from_date;
+		}
+		else{
+			$from_date=date("Y-m-d");
+			$to_date=$from_date;
+		}
+		if($this->input->post('visit_name')){
+			$this->db->where('patient_visit.visit_name_id',$this->input->post('visit_name'));
+		}
+		if($this->input->post('department')){
+			$this->db->where('patient_visit.department_id',$this->input->post('department'));
+		}
+		if($this->input->post('transport_type')){
+			$this->db->where('transport.transport_type',$this->input->post('transport_type'));
+		}
+		else{
+			$this->db->where('transport.transport_type',1);
+		}
+		if($this->input->post('transport_type')!=2){
+			$this->db->where('patient_visit.hospital_id',$hospital['hospital_id']);
+			$this->db->where("(admit_date BETWEEN '$from_date' AND '$to_date')");
+		}
+		else{	
+			$this->db->where("(DATE(start_date_time) BETWEEN '$from_date' AND '$to_date')");
+		}
+		if($this->input->post('unit')){
+			$this->db->select('IF(unit!="",unit,0) unit',false);
+			$this->db->where('patient_visit.unit',$this->input->post('unit'));
+		}
+		else{
+			$this->db->select('"0" as unit',false);
+		}
+		if($this->input->post('area')){
+			$this->db->select('IF(area!="",area,0) area',false);
+			$this->db->where('patient_visit.area',$this->input->post('area'));
+		}
+		else{
+			$this->db->select('"0" as area',false);
+		}
+
+		$this->db->select("hosp_file_no,patient_visit.visit_id,
+		CONCAT(IF(patient.first_name=NULL,'',patient.first_name),' ',IF(patient.last_name=NULL,'',patient.last_name)) patient_name,
+		CONCAT(IF(staff.first_name=NULL,'',staff.first_name),' ',IF(staff.last_name=NULL,'',staff.last_name)) staff_name, staff.phone staff_phone,
+		patient.gender,patient.age_years, patient.age_months, patient.age_days, patient_visit.visit_type,
+		fa.area_name from_area, fd.department from_department, ta.area_name to_area, td.department to_department, 
+		patient.phone, admit_date, admit_time, staff.phone,start_date_time,end_date_time,note",false);
+		 $this->db->from('transport')
+		 ->join('patient_visit','transport.visit_id=patient_visit.visit_id','left')
+		 ->join('patient','patient_visit.patient_id=patient.patient_id','left')
+		 ->join('staff','transport.staff_id=staff.staff_id')
+		 ->join('area fa','transport.from_area_id=fa.area_id')
+		 ->join('department fd','fa.department_id=fd.department_id')
+		 ->join('area ta','transport.to_area_id=ta.area_id')
+		 ->join('department td','ta.department_id=td.department_id');		  
+		$resource=$this->db->get();
+		return $resource->result();
+	}
 }
 ?>

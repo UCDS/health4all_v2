@@ -119,11 +119,40 @@ class Staff_model extends CI_Model{
 		return $query->result();
 	}
 	//get_staff() selects the staff details from the database and returns the result
-	function get_staff(){
+	function get_staff($department=0){
+		if(!!$department)
+			$this->db->where('department',$department);
 		$this->db->select("staff_id,CONCAT(IF(first_name!='',first_name,''),' ',IF(last_name!='',last_name,'')) staff_name,department",false)
 		->from("staff")
 		->join('department','staff.department_id=department.department_id');
 		$query=$this->db->get();
+		return $query->result();
+	}
+	function get_transport_log($status=0,$transport_type="p"){
+		if($status=="active") {
+			$this->db->where('end_date_time','0000-00-00 00:00:00');
+		}
+		if($this->input->post('selected_patient')){
+			$this->db->where('visit_id',$this->input->post('selected_patient'));
+		}
+		else if($this->input->post('visit_id')){
+			$this->db->where('visit_id',$this->input->post('visit_id'));
+		}
+		if($transport_type=="np"){
+			$this->db->where('transport_type',2);
+		}
+		else $this->db->where('transport_type',1);
+		$this->db->select("transport.*,fa.area_name from_area, ta.area_name to_area,CONCAT(IF(first_name!='',first_name,''),' ',IF(last_name!='',last_name,'')) transported_by",false)
+		->from("transport")
+		->join('area fa','transport.from_area_id=fa.area_id')
+		->join('area ta','transport.to_area_id=ta.area_id')
+		->join('staff','transport.staff_id=staff.staff_id');
+		$query=$this->db->get();
+		return $query->result();
+	}
+	function get_transport_defaults(){
+		$this->db->select('primary_key,default_value')->from('default_setting')->where_in('primary_key',array('from_area_id','to_area_id','from_department_id','to_department_id'));
+		$query = $this->db->get();
 		return $query->result();
 	}
 	//upload_form() takes the post variables and inserts data into the form and form_layout tables
