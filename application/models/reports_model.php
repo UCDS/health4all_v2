@@ -1239,10 +1239,6 @@ function get_sensitivity_summary(){
 		}
 		if($this->input->post('transport_type')!=2){
 			$this->db->where('patient_visit.hospital_id',$hospital['hospital_id']);
-			$this->db->where("(admit_date BETWEEN '$from_date' AND '$to_date')");
-		}
-		else{	
-			$this->db->where("(DATE(start_date_time) BETWEEN '$from_date' AND '$to_date')");
 		}
 		if($this->input->post('unit')){
 			$this->db->select('IF(unit!="",unit,0) unit',false);
@@ -1266,13 +1262,15 @@ function get_sensitivity_summary(){
 		fa.area_name from_area, fd.department from_department, ta.area_name to_area, td.department to_department, 
 		patient.phone, admit_date, admit_time, staff.phone,start_date_time,end_date_time,note",false);
 		 $this->db->from('transport')
-		 ->join('patient_visit','transport.visit_id=patient_visit.visit_id','left')
-		 ->join('patient','patient_visit.patient_id=patient.patient_id','left')
-		 ->join('staff','transport.staff_id=staff.staff_id')
-		 ->join('area fa','transport.from_area_id=fa.area_id')
-		 ->join('department fd','fa.department_id=fd.department_id')
-		 ->join('area ta','transport.to_area_id=ta.area_id')
-		 ->join('department td','ta.department_id=td.department_id');		  
+		->join('patient_visit','transport.visit_id=patient_visit.visit_id','left')
+		->join('patient','patient_visit.patient_id=patient.patient_id','left')
+		->join('staff','transport.staff_id=staff.staff_id')
+		->join('area fa','transport.from_area_id=fa.area_id')
+		->join('department fd','fa.department_id=fd.department_id')
+		->join('area ta','transport.to_area_id=ta.area_id')
+		->join('department td','ta.department_id=td.department_id')
+		->where("(DATE(start_date_time) BETWEEN '$from_date' AND '$to_date')")
+		->order_by("start_date_time");
 		$resource=$this->db->get();
 		return $resource->result();
 	}

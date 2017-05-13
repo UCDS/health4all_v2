@@ -303,9 +303,9 @@ class Register extends CI_Controller {
         $this->data['visit_names'] = $this->staff_model->get_visit_name();
 		$this->data['transporters'] = $this->staff_model->get_staff("Transport");
 		$this->form_validation->set_rules('patient_number', 'IP/OP Number', 'trim|xss_clean');
+		$this->data['transport_queue_np'] = $this->staff_model->get_transport_log("active","np");
 		if ($this->form_validation->run() === FALSE)
 		{
-			$this->data['transport_queue_np'] = $this->staff_model->get_transport_log("active","np");
 			$this->load->view('pages/transport',$this->data);
 		}
 		else{

@@ -4,8 +4,11 @@
 
 
 <script type="text/javascript">
+$(function(){
   		$("#from_area").chained("#from_department");
 		$("#to_area").chained("#to_department");
+  		$("#from_area2").chained("#from_department2");
+		$("#to_area2").chained("#to_department2");
 });
 </script>
 <br />
@@ -100,6 +103,18 @@
                                     <?php echo date("d-M-Y", strtotime($patient->admit_date)).", ".date("g:ia", strtotime($patient->admit_time));?>
                                 </div>
                   </div>
+                  <div class="row alt">
+                                <div class="col-md-4 col-xs-6">
+                                    <b>Patient Name: <?php echo $patient->first_name; ?> </b>
+                                </div>
+                                <div class="col-md-4 col-xs-6">
+                                    <b>Age: </b><?php echo $age;?>
+                                </div>
+                                <div class="col-md-4 col-xs-6">
+                                    <b>Gender: </b><?php echo $patient->gender;?>
+                                </div>
+                  </div>
+				  <br />
                   <div class="row alt">
 					
 					 <!--Patient transfers-->
@@ -236,14 +251,6 @@
                 }
               ?>
  
-				<script>
-				$(function(){
-					$(".transport_start_date,.transport_end_date").datetimepicker({
-						format : "D-MMM-YYYY h:ssA",
-						defaultDate : false
-                    });
-				});
-				</script>
 
 			<div class="col-md-12 text-center">
 				<input type="text" name="visit_id" class="sr-only" value="<?php echo $patient->visit_id;?>" hidden readonly />
@@ -336,7 +343,7 @@
 							  <tr>
 							 <td>
 								<?php echo form_open('register/transport',array('role'=>'form','id'=>'non-patient'));?>
-								 <select name="from_department" class="form-control from_department" id="from_department">
+								 <select name="from_department" class="form-control from_department" id="from_department2">
 									<option value="">--Select--</option>
 									<?php 
 										foreach($all_departments as $department){
@@ -346,7 +353,7 @@
 									}
 									?>
 								</select>
-								 <select name="transport_from_area" class="form-control from_area" id="from_area">
+								 <select name="transport_from_area" class="form-control from_area" id="from_area2">
 									<option value="">--Select--</option>
 									<?php 
 										foreach($areas as $area){
@@ -358,7 +365,7 @@
 								</select>
 							 </td>
 							 <td>
-								 <select name="to_department" class="form-control to_department" id="to_department">
+								 <select name="to_department" class="form-control to_department" id="to_department2">
 									<option value="">--Select--</option>
 									<?php 
 										foreach($all_departments as $department){
@@ -368,7 +375,7 @@
 									}
 									?>
 								</select>
-								 <select name="transport_to_area" id="to_area" class="form-control to_area">
+								 <select name="transport_to_area" id="to_area2" class="form-control to_area">
 								<option value="">--Select--</option>
 								<?php 
 								foreach($areas as $area){
@@ -413,6 +420,7 @@
 				<thead>
 					<tr><th colspan="5">Non Patient Transport Queue</th></tr>
 					<tr>
+						<th></th>
 						<th>								
 							<?php echo form_open('register/transport',array('role'=>'form','id'=>'non-patient'));?>
 							From Area
@@ -461,97 +469,12 @@
 		</div>
 </div>
 <br />
-<script>
-	$(function(){
-		selectize = $("#icd_code")[0].selectize;
-		selectize.on('change',function(){
-			var test = selectize.getOption(selectize.getValue());
-			console.log(test);
-		});
-		$i=1;
-		$("#prescription_add").click(function(){
-			$row = '<tr class="prescription">'+
-						'	<td>'+
-								'<select name="drug_'+$i+'" class="form-control">'+
-								'<option value="">--Select--</option>'+
-								'<?php foreach($drugs as $drug){ echo '<option value="'.$drug->item_id.'">'.$drug->item_name.'</option>';}?>'+
-								'</select>'+
-							'</td>'+
-							'<td>'+
-								'<input type="text" name="duration_'+$i+'" placeholder="in Days" style="width:100px" class="form-control" />'+
-							'</td>'+
-							'<td>'+
-								'<select name="frequency_'+$i+'" class="form-control">'+
-									'<option value="">Select</option>'+
-									'<option value="Daily" selected>Daily</option>'+
-									'<option value="Alternate Days">Alternate Days</option>'+
-								'</select>'+
-							'</td>'+
-							'<td>'+
-								'<label><input type="checkbox" name="bb_'+$i+'" value="1" /></label>'+
-							'</td>'+
-							'<td>'+
-								'<label><input type="checkbox" name="ab_'+$i+'" value="1" /></label>'+
-							'</td>'+
-							'<td>'+
-								'<label><input type="checkbox" name="bl_'+$i+'" value="1" /></label>'+
-							'</td>'+
-							'<td>'+
-								'<label><input type="checkbox" name="al_'+$i+'" value="1" /></label>'+
-							'</td>'+
-							'<td>'+
-								'<label><input type="checkbox" name="bd_'+$i+'" value="1" /></label>'+
-							'</td>'+
-							'<td>'+
-								'<label><input type="checkbox" name="ad_'+$i+'" value="1" /></label>'+
-							'</td>'+
-							'<td>'+
-								'<input type="text" name="quantity_'+$i+'" style="width:100px" class="form-control" />'+
-							'</td>'+
-							'<td>'+
-								'<select name="lab_unit_'+$i+'" class="form-control">'+
-								'<option value="">--Select--</option>'+
-								'<?php foreach($lab_units as $unit){ echo '"<option value="'.$unit->lab_unit_id.'">'.$unit->lab_unit.'</option>'; }?>'+
-								'</select>'+
-							'<input type="text" name="prescription[]" class="sr-only" value="'+$i+'" /></td>'+
-							'<td>'+
-								'<button type="button" class="btn btn-danger btn-sm" onclick="$(this).parent().parent().remove()">X</button>'+
-							'</td>'+
-						'</tr>';
-			$i++;
-			$(".prescription").parent().append($row);
-		});
-	});
-	$('#icd_code').selectize({
-    valueField: 'icd_code',
-    labelField: 'code_title',
-    searchField: 'code_title',
-    create: false,
-    render: {
-        option: function(item, escape) {
 
-            return '<div>' +
-                '<span class="title">' +
-                    '<span class="icd_code">' + escape(item.code_title) + '</span>' +
-                '</span>' +
-            '</div>';
-        }
-    },
-    load: function(query, callback) {
-        if (!query.length) return callback();
-		$.ajax({
-            url: '<?php echo base_url();?>register/search_icd_codes',
-            type: 'POST',
-			dataType : 'JSON',
-			data : {query:query},
-            error: function(res) {
-                callback();
-            },
-            success: function(res) {
-                callback(res.icd_codes.slice(0, 10));
-            }
-        });
-    }
-	});
-</script>
-	
+				<script>
+				$(function(){
+					$(".transport_start_date,.transport_end_date").datetimepicker({
+						format : "D-MMM-YYYY h:ssA",
+						defaultDate : false
+                    });
+				});
+				</script>
