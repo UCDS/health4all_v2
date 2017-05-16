@@ -588,10 +588,6 @@ class Reports_model extends CI_Model{
 		$resource=$this->db->get();
 		return $resource->result();
 	}
-
-    function get_icd_outcome_detail($icd_10,$department,$unit,$area,$gender,$from_age,$to_age,$from_date,$to_date,$visit_name,$visit_type){
-        
-    }
 	
 	function get_order_detail($test_master,$department,$unit,$area,$test_area,$specimen_type,$test_method,$visit_type,$from_date,$to_date,$status,$type,$number,$antibiotic_id,$micro_organism_id,$sensitive,$outcome_type=0){
 		if($this->input->post('from_date') && $this->input->post('to_date')){
@@ -696,8 +692,7 @@ class Reports_model extends CI_Model{
 		$query=$this->db->get();
 		return $query->result();
 	}
-		function get_service_records()
-		{
+	function get_service_records() {
 			if($this->input->post('department')){
 			$this->db->where('equipment.department_id',$this->input->post('department'));
 		}
@@ -754,7 +749,7 @@ class Reports_model extends CI_Model{
 		
 	}
 	
-function get_sensitivity_summary(){
+	function get_sensitivity_summary(){
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -1273,6 +1268,44 @@ function get_sensitivity_summary(){
 		->order_by("start_date_time");
 		$resource=$this->db->get();
 		return $resource->result();
+	}
+
+	function dashboard($organization=""){
+		$dashboards = array(    //array of available dashboards, add a sub-array with the given fields to create a new dashboard
+			array(
+				'name'=>'tvvp',   //retrieved from the url
+				'state'=>'Telangana', 
+				'type6'=>'VVP' 
+			)
+		);
+		$this->db->select('organization, short_name, type6, state')->from('dashboards')->where('LOWER(short_name)',strtolower($organization));
+		$query = $this->db->get();
+		$dashboard = $query->row();
+		if($query->num_rows()!=1) show_404();
+		if(!!$dashboard->state)
+			$this->db->where('hospital.state',$dashboard->state);
+		for($i=1;$i<7;$i++){
+			if(isset($dashboard->{"type".$i}))
+				$this->db->where("hospital.type$i",$dashboard->{"type".$i});
+		}
+		
+		if($this->input->post('date')){
+			$date = date("Y-m-d",strtotime($this->input->post('date')));
+			$this->db->where('patient_visit.admit_date',$date);
+		}
+		else {
+			$date = date("Y-m-d");
+			$this->db->where("patient_visit.admit_date",$date);
+		}
+		$this->db->select("SUM(CASE WHEN visit_type = 'IP' THEN 1 ELSE 0 END) total_ip,
+			SUM(CASE WHEN visit_type = 'OP' THEN 1 ELSE 0 END) total_op,
+			SUM(CASE WHEN visit_type = 'OP' AND patient_id IN (SELECT patient_id FROM patient_visit WHERE admit_date<'$date' AND visit_type='OP' AND hospital_id = hospital.hospital_id) THEN 1 ELSE 0 END) repeat_op, 
+			hospital.hospital_short_name")
+			->from('patient_visit')
+			->join('hospital','patient_visit.hospital_id = hospital.hospital_id')
+			->group_by('hospital.hospital_id')->order_by('total_op','desc');
+		$query = $this->db->get();
+		return array($dashboard->organization,$query->result());
 	}
 }
 ?>

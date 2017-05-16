@@ -157,6 +157,7 @@ class Staff_model extends CI_Model{
 	}
 	//upload_form() takes the post variables and inserts data into the form and form_layout tables
 	function upload_form(){
+		$hospital = $this->session->userdata('hospital');
 		//storing all the post variables and json variables into local variables.
 		$fields=json_decode($this->input->post('fields'));
 		$form_name=$this->input->post('form_name');
@@ -169,7 +170,8 @@ class Staff_model extends CI_Model{
 			'form_name'=>$form_name,
 			'form_type'=>$form_type,
 			'num_columns'=>$columns,
-			'print_layout_id'=>$print_layout
+			'print_layout_id'=>$print_layout,
+			'hospital_id'=>$hospital['hospital_id']
 		);
 		$this->db->trans_start(); //Transaction starts
 		$this->db->insert('form',$form_data); //Insert the form data array into the "form" table
@@ -207,7 +209,8 @@ class Staff_model extends CI_Model{
 	//get_forms() takes a parameter $form_type, selects the forms with the given form type 
 	//from the database and returns the result
 	function get_forms($form_type){
-		$this->db->select("form_id,form_name")->from("form")->where("form_type",$form_type);
+		$hospital = $this->session->userdata('hospital');
+		$this->db->select("form_id,form_name")->from("form")->where("form_type",$form_type)->where('hospital_id',$hospital['hospital_id']);
 		$query=$this->db->get();
 		return $query->result();
 	}

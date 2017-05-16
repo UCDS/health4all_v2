@@ -21,13 +21,13 @@ class Home extends CI_Controller {
 		$this->load->helper('form');
 		if($this->session->userdata('logged_in')){
 			$this->data['title']="Home";
-			$this->load->view('templates/header',$this->data);
 			if(count($this->data['hospitals'])>1){
 			$this->load->library('form_validation');
 				$this->form_validation->set_rules('organisation', 'Organisation',
 				'trim|required|xss_clean');
 				if ($this->form_validation->run() === FALSE)
 				{
+					$this->load->view('templates/header',$this->data);
 					$this->load->view('pages/home',$this->data);
 				}
 				else{
@@ -47,6 +47,9 @@ class Home extends CI_Controller {
 								break;
 							}
 						}
+						$this->data['op_forms']=$this->staff_model->get_forms("OP");
+						$this->data['ip_forms']=$this->staff_model->get_forms("IP");
+						$this->load->view('templates/header',$this->data);
 						$this->load->view('pages/home',$this->data);
 					}
 				}
@@ -66,6 +69,9 @@ class Home extends CI_Controller {
 							$this->session->set_userdata('place',array('camp_id'=>0,'name'=>'Blood Bank'));
 							break;
 				}
+				$this->data['op_forms']=$this->staff_model->get_forms("OP");
+				$this->data['ip_forms']=$this->staff_model->get_forms("IP");
+				$this->load->view('templates/header',$this->data);
 				$this->load->view('pages/home',$this->data);
 			}
 		}

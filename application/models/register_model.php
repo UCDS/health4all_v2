@@ -323,7 +323,7 @@ class Register_model extends CI_Model{
 		// based on the field type we modify the data as required before storing in the variables.
 		if($this->input->post('patient_id_manual')) $patient_id_manual=$this->input->post('patient_id_manual'); else $patient_id_manual="";
 		if($this->input->post('first_name')) $first_name=$this->input->post('first_name'); else $first_name="";
-                if($this->input->post('middle_name')) $middle_name=$this->input->post('middle_name'); else $middle_name="";
+        if($this->input->post('middle_name')) $middle_name=$this->input->post('middle_name'); else $middle_name="";
 		if($this->input->post('last_name')) $last_name=$this->input->post('last_name'); else $last_name="";
 		$age_years=$this->input->post('age_years');
 		$age_months=$this->input->post('age_months');
@@ -688,6 +688,9 @@ class Register_model extends CI_Model{
 	}
 	
 	function search(){
+
+		$hospital=$this->session->userdata('hospital');
+		$hospital_id=$hospital['hospital_id'];
 		//Build the where conditions based on the input given by the user.
 		if($this->input->post('search_patient_id')){
 			$this->db->where('patient.patient_id',$this->input->post('search_patient_id'));
@@ -723,6 +726,9 @@ class Register_model extends CI_Model{
 		if($this->input->post('search_year')){
 			$this->db->where('YEAR(patient_visit.admit_date)',$this->input->post('search_year'));
 		}
+		if(!$this->input->post('load_other_hospitals'))
+		$this->db->where('patient_visit.hospital_id',$hospital['hospital_id']);
+			
 		//Build the query to retrieve the patient records based on the search query.
 		$this->db->select("patient.*,patient_visit.*,CONCAT(first_name,' ',last_name) name,
 		IF(father_name IS NULL OR father_name='',spouse_name,father_name) parent_spouse,patient.*,patient_visit.*,mlc.*,occupation.occupation,id_proof_type,

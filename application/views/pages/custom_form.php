@@ -1154,7 +1154,18 @@ pri.print();
 										</tr>
 										<?php } ?>
 									</tbody>
-								</table>	
+								</table>
+								<div class="row text-center">
+									<?php echo form_open("register/custom_form/$form_id",array("role"=>"form","class"=>"form-custom")) ?>
+									<input type="text" class="sr-only" value="<?php echo $this->input->post('search_patient_id');?>" name="search_patient_id" />
+									<input type="text" class="sr-only" value="<?php echo $this->input->post('search_patient_name');?>" name="search_patient_name" />
+									<input type="text" class="sr-only" value="<?php echo $this->input->post('search_op_number');?>" name="search_op_number" />
+									<input type="text" class="sr-only" value="<?php echo $this->input->post('search_ip_number');?>" name="search_ip_number" />
+									<input type="text" class="sr-only" value="<?php echo $this->input->post('search_phone');?>" name="search_phone" />
+									<input type="text" class="sr-only" value="<?php echo $this->input->post('search_year');?>" name="search_year" />
+									<input type="text" class="sr-only" value="1" name="load_other_hospitals" />
+									<input type="submit" value="Search All Hospitals" name="search_patients" class="btn btn-primary btn-sm text-center">
+									</form>
 							<?php }  else echo "No patients matched your search.";?>
 						</div>
 					</div>
