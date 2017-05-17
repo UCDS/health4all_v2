@@ -9,7 +9,7 @@ class Register extends CI_Controller {
 		$this->load->model('staff_model');
 		$this->load->model('masters_model');
                 $this->load->model('patient_model');
-                $this->load->model('hospital_model');
+         //       $this->load->model('hospital_model');
                 $this->load->model('counter_model');
 		if($this->session->userdata('logged_in')){
 		$userdata=$this->session->userdata('logged_in');
@@ -74,7 +74,6 @@ class Register extends CI_Controller {
 			$this->data['units']=$this->staff_model->get_unit();
 			$this->data['areas']=$this->staff_model->get_area();
 			$this->data['districts']=$this->staff_model->get_district();
-			$this->data['districts_codes']=$this->staff_model->get_district_codes();
 			$this->data['countries']=$this->masters_model->get_data('country_codes');
 			$this->data['states_codes']=$this->masters_model->get_data('state_codes');
 			$this->data['userdata']=$this->session->userdata('logged_in');//Load the session data into a variable to use in headers and models.
@@ -236,9 +235,10 @@ class Register extends CI_Controller {
 		$this->data['lab_units'] = $this->masters_model->get_data("lab_unit");
 		$this->data['drugs'] = $this->masters_model->get_data("drugs");
 		$this->data['procedures'] = $this->masters_model->get_data("procedure");
-                $this->data['hospitals'] = $this->hospital_model->get_hospitals();
-                $this->data['arrival_modes'] = $this->patient_model->get_arrival_modes();
-                $this->data['visit_names'] = $this->patient_model->get_visit_types();
+		$this->data['defaults'] = $this->staff_model->get_transport_defaults();
+              //  $this->data['hospitals'] = $this->hospital_model->get_hospitals();
+              //  $this->data['arrival_modes'] = $this->patient_model->get_arrival_modes();
+        $this->data['visit_names'] = $this->staff_model->get_visit_name();
 		$this->form_validation->set_rules('patient_number', 'IP/OP Number',
 		'trim|xss_clean');
 		if ($this->form_validation->run() === FALSE)
@@ -246,13 +246,16 @@ class Register extends CI_Controller {
 			$this->load->view('pages/update_patients',$this->data);
 		}
 		else{
+		
+			$this->data['transporters'] = $this->staff_model->get_staff("Transport");
 			if($this->input->post('update_patient')){
 				$update = $this->register_model->update();
-                                if(is_int($update) && $update==2){
-                                    //If register function returns value 2 then we are setting a duplicate ip no error.
-                                    $this->data['duplicate']=1;
+                if(is_int($update) && $update==2){
+					//If register function returns value 2 then we are setting a duplicate ip no error.
+					$this->data['duplicate']=1;
 				}
-                                $this->data['transfers'] = $this->patient_model->get_transfers_info();
+				$this->data['transfers'] = $this->patient_model->get_transfers_info();
+				$this->data['transport'] = $this->staff_model->get_transport_log();
 				$this->data['patients']=$this->register_model->search();
 				$this->data['msg'] = "Patient information has been updated successfully";
 				if(count($this->data['patients'])==1){
@@ -268,7 +271,8 @@ class Register extends CI_Controller {
 				if(count($this->data['patients'])==1){
 					$this->load->model('diagnostics_model');
 					$visit_id = $this->data['patients'][0]->visit_id;
-                                        $this->data['transfers'] = $this->patient_model->get_transfers_info($visit_id);
+                    $this->data['transfers'] = $this->patient_model->get_transfers_info($visit_id);
+					$this->data['transport'] = $this->staff_model->get_transport_log();
 					$this->data['prescription']=$this->register_model->get_prescription($visit_id);
 					$this->data['tests']=$this->diagnostics_model->get_all_tests($visit_id);
 				}
@@ -294,5 +298,71 @@ class Register extends CI_Controller {
 				echo json_encode($list);
 		}
 		else return false;
+	}
+	
+	function transport(){		
+		if($this->session->userdata('logged_in')){
+		$this->data['userdata']=$this->session->userdata('logged_in');
+		$access=0;
+		foreach($this->data['functions'] as $function){
+			if($function->user_function=="Patient Transport"){
+				$access=1;
+			}
+		}
+		if($access==1){
+		$this->data['title']="Patient Transport";
+		$this->load->view('templates/header',$this->data);
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+		$this->data['all_departments']=$this->staff_model->get_department();
+		$this->data['units']=$this->staff_model->get_unit();
+		$this->data['areas']=$this->staff_model->get_area();
+		$this->data['defaults'] = $this->staff_model->get_transport_defaults();
+        $this->data['visit_names'] = $this->staff_model->get_visit_name();
+		$this->data['transporters'] = $this->staff_model->get_staff("Transport");
+		$this->form_validation->set_rules('patient_number', 'IP/OP Number', 'trim|xss_clean');
+		$this->data['transport_queue_np'] = $this->staff_model->get_transport_log("active","np");
+		if ($this->form_validation->run() === FALSE)
+		{
+			$this->load->view('pages/transport',$this->data);
+		}
+		else{
+		
+			if($this->input->post('transport')){
+				if($this->register_model->transport()){
+					$this->data['msg']="Updated Successfully";
+				}
+				$this->data['transport_queue'] = $this->staff_model->get_transport_log("active");
+				$this->data['patients']=$this->register_model->search();
+				if(count($this->data['patients'])==1){
+					$visit_id = $this->data['patients'][0]->visit_id;
+				}
+				$this->load->view('pages/transport',$this->data);
+			}
+			else if($this->input->post('transport_np')){
+				if($this->register_model->transport("np"))
+					$this->data['msg']="Updated Successfully";
+				$this->data['transport_queue_np'] = $this->staff_model->get_transport_log("active","np");
+				$this->load->view('pages/transport',$this->data);
+			}
+			else{
+				$this->data['patients']=$this->register_model->search();
+				if(count($this->data['patients'])==1){
+					$visit_id = $this->data['patients'][0]->visit_id;
+					$this->data['transport_queue'] = $this->staff_model->get_transport_log("active");
+				}
+				$this->load->view('pages/transport',$this->data);
+			}
+		}
+		$this->load->view('templates/footer');
+		}
+		else{
+		show_404();
+		}
+		}
+		else{
+		show_404();
+		}
+		
 	}
 }

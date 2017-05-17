@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/selectize.css" >
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/modal-fullscreen.css" >
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/selectize.css">
 
 		<style type="text/css">
@@ -122,7 +123,7 @@
 	</table>
 	<script type="text/javascript">
 				function loadDicom(path){
-					 $object = "<object type=\"text/html\" id=\"dicom\" data=\"http://localhost/dwv/viewers/simplistic/index.php?input=http%3A%2F%2Flocalhost%2F"+path+"\" width=\"100%\" height=\"800px\" style=\"overflow:auto;border:3px ridge #ccc\"></object>";
+					 $object = "<object type=\"text/html\" id=\"dicom\" data=\"http://45.63.0.24/dwv/viewers/simplistic/index.php?input=http%3A%2F%2F45.63.0.24%2F"+path+"\" width=\"100%\" height=\"800px\" style=\"overflow:auto;border:3px ridge #ccc\"></object>";
 					 $('.modal-body object').remove();
 					 $('.modal-body').append($object);
 				}
