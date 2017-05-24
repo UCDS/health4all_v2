@@ -236,7 +236,7 @@ $(function(){
 
 					Visit Type : <select class="form-control" name="visit_type">
 									<option value="" >All</option>
-f									<option value="OP" <?php if($visit_type == "OP") echo " selected ";?>>OP</option>
+									<option value="OP" <?php if($visit_type == "OP") echo " selected ";?>>OP</option>
 									<option value="IP" <?php if($visit_type == "IP" || $visit_type != 'OP') echo " selected ";?>>IP</option>
 								</select>
 					<br />

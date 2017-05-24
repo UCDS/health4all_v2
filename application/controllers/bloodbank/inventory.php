@@ -248,6 +248,7 @@ class Inventory extends CI_Controller {
 				if($this->input->post('select_request')){
 					$this->data['request']=$this->inventory_model->get_requests();
 					$this->data['inventory']=$this->inventory_model->check_inventory();
+                                        $inventory = $this->data['inventory'];
 					$this->data['inv']=$this->data['inventory'][0];
 					$this->data['count_inv']=$this->data['inventory'][1];
 					$this->load->view('pages/bloodbank/issue',$this->data);

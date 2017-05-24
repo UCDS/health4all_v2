@@ -166,6 +166,7 @@
 	foreach($functions as $f){
 		if($f->user_function=="Diagnostics - Order All"){ ?>
 			<li <?php if(preg_match("^view_orders^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/view_orders/0">View Tests</a></li>
+			<li <?php if(preg_match("^view_updated_tests^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/view_updated_tests">View Updated</a></li>
 	<?php 
 		$view_orders=1;
 		} 
