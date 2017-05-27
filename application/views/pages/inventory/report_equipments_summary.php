@@ -105,12 +105,12 @@ $(function(){
 					}
 					?>
 					</select>
-					
 					<select name="equipment_status" id="equipment" class="form-control" >
 					<option value="">All</option>	
-					<option value="1" <?php if($this->input->post('equipment_status') == '1') echo "selected";?>>Working</option>
-					<option value="0" <?php if($this->input->post('equipment_status') == '0') echo "selected";?>>Not Working</option>
+					<option value="1" <?php if($this->input->post('equipment_status') == '1') ?>>Working</option>
+					<option value="0" <?php if($this->input->post('equipment_status') == '0') ;?>>Not Working</option>
 					</select>
+					
 					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
 		</form>
 	<br />
@@ -159,6 +159,7 @@ $(function(){
 	<?php
 	$total_working+=$s->total_working;
 	$total_not_working+=$s->total_not_working;
+	$total=0;
 	$total+=$s->total;
 	}
 	?>

@@ -185,25 +185,19 @@ $(function(){
 		<td><?php echo date("h:i A", strtotime("$a->call_time")); ?></td>
 		<td><?php echo $a->call_information_type; ?></td>
 		<td><?php echo $a->call_information; ?></td>
-		<td><?php foreach($vendors as $d){
-			echo "<option value='$d->vendor_id'>$d->vendor_name</option>";
-		}
-		?></td>
-		<td><?php foreach($contact_persons as $d){
-			echo "<option value='$d->contact_person_id' class='$d->contact_person_id' >$d->contact_person_first_name  </option>";
-		}
-		?></td>
+		<td><?php echo $a->vendor_name; ?></td>
+		<td><?php echo $a->contact_person_first_name;?></td>
 		<td><?php echo $a->service_person_remarks; ?></td>
 		<td><?php echo date("d-M-Y", strtotime("$a->service_date"));   ?></td>
-		<td><?php  echo date("h:i A", strtotime("$s->service_time"));  ?></td>
+		<td><?php  echo date("h:i A", strtotime("$a->service_time"));  ?></td>
 		<td><?php echo $a->problem_status; ?></td>
 		<td><?php
 				if($a->working_status==1)
 				{
-					echo "Working";
+					echo "<h4 class='label label-success' >Working</h4>";
 				}
 						else{
-                        echo "Not working";	}?></td>
+                        echo "<h4 class='label label-danger'>Not working</h4> ";	}?></td>
 		                
 		
 

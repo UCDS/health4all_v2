@@ -195,10 +195,10 @@ $("#department").on('change',function(){
 		<td><?php echo $a->department; ?></td>
 		<td><?php if($a->equipment_status==1)
 				{
-					echo "Working";
+					echo "<h4 class='label label-success' >Working</h4>";
 				}
 						else{
-                        echo "Not working";	}?></td>
+                        echo "<h4 class='label label-danger'>Not working</h4>";	}?></td>
 		
 
 

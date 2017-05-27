@@ -673,13 +673,14 @@ class Reports_model extends CI_Model{
 		if($this->input->post('working_status')!=NULL){
 			$this->db->where('service_record.working_status',$this->input->post('working_status'));
 		}
-		$this->db->select("equipment.equipment_id,equipment.equipment_type_id,equipment.department_id,request_id,call_date,call_time,call_information_type,call_information,service_person_remarks,service_date,service_time,problem_status,working_status
+		$this->db->select("equipment.equipment_id,vendor.vendor_id,service_record.vendor_id,contact_person.contact_person_id,equipment.equipment_type_id,equipment_type,equipment.department_id,request_id,call_date,call_time,call_information_type,call_information,service_person_remarks,service_date,vendor_name,contact_person_first_name,service_time,problem_status,working_status
 		")
 		->from("service_record")
-		->join("equipment","service_record.equipment_id=equipment.equipment_id")
-		//->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id")
-		//->join("department","equipment.department_id=department.department_id" );
-		->group_by("equipment_id")
+		->join("equipment","service_record.equipment_id=equipment.equipment_id",'left')
+		->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id",'left')
+		->join("department","equipment.department_id=department.department_id",'left' )
+		->join("vendor","service_record.vendor_id=vendor.vendor_id",'left')
+		->join("contact_person","service_record.contact_person_id=contact_person.contact_person_id",'left')
 		->order_by("equipment_id");
 		$query=$this->db->get();
 		return $query->result();
