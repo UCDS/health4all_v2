@@ -4,22 +4,22 @@
 ?>
 <div class="col-sm-3 col-md-2 sidebar-left">
     <ul class="nav nav-sidebar">
-    			<li class="nav-header"> Add
-				<li <?php if(preg_match("^add/equipment$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/add/equipment"><i class="glyph-icon flaticon-medical-equipment"></i>  Equipment</a></li>
-				<li <?php if(preg_match("^add/equipment_type^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>equipments/add/equipment_type"><i class="glyph-icon flaticon-id12"></i>  Equipment Type</a></li>
-				<li <?php if(preg_match("^add/service_records^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/add/service_records"><i class="fa fa-cog   "></i></i> Service Issue</a></li>
+    			<li class="nav-header">&nbsp&nbsp <b><i class="fa fa-pencil-square fa-2x" style="color:#ef9007"></i>&nbsp&nbsp&nbsp&nbsp&nbspAdd</b> </li>
+				<li <?php if(preg_match("^add/equipment$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/add/equipment"> <i class="glyph-icon flaticon-medical-equipment" style="color:#E84F4F"></i>  Equipment</a></li>
+				<li <?php if(preg_match("^add/equipment_type^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>equipments/add/equipment_type"><i class="glyph-icon flaticon-id12" style="color:#E84F4F"></i>  Equipment Type</a></li>
+				<li <?php if(preg_match("^add/service_records^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/add/service_records"><i class="fa fa-cog   " style="color:#E84F4F"></i></i> Service Issue</a></li>
 				
-				<li ><a href="#"><i class="fa fa-file-text  "></i>&nbsp;&nbsp;&nbsp;AMC/CMC</a></li>
-				<li class="nav-header"> Edit
-				<li <?php if(preg_match("^edit/equipment$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/edit/equipment"> <i class="glyph-icon flaticon-id12"></i> Equipment </a></li>
-				<li <?php if(preg_match("^edit/equipment_type^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/edit/equipment_type"> <i class="glyph-icon flaticon-medical-equipment"></i>  Equipment Type</a></li>
+				<!--<li ><a href="#"><i class="fa fa-file-text  "></i>&nbsp;&nbsp;&nbsp;AMC/CMC</a></li>-->
+				<li class="nav-header">&nbsp&nbsp<b><i class="fa fa-pencil-square-o fa-2x" style="color:#ef9007"></i>&nbsp&nbsp&nbsp&nbsp&nbsp Edit</b></li>
+				<li <?php if(preg_match("^edit/equipment$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/edit/equipment"> <i class="glyph-icon flaticon-id12" style="color:#E84F4F"></i> Equipment </a></li>
+				<li <?php if(preg_match("^edit/equipment_type^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/edit/equipment_type"> <i class="glyph-icon flaticon-medical-equipment" style="color:#E84F4F"></i>  Equipment Type</a></li>
 			
-				<li <?php if(preg_match("^edit/service_records^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/edit/service_records"> <i class="fa fa-cog  "></i></i>  Service Issue</a></li>
-				<li ><a href="#"><i class="fa fa-file-text  "></i>&nbsp;&nbsp;&nbsp;AMC/CMC</a></li>
-				<li class="nav-header">View</li>
-				<li <?php if(preg_match("^view/equipments_summary^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/view/equipments_summary"> <i class="glyph-icon flaticon-medical-equipment"></i> Equipment</a></li>
-				 <li <?php if(preg_match("^view/equipments_detail^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/view/equipments_detail"> <i class="fa fa-cog "></i> Equipment Detail</a></li>
-				<li <?php if(preg_match("^view/service_record_summary^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/view/service_record_summary"> <i class="fa fa-cog "></i> Service Issue</a></li>
+				<li <?php if(preg_match("^edit/service_records^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/edit/service_records"> <i class="fa fa-cog  " style="color:#E84F4F"></i></i>  Service Issue</a></li>
+				<!--<li ><a href="#"><i class="fa fa-file-text  "></i>&nbsp;&nbsp;&nbsp;AMC/CMC</a></li>-->
+				<li class="nav-header">&nbsp&nbsp<b><i class="fa fa-search fa-2x" style="color:#ef9007"></i>&nbsp&nbsp&nbsp&nbsp&nbsp View</b></li>
+				<li <?php if(preg_match("^view/equipments_summary^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/view/equipments_summary"> <i class="glyph-icon flaticon-medical-equipment" style="color:#E84F4F"></i> Equipment</a></li>
+				 <li <?php if(preg_match("^view/equipments_detail^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/view/equipments_detail"> <i class="fa fa-cog " style="color:#E84F4F"></i> Equipment Detail</a></li>
+				<li <?php if(preg_match("^view/service_record_summary^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/view/service_record_summary"> <i class="fa fa-cog " style="color:#E84F4F"></i> Service Issue</a></li>
 	<ul>
 </div>
 <?php } ?>
@@ -166,6 +166,7 @@
 	foreach($functions as $f){
 		if($f->user_function=="Diagnostics - Order All"){ ?>
 			<li <?php if(preg_match("^view_orders^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/view_orders/0">View Tests</a></li>
+			<li <?php if(preg_match("^view_updated_tests^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>diagnostics/view_updated_tests">View Updated</a></li>
 	<?php 
 		$view_orders=1;
 		} 

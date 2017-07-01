@@ -351,10 +351,16 @@ pri.print();
 						<label class="control-label">District<?php if($field->mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<select name="district" id="district" class="form-control" <?php if($field->mandatory) echo "required"; ?> style="width:200px;">
 						<option value="">--Select--</option>
-						<?php  						
-						foreach($districts as $district){
+
+						<?php /* 						
+						foreach($districts_codes as $district){
+							echo "<option value='".$district->place_code."'";
+							if($district->place_code==$this->session->userdata('district_id')) echo " selected ";
+							echo ">".$district->place_name."</option>";
+						} */
+                                                foreach($districts as $district){
 							echo "<option value='".$district->district_id."'";
-							if($district->district_id==$this->session->userdata('district_id')) echo " selected ";
+							if($patient) if($district->district_id==$patient->district_id) echo " selected ";
 							echo ">".$district->district."</option>";
 						}
 						?>
