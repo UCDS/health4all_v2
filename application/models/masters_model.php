@@ -135,9 +135,6 @@ class Masters_model extends CI_Model{
 		else if($type=="icd_codes"){
 			$this->db->select("*")->from("icd_code")->order_by('code_title');
 		}
-		else if($type=="unit"){
-			$this->db->select("unit_id,unit_name,department_id")->from("unit");
-		}
 		else if($type=="user"){
 			$this->db->select("user.user_id,username,password,user.staff_id,first_name,last_name,designation,phone,department")
 			->from("user")
@@ -192,6 +189,7 @@ class Masters_model extends CI_Model{
 			->join('staff_category','staff.staff_category_id=staff_category.staff_category_id','left')
 			->join('hr_transaction','staff.staff_id=hr_transaction.staff_id','left')
 			->join('hr_transaction_type','hr_transaction.hr_transaction_type_id=hr_transaction_type.hr_transaction_type_id','left')
+			->where('staff.hospital_id',$hospital['hospital_id'])
 			->group_by('staff.staff_id');
 		}
 		else if($type=='view_staff')
@@ -234,6 +232,7 @@ class Masters_model extends CI_Model{
 			->join('staff_category','staff.staff_category_id=staff_category.staff_category_id','left')
 			->join('hr_transaction','staff.staff_id=hr_transaction.staff_id','left')
 			->join('hr_transaction_type','hr_transaction.hr_transaction_type_id=hr_transaction_type.hr_transaction_type_id','left')
+			->where('staff.hospital_id',$hospital['hospital_id'])
 			->group_by('staff.staff_id');
 			
 			
@@ -521,7 +520,7 @@ class Masters_model extends CI_Model{
 
 		    	}
 
-				$this->db->select("test_method_id,test_method")->from("test_method")->order_by('test_method');
+				$this->db->select("test_method_id,test_method")->from("test_method")->where('hospital_id',$hospital['hospital_id'])->order_by('test_method');
 
 			}
 			elseif ($type=="test_group") 
@@ -548,6 +547,7 @@ class Masters_model extends CI_Model{
 				->join('test_master','test_group_link.test_master_id = test_master.test_master_id')
 				->join('test_method','test_master.test_method_id=test_method.test_method_id')
 				->join('test_area','test_master.test_area_id=test_area.test_area_id')
+				->where('test_master.hospital_id',$hospital['hospital_id'])
 				->order_by('group_name');
 			}
 		elseif ($type=="test_status_type") {
@@ -588,6 +588,7 @@ class Masters_model extends CI_Model{
 			->from("test_master")
 			->join('test_method','test_master.test_method_id=test_method.test_method_id')
 			->join('test_area','test_master.test_area_id=test_area.test_area_id')
+			->where('test_master.hospital_id',$hospital['hospital_id'])
 			->order_by('test_name');
 
 
@@ -610,7 +611,8 @@ class Masters_model extends CI_Model{
 				}
 				$this->db->where_in('department_id',$deps);
 			}
-			$this->db->select("test_area_id,test_area")->from("test_area")->order_by('test_area');
+			$this->db->select("test_area_id,test_area")->from("test_area")
+			->where('test_area.hospital_id',$hospital['hospital_id'])->order_by('test_area');
 
 
 		}
@@ -626,7 +628,7 @@ class Masters_model extends CI_Model{
 	 		 		$search_method=strtolower($this->input->post('antibiotic'));
 		  	    	$this->db->like('LOWER(antibiotic)',$search_method,'after');
 	    	}
-			$this->db->select("antibiotic_id,antibiotic")->from("antibiotic")->order_by('antibiotic');
+			$this->db->select("antibiotic_id,antibiotic")->from("antibiotic")->where('hospital_id',$hospital['hospital_id'])->order_by('antibiotic');
 			
 			}
 			
@@ -641,7 +643,7 @@ class Masters_model extends CI_Model{
 	 		 		$search_method=strtolower($this->input->post('micro_organism'));
 		  	    	$this->db->like('LOWER(micro_organism)',$search_method,'after');
 	    	}
-			$this->db->select("micro_organism_id,micro_organism")->from("micro_organism")->order_by('micro_organism');
+			$this->db->select("micro_organism_id,micro_organism")->from("micro_organism")->where('hospital_id',$hospital['hospital_id'])->order_by('micro_organism');
 			
 			}
 		elseif ($type=="specimen_type") {
@@ -655,7 +657,7 @@ class Masters_model extends CI_Model{
 	 		 		$search_method=strtolower($this->input->post('specimen_type'));
 		  	    	$this->db->like('LOWER(specimen_type)',$search_method,'after');
 	    	}
-			$this->db->select("specimen_type_id,specimen_type")->from("specimen_type")->order_by('specimen_type');
+			$this->db->select("specimen_type_id,specimen_type")->from("specimen_type")->where('hospital_id',$hospital['hospital_id'])->order_by('specimen_type');
 
 		}
 		elseif ($type=="sample_status") {
@@ -682,7 +684,7 @@ class Masters_model extends CI_Model{
 	 		 		$search_method=strtolower($this->input->post('lab_unit'));
 		  	    	$this->db->like('LOWER(lab_unit)',$search_method,'after');
 	    	}
-			$this->db->select("lab_unit_id,lab_unit")->from("lab_unit")->order_by('lab_unit');
+			$this->db->select("lab_unit_id,lab_unit")->from("lab_unit")->where('hospital_id',$hospital['hospital_id'])->order_by('lab_unit');
 
 		}
 		else if($type=="districts"){
@@ -784,7 +786,6 @@ class Masters_model extends CI_Model{
 		}
 		
 		$query=$this->db->get();
-		
 		return $query->result();
 	
 }
@@ -1521,7 +1522,10 @@ else if($type=="dosage"){
 
 		elseif ($type=="test_method") {
 
-			$data=array('test_method'=>$this->input->post('test_method'));
+			$data=array(
+				'test_method'=>$this->input->post('test_method'),
+				'hospital_id'=>$hospital['hospital_id']
+			);
 
 		$table="test_method";			
 
@@ -1572,7 +1576,11 @@ else if($type=="dosage"){
 			else return true;
 		}
 		elseif ($type=="test_area") {
-			$data=array('test_area'=>$this->input->post('test_area'));
+			$data=array(
+				'test_area'=>$this->input->post('test_area'),
+				'department_id'=>$this->input->post('department'),
+				'hospital_id' => $hospital['hospital_id']
+			);
 		$table="test_area";
 		}
 		elseif ($type=="test_status_type") {
@@ -1604,7 +1612,8 @@ else if($type=="dosage"){
 				'text_result'=>$text,
 				'binary_positive'=>$this->input->post('binary_pos'),
 				'binary_negative'=>$this->input->post('binary_neg'),
-				'numeric_result_unit'=>$this->input->post('numeric_result_unit')
+				'numeric_result_unit'=>$this->input->post('numeric_result_unit'),
+				'hospital_id' => $hospital['hospital_id']
 			);
                         $this->db->trans_start();
                         $this->db->insert('test_master', $data);
@@ -1684,28 +1693,29 @@ else if($type=="dosage"){
                             return true;
                         
 		}
-		elseif ($type=="test_area") {
-			$data=array('test_area'=>$this->input->post('test_area'));
-			$table="test_area";
-		}
 		elseif ($type=="antibiotic") {
-			$data=array('antibiotic'=>$this->input->post('antibiotic'));
+			$data=array('antibiotic'=>$this->input->post('antibiotic'),
+				'hospital_id'=>$hospital['hospital_id']);
 		$table="antibiotic";
 		}
 		elseif ($type=="micro_organism") {
-			$data=array('micro_organism'=>$this->input->post('micro_organism'));
+			$data=array('micro_organism'=>$this->input->post('micro_organism'),
+				'hospital_id'=>$hospital['hospital_id']);
 		$table="micro_organism";
 		}
 		elseif ($type=="specimen_type") {
-			$data=array('specimen_type'=>$this->input->post('specimen_type'));
+			$data=array('specimen_type'=>$this->input->post('specimen_type'),
+				'hospital_id'=>$hospital['hospital_id']);
 		$table="specimen_type";
 		}
 		elseif ($type=="sample_status") {
-			$data=array('sample_status'=>$this->input->post('sample_status'));
+			$data=array('sample_status'=>$this->input->post('sample_status'),
+				'hospital_id'=>$hospital['hospital_id']);
 		$table="sample_status";
 		}
 		elseif ($type=="lab_unit") {
-			$data=array('lab_unit'=>$this->input->post('lab_unit'));
+			$data=array('lab_unit'=>$this->input->post('lab_unit'),
+				'hospital_id'=>$hospital['hospital_id']);
 		$table="lab_unit";
 		}
 		
@@ -1887,11 +1897,13 @@ else if($type=="dosage"){
     }
     
     function add_assay(){
+		$hospital = $this->session->userdata('hospital');
 		$assay = $this->input->post('assay_name');
 		
 		$data = array(
 			'assay_id'=> 'NULL',
-			'assay'=> $this->input->post('assay_name')
+			'assay'=> $this->input->post('assay_name'),
+			'hospital_id' => $hospital['hospital_id']
 		);
 		$this->db->trans_start();
 		$this->db->insert('test_assay', $data);
@@ -1905,11 +1917,12 @@ else if($type=="dosage"){
    
    
    function get_assay(){
+	$hospital = $this->session->userdata('hospital');
    	if($this->input->post('assay_id')!='')
    		$this->db->where('assay_id',$this->input->post('assay_id'));
    	else if ($this->input->post('assay')!='')
    		$this->db->like('assay',$this->input->post('assay'),'both');
-   	$this->db->select("*")->from("test_assay");
+   	$this->db->select("*")->from("test_assay")->where('hospital_id',$hospital['hospital_id']);
    	return $this->db->get()->result();
    }
    

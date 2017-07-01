@@ -19,7 +19,6 @@
 </style>
 <script>
 	$(function(){	
-		console.log('hello');
 		$(".date").Zebra_DatePicker();
 	})
 </script>
@@ -217,7 +216,7 @@
 					<?php } ?>
 					<?php if($test['text_result']==1){ ?>
 					<div class="col-md-3">
-							<input type='text' id="text_result_<?php echo $test['test_id'];?>" name="text_result_<?php echo $test['test_id'];?>" class="form-control" form='order_submit' placeholder="Suggestive result" value="<?php echo $test['test_result_text'];?>"  <?php echo $readonly;?> list="SuggestiveList<?php echo $test['test_id']?>"></input>
+							<textarea id="text_result_<?php echo $test['test_id'];?>" name="text_result_<?php echo $test['test_id'];?>" class="form-control" form='order_submit' placeholder="Suggestive result" value="<?php echo $test['test_result_text'];?>"  <?php echo $readonly;?> list="SuggestiveList<?php echo $test['test_id']?>"></textarea>
 					</div>
 					<?php } ?>
 			<input type="text" value="<?php echo $test['test_id'];?>" name="test[]" class="sr-only hidden" />
@@ -259,7 +258,7 @@
 					<?php } ?>
 					<?php if($test['text_result']==1){ ?>
 					<div class="col-md-3">
-							<input rows="1" type='text' id="text_result_<?php echo $test['test_id'];?>" name="text_result_<?php echo $test['test_id'];?>" class="form-control" form='order_submit' placeholder="Suggestive result" value="<?php echo $test['test_result_text'];?>"  <?php echo $readonly;?> list="SuggestiveList<?php echo $test['test_id']?>"></input>
+							<textarea id="text_result_<?php echo $test['test_id'];?>" name="text_result_<?php echo $test['test_id'];?>" class="form-control" form='order_submit' placeholder="Suggestive result" value="<?php echo $test['test_result_text'];?>"  <?php echo $readonly;?> list="SuggestiveList<?php echo $test['test_id']?>"></textarea>
 					</div>
 					<?php } ?>
 			<input type="text" value="<?php echo $test['test_id'];?>" name="test[]" class="sr-only hidden" />
@@ -427,7 +426,7 @@
 					<?php } ?>
 					<?php if($test->text_result==1){ ?>
 					<div class="col-md-3">
-							<input rows="1" type='text' id="text_result_<?php echo $test->test_id;?>" name="text_result_<?php echo $test->test_id;?>" class="form-control" form='order_submit' placeholder="Suggestive result" value="<?php echo $test->test_result_text;?>"  <?php echo $readonly;?> list="SuggestiveList<?php echo $test->test_id?>"></input>
+							<textarea id="text_result_<?php echo $test->test_id;?>" name="text_result_<?php echo $test->test_id;?>" class="form-control" form='order_submit' placeholder="Suggestive result" value="<?php echo $test->test_result_text;?>"  <?php echo $readonly;?> list="SuggestiveList<?php echo $test->test_id;?>"></textarea>
 					</div>
 					<?php } ?>
 					
@@ -602,7 +601,7 @@ if(count($orders)>0){ ?>
 	}
 } 
 ?>
-<p><b style="color:red">*</b>Not under NABL</p>
+<!-- <p><b style="color:red">*</b>Not under NABL</p> -->
 </div>
 <script>
 	function removeRow(type,i){

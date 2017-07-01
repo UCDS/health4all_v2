@@ -4,10 +4,12 @@ class Diagnostics_model extends CI_Model{
 		parent::__construct();
 	}
 	function order_test(){
+		$hospital = $this->session->userdata('hospital');
       	$this->db->select('visit_id, patient_id')->from('patient_visit')
 		->where('hosp_file_no',$this->input->post('visit_id'))
 		->where('visit_type',$this->input->post('patient_type'))
-		->where('YEAR(admit_date)',$this->input->post('year'),false); 
+		->where('YEAR(admit_date)',$this->input->post('year'),false)
+		->where('hospital_id',$hospital['hospital_id']); 
 		$query=$this->db->get();
 		$row=$query->row();
 		
@@ -24,7 +26,8 @@ class Diagnostics_model extends CI_Model{
 				'doctor_id'=>$doctor_id,
 				'test_area_id'=>$test_area_id,
 				'order_date_time'=>$order_date_time,
-				'order_status'=>$order_status
+				'order_status'=>$order_status,
+				'hospital_id'=>$hospital['hospital_id']
 			);
 			$this->db->insert('test_order',$data);
 			$order_id=$this->db->insert_id();
@@ -246,15 +249,16 @@ class Diagnostics_model extends CI_Model{
 						'sample_id'=>$sample_id,
 						'test_master_id'=>$test_master,
 						'group_id'=>0,
-                                                'test_range_id'=>$range_id
+                        'test_range_id'=>$range_id
 					);
                                         $range_id = '';
 				}
 			if($this->input->post('test_group')){
 				foreach($this->input->post('test_group') as $test_group){
-                                    	$this->db->select('test_master.test_master_id,has_result')->from('test_master')
-                                        ->join('test_group_link','test_master.test_master_id=test_group_link.test_master_id')
+					$this->db->select('test_master.test_master_id,has_result')->from('test_master')
+					->join('test_group_link','test_master.test_master_id=test_group_link.test_master_id')
 					->join('test_group','test_group_link.group_id=test_group.group_id')
+					->where('hospital_id',$hospital['hospital_id'])
 					->where('test_group.group_id',$test_group);
 					$query=$this->db->get();
 					$result=$query->result();
@@ -466,6 +470,7 @@ class Diagnostics_model extends CI_Model{
 	
 	
 	function get_tests_ordered($test_areas){
+		$hospital = $this->session->userdata('hospital');
 		if($this->input->post('test_area')){
 			$test_area=$this->input->post('test_area');
 		}
@@ -509,14 +514,15 @@ class Diagnostics_model extends CI_Model{
 		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id','left')
 		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')") 
 		->where('order_status <',2)
-		->where('test_order.test_area_id',$test_area);
+		->where('test_order.test_area_id',$test_area)
+		->where('test_order.hospital_id',$hospital['hospital_id']);
 		$query=$this->db->get();
 		
 		return $query->result();
 	}
 	
 	function get_tests_completed($test_areas){
-
+		$hospital = $this->session->userdata('hospital');
 		$this->input->post('test_area')?$test_area=$this->input->post('test_area'):$test_area="";
 		if(count($test_areas)==1){
 			$test_area = $test_areas[0]->test_area_id;// test_area will be updated if condition is satisfied i.e. if the value is one
@@ -562,13 +568,14 @@ class Diagnostics_model extends CI_Model{
 		
 		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')") 
 		->where('test_master.test_area_id',$test_area)
-        ->where('test.test_status',1);//the orders will be approve if their value is 1. So we verify the condition to display the outcome
+        ->where('test.test_status',1)
+		->where('test_order.hospital_id',$hospital['hospital_id']);//the orders will be approve if their value is 1. So we verify the condition to display the outcome
 		$query=$this->db->get(); 
 		return $query->result();
 	}
 	
 	function get_tests($test_areas){
-
+		$hospital = $this->session->userdata('hospital');
 		$this->input->post('test_area')?$test_area=$this->input->post('test_area'):$test_area="";
 		if(count($test_areas)==1){
 			$test_area = $test_areas[0]->test_area_id;// test_area will be updated if condition is satisfied i.e. if the value is one
@@ -613,12 +620,14 @@ class Diagnostics_model extends CI_Model{
 		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id','left')
 		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')") 
 		->where('test_master.test_area_id',$test_area)
+		->where('test_order.hospital_id',$hospital['hospital_id'])
         ->where_in('test.test_status',array(0,1));
 		$query=$this->db->get(); 
 		return $query->result();
 	}
 	
 	function get_tests_approved($test_areas){
+		$hospital = $this->session->userdata('hospital');
 		$this->input->post('test_area')?$test_area=$this->input->post('test_area'):$test_area="";
 		if(count($test_areas)==1){
 			$test_area = $test_areas[0]->test_area_id;
@@ -657,12 +666,14 @@ class Diagnostics_model extends CI_Model{
 		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id','left')
 		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')") 
 		->where('test_status',2)
-		->where('test_master.test_area_id',$test_area);
+		->where('test_master.test_area_id',$test_area)
+		->where('test_order.hospital_id',$hospital['hospital_id']);
 		$query=$this->db->get();
 		return $query->result();
 	}
 	
 	function get_order(){
+		$hospital = $this->session->userdata('hospital');
 		$order_id=$this->input->post('order_id');
 		$this->db->select('test.test_id,test.test_master_id,test_group.group_id,test_order.order_id,test_order.order_date_time,test.reported_date_time,test_sample.sample_id,test_method,accredition_logo,
 		IFNULL(test_name,group_name)test_name,department.department,unit_name,area_name,age_years,age_months,age_days,patient.gender,patient.first_name, patient.last_name,visit_type,
@@ -715,6 +726,7 @@ class Diagnostics_model extends CI_Model{
 		->join('department test_dept','tas.department_id=test_dept.department_id','left')
 		->join('hospital','test_dept.hospital_id=hospital.hospital_id','left')
 		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id','left')
+		->where('test_order.hospital_id',$hospital['hospital_id'])
 		->group_by('test_id');
 		$this->db->where('test_order.order_id',$order_id);
 		$query=$this->db->get();
@@ -724,6 +736,7 @@ class Diagnostics_model extends CI_Model{
 	
 	
 	function get_test_suggestions(){
+		$hospital = $this->session->userdata('hospital');
 		$order_id=$this->input->post('order_id');
 		$this->db->select('test_master_id, suggestion')
 		->from('test_result_suggestion');
@@ -736,6 +749,7 @@ class Diagnostics_model extends CI_Model{
 	}
 	
 	function upload_test_results(){
+		$hospital = $this->session->userdata('hospital');
 		$tests=$this->input->post('test');
 		$userdata=$this->session->userdata('logged_in');
 		$data=array();
@@ -796,7 +810,11 @@ class Diagnostics_model extends CI_Model{
 		if(!!$antibiotics_data)
 		$this->db->insert_batch('antibiotic_test',$antibiotics_data);
 		$this->db->update_batch('test',$data,'test_id');
-		$this->db->select('test_status,test_master_id')->from('test')->join('test_order','test.order_id=test_order.order_id')->where('test_order.order_id',$this->input->post('order_id'));
+		$this->db->select('test_status,test_master_id')
+		->from('test')
+		->join('test_order','test.order_id=test_order.order_id')
+		->where('test_order.order_id',$this->input->post('order_id'))
+		->where('test_order.hospital_id',$hospital['hospital_id']);
 		$query=$this->db->get();
 		$result=$query->result();
 		$order_status=2;
@@ -816,6 +834,7 @@ class Diagnostics_model extends CI_Model{
 	}
 	
 	function approve_results(){
+		$hospital = $this->session->userdata('hospital');
 		$this->db->trans_start();
 		$userdata = $this->session->userdata('logged_in');
 		$order_approved = 1;
@@ -853,7 +872,8 @@ class Diagnostics_model extends CI_Model{
 		->join('staff u_staff','unit.lab_report_staff_id = u_staff.staff_id','left')
 		->join('department','patient_visit.department_id = department.department_id','left')
 		->join('staff d_staff','department.lab_report_staff_id = d_staff.staff_id','left')
-		->where('order_id',$this->input->post('order_id'));
+		->where('order_id',$this->input->post('order_id'))
+		->where('test_order.hospital_id',$hospital['hospital_id']);
 		$query=$this->db->get();
 		$this->db->trans_complete();
 		if($this->db->trans_status() === FALSE){
@@ -866,6 +886,7 @@ class Diagnostics_model extends CI_Model{
 	}
 	
 	function cancel_order(){
+		$hospital = $this->session->userdata('hospital');
 		$this->db->trans_start();
 		$userdata = $this->session->userdata('logged_in');
 		$this->db->where('order_id',$this->input->post('order_id'));
@@ -883,12 +904,14 @@ class Diagnostics_model extends CI_Model{
 	}
 	
 	function search_patients(){
+		$hospital = $this->session->userdata('hospital');
 		$this->db->select('first_name,last_name,hosp_file_no,patient.patient_id,age_years,age_months,age_days')
 		->from('patient')
 		->join('patient_visit','patient.patient_id = patient_visit.patient_id')
 		->like('hosp_file_no',$this->input->post('query'),'after')
 		->where('YEAR(admit_date)',$this->input->post('year'))
-		->where('visit_type',$this->input->post('visit_type'));
+		->where('visit_type',$this->input->post('visit_type'))
+		->where('patient_visit.hospital_id',$hospital['hospital_id']);
 		$query=$this->db->get();
 		if($query->num_rows()>0){
 		return $query->result_array();
@@ -898,6 +921,7 @@ class Diagnostics_model extends CI_Model{
 	
 	
 	function get_all_tests($visit_id){
+		$hospital = $this->session->userdata('hospital');
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -929,6 +953,7 @@ class Diagnostics_model extends CI_Model{
 		->join('patient','patient_visit.patient_id=patient.patient_id')
 		->join('department','patient_visit.department_id=department.department_id')
 		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id','left')
+		->where('test_order.hospital_id',$hospital['hospital_id'])
 		->group_by('test.test_id')
 		->order_by('order_date_time','desc');	  
 		$query=$this->db->get();
@@ -936,6 +961,7 @@ class Diagnostics_model extends CI_Model{
 	}
         
     function tests_info($type){
+		$hospital = $this->session->userdata('hospital');
         if($type=='master_tests'){
             $this->db->select("test_master.test_master_id,test_method,test_name, binary_result, numeric_result, text_result,test_area,comments,COUNT(test_range_id) ranges_count, lab_unit")
                     ->from("test_master")            
@@ -943,6 +969,7 @@ class Diagnostics_model extends CI_Model{
                     ->join('test_method','test_master.test_method_id=test_method.test_method_id','left')
                     ->join('test_range','test_master.test_master_id = test_range.test_master_id','left')
                     ->join('lab_unit','test_master.numeric_result_unit=lab_unit.lab_unit_id')
+					->where('test_master.hospital_id',$hospital['hospital_id'])
                     ->group_by('test_master.test_master_id');
             $query = $this->db->get();
             return $query->result();
@@ -950,15 +977,19 @@ class Diagnostics_model extends CI_Model{
     }
     
     function test_range_info($type){
+		$hospital = $this->session->userdata('hospital');
         if($type=='master_tests'){
-            $this->db->select("test_master_id,gender, min, max, from_year, to_year, from_month, to_month, from_day, to_day, age_type, range_type")
-                     ->from("test_range");
+            $this->db->select("test_range.test_master_id,gender, min, max, from_year, to_year, from_month, to_month, from_day, to_day, age_type, range_type")
+                    ->from("test_range")
+					->join('test_master','test_range.test_master_id = test_master.test_master_id')
+					->where('test_master.hospital_id',$hospital['hospital_id']);
             $query = $this->db->get();
             return $query->result();
         }
     }
 	
 	function get_new_dicoms(){
+		$hospital = $this->session->userdata('hospital');
 		$config['hostname'] = "localhost";
 		$config['username'] = "root";
 		$config['password'] = "password";
@@ -979,6 +1010,7 @@ class Diagnostics_model extends CI_Model{
 		->join('series','study.pk = series.study_fk')
 		->join('instance','series.pk = instance.series_fk')
 		->join('files','instance.pk = files.instance_fk')
+		->where('patient.hospital_id',$hospital['hospital_id'])
 		->group_by('study.study_id')
 		->where('stored','0');
 		$query = $dbt->get();
@@ -989,11 +1021,13 @@ class Diagnostics_model extends CI_Model{
 	
 	
 	function get_test_masters_radiology(){
+		$hospital = $this->session->userdata('hospital');
 		$this->db->select("test_master_id,test_name,test_master.test_method_id,test_master.test_area_id,test_method")
 			->from("test_master")
 			->join('test_method','test_master.test_method_id=test_method.test_method_id')
 			->join('test_area','test_master.test_area_id=test_area.test_area_id')
 			->where('test_area.test_area','Radiology')
+			->where('test_master.hospital_id',$hospital['hospital_id'])
 			->order_by('test_name');
 		$query=$this->db->get();
 		return $query->result();
@@ -1001,6 +1035,7 @@ class Diagnostics_model extends CI_Model{
 	
 	
 	function import_dicom(){
+	$hospital = $this->session->userdata('hospital');
 	$userdata = $this->session->userdata('logged_in');
 	$this->db->select('visit_id')->from('patient_visit')
 		->where('hosp_file_no',$this->input->post('visit_id'))
@@ -1020,7 +1055,8 @@ class Diagnostics_model extends CI_Model{
 				'visit_id' => $visit_id,
 				'test_area_id' => $this->input->post('test_area_id'),
 				'order_date_time'=>$this->input->post('study_datetime'),
-				'order_status'=>$order_status
+				'order_status'=>$order_status,
+				'hospital_id'=>$hospital['hospital_id']
 			);
 			$this->db->insert('test_order',$order);
 			$order_id = $this->db->insert_id();
@@ -1076,6 +1112,7 @@ class Diagnostics_model extends CI_Model{
 		}
 	}
 	function get_dicom_images($study){
+		$hospital = $this->session->userdata('hospital');
 	
 		$config['hostname'] = "localhost";
 		$config['username'] = "root";
@@ -1093,6 +1130,7 @@ class Diagnostics_model extends CI_Model{
 		$dbt->select("filepath")->from('study')->join('series','study.pk = series.study_fk')
 		->join('instance','series.pk=instance.series_fk')
 		->join('files','instance.pk=files.instance_fk')
+		->where('study.hospital_id',$hospital['hospital_id'])
 		->where('study.study_id',$study);
 		$query = $dbt->get();
 		return $query->result();
@@ -1100,6 +1138,7 @@ class Diagnostics_model extends CI_Model{
 	}
 	
         function lab_turnaround_time(){
+		$hospital = $this->session->userdata('hospital');
 		if($type == "department"){
 			$this->db->select('department.department,department.department_id as department_id');
 			$this->db->group_by('department.department_id');
@@ -1203,6 +1242,7 @@ class Diagnostics_model extends CI_Model{
 		->join('test_master','test.test_master_id = test_master.test_master_id')
 		->join('test_method','test_master.test_method_id = test_method.test_method_id')
 		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')")
+		->where('test_order.hospital_id',$hospital['hospital_id'])
 		->group_by('test_method.test_method,test_master.test_master_id');
             
             $query=$this->db->get();

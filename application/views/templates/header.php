@@ -247,6 +247,7 @@
 				foreach($functions as $f){
 					if($f->user_function=="IP Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/ip_summary";?>">IP Summary</a></li>
+						  <li><a href="<?php echo base_url()."op_ip_report/op_ip_summary_report";?>">District Wise IP/OP Summary</a></li>
 						  <li><a href="<?php echo base_url()."patient/casesheet_mrd_status";?>">MRD Report</a></li>
 						  <li><a href="<?php echo base_url()."staff_report/get_patient_records";?>">Staff Activity OP/IP</a></li>
 						  <li><a href="<?php echo base_url()."staff_report/get_lab_records";?>">Diagnostics Staff Activity</a></li>
@@ -305,6 +306,10 @@
 								<li><a href="<?php echo base_url()."reports/transport_detail";?>">Transport Detailed</a></li>
 					<?php	}  
 					
+			if($f->user_function=="Helpline Reports"){ ?>
+								<li><a href="<?php echo base_url()."helpline/detailed_report";?>">Helpline Detailed</a></li>
+					<?php	}  
+					
 			} ?>
 			</ul>
 			<?php 
@@ -312,14 +317,18 @@
 				}  
 			}
 			?>
-                        		<li class="dropdown  <?php if(preg_match("^".base_url()."help^",current_url())){ echo "active";}?>">
-						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><i class="fa fa-question"></i> Help <b class="caret"></b></a>
-						<ul class="dropdown-menu">
-			                        			<li><a href="<?php echo base_url()."issue_tracker";?>"><i class="fa fa-phone"> </i> Issue Tracker</a></li>
-                                                                        <li><a href="<?php echo base_url()."contact_us";?>"><i class="fa fa-question"> </i> Contact us</a></li>
-						
-                                              </ul>
-					</li>
+            <li class="dropdown  <?php if(preg_match("^".base_url()."help^",current_url())){ echo "active";}?>">
+			<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><i class="fa fa-question"></i> Help <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="<?php echo base_url()."issue_tracker";?>"><i class="fa fa-phone"> </i> Issue Tracker</a></li>
+
+			<?php foreach($functions as $f){
+			if($f->user_function=="Helpline Update"){ ?>
+					<li><a href="<?php echo base_url()."helpline/update_call";?>"><i class="fa fa-phone"></i>HelpLine Update</a></li>
+			<?php } } ?>
+                    <li><a href="<?php echo base_url()."contact_us";?>"><i class="fa fa-question"> </i> Contact us</a></li>
+				</ul>
+			</li>
 					
 			
                        

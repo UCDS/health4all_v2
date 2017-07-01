@@ -38,7 +38,8 @@ class Staff_model extends CI_Model{
 		$this->db->select('hospital.hospital_id,hospital,description,place,district,state,logo')->from('user')
 		->join('user_hospital_link','user.user_id=user_hospital_link.user_id')
 		->join('hospital','user_hospital_link.hospital_id=hospital.hospital_id')
-		->where('user_hospital_link.user_id',$user_id);
+		->where('user_hospital_link.user_id',$user_id)
+		->order_by('hospital');
 		$query=$this->db->get();
 		return $query->result();
 	}
@@ -63,20 +64,34 @@ class Staff_model extends CI_Model{
 	function get_department($clinical=1){
 		$hospital=$this->session->userdata('hospital');
 		$this->db->where('hospital_id',$hospital['hospital_id']);
-		$this->db->select("department_id,department")->from("department")->where('clinical',$clinical)->order_by('department');
+		if($clinical != -1){
+			$this->db->where('clinical',$clinical);
+		}
+		$this->db->select("department_id,department")->from("department")->order_by('department');
+		$query=$this->db->get();
+		return $query->result();
+	}
+	//get_department() selects the clinical departments from the database and returns the result
+	function get_list_department(){
+		$hospital=$this->session->userdata('hospital');
+		$this->db->select("list_department_id,department")->from("list_department")->order_by('department');
 		$query=$this->db->get();
 		return $query->result();
 	}
 	
 	//get_area() selects the areas from the database and returns the result
 	function get_area(){
-		$this->db->select("area_id,department_id,area_name")->from("area");
+		$hospital=$this->session->userdata('hospital');
+		$this->db->where('hospital_id',$hospital['hospital_id']);
+		$this->db->select("area_id,area.department_id,area_name")->from("area")->join('department','area.department_id = department.department_id');
 		$query=$this->db->get();
 		return $query->result();
 	}
 	//get_unit() selects the units from the database and returns the result
 	function get_unit(){
-		$this->db->select("department_id,unit_id,unit_name")->from("unit");
+		$hospital=$this->session->userdata('hospital');
+		$this->db->where('hospital_id',$hospital['hospital_id']);
+		$this->db->select("unit.department_id,unit_id,unit_name")->from("unit")->join('department','unit.department_id = department.department_id');
 		$query=$this->db->get();
 		return $query->result();
 	}
@@ -290,7 +305,9 @@ class Staff_model extends CI_Model{
 		$userdata=$this->session->userdata('hospital');
 		if($hospital_id==0) $hospital_id=$userdata['hospital_id'];
 		
-		$this->db->select("*")->from("staff")->where("department_id","4")->where("hospital_id",$hospital_id);
+		$this->db->select("*")->from("staff")
+		->join('department','staff.department_id = department.department_id')
+		->where("department","Blood Bank")->where("staff.hospital_id",$hospital_id);
 		$query=$this->db->get();
 		return $query->result();
 	}

@@ -114,7 +114,7 @@
 		<?php 
 			$i=0;
 			foreach($hospitals as $row){
-				echo "<option id='hospital_$i' value='$row->hospital_id'>$row->hospital, $row->description, $row->place, $row->district</option>";
+				echo "<option id='hospital_$i' value='$row->hospital_id'>$row->hospital, $row->place, $row->district</option>";
 			}
 		?>
 		<input class="btn btn-primary " type="submit" value="Submit" />

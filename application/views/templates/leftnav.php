@@ -260,6 +260,28 @@
 				<li <?php if(preg_match("^user_panel/edit_user^",current_url())) echo 'class="active"';?>> 
 				<a href="<?php echo base_url()."user_panel/edit_user";?>">Edit User</a>
 				</li>
+				<?php			
+				 foreach($functions as $f){
+					if($f->user_function=="Admin"){ ?>
+						<li class="navbar-text">Admint</li>
+						
+						<li <?php if(preg_match("^hospital/add_hospital^",current_url())) echo 'class="active"';?>> 
+						<a href="<?php echo base_url()."hospital/add_hospital";?>">Add Hospital</a>
+						</li>
+						
+						<li <?php if(preg_match("^departments/add_department^",current_url())) echo 'class="active"';?>> 
+						<a href="<?php echo base_url()."departments/add_department";?>">Add Department</a>
+						</li>
+						
+						<li <?php if(preg_match("^hospital_areas/add_area^",current_url())) echo 'class="active"';?>> 
+						<a href="<?php echo base_url()."hospital_areas/add_area";?>">Add Area</a>
+						</li>
+						
+						<li <?php if(preg_match("^hospital_units/add_unit^",current_url())) echo 'class="active"';?>> 
+						<a href="<?php echo base_url()."hospital_units/add_unit";?>">Add Unit</a>
+						</li>
+				<?php }
+				} ?> 
 				</ul>
         </div>
 <?php } ?>

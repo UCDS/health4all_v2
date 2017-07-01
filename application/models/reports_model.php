@@ -250,6 +250,7 @@ class Reports_model extends CI_Model{
 	}
         
 	function get_order_summary($type){
+		$hospital=$this->session->userdata('hospital');
 		if($type == "department"){
 			$this->db->select('department.department,department.department_id as department_id');
 			$this->db->group_by('department.department_id');
@@ -323,6 +324,7 @@ class Reports_model extends CI_Model{
 		->join('test_master','test.test_master_id = test_master.test_master_id')
 		->join('test_method','test_master.test_method_id = test_method.test_method_id')
 		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')")
+		->where('test_order.hospital_id',$hospital['hospital_id'])
 		->group_by('test_method.test_method,test_master.test_master_id');
 		$resource=$this->db->get();
                 
@@ -590,6 +592,7 @@ class Reports_model extends CI_Model{
 	}
 	
 	function get_order_detail($test_master,$department,$unit,$area,$test_area,$specimen_type,$test_method,$visit_type,$from_date,$to_date,$status,$type,$number,$antibiotic_id,$micro_organism_id,$sensitive,$outcome_type=0){
+		$hospital=$this->session->userdata('hospital');
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -672,6 +675,7 @@ class Reports_model extends CI_Model{
 		->join('unit','patient_visit.unit=unit.unit_id','left')
 		->join('area','patient_visit.area=area.area_id','left')
 		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id','left')
+		->where('test_order.hospital_id',$hospital['hospital_id'])
 		 ->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')")
 		 ->group_by('test.test_id');		  
 		
@@ -750,6 +754,7 @@ class Reports_model extends CI_Model{
 	}
 	
 	function get_sensitivity_summary(){
+		$hospital=$this->session->userdata('hospital');
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -799,12 +804,14 @@ class Reports_model extends CI_Model{
 			->join('specimen_type','test_sample.specimen_type_id = specimen_type.specimen_type_id')
 			->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
 			->join('patient','patient_visit.patient_id = patient.patient_id')
+			->where('test_order.hospital_id',$hospital['hospital_id'])
 			->where('test.test_status',2);
 			$query=$this->db->get();
 		return $query->result();
 	}
         
 	function get_audiology_summary(){
+		$hospital=$this->session->userdata('hospital');
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -843,6 +850,7 @@ class Reports_model extends CI_Model{
 			->join('area','patient_visit.area = area.area_id','left')
 			->join('unit','patient_visit.unit = unit.unit_id','left')
 			->where('test.test_status',2)
+			->where('test_order.hospital_id',$hospital['hospital_id'])
 			->where_in('test_name',array('Left OAE','Right OAE'));
 			$query=$this->db->get();
 		return $query->result();
@@ -937,6 +945,7 @@ class Reports_model extends CI_Model{
     
 	
 	function get_transfers_summary(){
+		$hospital=$this->session->userdata('hospital');
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));            
@@ -970,6 +979,7 @@ class Reports_model extends CI_Model{
 		->join('department td','it.department_id = td.department_id')
 		->join('area ta','it.area_id = ta.area_id','left')
 		->join('patient_visit','it.visit_id = patient_visit.visit_id')
+		->where('patient_visit.hospital_id',$hospital['hospital_id'])
 		->group_by('from_department_id,to_department_id,from_area_id,to_area_id');
 		$query = $this->db->get();
 		return $query->result();
@@ -977,6 +987,7 @@ class Reports_model extends CI_Model{
 	}
 	
 	function get_audiology_detail(){
+		$hospital=$this->session->userdata('hospital');
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
@@ -1021,6 +1032,7 @@ class Reports_model extends CI_Model{
 			->join('department','patient_visit.department_id = department.department_id')
 			->join('area','patient_visit.area = area.area_id','left')
 			->join('unit','patient_visit.unit = unit.unit_id','left')
+			->where('test_order.hospital_id',$hospital['hospital_id'])
 			->where('test.test_status',2)
 			->where_in('test_name',array('Left OAE','Right OAE'));
 
@@ -1270,42 +1282,241 @@ class Reports_model extends CI_Model{
 		return $resource->result();
 	}
 
+
 	function dashboard($organization=""){
-		$dashboards = array(    //array of available dashboards, add a sub-array with the given fields to create a new dashboard
-			array(
-				'name'=>'tvvp',   //retrieved from the url
-				'state'=>'Telangana', 
-				'type6'=>'VVP' 
-			)
-		);
 		$this->db->select('organization, short_name, type6, state')->from('dashboards')->where('LOWER(short_name)',strtolower($organization));
 		$query = $this->db->get();
 		$dashboard = $query->row();
 		if($query->num_rows()!=1) show_404();
 		if(!!$dashboard->state)
-			$this->db->where('hospital.state',$dashboard->state);
+				$this->db->where('hospital.state',$dashboard->state);
+		for($i=1;$i<7;$i++){
+			if(isset($dashboard->{"type".$i}))
+				$this->db->where("hospital.type$i",$dashboard->{"type".$i});
+		}
+		if($this->input->post('department')){
+			$this->db->where('pv.department_id',$this->input->post('department'));
+		}
+		
+		if($this->input->post('from_date') || $this->input->post('to_date')){
+			
+			if($this->input->post('from_date')){
+				$date = date("Y-m-d",strtotime($this->input->post('from_date')));
+				$this->db->where('pv.admit_date >=',$date);
+			}
+			if($this->input->post('to_date')){
+				$date = date("Y-m-d",strtotime($this->input->post('to_date')));
+				$this->db->where('pv.admit_date <=',$date);
+			}
+		}
+		else {
+			$date = date("Y-m-d");
+			$this->db->where("pv.admit_date <=",$date);
+			$fromDate = date("Y-m-d");
+			$this->db->where('pv.admit_date >=',$fromDate);
+		}
+
+		if($this->input->post('from_time') || $this->input->post('to_time')){
+			$from_time=date("H:i",strtotime($this->input->post('from_time')));
+			$to_time=date("H:i",strtotime($this->input->post('to_time')));
+			$this->db->where("pv.admit_time BETWEEN '$from_time' AND '$to_time'");
+		}else{
+			$from_time = date("00:00");
+			$to_time = date("23:59");
+			$this->db->where("pv.admit_time BETWEEN '$from_time' AND '$to_time'");
+		}
+		/** query to select hospitals  according to hospitals type wise*/
+		$this->db->select("SUM(CASE WHEN visit_type = 'IP' THEN 1 ELSE 0 END) total_ip,
+			SUM(CASE WHEN visit_type = 'OP' THEN 1 ELSE 0 END) total_op,
+			SUM(CASE WHEN visit_type = 'OP' AND patient_id IN (SELECT patient_id FROM patient_visit p WHERE p.admit_date<pv.admit_date AND visit_type='OP' AND hospital_id = hospital.hospital_id) THEN 1 ELSE 0 END) repeat_op, 
+			 hospital.type4,count(DISTINCT hospital.hospital_id) hospital_count")
+			->from('patient_visit pv')
+			->join('hospital','pv.hospital_id = hospital.hospital_id','left')
+			->group_by('hospital.type4')
+			->order_by('total_op','desc');
+		$query = $this->db->get();
+
+		$resource = $query->result();
+		
+		
+		//echo $this->db->last_query();
+		//var_dump($resource);
+		return array($dashboard->organization,$resource);
+	}
+	function dashboard_district_wise($organization=""){
+		$this->db->select('organization, short_name, type6, state')->from('dashboards')->where('LOWER(short_name)',strtolower($organization));
+		$query = $this->db->get();
+		$dashboard = $query->row();
+		if($query->num_rows()!=1) show_404();
+		if(!!$dashboard->state)
+				$this->db->where('hospital.state',$dashboard->state);
+		for($i=1;$i<7;$i++){
+			if(isset($dashboard->{"type".$i}))
+				$this->db->where("hospital.type$i",$dashboard->{"type".$i});
+		}
+		if($this->input->post('from_date') || $this->input->post('to_date')){
+			
+			if($this->input->post('from_date')){
+				$date = date("Y-m-d",strtotime($this->input->post('from_date')));
+				$this->db->where('pv.admit_date >=',$date);
+			}
+			if($this->input->post('to_date')){
+				$date = date("Y-m-d",strtotime($this->input->post('to_date')));
+				$this->db->where('pv.admit_date <=',$date);
+
+			}
+		}
+		else {
+			$date = date("Y-m-d");
+			$this->db->where("pv.admit_date <=",$date);
+			$fromDate = date("Ymd");
+			$this->db->where('pv.admit_date >=',$fromDate);
+		}
+		
+		if($this->input->post('from_time') || $this->input->post('to_time')){
+			$from_time=date("H:i",strtotime($this->input->post('from_time')));
+			$to_time=date("H:i",strtotime($this->input->post('to_time')));
+			$this->db->where("pv.admit_time BETWEEN '$from_time' AND '$to_time'");
+		}else{
+			$from_time = date("00:00");
+			$to_time = date("23:59");
+			$this->db->where("pv.admit_time BETWEEN '$from_time' AND '$to_time'");
+		}
+		
+		if($this->input->post('hospitaltype')){
+			$this->db->where('hospital.type4',$this->input->post('hospitaltype') == "Others" ? "" : $this->input->post('hospitaltype'));
+		}
+		/** query to get patients count district wise*/
+		$this->db->select("SUM(CASE WHEN visit_type = 'IP' THEN 1 ELSE 0 END) total_ip, 
+			SUM(CASE WHEN visit_type = 'OP' THEN 1 ELSE 0 END) total_op,
+			SUM(CASE WHEN visit_type = 'OP' AND pv.patient_id IN (SELECT p.patient_id FROM patient_visit p  WHERE p.admit_date<pv.admit_date AND visit_type='OP' AND hospital_id = hospital.hospital_id) THEN 1 ELSE 0 END) repeat_op, 
+			  patient.district_id,district.district ")
+			->from('patient_visit pv')
+			->join('patient','pv.patient_id=patient.patient_id')
+			->join('district','patient.district_id=district.district_id','left')
+			->join('hospital','pv.hospital_id = hospital.hospital_id')
+			->group_by('patient.district_id')->order_by('total_op','desc');
+			$query = $this->db->get();
+			$resource2 = $query->result();
+			return $resource2;
+		
+	}
+	function dashboard_department_wise($organization=""){
+		$this->db->select('organization, short_name, type6, state')->from('dashboards')->where('LOWER(short_name)',strtolower($organization));
+		$query = $this->db->get();
+		$dashboard = $query->row();
+		if($query->num_rows()!=1) show_404();
+		if(!!$dashboard->state)
+				$this->db->where('hospital.state',$dashboard->state);
+		for($i=1;$i<7;$i++){
+			if(isset($dashboard->{"type".$i}))
+				$this->db->where("hospital.type$i",$dashboard->{"type".$i});
+		}
+			
+		if($this->input->post('from_date') || $this->input->post('to_date')){
+			
+			if($this->input->post('from_date')){
+				$date = date("Y-m-d",strtotime($this->input->post('from_date')));
+				$this->db->where('pv.admit_date >=',$date);
+			}
+			if($this->input->post('to_date')){
+				$date = date("Y-m-d",strtotime($this->input->post('to_date')));
+				$this->db->where('pv.admit_date <=',$date);
+
+			}
+		}
+		else {
+			$date = date("Y-m-d");
+			$this->db->where("pv.admit_date <=",$date);
+			$fromDate = date("Ymd");
+			$this->db->where('pv.admit_date >=',$fromDate);
+		}
+		
+		if($this->input->post('from_time') || $this->input->post('to_time')){
+			$from_time=date("H:i",strtotime($this->input->post('from_time')));
+			$to_time=date("H:i",strtotime($this->input->post('to_time')));
+			$this->db->where("pv.admit_time BETWEEN '$from_time' AND '$to_time'");
+		}else{
+			$from_time = date("00:00");
+			$to_time = date("23:59");
+			$this->db->where("pv.admit_time BETWEEN '$from_time' AND '$to_time'");
+		}
+		
+		if($this->input->post('hospitaltype')){
+			$this->db->where('hospital.type4',$this->input->post('hospitaltype') == "Others" ? "" : $this->input->post('hospitaltype'));
+		}
+			/** query to get patients count department wise*/
+		$this->db->select("SUM(CASE WHEN visit_type = 'IP' THEN 1 ELSE 0 END) total_ip, 
+			SUM(CASE WHEN visit_type = 'OP' THEN 1 ELSE 0 END) total_op,
+			SUM(CASE WHEN visit_type = 'OP' AND patient_id IN (SELECT patient_id FROM patient_visit p WHERE p.admit_date<pv.admit_date AND visit_type='OP' AND p.hospital_id = hospital.hospital_id) THEN 1 ELSE 0 END) repeat_op, 
+			 pv.department_id, department.department")
+			->from('patient_visit pv')
+			->join('department','pv.department_id=department.department_id','left')
+			->join('hospital','pv.hospital_id = hospital.hospital_id')
+			->group_by('department.department')->order_by('total_op','desc');
+			$query = $this->db->get();
+			$resource1 = $query->result();
+			return $resource1;
+		} 
+	
+	function HospitalTypewise($organization=""){
+		$this->db->select('organization, short_name, type6, state')->from('dashboards')->where('LOWER(short_name)',strtolower($organization));
+		$query = $this->db->get();
+		$dashboard = $query->row();
+		if($query->num_rows()!=1) show_404();
+		if(!!$dashboard->state)
+				$this->db->where('hospital.state',$dashboard->state);
 		for($i=1;$i<7;$i++){
 			if(isset($dashboard->{"type".$i}))
 				$this->db->where("hospital.type$i",$dashboard->{"type".$i});
 		}
 		
-		if($this->input->post('date')){
-			$date = date("Y-m-d",strtotime($this->input->post('date')));
-			$this->db->where('patient_visit.admit_date',$date);
+		
+		if($this->input->post('from_date') || $this->input->post('to_date')){
+			
+			if($this->input->post('from_date')){
+				$date = date("Y-m-d",strtotime($this->input->post('from_date')));
+				$this->db->where('pv.admit_date >=',$date);
+			}
+			if($this->input->post('to_date')){
+				$date = date("Y-m-d",strtotime($this->input->post('to_date')));
+				$this->db->where('pv.admit_date <=',$date);
+
+			}
 		}
 		else {
 			$date = date("Y-m-d");
-			$this->db->where("patient_visit.admit_date",$date);
+			$this->db->where("pv.admit_date <=",$date);
+			$fromDate = date("Y-m-d");
+			$this->db->where('pv.admit_date >=',$fromDate);
+		}
+
+		if($this->input->post('from_time') || $this->input->post('to_time')){
+			$from_time=date("H:i",strtotime($this->input->post('from_time')));
+			$to_time=date("H:i",strtotime($this->input->post('to_time')));
+			$this->db->where("pv.admit_time BETWEEN '$from_time' AND '$to_time'");
+		}else{
+			$from_time = date("00:00");
+			$to_time = date("23:59");
+			$this->db->where("pv.admit_time BETWEEN '$from_time' AND '$to_time'");
+		}
+
+		if($this->input->post('hospitaltype')){
+			
+			$this->db->where('hospital.type4',$this->input->post('hospitaltype') == "Others" ? "" : $this->input->post('hospitaltype'));
 		}
 		$this->db->select("SUM(CASE WHEN visit_type = 'IP' THEN 1 ELSE 0 END) total_ip,
 			SUM(CASE WHEN visit_type = 'OP' THEN 1 ELSE 0 END) total_op,
-			SUM(CASE WHEN visit_type = 'OP' AND patient_id IN (SELECT patient_id FROM patient_visit WHERE admit_date<'$date' AND visit_type='OP' AND hospital_id = hospital.hospital_id) THEN 1 ELSE 0 END) repeat_op, 
+			SUM(CASE WHEN visit_type = 'OP' AND patient_id IN (SELECT patient_id FROM patient_visit p WHERE p.admit_date<pv.admit_date AND visit_type='OP' AND hospital_id = hospital.hospital_id) THEN 1 ELSE 0 END) repeat_op, 
 			hospital.hospital_short_name")
-			->from('patient_visit')
-			->join('hospital','patient_visit.hospital_id = hospital.hospital_id')
-			->group_by('hospital.hospital_id')->order_by('total_op','desc');
+			->from('patient_visit pv' )
+			->join('hospital','pv.hospital_id = hospital.hospital_id')
+			->group_by('hospital.hospital_id')
+			->order_by('total_op','desc');
 		$query = $this->db->get();
-		return array($dashboard->organization,$query->result());
+
+		$resource3 = $query->result();
+		return $resource3;
 	}
 }
 ?>

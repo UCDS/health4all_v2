@@ -53,7 +53,8 @@
 		});
 	</script>
 <div class="col-md-10 col-md-offset-2">
-<?php 	echo validation_errors(); ?>
+<?php
+	echo validation_errors(); ?>
 <?php if(isset($msg)){ ?> 
 	<div class="alert alert-info"> <?php echo $msg;?>
 	</div>
@@ -401,5 +402,5 @@ if(count($orders)>0){ ?>
 	}
 } 
 ?>
-<p><b style="color:red">*</b>Not under NABL</p>
+<!--<p><b style="color:red">*</b>Not under NABL</p>-->
 </div>

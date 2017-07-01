@@ -102,15 +102,15 @@ class User_panel extends CI_Controller {
 	}
 	function donation_summary(){
 		if($this->session->userdata('logged_in')){
-		$this->load->helper('form');
-		$this->data['title']="Donations Summary";
-		$this->data['userdata']=$this->session->userdata('logged_in');
-		$this->data['hospitaldata']=$this->session->userdata('hospital');
-		$this->data['summary']=$this->reports_model->get_donation_summary();
-		$this->load->view('templates/header',$this->data);
-		$this->load->view('templates/reports_nav',$this->data);
-		$this->load->view('pages/bloodbank/panel_index',$this->data);
-		$this->load->view('templates/footer');	
+			$this->load->helper('form');
+			$this->data['title']="Donations Summary";
+			$this->data['userdata']=$this->session->userdata('logged_in');
+			$this->data['hospitaldata']=$this->session->userdata('hospital');
+			$this->data['summary']=$this->reports_model->get_donation_summary();
+			$this->load->view('templates/header',$this->data);
+			$this->load->view('templates/reports_nav',$this->data);
+			$this->load->view('pages/bloodbank/panel_index',$this->data);
+			$this->load->view('templates/footer');	
 		}
 		else{
 			show_404();

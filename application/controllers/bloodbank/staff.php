@@ -159,7 +159,7 @@ class Staff extends CI_Controller {
 		$this->load->view('templates/footer');
 		
 	}// add_camp
-
+/*
 	function add_hospital() {
 		if(!$this->session->userdata('logged_in')){
 		show_404();
@@ -219,7 +219,7 @@ class Staff extends CI_Controller {
 		$this->load->view('templates/footer');
 		
 	}
-
+*/
 	function check_database($password){
 	   //Field validation succeeded.  Validate against database
 	   

@@ -102,4 +102,59 @@ class Hospital_model extends CI_Model {
         }
         return $hospitals_status;
     }
+	function add_hospital(){
+        $get_hospital = array();
+        if($this->input->post('hospital')){
+            $get_hospital['hospital'] = $this->input->post('hospital');
+        }   //if
+		 if($this->input->post('place')){
+             $get_hospital['place'] = $this->input->post('place');
+        } 
+        if($this->input->post('hospital_short_name')){
+            $get_hospital['hospital_short_name'] = $this->input->post('hospital_short_name');
+        }   //if        
+		if($this->input->post('district')){
+             $get_hospital['district'] = $this->input->post('district');
+        }
+		if($this->input->post('state')){
+             $get_hospital['state'] = $this->input->post('state');
+        }		
+        if($this->input->post('type1')){
+             $get_hospital['type1'] = $this->input->post('type1');
+        }
+        if($this->input->post('type2')){
+             $get_hospital['type2'] = $this->input->post('type2');
+        }
+        if($this->input->post('type3')){
+             $get_hospital['type3'] = $this->input->post('type3');
+        }
+        if($this->input->post('type4')){
+             $get_hospital['type4'] = $this->input->post('type4');
+        }
+        if($this->input->post('type5')){
+             $get_hospital['type5'] = $this->input->post('type5');
+        }
+        if($this->input->post('type6')){
+             $get_hospital['type6'] = $this->input->post('type6');
+        }
+		 if($this->input->post('description')){
+            $get_hospital['description'] = $this->input->post('description');
+        } 
+        $hospital_id='';
+        if($this->input->post('hospital_id')){
+            $hospital_id=$this->input->post('hospital_id');
+        }
+       
+		$this->db->trans_start();
+        $this->db->insert('hospital',$get_hospital);
+      
+	  
+        $this->db->trans_complete();
+        if($this->db->trans_status()==FALSE){
+		    return false;
+		}
+        else{
+           return true;
+        }       
+    }
 }

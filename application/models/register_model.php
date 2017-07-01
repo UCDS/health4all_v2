@@ -443,6 +443,22 @@ class Register_model extends CI_Model{
                         
 		);
 		  
+
+                if($this->input->post('patient_id_manual')){
+                    $patient_id_manual = $this->input->post('patient_id_manual');
+                    $this->db->select('patient_id_manual'); //Here we are selecting hosp_file_no and admit_date with year for match  from the database
+                    $this->db->from('patient');
+                    $this->db->where('patient_id_manual',$patient_id_manual);                    
+                    $query=$this->db->get();
+                    if($query->num_rows()>0)
+                    {
+                        //If there is a dupilcate patient ID.
+                        return 2; 
+                    }
+                    
+                    $data['patient_id_manual'] = $patient_id_manual;
+                }
+                
 		//Start a mysql transaction.
 		$this->db->trans_start();
 
