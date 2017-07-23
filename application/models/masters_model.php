@@ -564,9 +564,6 @@ class Masters_model extends CI_Model{
 		else if($type=="facility_type"){
 			$this->db->select("facility_type_id,facility_type")->from("facility_type");
 		}
-		else if($type=="area"){
-			$this->db->select("area_id,area_name")->from("area");
-		}
 			else if($type=="vendor"){
 			$this->db->select("vendor_id,vendor_name")->from("vendor");
 		}
