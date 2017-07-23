@@ -72,13 +72,20 @@ $(function(){
 	<?php } ?>
 	
 	<?php 
-			if($this->input->post('date')){
-				$date = date("d-M-Y",strtotime($this->input->post('date')));
+			if($this->input->post('from_date')){
+				$from_date = date("d-M-Y",strtotime($this->input->post('from_date')));
 			}
-			else $date = date("d-M-Y");
+			else $from_date = date("d-M-Y");
+			if($this->input->post('to_date')){
+				$to_date = date("d-M-Y",strtotime($this->input->post('to_date')));
+			}
+			else $to_date = date("d-M-Y");
 			echo form_open('helpline/detailed_report',array('role'=>'form','class'=>'form-custom'));
 	?>
-			<h4>Calls on <input type="text" class="date" value="<?php echo $date;?>" name="date" /> <input type="submit" value="Go" name="submit" class="btn btn-primary btn-sm" /></form></h4>
+			<h4>Calls during 
+				<input type="text" class="date" value="<?php echo $from_date;?>" name="from_date" /> 
+				<input type="text" class="date" value="<?php echo $to_date;?>" name="to_date" /> 
+			<input type="submit" value="Go" name="submit" class="btn btn-primary btn-sm" /></form></h4>
 	<?php
 		if(!!$calls){
 	?>

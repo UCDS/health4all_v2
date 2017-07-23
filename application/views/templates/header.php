@@ -227,7 +227,7 @@
 					$f->user_function=="OP Detail" || $f->user_function=="IP Detail" || 
 					$f->user_function=="Diagnostics - Detail" || $f->user_function=="Diagnostics - Summary" || 
 					($f->user_function == "Sanitation Evaluation" && $f->view==1) || 
-					$f->user_function == "Bloodbank" || $f->user_function == "Outcome Summary"){ ?>
+					$f->user_function == "Bloodbank" || $f->user_function == "Outcome Summary" || $f->user_function == "Helpline Reports"){ ?>
 					<li class="dropdown  <?php if(preg_match("^".base_url()."reports^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><i class="fa fa-line-chart"></i> Reports <b class="caret"></b></a>
 						<ul class="dropdown-menu">
@@ -335,13 +335,13 @@
 			<?php } ?>
 					
 		</ul>
-	<?php if($this->session->userdata('logged_in')) { ?>
           <ul class="nav navbar-nav navbar-right">
+			<?php if($this->session->userdata('logged_in')) { ?>
             <li class="dropdown  <?php if(preg_match("^".base_url()."user_panel^",current_url())){ echo "active";}?>"><a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">
 				<?php 
 					$logged_in=$this->session->userdata('logged_in');
 					$hospital=$this->session->userdata('hospital');
-					echo $hospital['hospital']." | ".$logged_in['username']; ?> <b class="caret"></b></a>
+					echo $hospital['hospital_short_name']." | ".$logged_in['username']; ?> <b class="caret"></b></a>
                 <ul class="dropdown-menu">
 				<?php
 				foreach($functions as $f){
@@ -356,8 +356,21 @@
 				  <li><a href="<?php echo base_url();?>home/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
                 </ul>
 			</li>
+			<?php } ?>
+            <li class="dropdown  <?php if(preg_match("^".base_url()."dashboard^",current_url())){ echo "active";}?>">
+				<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">
+				Dashboards
+				<b class="caret"></b>
+				</a>
+                <ul class="dropdown-menu">
+                  <li><a href="<?php echo base_url()."dashboard/helpline";?>">Helpline</a></li>
+                  <li><a href="<?php echo base_url()."dashboard/view/tvvp";?>">TVVP</a></li>
+                  <li><a href="<?php echo base_url()."dashboard/view/dmetelangana";?>">DME Telangana</a></li>
+                  <li><a href="<?php echo base_url()."dashboard/view/dmeap";?>">DME AP</a></li>
+                  <li><a href="<?php echo base_url()."dashboard/bloodbanks";?>">Blood Banks</a></li>
+                </ul>
+			</li>
           </ul>	
-	<?php } ?>
         </div><!--/.nav-collapse -->
       </div>
     </div>

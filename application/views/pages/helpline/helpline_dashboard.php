@@ -1,20 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">	
-	<title><?php echo $title; ?></title>
-	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/bootstrap.css" media='screen,print'>
-	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/font-awesome.min.css" >
-	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/flaticon.css" >
 	<link rel="stylesheet"  type="text/css" href="<?php echo base_url();?>assets/css/bootstrap_datetimepicker.css"></script>
 	
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.min.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/moment.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/bootstrap-datetimepicker.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/Chart.js"></script>
-	
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/highcharts.js"></script>
+
+	<style>
+		.panel-body { padding-top:0px; }
+	</style>
 	
 	<?php 
 		$total=0;
@@ -34,233 +26,161 @@
 		$(".date").datetimepicker({
 			format : "D-MMM-YYYY"
 		});
-		
-			var hospitalctx = $("#hospitalChart");
-			var myChart = new Chart(hospitalctx, {
-				type: 'horizontalBar',
-				data: {
-					labels: [<?php $i=1;foreach($hospital_report as $a) { echo "'".$a->hospital;if($i<count($hospital_report)) echo "' ,"; else echo "'"; $i++; }?>],
-					datasets: [
-						{
-							type: 'horizontalBar',
-							label: 'Calls',
-							xAxisID : "A",
-							backgroundColor: "rgba(255,102,0,0.6)",
-							borderColor: "rgba(255,102,0,0.6)",
-							data: [<?php $i=1;foreach($hospital_report as $a) { echo $a->count;if($i<count($hospital_report)) echo " ,"; $i++; }?>]
-						}
-					]
+	
+	Highcharts.chart('hospitalChart', {
+		chart : {type:'bar'},
+		title: false,
+		xAxis: {
+			categories: [<?php $i=1;foreach($hospital_report as $a) { echo "'".$a->hospital;if($i<count($hospital_report)) echo "' ,"; else echo "'"; $i++; }?>],
+		},
+		yAxis: {
+			min: 0, title: { text: 'Calls', align: 'high' }, labels: { overflow: 'justify' }
+		},
+		plotOptions: {bar: { dataLabels: { enabled: true } } },
+		legend: {enabled:false},
+		credits: {enabled:false},
+		series: [{ name: 'Calls', colorByPoint: true,
+			data: [<?php $i=1;foreach($hospital_report as $a) { echo $a->count;if($i<count($hospital_report)) echo " ,"; $i++; }?>]
+		}]
+	});
+	
+	Highcharts.chart('volunteerChart', {
+		chart : {type:'bar'},
+		title: false,
+		xAxis: {
+			categories: [<?php $i=1;foreach($volunteer_report as $a) { echo "'".$a->dial_whom_number;if($i<count($volunteer_report)) echo "' ,"; else echo "'"; $i++; }?>],
+		},
+		yAxis: {
+			min: 0, title: { text: 'Calls', align: 'high' }, labels: { overflow: 'justify' }
+		},
+		plotOptions: {bar: { dataLabels: { enabled: true } } },
+		legend: {enabled:false},
+		credits: {enabled:false},
+		series: [{ name: 'Calls', colorByPoint: true,
+			data: [<?php $i=1;foreach($volunteer_report as $a) { echo $a->count;if($i<count($volunteer_report)) echo " ,"; $i++; }?>]
+		}]
+	});
+	Highcharts.chart('durationChart', {
+		chart : {type:'column'},
+		title: false,
+		xAxis: {
+			categories: ['Average','Median'],
+		},
+		yAxis: {
+			min: 0, title: { text: 'Time (in seconds)', align: 'high' }, labels: { overflow: 'justify' }
+		},
+		plotOptions: {bar: { dataLabels: { enabled: true } } },
+		legend: {enabled:false},
+		credits: {enabled:false},
+		series: [{ name: 'Time', colorByPoint: true,
+			data: [<?php echo $average;?>, <?php echo $median;?>]
+		}]
+	});
+	
+	
+	var pie_chart = {
+		plotBackgroundColor: null, 
+		plotBorderWidth: null, 
+		plotShadow: false, 
+		type: 'pie'
+	};
+	var pie_credits = {enabled: false};
+	var pie_tooltip = {
+			pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	};
+	var pie_plotOptions= {
+		pie: {
+			allowPointSelect: true,
+			cursor: 'pointer',
+			showInLegend: true,
+			dataLabels: {
+				enabled: false,
+				format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+				style: {
+					color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
 				},
-				options: {
-					scales: {
-					  xAxes: [{
-							id: 'A',
-							type: 'linear',
-							position: 'bottom',
-							ticks: {
-								beginAtZero:true
-							},
-							gridLines : false,
-							scaleLabel : {
-								display : true,
-								labelString : "Calls"
-							}
-						}],
-						yAxes: [{
-							stacked: true
-						}]
-					}
-				}
-			});
-			
-			var durationctx = $("#durationChart");
-			var myChart = new Chart(durationctx, {
-				type: 'bar',
-				data: {
-					labels: ['Average','Median'],
-					datasets: [
-						{
-							type: 'bar',
-							label: 'Time (in seconds)',
-							yAxisID : "A",
-							backgroundColor: "rgba(255,102,0,0.6)",
-							borderColor: "rgba(255,102,0,0.6)",
-							data: [<?php echo $average;?>, <?php echo $median;?>]
-						}
-					]
-				},
-				options: {
-					scales: {
-					  yAxes: [{
-							id: 'A',
-							type: 'linear',
-							position: 'left',
-							ticks: {
-								beginAtZero:true
-							},
-							gridLines : false,
-							scaleLabel : {
-								display : true,
-								labelString : "Time"
-							}
-						}],
-						xAxes: [{
-							stacked: true
-						}]
-					}
-				}
-			});
-			
-			var volunteerctx = $("#volunteerChart");
-			var myChart = new Chart(volunteerctx, {
-				type: 'horizontalBar',
-				data: {
-					labels: [<?php $i=1;foreach($volunteer_report as $a) { echo "'".$a->dial_whom_number;if($i<count($volunteer_report)) echo "' ,"; else echo "'"; $i++; }?>],
-					datasets: [
-						{
-							type: 'horizontalBar',
-							label: 'Calls',
-							xAxisID : "A",
-							backgroundColor: "rgba(255,102,0,0.6)",
-							borderColor: "rgba(255,102,0,0.6)",
-							data: [<?php $i=1;foreach($volunteer_report as $a) { echo $a->count;if($i<count($volunteer_report)) echo " ,"; $i++; }?>]
-						}
-					]
-				},
-				options: {
-					scales: {
-					  xAxes: [{
-							id: 'A',
-							type: 'linear',
-							position: 'bottom',
-							ticks: {
-								beginAtZero:true
-							},
-							gridLines : false,
-							scaleLabel : {
-								display : true,
-								labelString : "Calls"
-							}
-						}],
-						yAxes: [{
-							stacked: true
-						}]
-					}
-				}
-			});
-			
-			
-			var callertypectx = $("#callerType");
-			var myChart = new Chart(callertypectx, {
-				type: 'pie',
-				data: {
-					labels: [<?php $i=1;foreach($caller_type_report as $a) { echo "'".$a->caller_type;if($i<count($caller_type_report)) echo "' ,"; else echo "'"; $i++; }?>],
-					datasets: [
-						{
-							type: 'pie',
-							label: 'Caller Type',
-							backgroundColor: "rgba(255,102,0,0.6)",
-							borderColor: "rgba(255,102,0,0.6)",
-							data: [<?php $i=1;foreach($caller_type_report as $a) { echo $a->count;if($i<count($caller_type_report)) echo " ,"; $i++; }?>]
-						}
-					]
-				}
-			});
-			var calltypectx = $("#callType");
-			var myChart = new Chart(calltypectx, {
-				type: 'pie',
-				data: {
-					labels: [<?php $i=1;foreach($call_type_report as $a) { echo "'".$a->call_type;if($i<count($call_type_report)) echo "' ,"; else echo "'"; $i++; }?>],
-					datasets: [
-						{
-							type: 'pie',
-							label: 'Caller Type',
-							backgroundColor: "rgba(255,102,0,0.6)",
-							borderColor: "rgba(255,102,0,0.6)",
-							data: [<?php $i=1;foreach($call_type_report as $a) { echo $a->count;if($i<count($call_type_report)) echo " ,"; $i++; }?>]
-						}
-					]
-				}
-			});
-			var callcategoryctx = $("#callCategory");
-			var myChart = new Chart(callcategoryctx, {
-				type: 'pie',
-				data: {
-					labels: [<?php $i=1;foreach($call_category_report as $a) { echo "'".$a->call_category;if($i<count($call_category_report)) echo "' ,"; else echo "'"; $i++; }?>],
-					datasets: [
-						{
-							type: 'pie',
-							label: 'Caller Type',
-							backgroundColor: "rgba(255,102,0,0.6)",
-							borderColor: "rgba(255,102,0,0.6)",
-							data: [<?php $i=1;foreach($call_category_report as $a) { echo $a->count;if($i<count($call_category_report)) echo " ,"; $i++; }?>]
-						}
-					]
-				}
-			});
-			var to_numberctx = $("#to_number");
-			var myChart = new Chart(to_numberctx, {
-				type: 'pie',
-				data: {
-					labels: [<?php $i=1;foreach($to_number_report as $a) { echo "'".$a->to_number;if($i<count($to_number_report)) echo "' ,"; else echo "'"; $i++; }?>],
-					datasets: [
-						{
-							type: 'pie',
-							label: 'To Number',
-							backgroundColor: "rgba(255,102,0,0.6)",
-							borderColor: "rgba(255,102,0,0.6)",
-							data: [<?php $i=1;foreach($to_number_report as $a) { echo $a->count;if($i<count($to_number_report)) echo " ,"; $i++; }?>]
-						}
-					]
-				}
-			});
-			var op_ipctx = $("#op_ip");
-			var myChart = new Chart(op_ipctx, {
-				type: 'pie',
-				data: {
-					labels: [<?php $i=1;foreach($op_ip_report as $a) { echo "'".$a->ip_op;if($i<count($op_ip_report)) echo "' ,"; else echo "'"; $i++; }?>],
-					datasets: [
-						{
-							type: 'pie',
-							label: 'Visit Type',
-							backgroundColor: "rgba(255,102,0,0.6)",
-							borderColor: "rgba(255,102,0,0.6)",
-							data: [<?php $i=1;foreach($op_ip_report as $a) { echo $a->count;if($i<count($op_ip_report)) echo " ,"; $i++; }?>]
-						}
-					]
-				}
-			});
+				distance: 0
+			}
+		}
+	};
+	pie_legend= {
+		align: 'left',
+		layout: 'horizontal',
+		verticalAlign: 'bottom',
+		floating:false,
+		itemDistance:10,
+		y:10,
+		reversed:true
+	};
+	
+	Highcharts.chart('callCategory', {
+		chart: pie_chart,
+		credits: pie_credits,
+		title: false,
+		tooltip: pie_tooltip,
+		plotOptions: pie_plotOptions,
+		legend: pie_legend,
+		series: [{
+			name: 'Calls',
+			colorByPoint: true,
+			data: [<?php $i=1;foreach($call_category_report as $a) { echo "{ name: '$a->call_category', y: $a->count }"; if($i<count($call_category_report)) echo " ,"; $i++; }?>]
+		}]
+	});
+	Highcharts.chart('callerType', {
+		chart: pie_chart,
+		credits: pie_credits,
+		title: false,
+		tooltip: pie_tooltip,
+		plotOptions: pie_plotOptions,
+		legend: pie_legend,
+		series: [{
+			name: 'Calls',
+			colorByPoint: true,
+			data: [<?php $i=1;foreach($caller_type_report as $a) { echo "{ name: '$a->caller_type', y: $a->count }"; if($i<count($caller_type_report)) echo " ,"; $i++; }?>]
+		}]
+	});
+	Highcharts.chart('callType', {
+		chart: pie_chart,
+		credits: pie_credits,
+		title: false,
+		tooltip: pie_tooltip,
+		plotOptions: pie_plotOptions,
+		legend: pie_legend,
+		series: [{
+			name: 'Calls',
+			colorByPoint: true,
+			data: [<?php $i=1;foreach($call_type_report as $a) { echo "{ name: '$a->call_type', y: $a->count }"; if($i<count($call_type_report)) echo " ,"; $i++; }?>]
+		}]
+	});
+	Highcharts.chart('op_ip', {
+		chart: pie_chart,
+		credits: pie_credits,
+		title: false,
+		tooltip: pie_tooltip,
+		plotOptions: pie_plotOptions,
+		legend: pie_legend,
+		series: [{
+			name: 'Calls',
+			colorByPoint: true,
+			data: [<?php $i=1;foreach($op_ip_report as $a) { echo "{ name: '$a->ip_op', y: $a->count }"; if($i<count($op_ip_report)) echo " ,"; $i++; }?>]
+		}]
+	});
+	Highcharts.chart('to_number', {
+		chart: pie_chart,
+		credits: pie_credits,
+		title: false,
+		tooltip: pie_tooltip,
+		plotOptions: pie_plotOptions,
+		legend: pie_legend,
+		series: [{
+			name: 'Calls',
+			colorByPoint: true,
+			data: [<?php $i=1;foreach($to_number_report as $a) { echo "{ name: '$a->to_number', y: $a->count }"; if($i<count($to_number_report)) echo " ,"; $i++; }?>]
+		}]
+	});
 	});
 	</script>
-</head>
-<body>
-<div id="wrap">
-    <!-- Static navbar -->
-    <div class="navbar navbar-default navbar-static-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-		<!-- Bootstrap toggle menu for mobile devices, only visible on small screens --> 
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="<?php echo base_url();?>"><?php echo $title;?></a>
-        </div>
-        <div class="navbar-collapse collapse">
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="/"><i class="fa fa-sign-out"></i>Login</a></li>
-				<li><a href="<?php echo base_url();?>home/about">About</a></li>
-				<li><a href="http://www.yousee.in" target="_blank"><img src="<?php echo base_url();?>assets/images/uc-logo.png" alt="" height="22" width="22"></a></li>
-			</ul>	
-		</div> 
-		</div><!--/.nav-collapse -->
-      </div>
-	<div class="container">
 	
-	<div class="panel panel-default">
-		<div class="panel panel-body">
 			<?php 
 			if($this->input->post('from_date')) $from_date = date("d-M-Y",strtotime($this->input->post('from_date'))); else $from_date = date("d-M-Y");
 			if($this->input->post('to_date')) $to_date = date("d-M-Y",strtotime($this->input->post('to_date'))); else $to_date = date("d-M-Y");
@@ -320,18 +240,6 @@
 		</div>
 	
 	
-	<?php
-		foreach($report[1] as $r) { 
-			$total_op=0;
-			$total_repeat_op=0;
-			$total_ip=0;
-			foreach($report[1] as $r) {
-				$total_op+=$r->total_op;
-				$total_ip+=$r->total_ip;
-				$total_repeat_op+=$r->repeat_op;
-			}
-		}
-	?>
 	<div class="row"> 		
 		<div class="col-md-4">
 			<div class="panel panel-default">
@@ -339,7 +247,7 @@
 				<h4>Hospital</h4>
 			</div>
 			<div class="panel-body">
-			<canvas id="hospitalChart" width="200" height="150"></canvas>
+			<div id="hospitalChart" style="width:300px;height:250px"></div>
 			</div>
 			</div>
 		</div>
@@ -349,7 +257,7 @@
 				<h4>Category</h4>
 			</div>
 			<div class="panel-body">
-			<canvas id="callCategory" width="200" height="150"></canvas>
+			<div id="callCategory" style="width:300px;height:250px"></div>
 			</div>
 			</div>
 		</div>
@@ -359,7 +267,7 @@
 				<h4>Caller</h4>
 			</div>
 			<div class="panel-body">
-			<canvas id="callerType" width="200" height="150"></canvas>
+			<div id="callerType" style="width:300px;height:250px"></div>
 			</div>
 			</div>
 		</div>
@@ -369,7 +277,7 @@
 				<h4>Status</h4>
 			</div>
 			<div class="panel-body">
-			<canvas id="callType" width="200" height="150"></canvas>
+			<div id="callType" style="width:300px;height:250px"></div>
 			</div>
 			</div>
 		</div>
@@ -379,7 +287,7 @@
 				<h4>Duration</h4>
 			</div>
 			<div class="panel-body">
-			<canvas id="durationChart" width="200" height="150"></canvas>
+			<div id="durationChart" style="width:300px;height:250px"></div>
 			</div>
 			</div>
 		</div>
@@ -389,7 +297,7 @@
 				<h4>Patient Type</h4>
 			</div>
 			<div class="panel-body">
-			<canvas id="op_ip" width="200" height="150"></canvas>
+			<div id="op_ip" style="width:300px;height:250px"></div>
 			</div>
 			</div>
 		</div>
@@ -399,7 +307,7 @@
 				<h4>Reciever</h4>
 			</div>
 			<div class="panel-body">
-			<canvas id="volunteerChart" width="200" height="150"></canvas>
+			<div id="volunteerChart" style="width:300px;height:250px"></div>
 			</div>
 			</div>
 		</div>
@@ -409,11 +317,10 @@
 				<h4>Helpline</h4>
 			</div>
 			<div class="panel-body">
-			<canvas id="to_number" width="200" height="150"></canvas>
+			<div id="to_number" style="width:300px;height:250px"></div>
 			</div>
 			</div>
 		</div>
-	</div>
 	</div>
 
 	
@@ -434,6 +341,7 @@ function calculate_median($arr) {
 }
 
 function calculate_average($arr) {
+	$total = 0;
     $count = count($arr); //total numbers in array
     foreach ($arr as $value) {
         $total = $total + $value; // total value of array numbers

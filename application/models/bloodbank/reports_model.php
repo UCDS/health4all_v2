@@ -117,9 +117,18 @@ class Reports_model extends CI_Model{
 	
 	/* get_available_blood() : Generate the report of the available stock at the present time. */
 
-	function get_available_blood(){
+	function get_available_blood($hospitals=0){
 		$userdata=$this->session->userdata('hospital');
 		$hospital=$userdata['hospital_id'];
+		if($hospitals=='0'){
+			$this->db->where('blood_donor.hospital_id', $hospital);
+		}
+		else{
+			$this->db->group_by('blood_donor.hospital_id');
+			$this->db->order_by('hospital,blood_group');
+			$this->db->join('hospital','blood_donor.hospital_id = hospital.hospital_id');
+			$this->db->select('hospital');
+		}
 		$this->db->select("
 			blood_group,
 			SUM(CASE WHEN component_type='PRP' THEN 1 ELSE 0 END) prp,
@@ -142,7 +151,6 @@ class Reports_model extends CI_Model{
 		* 
 		* Added By : Pranay On 20170521
 		*/
-		->where('blood_donor.hospital_id', $hospital)
 		->where('expiry_date>=',date("Y-m-d"),false)
 		->group_by('blood_group');
 

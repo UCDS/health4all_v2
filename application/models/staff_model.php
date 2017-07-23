@@ -35,7 +35,7 @@ class Staff_model extends CI_Model{
 	
 	//user_hospital() takes user ID as parameter and returns a list of all the hospitals the user has access to.	
 	function user_hospital($user_id){
-		$this->db->select('hospital.hospital_id,hospital,description,place,district,state,logo')->from('user')
+		$this->db->select('hospital.hospital_id,hospital,hospital_short_name,description,place,district,state,logo')->from('user')
 		->join('user_hospital_link','user.user_id=user_hospital_link.user_id')
 		->join('hospital','user_hospital_link.hospital_id=hospital.hospital_id')
 		->where('user_hospital_link.user_id',$user_id)

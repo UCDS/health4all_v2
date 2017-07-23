@@ -296,7 +296,7 @@ class Register_model extends CI_Model{
 		patient.patient_id,patient_visit.visit_id visit_id1,
 		CONCAT(IF(patient.first_name=NULL,"",patient.first_name)," ",IF(patient.last_name=NULL,"",patient.last_name)) name,
 		IF(father_name=NULL OR father_name="",spouse_name,father_name) parent_spouse,visit_name,visit_name.visit_name_id,
-		department,unit_name,unit.unit_head_staff_id,
+		department,unit_name,unit.unit_head_staff_id,id_proof_type,patient.address,
 		CONCAT(staff.first_name," ",staff.last_name) as unit_head_name ,area_name,district,op_room_no,mlc.*,occupation',false)
 		->from('patient')->join('patient_visit','patient.patient_id=patient_visit.patient_id')
 		->join('department','patient_visit.department_id=department.department_id','left')
@@ -307,6 +307,7 @@ class Register_model extends CI_Model{
 		->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
 		->join('visit_name','patient_visit.visit_name_id=visit_name.visit_name_id','left')
 		->join('occupation','patient.occupation_id=occupation.occupation_id','left')
+		->join('id_proof_type','patient.id_proof_type_id=id_proof_type.id_proof_type_id','left')
 		->where('patient_visit.visit_id',$visit_id);
 		$resource=$this->db->get();
 		//return the result array to the controller

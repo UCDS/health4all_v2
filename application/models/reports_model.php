@@ -795,7 +795,7 @@ class Reports_model extends CI_Model{
 			->from('test')
 			->join('test_order',"test.order_id = test_order.order_id AND (DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')",'left')
 			->join('micro_organism_test','micro_organism_test.test_id = test.test_id','left')
-			->join('test_master','test_master.test_master_id = test.test_master_id AND (test_master.test_area_id = 2 AND test_master.test_method_id = 3)')
+			->join('test_master','test_master.test_master_id = test.test_master_id')
 			->join('test_method','test_method.test_method_id = test_master.test_method_id')
 			->join('test_area','test_area.test_area_id = test_master.test_area_id')                        		
 			->join('micro_organism','micro_organism_test.micro_organism_id = micro_organism.micro_organism_id')
@@ -805,6 +805,8 @@ class Reports_model extends CI_Model{
 			->join('specimen_type','test_sample.specimen_type_id = specimen_type.specimen_type_id')
 			->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
 			->join('patient','patient_visit.patient_id = patient.patient_id')
+			->where('test_area.test_area','Microbiology')
+			->where('test_method.test_method','Culture and Sensitivity')
 			->where('test_order.hospital_id',$hospital['hospital_id'])
 			->where('test.test_status',2);
 			$query=$this->db->get();

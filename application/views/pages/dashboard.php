@@ -1,18 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">	
-	<title><?php echo $report[0]; ?> - Dashboard</title>
-	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/bootstrap.css" media='screen,print'>
-	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/font-awesome.min.css" >
-	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/flaticon.css" >
 	<link rel="stylesheet"  type="text/css" href="<?php echo base_url();?>assets/css/bootstrap_datetimepicker.css"></script>
 	<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery.ptTimeSelect.css">
 	<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.css"> 
 	<script src="<?php echo base_url();?>assets/js/highcharts.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.min.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/ajaxcalls.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/moment.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.ptTimeSelect.js"></script>
@@ -48,8 +37,6 @@
 	
 	</style>
 
-</head>
-<body>   
 		<?php
         	$from_time=0;$to_time=0;
         if($this->input->post('from_time')) $from_time=date("H:i",strtotime($this->input->post('from_time'))); else $from_time = date("00:00");
@@ -64,29 +51,6 @@
 			<div>
 			  <img width="100px" height="100px" src="<?php echo base_url();?>assets/images/loader.gif" />
 			</div>
-		</div>
-	<div id="wrap">
-		<!-- Static navbar -->
-		<div class="navbar navbar-default navbar-static-top" role="navigation">
-			<div class="container">
-				<div class="navbar-header">
-					<!-- Bootstrap toggle menu for mobile devices, only visible on small screens --> 
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="<?php echo base_url();?>"><?php echo $report[0];?> - Dashboard</a>
-				</div>
-				<div class="navbar-collapse collapse">
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="/"><i class="fa fa-sign-out"></i>Login</a></li>
-						<li><a href="<?php echo base_url();?>home/about">About</a></li>
-						<li><a href="http://www.yousee.in" target="_blank"><img src="<?php echo base_url();?>assets/images/uc-logo.png" alt="" height="22" width="22"></a></li>
-					</ul>	
-				</div> 
-			</div><!--/.nav-collapse -->
 		</div>
 			<div  class="container"  id="Hospitaltable" style="display:none;">
 				<?php
@@ -453,9 +417,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
-</body>
 
 <script>
 	function ShowMainStats(){
@@ -1185,4 +1146,3 @@ var departmentChart;
 		}
 	}
 </script>
-</html>

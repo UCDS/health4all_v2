@@ -96,8 +96,8 @@ class Helpline_model extends CI_Model{
 	}
 	
 	function get_detailed_report(){
-		if($this->input->post('date')){
-			$this->db->where('DATE(start_time)',date("Y-m-d",strtotime($this->input->post('date'))));
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$this->db->where('(DATE(start_time) BETWEEN "'.date("Y-m-d",strtotime($this->input->post('from_date'))).'" AND "'.date("Y-m-d",strtotime($this->input->post('to_date'))).'")');
 		}
 		else 
 			$this->db->where('DATE(start_time)',date("Y-m-d"));
@@ -116,30 +116,37 @@ class Helpline_model extends CI_Model{
 		if($type == "caller_type"){
 			$this->db->select('caller_type,count(call_id) as count');
 			$this->db->group_by('helpline_caller_type.caller_type_id');
+			$this->db->order_by('count');
 		}
 		if($type == "call_category"){
 			$this->db->select('call_category,count(call_id) as count');
 			$this->db->group_by('helpline_call_category.call_category_id');
+			$this->db->order_by('count');
 		}
 		if($type == "hospital"){
-			$this->db->select('hospital,count(call_id) as count');
+			$this->db->select('hospital_short_name hospital,count(call_id) as count');
 			$this->db->group_by('hospital.hospital_id');
+			$this->db->order_by('count');
 		}
 		if($type == "volunteer"){
 			$this->db->select('dial_whom_number,count(call_id) as count');
 			$this->db->group_by('dial_whom_number');
+			$this->db->order_by('count');
 		}
 		if($type == "call_type"){
 			$this->db->select('call_type,count(call_id) as count');
 			$this->db->group_by('call_type');
+			$this->db->order_by('count');
 		}
 		if($type == "to_number"){
 			$this->db->select('to_number,count(call_id) as count');
 			$this->db->group_by('to_number');
+			$this->db->order_by('count');
 		}
 		if($type == "op_ip"){
 			$this->db->select('ip_op,count(call_id) as count');
 			$this->db->group_by('ip_op');
+			$this->db->order_by('count');
 		}
 		if($type == "duration"){
 			$this->db->select('dial_call_duration');

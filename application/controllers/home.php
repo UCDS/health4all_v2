@@ -37,6 +37,7 @@ class Home extends CI_Controller {
 								$sess_array = array(
 								 'hospital_id' => $row->hospital_id,
 								 'hospital' => $row->hospital,
+								 'hospital_short_name' => $row->hospital_short_name,
 								 'description' => $row->description,
 								 'place' => $row->place,
 								 'district' => $row->district,
@@ -59,6 +60,7 @@ class Home extends CI_Controller {
 							$sess_array = array(
 							 'hospital_id' => $row->hospital_id,
 							 'hospital' => $row->hospital,
+							 'hospital_short_name' => $row->hospital_short_name,
 							 'description' => $row->description,
 							 'place' => $row->place,
 							 'district' => $row->district,
