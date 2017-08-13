@@ -53,25 +53,7 @@
 			</div>
 		</div>
 			<div  class="container"  id="Hospitaltable" style="display:none;">
-				<?php
-					$total_op=0;
-					$total_repeat_op=0;
-					$total_ip=0;
-						
-					foreach($TypeWise as $r) { 
-					//	$total_op=0;
-					//	$total_repeat_op=0;
-					//	$total_ip=0;
-					//	foreach($report[1] as $r) {
-							$total_op+=$r->total_op;
-							$total_ip+=$r->total_ip;
-							$total_repeat_op+=$r->repeat_op;
-							
-							
-					//	}
-							
-					}
-				?> 
+				
 		
 				<!--table and charts hospital type wise CHC,AH,DH -->
 				<div class="row" >  
@@ -598,7 +580,7 @@
 					var T_total_op=0;
 					var T_total_repeat_op=0;
 					var T_total_ip=0;
-					$.each(data,function(i,v){
+					$.each(data[1],function(i,v){
 						T_total_op += parseInt(v.total_op);
 						T_total_repeat_op +=parseInt(v.repeat_op);
 						T_total_ip +=parseInt(v.total_ip);
@@ -621,7 +603,7 @@
 					var vHospIpPie = [];
 
 				
-				$.each(data, function(i,v){
+				$.each(data[1], function(i,v){
 					vHospNames.push(v.hospital_short_name);
 					vHospOp.push(v.total_op); 
 					vHospIp.push(v.total_ip);
@@ -795,7 +777,7 @@ var departmentChart;
 						var T_total_op=0;
 						var T_total_repeat_op=0;
 						var T_total_ip=0;
-						$.each(data,function(i,v){
+						$.each(data[1],function(i,v){
 							T_total_op += parseInt(v.total_op);
 							T_total_repeat_op +=parseInt(v.repeat_op);
 							T_total_ip +=parseInt(v.total_ip);
@@ -816,7 +798,7 @@ var departmentChart;
 						var vDepartmentIpPie =[];
 						var vDepartmentOpPie = [];
 
-						$.each(data, function(i,v){
+						$.each(data[1], function(i,v){
 							vDepartmentOpPie.push({"name":v.department,"y":parseInt(v.total_op)});
 							vDepartmentIpPie.push({"name":v.department,"y":parseInt(v.total_ip)});
 							vDepartmentNames.push(v.department);
@@ -975,7 +957,7 @@ var departmentChart;
 						var T_total_op=0;
 						var T_total_repeat_op=0;
 						var T_total_ip=0;
-						$.each(data,function(i,v){
+						$.each(data[1],function(i,v){
 							T_total_op += parseInt(v.total_op);
 							T_total_repeat_op +=parseInt(v.repeat_op);
 							T_total_ip +=parseInt(v.total_ip);
@@ -996,7 +978,7 @@ var departmentChart;
 						var vDistOpPie = [];
 						var vDistIpPie = [];
 
-						$.each(data, function(i,v){
+						$.each(data[1], function(i,v){
 							vDistNames.push(v.district);
 							vDistOp.push(parseInt(v.total_op));
 							vDistIp.push(parseInt(v.total_ip));

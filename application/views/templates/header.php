@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">	
 	<title><?php echo $title; ?> - Health4All</title>
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/bootstrap.css" media='screen,print'>
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/youseelogo.css" media='screen,print'>
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/font-awesome.min.css" >
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/flaticon.css" >
 	
@@ -27,14 +28,14 @@
       <div class="container">
         <div class="navbar-header">
 		<!-- Bootstrap toggle menu for mobile devices, only visible on small screens --> 
-		<a class="navbar-brand" href="http://www.yousee.in" target="_blank"><img src="<?php echo base_url();?>assets/images/uc-logo.png" alt="Yousee Logo" height="22" width="22"></a>	  
+		<a class="navbar-brand" href="https://yousee.in/c4c" target="_blank"><span style="position:absolute;font-size:2.7em;left:5%;top:10px" class="logo logo-yousee"> </span> </a>	  
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="<?php echo base_url();?>">Health4All</a>
+          <a class="navbar-brand" href="<?php echo base_url();?>"> Health4All</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -356,14 +357,19 @@
 				  <li><a href="<?php echo base_url();?>home/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
                 </ul>
 			</li>
+			<?php }  else { ?>
+            <li class="<?php if(preg_match("^".base_url()."home/login^",current_url())){ echo " active";}?>">
+				<a href="<?php echo base_url()."home/login";?>"><i class="fa fa-sign-in"></i> Login</a>
+			</li>
 			<?php } ?>
             <li class="dropdown  <?php if(preg_match("^".base_url()."dashboard^",current_url())){ echo "active";}?>">
 				<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">
-				Dashboards
+				<i class="fa fa-bar-chart"></i> Dashboards
 				<b class="caret"></b>
 				</a>
                 <ul class="dropdown-menu">
                   <li><a href="<?php echo base_url()."dashboard/helpline";?>">Helpline</a></li>
+                  <li><a href="<?php echo base_url()."dashboard/state/telangana";?>">State - TS</a></li>
                   <li><a href="<?php echo base_url()."dashboard/view/tvvp";?>">TVVP</a></li>
                   <li><a href="<?php echo base_url()."dashboard/view/dmetelangana";?>">DME Telangana</a></li>
                   <li><a href="<?php echo base_url()."dashboard/view/dmeap";?>">DME AP</a></li>

@@ -192,7 +192,7 @@
 						else{	
 							$result = $test->test_result_text;
 						?>
-							<textarea name="text_result" class="form-control"><?php echo $result;?></textarea>
+							<textarea name="text_result_<?=$test->test_id;?>" class="form-control"><?php echo $result;?></textarea>
 						<?php
 						}
 					 }

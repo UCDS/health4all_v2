@@ -34,6 +34,25 @@ class Dashboard extends CI_Controller {
 		$this->load->view('templates/footer');
 	}
 	
+	public function state($state=""){
+			$this->load->model('reports_model');
+			if(!!$state) //if $organization variable is not empty
+		{
+				$this->load->helper('form');
+				$this->data['state']=$state;
+				
+				$this->data['result']=$this->reports_model->dashboard("","state",$state);
+				$this->data['title']=$this->data['result'][0];
+				$this->data['report']=$this->data['result'][1];
+				$this->load->view('templates/header',$this->data);		
+				$this->load->view('pages/state_dashboard',$this->data);
+
+		}		
+		else{
+			show_404();
+		}
+		$this->load->view('templates/footer');
+	}
 	public function helpline(){
 		$this->load->helper('form');
 		$this->data['title']="Helpline Dashboard";
@@ -42,6 +61,7 @@ class Dashboard extends CI_Controller {
 		$this->data['caller_type_report']=$this->helpline_model->dashboard('caller_type');	
 		$this->data['call_category_report']=$this->helpline_model->dashboard('call_category');	
 		$this->data['hospital_report']=$this->helpline_model->dashboard('hospital');	
+		$this->data['district_report']=$this->helpline_model->dashboard('district');	
 		$this->data['volunteer_report']=$this->helpline_model->dashboard('volunteer');	
 		$this->data['call_type_report']=$this->helpline_model->dashboard('call_type');	
 		$this->data['to_number_report']=$this->helpline_model->dashboard('to_number');	
@@ -51,6 +71,7 @@ class Dashboard extends CI_Controller {
 		$this->data['call_category']=$this->helpline_model->get_call_category();
 		$this->data['resolution_status']=$this->helpline_model->get_resolution_status();
 		$this->data['all_hospitals']=$this->staff_model->get_hospital();
+		$this->data['hospital_districts']=$this->helpline_model->get_hospital_district();
 		$this->load->view('templates/header',$this->data);		
 		$this->load->view('pages/helpline/helpline_dashboard',$this->data);		
 		$this->load->view('templates/footer');
@@ -67,7 +88,7 @@ class Dashboard extends CI_Controller {
 	}
 	public function hospital($organization=""){
 		$this->load->model('reports_model');
-		$hospitalstarts=$this->reports_model->HospitalTypewise($organization);
+		$hospitalstarts=$this->reports_model->dashboard($organization,'hospital');
 		$this->output
         ->set_content_type('application/json')
         ->set_output(json_encode($hospitalstarts));
@@ -75,7 +96,7 @@ class Dashboard extends CI_Controller {
 	}
 	public function department($organization=""){
 		$this->load->model('reports_model');
-		$deptstarts=$this->reports_model->dashboard_department_wise($organization);
+		$deptstarts=$this->reports_model->dashboard($organization,'department');
 		$this->output
         ->set_content_type('application/json')
         ->set_output(json_encode($deptstarts));
@@ -83,11 +104,11 @@ class Dashboard extends CI_Controller {
 	}
 	public function district($organization=""){
 		$this->load->model('reports_model');
-		$diststarts=$this->reports_model->dashboard_district_wise($organization);
+		$diststarts=$this->reports_model->dashboard($organization,'district');
 		$this->output
         ->set_content_type('application/json')
         ->set_output(json_encode($diststarts));
 
 	}
-	
+
 }

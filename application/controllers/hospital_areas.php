@@ -1,35 +1,35 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Hospital_areas extends CI_Controller{                                           //create class with name Hospital_areas and it extends codeigniter controller.
+<?php
+class hospital_areas extends CI_Controller{                                           //create class with name Hospital_areas and it extends codeigniter controller.
   function __construct(){                                                             // definition of constructor.
-		parent::__construct();     					
-		$this->load->model('staff_model');
-		if($this->session->userdata('logged_in')){
-		$userdata=$this->session->userdata('logged_in');
-		$user_id=$userdata['user_id'];
-		$this->data['hospitals']=$this->staff_model->user_hospital($user_id);
-		$this->data['functions']=$this->staff_model->user_function($user_id);
-		$this->data['departments']=$this->staff_model->user_department($user_id);
-		}
-		$this->data['op_forms']=$this->staff_model->get_forms("OP");
-		$this->data['ip_forms']=$this->staff_model->get_forms("IP");	                                                      
+    parent::__construct();                                                            //calling code igniter (parent) constructor.
   }// __construct
 
      function add_area(){    
-       
-		if($this->session->userdata('logged_in')){                                    //checking whether user is in logging state or not;session:state of a user.
+        if($this->session->userdata('logged_in')){                                    //checking whether user is in logging state or not;session:state of a user.
             $this->data['userdata']=$this->session->userdata('logged_in');            //taking session data into data array of index:userdata                   
         }	
         else{
             show_404();                                                               //if user is not logged in then this error will be thrown.
         }
-		$access=0;
-		foreach($this->data['functions'] as $function){
-			if($function->user_function=="Admin"){
-					$access=1;
-					break;
-			}
-		}
-        if($access==1){
+        $this->data['userdata']=$this->session->userdata('logged_in');           
+        $user_id=$this->data['userdata']['user_id'];                                  //user_id variable is created  and taking user id from user data of data array.
+        $this->load->model('staff_model');                                            //staff_model (model file) is loaded and called from CI_Controller function.
+        $this->data['hospitals']=$this->staff_model->user_hospital($user_id);         //storing hospital's user_id into data array of index:hospitals.
+        $this->data['functions']=$this->staff_model->user_function($user_id);         //storing user_id of function into data array index of functions(Authorizatio
+        $this->data['departments']=$this->staff_model->user_department($user_id);  
+        $this->data['op_forms']=$this->staff_model->get_forms("OP");                  //stroing op form details into data array of index:op_forms.
+        $this->data['ip_forms']=$this->staff_model->get_forms("IP");                  //storing ip form details into data array of ip_forms.
+        $access = -1;
+        foreach($this->data['functions'] as $function){                               //for loop that checks for first user_function of functions index is                                                                                                      HR_Recruitment;then make access=1.
+            if($function->user_function=="Admin"){
+                $access = 1;
+		break;
+            }
+	 }                                       
+        if($access == -1){                                                          //if there is no user function with HR_Recruitment then error is thrown.
+            show_404();
+        }                                                                                                    
+        $this->data['userdata']=$this->session->userdata('area');                  //taking userdata from area table into data array of index:userdata.
         $this->load->helper('form');                                               //to do form validation,we are loading helper file with file name 'form'.
         $this->load->library('form_validation');                                   //this function is used to load core classes.Loading form_validation class.
         $this->data['title']="add area";                                           //store title value into data array of index:title.
@@ -64,8 +64,8 @@ class Hospital_areas extends CI_Controller{                                     
         $this->form_validation->set_message('message','Please input missing details.'); //display message if all the details are not given.
         if ($this->form_validation->run() == FALSE)                                     //checking whether the form has any error or not 
         {
-	    echo validation_errors();                                                  //function used to display the errors.
-            $this->data['message']= "Validation failed.";                              //pass failed message into data array of index:message.
+	  //  echo validation_errors();                                                  //function used to display the errors.
+         //   $this->data['message']= "Validation failed.";                              //pass failed message into data array of index:message.
             
         }//if
         else{     
@@ -83,9 +83,7 @@ class Hospital_areas extends CI_Controller{                                     
         $this->data['lab_report_staff']=$this->staff_model->get_staff();               //get staff details using get_staff method of staff_model file into data array                                                                                          of index:lab_report_staff.
         $this->load->view('pages/hospital_area_view',$this->data);                     //load hospital_area_view (view page).
         $this->load->view('templates/footer');                                         //load footer view page.
-		}
-		else show_404();
-	}//add_area
-}// hospital_areas
+    }//add_area
+    }// hospital_areas
 
 

@@ -33,9 +33,39 @@ class Helpline_model extends CI_Model{
 		if($this->db->insert('helpline_call',$data)){
 			return true;
 		}
-		else return false;
-		
+		else return false;	
 	}	
+	function insert_outbound_call(){
+		$callsid=$this->input->post('CallSid');
+		$from_number = $this->input->post('From');
+		$to_number = $this->input->post('To');
+		$direction = $this->input->post('Direction');
+		$dial_call_duration = $this->input->post('Duration');
+		$start_time = $this->input->post('StartTime');
+		$end_time = $this->input->post('EndTime');
+		$call_type = "Out-going";
+		$recording_url = $this->input->post('RecordingUrl');
+		$dial_whom_number = $this->input->post('DialWhomNumber');
+		$data = array(
+			'callsid'=>$callsid,
+			'from_number' => $from_number,
+			'to_number' => $to_number,
+			'direction' => $direction,
+			'dial_call_duration' => $dial_call_duration,
+			'start_time' => $start_time,
+			'end_time' => $end_time,
+			'call_type' => $call_type,
+			'recording_url' => $recording_url,
+			'dial_whom_number' => $from,
+			'create_date_time' => date("Y-m-d H:i:s")
+		);
+		
+		if($this->db->insert('helpline_call',$data)){
+			return true;
+		}
+		else return false;	
+	}	
+	
 	function update_call(){
 		$calls = $this->input->post('call');
 		$data=array();
@@ -94,6 +124,11 @@ class Helpline_model extends CI_Model{
 		$query = $this->db->get();
 		return $query->result();
 	}
+	function get_hospital_district(){
+		$this->db->select('DISTINCT district',false)->from('hospital')->order_by('district');
+		$query = $this->db->get();
+		return $query->result();
+	}
 	
 	function get_detailed_report(){
 		if($this->input->post('from_date') && $this->input->post('to_date')){
@@ -116,37 +151,42 @@ class Helpline_model extends CI_Model{
 		if($type == "caller_type"){
 			$this->db->select('caller_type,count(call_id) as count');
 			$this->db->group_by('helpline_caller_type.caller_type_id');
-			$this->db->order_by('count');
+			$this->db->order_by('count','desc');
 		}
 		if($type == "call_category"){
 			$this->db->select('call_category,count(call_id) as count');
 			$this->db->group_by('helpline_call_category.call_category_id');
-			$this->db->order_by('count');
+			$this->db->order_by('count','desc');
 		}
 		if($type == "hospital"){
 			$this->db->select('hospital_short_name hospital,count(call_id) as count');
 			$this->db->group_by('hospital.hospital_id');
-			$this->db->order_by('count');
+			$this->db->order_by('count','desc');
+		}
+		if($type == "district"){
+			$this->db->select('district,count(call_id) as count');
+			$this->db->group_by('hospital.district');
+			$this->db->order_by('count','desc');
 		}
 		if($type == "volunteer"){
-			$this->db->select('dial_whom_number,count(call_id) as count');
+			$this->db->select('short_name,count(call_id) as count');
 			$this->db->group_by('dial_whom_number');
-			$this->db->order_by('count');
+			$this->db->order_by('count','desc');
 		}
 		if($type == "call_type"){
-			$this->db->select('call_type,count(call_id) as count');
-			$this->db->group_by('call_type');
-			$this->db->order_by('count');
+			$this->db->select('CONCAT(direction," ",call_type) call_type,count(call_id) as count',false);
+			$this->db->group_by('call_type,direction');
+			$this->db->order_by('count','desc');
 		}
 		if($type == "to_number"){
 			$this->db->select('to_number,count(call_id) as count');
 			$this->db->group_by('to_number');
-			$this->db->order_by('count');
+			$this->db->order_by('count','desc');
 		}
 		if($type == "op_ip"){
 			$this->db->select('ip_op,count(call_id) as count');
 			$this->db->group_by('ip_op');
-			$this->db->order_by('count');
+			$this->db->order_by('count','desc');
 		}
 		if($type == "duration"){
 			$this->db->select('dial_call_duration');
@@ -179,6 +219,9 @@ class Helpline_model extends CI_Model{
 		if($this->input->post('hospital')){
 			$this->db->where('hospital.hospital_id',$this->input->post('hospital'));
 		}
+		if($this->input->post('district')){
+			$this->db->where('hospital.district',$this->input->post('district'));
+		}
 		if($this->input->post('visit_type')){
 			$this->db->where('visit_type.ip_op',$this->input->post('visit_type'));
 		}
@@ -186,6 +229,7 @@ class Helpline_model extends CI_Model{
 		$this->db->from('helpline_call')
 		->join('helpline_caller_type','helpline_call.caller_type_id = helpline_caller_type.caller_type_id','left')
 		->join('helpline_call_category','helpline_call.call_category_id = helpline_call_category.call_category_id','left')
+		->join('helpline_receiver','helpline_call.dial_whom_number = helpline_receiver.phone','left')
 		->join('hospital','helpline_call.hospital_id = hospital.hospital_id','left');
 		$query = $this->db->get();
 		return $query->result();

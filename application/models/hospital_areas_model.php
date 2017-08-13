@@ -1,5 +1,5 @@
 <?php
-class hospital_areas_model extends CI_Model {                                          //create a model class with name hospital_areas_model which extends CI_model.
+class Hospital_areas_model extends CI_Model {                                          //create a model class with name hospital_areas_model which extends CI_model.
     function __construct() {                                                           //constructor definition.
         parent::__construct();                                                         //calling code igniter (parent) constructor.
     }//constructor
@@ -23,7 +23,8 @@ class hospital_areas_model extends CI_Model {                                   
          }//if
           
         $this->db->trans_start();                                                      //transaction started here.
-        $this->db->insert('area', $area);                                              //insert array (area) into area table.
+        $this->db->insert('area', $area); 
+        echo "inserted successfully" ;                                           //insert array (area) into area table.
         $this->db->trans_complete();                                                   //transaction completed here.
         if($this->db->trans_status()==FALSE){                                          //checking transaction status.If it fails return false else return true.
                 return false;

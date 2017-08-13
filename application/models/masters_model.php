@@ -1285,23 +1285,23 @@ else if($type=="dosage"){
                                     $to_year = $this->input->post('upper_age_limit_years'.$count);
                                     $to_month = $this->input->post('upper_age_limit_months'.$count);
                                     $to_day = $this->input->post('upper_age_limit_days'.$count);
-                                    $from_year = NULL;
-                                    $from_month = NULL;
-                                    $from_day = NULL;
+                                    $from_year = 0;
+                                    $from_month = 0;
+                                    $from_day = 0;
                                 }elseif($this->input->post('age'.$count)=='2'){
                                     $from_year = $this->input->post('lower_age_limit_years'.$count);
                                     $from_month = $this->input->post('lower_age_limit_months'.$count);
                                     $from_day = $this->input->post('lower_age_limit_days'.$count);
-                                    $to_year = NULL;
-                                    $to_month = NULL;
-                                    $to_day = NULL;                                  
+                                    $to_year = 0;
+                                    $to_month = 0;
+                                    $to_day = 0;                                  
                                 }else{
-                                    $from_year = NULL;
-                                    $from_month = NULL;
-                                    $from_day = NULL;
-                                    $to_year = NULL;
-                                    $to_month = NULL;
-                                    $to_day = NULL;
+                                    $from_year = 0;
+                                    $from_month = 0;
+                                    $from_day = 0;
+                                    $to_year = 0;
+                                    $to_month = 0;
+                                    $to_day = 0;
                                 }
                                 $range_data[]=array(
                                     'test_master_id' => $test_master_id,

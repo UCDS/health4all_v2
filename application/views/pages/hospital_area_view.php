@@ -1,18 +1,13 @@
 <div class="center-block">
-  <div class="col-xs-4 col-md-2 sidebar-left">
-    <ul class="nav nav-sidebar">
-    			<li class="nav-header" style="font-size:20px;font-style:bold">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add
-				<li <?php if(preg_match("^add/equipment$^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/add/equipment" style="font-size:15px;font-style:bold"><i class="fa fa-hospital-o fa-lg"style="color:red"></i>&nbsp;&nbsp;&nbsp;Hospital</a></li>
-				<li <?php if(preg_match("^add/equipment_type^",current_url())) echo 'class="active"';?>><a href="<?php echo base_url();?>equipments/add/equipment_type" style="font-style:bold;font-size:15px"><i class="fa fa-medkit fa-lg"style="color:red"></i>&nbsp;&nbsp;Department</a></li>
-				<li <?php if(preg_match("^add/service_records^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/add/service_records"style="font-style:bold;font-size:15px"><i class="fa fa-building-o fa-lg"style="color:red" aria-hidden="false"></i>&nbsp;&nbsp;Units</a></li>
-				<li <?php if(preg_match("^add/service_records^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>equipments/add/service_records" style="font-style:bold;font-size:15px"><i class="fa fa-map-marker fa-2x" style="color:red"></i></i>&nbsp;&nbsp;Areas</a></li>
-	<ul>
-  </div>
+  
 
 
  <h2 align="center">Area</h2><br>
-  <strong><?php if(isset($message)){ echo "<center>".$message."</center>";}?></strong>
-   <?php	echo form_open('hospital_areas/add_area',array('class'=>'form-group','role'=>'form')); ?>
+ <strong><?php if(isset($message)){ echo "<center>".$message."</center>";}   
+     echo  "<center>".validation_errors()."<center>"; ?></strong> 
+    
+  <?php	echo form_open('hospital_areas/add_area',array('class'=>'form-group','role'=>'form')); ?> 
+	 
     <div class="col-md-8 col-md-offset-3">
 	 <div class="row">
 	  <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
@@ -23,7 +18,7 @@
 	  </div>
 	  <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
 	   <div class="form-group">
-	    <label for="inputdepartment_id ">Department </label>
+	    <label for="inputdepartment_id">Department</label>
 		 <select name="department_id" id="department_id" class="form-control">
 		 <option value="">select</option>
 	     <?php
@@ -43,7 +38,7 @@
 	  </div>
 	  <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
 	   <div class="form-group">
-	    <label for="inputaarea_type_id ">Area Type </label>
+	    <label for="inputarea_type_id ">Area Type </label>
 		 <select name="area_type_id" id="area_type_id" class="form-control">
 		 <option value="">select</option>
 		 <?php

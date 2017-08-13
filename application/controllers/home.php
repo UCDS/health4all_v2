@@ -15,9 +15,8 @@ class Home extends CI_Controller {
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 	}
-
-	public function index()
-	{
+	public function index(){
+		$this->data['title']="Home";
 		$this->load->helper('form');
 		if($this->session->userdata('logged_in')){
 			$this->data['title']="Home";
@@ -28,7 +27,7 @@ class Home extends CI_Controller {
 				if ($this->form_validation->run() === FALSE)
 				{
 					$this->load->view('templates/header',$this->data);
-					$this->load->view('pages/home',$this->data);
+					$this->load->view('pages/user_home',$this->data);
 				}
 				else{
 					if($this->input->post('organisation')){
@@ -51,7 +50,7 @@ class Home extends CI_Controller {
 						$this->data['op_forms']=$this->staff_model->get_forms("OP");
 						$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 						$this->load->view('templates/header',$this->data);
-						$this->load->view('pages/home',$this->data);
+						$this->load->view('pages/user_home',$this->data);
 					}
 				}
 			}
@@ -74,52 +73,112 @@ class Home extends CI_Controller {
 				$this->data['op_forms']=$this->staff_model->get_forms("OP");
 				$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 				$this->load->view('templates/header',$this->data);
-				$this->load->view('pages/home',$this->data);
+				$this->load->view('pages/user_home',$this->data);
+			}
+		}
+		else{ 
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('pages/home',$this->data);
+		}
+		$this->load->view('templates/footer');
+	}
+	public function login()
+	{
+		$this->load->helper('form');
+		if($this->session->userdata('logged_in')){
+			$this->data['title']="Home";
+			if(count($this->data['hospitals'])>1){
+			$this->load->library('form_validation');
+				$this->form_validation->set_rules('organisation', 'Organisation',
+				'trim|required|xss_clean');
+				if ($this->form_validation->run() === FALSE)
+				{
+					$this->load->view('templates/header',$this->data);
+					$this->load->view('pages/user_home',$this->data);
+				}
+				else{
+					if($this->input->post('organisation')){
+						foreach($this->data['hospitals'] as $row){
+							if($row->hospital_id==$this->input->post('organisation')){
+								$sess_array = array(
+								 'hospital_id' => $row->hospital_id,
+								 'hospital' => $row->hospital,
+								 'hospital_short_name' => $row->hospital_short_name,
+								 'description' => $row->description,
+								 'place' => $row->place,
+								 'district' => $row->district,
+								 'state' => $row->state,
+								 'logo' => $row->logo
+								);
+								$this->session->set_userdata('hospital',$sess_array);
+								break;
+							}
+						}
+						$this->data['op_forms']=$this->staff_model->get_forms("OP");
+						$this->data['ip_forms']=$this->staff_model->get_forms("IP");
+						$this->load->view('templates/header',$this->data);
+						$this->load->view('pages/user_home',$this->data);
+					}
+				}
+			}
+			else{
+				foreach($this->data['hospitals'] as $row){
+							$sess_array = array(
+							 'hospital_id' => $row->hospital_id,
+							 'hospital' => $row->hospital,
+							 'hospital_short_name' => $row->hospital_short_name,
+							 'description' => $row->description,
+							 'place' => $row->place,
+							 'district' => $row->district,
+							 'state' => $row->state,
+							 'logo' => $row->logo
+							);
+							$this->session->set_userdata('hospital',$sess_array);
+							$this->session->set_userdata('place',array('camp_id'=>0,'name'=>'Blood Bank'));
+							break;
+				}
+				$this->data['op_forms']=$this->staff_model->get_forms("OP");
+				$this->data['ip_forms']=$this->staff_model->get_forms("IP");
+				$this->load->view('templates/header',$this->data);
+				$this->load->view('pages/user_home',$this->data);
 			}
 		}
 		
 		else{
-			$this->data['title']="Login";
-			$this->load->view('templates/header',$this->data);
-			$this->load->view('pages/login');
+			if(!$this->session->userdata('logged_in')){
+			
+				$this->data['title']="Login";
+
+				$this->load->view('templates/header',$this->data);
+				$this->load->helper('form');
+				$this->load->library('form_validation');
+				
+				$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean');
+				$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean|callback_check_database');
+				if ($this->form_validation->run() === FALSE)
+				{
+					$this->load->view('pages/login');
+				}
+				else{
+					$defaults = $this->staff_model->get_defaults();
+					 if($defaults != false) {
+						foreach($defaults as $def) {
+								$this->session->set_userdata($def->primary_key, $def->default_value_text);
+						}
+					 }
+					redirect('home', 'refresh');
+				}
+				
+				$this->load->view('templates/footer');
+			}
+			else {
+				redirect('home','refresh');
+			}
 		}
 		$this->load->view('templates/footer');
+		
 	}
 
-	function login()
-	{	
-		if(!$this->session->userdata('logged_in')){
-			
-			$this->data['title']="Login";
-
-			$this->load->view('templates/header',$this->data);
-			$this->load->helper('form');
-			$this->load->library('form_validation');
-			
-			$this->form_validation->set_rules('username', 'Username',
-			'trim|required|xss_clean');
-			$this->form_validation->set_rules('password', 'Password', 
-			'trim|required|xss_clean|callback_check_database');
-			if ($this->form_validation->run() === FALSE)
-			{
-				$this->load->view('pages/login');
-			}
-			else{
-				$defaults = $this->staff_model->get_defaults();
-				 if($defaults != false) {
-					foreach($defaults as $def) {
-							$this->session->set_userdata($def->primary_key, $def->default_value_text);
-					}
-				 }
-				redirect('home', 'refresh');
-			}
-			
-			$this->load->view('templates/footer');
-		}
-		else {
-			redirect('home','refresh');
-		}
-	}
 	
 	
 	function check_database($password){

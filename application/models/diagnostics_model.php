@@ -851,7 +851,7 @@ class Diagnostics_model extends CI_Model{
 			}				
 			$this->db->where('test_id',$test);
 			if($this->input->post('text_result')){
-				$this->db->update('test',array('test_status'=>$status,'test_approved_by'=>$userdata['user_id'],'reported_date_time'=>date("Y-m-d H:i:s"),'test_result_text'=>$this->input->post('text_result')));
+				$this->db->update('test',array('test_status'=>$status,'test_approved_by'=>$userdata['user_id'],'reported_date_time'=>date("Y-m-d H:i:s"),'test_result_text'=>$this->input->post('text_result_'.$test)));
 			}
 			else{
 			$this->db->update('test',array('test_status'=>$status,'test_approved_by'=>$userdata['user_id'],'reported_date_time'=>date("Y-m-d H:i:s")));
