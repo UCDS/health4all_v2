@@ -68,6 +68,10 @@ class Helpline_model extends CI_Model{
 	
 	function update_call(){
 		$calls = $this->input->post('call');
+		if(!!$this->input->post('resolution_date') && !! $this->input->post('resolution_time')){
+			$resolution_date_time = date("Y-m-d H:i:s",strtotime($this->input->post('resolution_date')." ".$this->input->post('resolution_time')));
+		}
+		else $resolution_date_time = 0;
 		$data=array();
 		foreach($calls as $call){
 			$data[]=array(
@@ -79,6 +83,7 @@ class Helpline_model extends CI_Model{
 				'ip_op'=>$this->input->post("visit_type_".$call),
 				'visit_id'=>$this->input->post("visit_id_".$call),
 				'note'=>$this->input->post("note_".$call),
+				'resolution_date_time'=>$resolution_date_time,
 				'updated'=>1
 			);
 		}
@@ -93,6 +98,97 @@ class Helpline_model extends CI_Model{
 			return false;
 		}
 		
+	}
+	function send_email(){
+		$this->load->library('email');
+		$user = $this->session->userdata('logged_in');
+		$call_date = $this->input->post('call_date');
+		$to_email = $this->input->post('to_email');
+		$cc_email = $this->input->post('cc_email');
+		$greeting = $this->input->post('greeting');
+		$phone_shared = $this->input->post('phone_shared');
+		$note = $this->input->post('note');
+		$call_id = $this->input->post('call_id_email');
+		$patient = $this->input->post('patient');
+		$caller_type = $this->input->post('caller_type');
+		$from_number = $this->input->post('from_number');
+		$call_category = $this->input->post('call_category');
+		$hospital = $this->input->post('hospital');
+		$recording = $this->input->post('recording');
+		$from_name = "Hospital Helpline";
+		if($to_email!=''){
+		$subject="Helpline call #$call_id - ";
+		if(!!$call_category) $subject .= $call_category." ";
+		if(!!$hospital) $subject .= "from ".$hospital." ";
+		if(!!$caller_type) $subject .= "by ".$caller_type." ";
+		if(!!$patient) $subject .= "regarding ".$patient." ";
+		if(!!$greeting){ $body = $greeting; } else $body = "Hi,";
+		$body.="<br /><br />This call information from Hospital Helpline (040 - 39 56 53 39) is being escalated for your information and intervention.<br /><br />";
+		$body.="Call ID: $call_id <br />";
+		$body.="Call Time: ".date("d-M-Y, g:iA",strtotime($call_date))." <br />";
+		$body.="Call: ";
+		if(!!$call_category) $body .= $call_category." ";
+		if(!!$hospital) $body .= "from ".$hospital." ";
+		if(!!$caller_type) $body .= "by ".$caller_type." ";
+		if(!!$phone_shared) $body.="(".$from_number.") ";
+		if(!!$patient) $body .= "regarding ".$patient." ";
+		$body.="<br />";
+		$body.="Call Information: $note <br />";
+		$body.="Recording: <a href=\"$recording\">Click Here</a><br /><br />";
+		$body.="We request you to give your input regarding this call by calling the helpline 040 - 39 56 53 39 or by replying to this email.<br /><br />";
+		$body.="With Regards, <br />Hospital Helpline Team";
+		$mailbody="
+		<div style='width:90%;padding:5px;margin:5px;font-style:\"Trebuchet MS\";border:1px solid #eee;'>
+		<br />$body
+		</div>";
+		}
+		$from = 'helpline@health4all.online';
+		if(!!$from){
+		$this->email->from("$from", "Hospital Helpline");
+		$this->email->to($to_email);
+		$this->email->cc($cc_email);
+		$this->email->subject($subject);
+		$this->email->message($mailbody);
+		if ( ! $this->email->send()) {
+			$this->email->print_debugger();
+		}
+		else{
+			$this->email->clear(TRUE);
+		}
+		}
+		$data=array(
+			'call_id'=>$call_id,
+			'to_email'=>$this->input->post("to_email"),
+			'cc_email'=>$this->input->post("cc_email"),
+			'greeting'=>$this->input->post("greeting"),
+			'phone_shared'=>$this->input->post("phone_shared"),
+			'note'=>$this->input->post("note"),
+			'user_id'=>$user['user_id'],
+			'email_date_time'=>date("Y-m-d H:i:s")
+		);
+		$this->db->trans_start();
+			$this->db->insert('helpline_email',$data);
+		$this->db->trans_complete();
+		if($this->db->trans_status()===TRUE){
+			return true;
+		}
+		else {
+			$this->db->trans_rollback();
+			return false;
+		}
+		
+	}
+	
+	function get_emails(){
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$this->db->where('(DATE(start_time) BETWEEN "'.date("Y-m-d",strtotime($this->input->post('from_date'))).'" AND "'.date("Y-m-d",strtotime($this->input->post('to_date'))).'")');
+		}
+		else 
+			$this->db->where('DATE(start_time)',date("Y-m-d"));
+		$this->db->select('helpline_email.*')->from('helpline_email')->join('helpline_call','helpline_email.call_id = helpline_call.call_id')
+		->order_by('email_date_time','desc');
+		$query = $this->db->get();
+		return $query->result();
 	}
 	function get_calls(){
 		if($this->input->post('date')){
@@ -136,11 +232,13 @@ class Helpline_model extends CI_Model{
 		}
 		else 
 			$this->db->where('DATE(start_time)',date("Y-m-d"));
-		$this->db->select('*,helpline_call.note')->from('helpline_call')
+		$this->db->select('*,helpline_call.note,count(helpline_email_id) email_count')->from('helpline_call')
 		->join('helpline_caller_type','helpline_call.caller_type_id = helpline_caller_type.caller_type_id','left')
 		->join('helpline_call_category','helpline_call.call_category_id = helpline_call_category.call_category_id','left')
 		->join('helpline_resolution_status','helpline_call.resolution_status_id = helpline_resolution_status.resolution_status_id','left')
 		->join('hospital','helpline_call.hospital_id = hospital.hospital_id','left')
+		->join('helpline_email','helpline_call.call_id = helpline_email.call_id','left')
+		->group_by('helpline_call.call_id')
 		->order_by('start_time','desc');
 		$query = $this->db->get();
 		return $query->result();
@@ -223,7 +321,7 @@ class Helpline_model extends CI_Model{
 			$this->db->where('hospital.district',$this->input->post('district'));
 		}
 		if($this->input->post('visit_type')){
-			$this->db->where('visit_type.ip_op',$this->input->post('visit_type'));
+			$this->db->where('helpline_call.ip_op',$this->input->post('visit_type'));
 		}
 		
 		$this->db->from('helpline_call')
@@ -231,6 +329,68 @@ class Helpline_model extends CI_Model{
 		->join('helpline_call_category','helpline_call.call_category_id = helpline_call_category.call_category_id','left')
 		->join('helpline_receiver','helpline_call.dial_whom_number = helpline_receiver.phone','left')
 		->join('hospital','helpline_call.hospital_id = hospital.hospital_id','left');
+		$query = $this->db->get();
+		return $query->result();
+	}
+	
+	function helpline_trend(){
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$this->db->where('date(start_time) >=',date("Y-m-d",strtotime($this->input->post('from_date'))));
+			$this->db->where('date(start_time) <=',date("Y-m-d",strtotime($this->input->post('to_date'))));
+		}
+		else if($this->input->post('from_date')){
+			$this->db->where('date(start_time) >=',date("Y-m-d",strtotime($this->input->post('from_date'))));
+		}
+		else if($this->input->post('to_date')){
+			$this->db->where('date(start_time) <=',date("Y-m-d",strtotime($this->input->post('to_date'))));
+		}
+		else
+			$this->db->where('date(start_time) >= ',date("Y-m-d",strtotime("-1 months")));
+		
+		if($this->input->post('caller_type')){
+			$this->db->where('helpline_caller_type.caller_type_id',$this->input->post('caller_type'));
+		}
+		if($this->input->post('call_category')){
+			$this->db->where('helpline_call_category.call_category_id',$this->input->post('call_category'));
+		}
+		if($this->input->post('hospital')){
+			$this->db->where('hospital.hospital_id',$this->input->post('hospital'));
+		}
+		if($this->input->post('district')){
+			$this->db->where('hospital.district',$this->input->post('district'));
+		}
+		if($this->input->post('visit_type')){
+			$this->db->where('helpline_call.ip_op',$this->input->post('visit_type'));
+		}
+		if($this->input->post('trend_type')){
+	    	$trend=$this->input->post('trend_type');
+			if($trend=="Month"){
+			$this->db->select("DATE_FORMAT(helpline_call.start_time ,\"%b-%Y\") as date",false);  
+			$this->db->group_by('date','desc');
+			}
+			else if($trend=="Year"){
+			$this->db->select("DATE_FORMAT(helpline_call.start_time ,\"%Y\") as date",false);  
+			$this->db->group_by('date','desc');
+			}
+			else{
+			$this->db->select("DATE_FORMAT(helpline_call.start_time ,\"%d-%b-%Y\") as date",false);  
+			$this->db->group_by('date','desc');
+			}
+		}
+		else{
+			$this->db->select("DATE_FORMAT(helpline_call.start_time ,\"%d-%b-%Y\") as date",false);  
+			$this->db->group_by('date','desc');
+		}
+ 
+
+		$this->db->select("count(call_id) calls ")
+		->from('helpline_call')
+		->join('helpline_caller_type','helpline_call.caller_type_id = helpline_caller_type.caller_type_id','left')
+		->join('helpline_call_category','helpline_call.call_category_id = helpline_call_category.call_category_id','left')
+		->join('helpline_receiver','helpline_call.dial_whom_number = helpline_receiver.phone','left')
+		->join('hospital','helpline_call.hospital_id = hospital.hospital_id','left')
+		->order_by('start_time','asc');
+
 		$query = $this->db->get();
 		return $query->result();
 	}

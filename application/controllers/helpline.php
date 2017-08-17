@@ -41,6 +41,7 @@ class Helpline extends CI_Controller {
 		$this->data['call_category']=$this->helpline_model->get_call_category();
 		$this->data['resolution_status']=$this->helpline_model->get_resolution_status();
 		$this->data['all_hospitals']=$this->staff_model->get_hospital();
+		$this->data['emails_sent']=$this->helpline_model->get_emails();
 		$this->load->view('pages/helpline/report_detailed',$this->data);
 		$this->load->view('templates/footer');
 		}
@@ -90,6 +91,20 @@ class Helpline extends CI_Controller {
 				}
 				$this->load->view('pages/helpline/update_calls',$this->data);					
 			}
+			else if($this->input->post('send_email')){
+				$result = $this->helpline_model->send_email();
+				$this->data['calls']=$this->helpline_model->get_calls();
+				if($result==1){
+					$this->data['msg']="Email sent successfully.";
+				}
+				else if($result==2){
+					$this->data['msg']="Email not sent, please check the email address(es) entered and try again.";
+				}
+				else{
+					$this->data['msg']="Email not sent.";
+				}
+				$this->load->view('pages/helpline/update_calls',$this->data);					
+			}
 			else{
 			$this->load->view('pages/helpline/update_calls',$this->data);
 			}
@@ -98,7 +113,7 @@ class Helpline extends CI_Controller {
 		}
 		else show_404();
 	}
-
+	
 	
 	function insert_call(){
 		if(!!$this->input->get('CallSid')) {

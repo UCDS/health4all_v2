@@ -218,10 +218,10 @@
 		<div class="col-md-12">
 			<?php echo form_open('dashboard/helpline/',array('role'=>'form','class'=>'form-custom')); ?>
 			<div style="position:relative;display:inline;">
-			<input type="text" class="date" name="from_date" class="form-control" value="<?php echo $from_date;?>" />
+			<input type="text" class="date form-control" name="from_date" class="form-control" value="<?php echo $from_date;?>" />
 			</div>
 			<div  style="position:relative;display:inline;">
-			<input type="text" class="date" name="to_date" class="form-control" value="<?php echo $to_date;?>" />	
+			<input type="text" class="date form-control" name="to_date" class="form-control" value="<?php echo $to_date;?>" />	
 			</div>
 			<select name="hospital" style="width:100px" class="form-control">
 				<option value="">Hospital</option>
@@ -265,6 +265,7 @@
 					>IP</option>
 			</select>	
 			<input type="submit" name="submit" value="Go" class="btn btn-primary btn-sm" />
+			<a href="<?php echo base_url()."dashboard/helpline_trend/";?>" class="btn btn-warning btn-sm"><i class="fa fa-line-chart"></i> Trends</a>
 			</form>
 			<br />
 		</div>

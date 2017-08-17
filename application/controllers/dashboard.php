@@ -76,6 +76,23 @@ class Dashboard extends CI_Controller {
 		$this->load->view('pages/helpline/helpline_dashboard',$this->data);		
 		$this->load->view('templates/footer');
 	}
+
+	public function helpline_trend(){
+		$this->load->helper('form');
+		$this->data['title']="Helpline Trend Dashboard";
+		$this->load->model('helpline_model');
+		$this->load->model('staff_model');
+		$this->data['caller_type']=$this->helpline_model->get_caller_type();
+		$this->data['call_category']=$this->helpline_model->get_call_category();
+		$this->data['resolution_status']=$this->helpline_model->get_resolution_status();
+		$this->data['all_hospitals']=$this->staff_model->get_hospital();
+		$this->data['hospital_districts']=$this->helpline_model->get_hospital_district();
+		$this->data['report']=$this->helpline_model->helpline_trend();
+		//var_dump($this->data['report']);
+		$this->load->view('templates/header',$this->data);		
+		$this->load->view('pages/helpline/helpline_trend',$this->data);		
+		$this->load->view('templates/footer');
+	}
 	
 	public function bloodbanks(){
 		$this->load->helper('form');

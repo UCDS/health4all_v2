@@ -98,9 +98,12 @@ $(function(){
 				<th>Caller Type</th>
 				<th>Call Category</th>
 				<th>Resolution Status</th>
+				<th>Resolution Time</th>
+				<th>TAT</th>
 				<th>Hospital</th>
 				<th>Patient</th>
 				<th>Note</th>
+				<th>Emails</th>
 			</thead>
 			<tbody>
 			<?php 
@@ -147,7 +150,25 @@ $(function(){
 							<?php echo $call->call_category;?>		
 						</td>
 						<td>
-							<?php echo $call->resolution_status;?>		
+							<?php echo $call->resolution_status;?>	
+						</td>
+						<td>
+							<small>
+							<?php if($call->resolution_date_time != 0) echo date("d-M-Y g:i A",strtotime($call->resolution_date_time)); else echo '';?>
+							</small>
+						</td>
+						<td>
+							<small>
+								<?php if($call->resolution_date_time != 0){
+									$diff = date_diff(date_create($call->resolution_date_time),date_create($call->start_time));
+									if($diff->y != 0) echo $diff->y." Y, ".$diff->m." Months"; 
+									else if($diff->m != 0) echo $diff->m." Months, ".$diff->d." Days";
+									else if($diff->d != 0) echo $diff->d." Days, ".$diff->h." Hours";
+									else if($diff->h != 0) echo $diff->h." Hours, ".$diff->i." Mins";
+									else if($diff->i != 0) echo $diff->i." Mins";
+									}
+								?>
+							</small>
 						</td>
 						<td>
 							<?php echo $call->hospital;?>		
@@ -157,6 +178,45 @@ $(function(){
 						</td>
 						<td>
 							<?php echo $call->note;?>
+						</td>
+						<td>
+							<?php if($call->email_count > 0) { ?>
+							<a href="#" onclick="display_emails(<?= $call->call_id;?>)"  data-toggle="modal" data-target="#emailModal"><i class="fa fa-envelope"></i> (<?= $call->email_count;?>)</a>
+							<div class="emails_sent_<?= $call->call_id;?> sr-only"> 
+							<?php foreach($emails_sent as $email) {
+								if($email->call_id == $call->call_id) { 
+								$from_name = "Hospital Helpline";
+								$subject="Helpline call #$email->call_id - ";
+								if(!!$call->call_category) $subject .= $call->call_category." ";
+								if(!!$call->hospital) $subject .= "from ".$call->hospital." ";
+								if(!!$call->caller_type) $subject .= "by ".$call->caller_type." ";
+								if(!!$call->ip_op && $call->visit_id !=0 ) $subject .= "regarding ".$call->ip_op." #".$call->visit_id." ";
+								$body = date("d-M-Y g:iA",strtotime($email->email_date_time))."<br /><br />";
+								if(!!$email->greeting){ $body .= $email->greeting; } else $body .= "Hi,";
+								$body.="<br /><br />This call information from Hospital Helpline (040 - 39 56 53 39) is being escalated for your information and intervention.<br /><br />";
+								$body.="Call ID: $email->call_id <br />";
+								$body.="Call Time: ".date("d-M-Y, g:iA",strtotime($call->start_time))." <br />";
+								$body.="Call: ";
+								if(!!$call->call_category) $body .= $call->call_category." ";
+								if(!!$call->hospital) $body .= "from ".$call->hospital." ";
+								if(!!$call->caller_type) $body .= "by ".$call->caller_type." ";
+								if(!!$email->phone_shared) $body.="(".$call->from_number.") ";
+								if(!!$call->ip_op && $call->visit_id !=0) $body .= "regarding ".$call->ip_op." #".$call->visit_id." ";
+								$body.="<br />";
+								$body.="Call Information: $email->note <br />";
+								$body.="Recording: <a href=\"$call->recording_url\">Click Here</a><br /><br />";
+								$body.="We request you to give your input regarding this call by calling the helpline 040 - 39 56 53 39 or by replying to this email.<br /><br />";
+								$body.="With Regards, <br />Hospital Helpline Team";
+								$mailbody="
+								<div style='width:90%;padding:5px;margin:5px;font-style:\"Trebuchet MS\";border:1px solid #eee;'>
+								<br />$body
+								</div>";
+								echo $mailbody;
+								}
+							}
+							?>
+							</div>
+							<?php } ?>
 						</td>
 					</tr>
 				<?php } 
@@ -172,5 +232,25 @@ $(function(){
 		?>
 </div>
 
+
+<!-- Modal -->
+<div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document" style="width:90%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Email</h4>
+      </div>
+      <div class="modal-body">
+	  </div>
+	 </div>
+	</div>
+</div>
+
+<script type="text/javascript">
+function display_emails(callId){
+	$(".modal-body").html($(".emails_sent_"+callId).html());
+}
+</script>
 					
 				
