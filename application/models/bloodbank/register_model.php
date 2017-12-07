@@ -1,4 +1,4 @@
-<?php 
+<?php
 class Register_model extends CI_Model{
 
 	function __construct(){
@@ -39,7 +39,7 @@ class Register_model extends CI_Model{
 			$camp_id=$place['camp_id'];
 		else
 			$camp_id = 0;
-		
+
 		$data=array(
 			'name'=>$name,
 			'parent_spouse'=>$parent_spouse,
@@ -70,7 +70,7 @@ class Register_model extends CI_Model{
 				);
 				$this->db->insert('bb_replacement_patient',$patient_data);
 				$replacement_patient_id=$this->db->insert_id();
-			}		
+			}
 		}
 		$this->db->insert('blood_donor',$data);
 		$donor_id=$this->db->insert_id();
@@ -91,7 +91,7 @@ class Register_model extends CI_Model{
 			return true;
 		}
 	}// donor_register
-        
+
 	function repeat_donor() {
 		$place=$this->session->userdata('place');
 		$userdata=$this->session->userdata('hospital');
@@ -140,10 +140,10 @@ class Register_model extends CI_Model{
 					'ward_unit'=>$patient_ward_unit,
 					'blood_group'=>$patient_blood_group,
 					'hospital_id'=>$hospital
-				);                    
+				);
 				$this->db->insert('bb_replacement_patient',$patient_data);
 				$replacement_patient_id=$this->db->insert_id();
-			}		
+			}
 		}
 		$donor_id = $this->input->post('repeat_donor');
 		$this->db->where('donor_id', $this->input->post('donor_id'));
@@ -268,7 +268,7 @@ class Register_model extends CI_Model{
 		$this->db->trans_complete();
 		return $this->db->trans_status();
 	}// update_medical
-	
+
 	function update_bleeding($donation_id){
 		$hospital=$this->session->userdata('hospital');
 		if($this->input->post('incomplete')){
@@ -279,7 +279,7 @@ class Register_model extends CI_Model{
 			$status_id=4;
 			$blood_unit=$this->input->post('blood_unit_num');
 		}
-		$this->db->select('blood_unit_num,donation_date'); 
+		$this->db->select('blood_unit_num,donation_date');
 		$this->db->where('blood_unit_num',$blood_unit);
 		$this->db->where('hospital_id',$hospital['hospital_id']);
 		$this->db->where('YEAR(donation_date)',date("Y"));
@@ -287,8 +287,8 @@ class Register_model extends CI_Model{
 		$query=$this->db->get();
 		if($query->num_rows()>0)
 		{
-			return 2; 
-		}	
+			return 2;
+		}
 		$data=array(
 			'blood_unit_num'=>$blood_unit,
 			'segment_num'=>$this->input->post('segment_num'),
@@ -300,7 +300,7 @@ class Register_model extends CI_Model{
 			'blood_group'=>$this->input->post('blood_group')
 		);
 		$userdata=$this->session->userdata('logged_in');
-		
+
 		$result=$this->db->query("SELECT DATE_ADD((SELECT donation_date FROM bb_donation WHERE donation_id=$donation_id),INTERVAL 35 DAY) expiry_date");
 		$row=$result->row();
 		$hospitaldata=$this->session->userdata('hospital');
@@ -319,14 +319,14 @@ class Register_model extends CI_Model{
 			'donation_id'=>$donation_id,
 			'hospital_id'=>$hospital
 		);
-		
+
 		$this->db->trans_start();
 		$this->db->where('donation_id',$donation_id);
 		$this->db->update('bb_donation',$data);
 		$this->db->where('donor_id','(SELECT donor_id FROM bb_donation WHERE donation_id='.$donation_id.')',FALSE);
 		$this->db->update('blood_donor',$blood_group);
 		$this->db->insert('blood_inventory',$blood,FALSE);
-		$this->db->insert('blood_screening',$screening);		
+		$this->db->insert('blood_screening',$screening);
 		$this->db->select('name,email,donation_date')
 			->from('blood_donor')
 			->join('bb_donation','blood_donor.donor_id=bb_donation.donor_id')
@@ -355,18 +355,18 @@ class Register_model extends CI_Model{
 		$query=$this->db->get();
 		return $query->result();
 	}// get_camps
-	
+
 	function check_unique($blood_unit_num){
 		$userdata=$this->session->userdata('hospital');
 		$hospital=$userdata['hospital_id'];
 		$year_start=date("Y-m-d",strtotime("April 1"));
 		$year_current=date("Y-m-d");
-		if($year_current>=$year_start){ 
+		if($year_current>=$year_start){
 			$year=$year_start;
 		}
-		else 
+		else
 			$year=date("Y-m-d",strtotime("April 1 Last year"));
-		
+
 		$this->db->select('donation_id')
 			->from('bb_donation')
 			->where('blood_unit_num',$blood_unit_num)
@@ -409,7 +409,7 @@ class Register_model extends CI_Model{
 		$this->db->where('blood_donor.hospital_id', $hospital);
 
 		$this->db->select("donor_id, name, parent_spouse,
-		occupation,	
+		occupation,
 		dob, sex, blood_group, phone, email, address");
 		$this->db->from('blood_donor');
 
@@ -458,7 +458,7 @@ class Register_model extends CI_Model{
 
 		if($this->input->post('referred_by_doctor'))
 			$referred_by_doctor = $this->input->post('referred_by_doctor');
-		else 
+		else
 			$referred_by_doctor="";
 
         if($patient_type=='Internal' && isset($patient_visit) && $request_type!=1){
@@ -472,34 +472,34 @@ class Register_model extends CI_Model{
             $hospital_id=$row_result->hospital_id;
             $patient_id = $row_result->patient_id;
         }
-            //All the post variables are stored in local variables; 
+            //All the post variables are stored in local variables;
 			//based on the field type we modify the data as required before storing in the variables.
 			$date=date("Y-m-d",strtotime($this->input->post('date')));
 		//	$time=date_format(date_create_from_format('h:ia', $this->input->post('time')),'H:i:s');
-			
-			if($this->input->post('patient_first_name')) 
-				$first_name=$this->input->post('patient_first_name'); 
-			else 
+
+			if($this->input->post('patient_first_name'))
+				$first_name=$this->input->post('patient_first_name');
+			else
 				$first_name="";
-			
-			if($this->input->post('patient_last_name')) 
-				$last_name=$this->input->post('patient_last_name'); 
-			else 
+
+			if($this->input->post('patient_last_name'))
+				$last_name=$this->input->post('patient_last_name');
+			else
 				$last_name="";
 			$patient_name = $first_name." ".$last_name;
 			if($this->input->post('patient_age')) $patient_age=$this->input->post('patient_age'); else $patient_age = "";
 			if($this->input->post('diagnosis')) $diagnosis=$this->input->post('diagnosis');else $diagnosis = "";
 			if($this->input->post('patient_gender')) $patient_gender=$this->input->post('gender'); else $patient_gender = "";
-			if($this->input->post('ward_unit')) 
-				$ward_unit = $this->input->post('ward_unit'); 
-			else 
+			if($this->input->post('ward_unit'))
+				$ward_unit = $this->input->post('ward_unit');
+			else
 				$ward_unit="";
 
 
 			$hospital=$this->session->userdata('hospital');
 			$hospital_id=$hospital['hospital_id'];
 
-        
+
         $blood_transfusion_required=$this->input->post('blood_transfusion');
         $blood_groups=$this->input->post('blood_group');
         $whole_blood_units=$this->input->post('whole_blood_units');
@@ -512,7 +512,7 @@ class Register_model extends CI_Model{
         $request_date=date("Y-m-d",strtotime($this->input->post('request_date')));
         $i=0;
         $data = array();
-        
+
         if($request_type==1)
             $patient_id = 0;
 
@@ -556,16 +556,16 @@ class Register_model extends CI_Model{
 	function search_patients(){
 		$hospital=$this->session->userdata('hospital');
 		$hospital_id=$hospital['hospital_id'];
-		
+
         $this->db->select('first_name,last_name,hosp_file_no,patient.patient_id,age_years,age_months,age_days')
 			->from('patient')
 			->join('patient_visit','patient.patient_id = patient_visit.patient_id','left')
 			->like('patient_visit.hosp_file_no',strtolower($this->input->post('query')),'both')
 			/**
 			 * Multi hospital support
-			 * 
+			 *
 			 * Added By : Pranay On 20170521
-			 */	
+			 */
 			->where('patient_visit.hospital_id',$hospital_id)
 			->where('YEAR(patient_visit.admit_date)',$this->input->post('year'))
 			->where('visit_type',$this->input->post('visit_type'));
@@ -596,7 +596,7 @@ class Register_model extends CI_Model{
             return false;
         }
     }// remove_donation
-    
+
     /* removing donor from bleeding and inserting the reason for cancelling*/
     function remove_donation_from_bleeding($donation_id){
         $bleeding_cancel_details =array(
@@ -616,6 +616,6 @@ class Register_model extends CI_Model{
             return false;
         }
     }// remove_donation_from_bleeding
-		
+
 }
 ?>

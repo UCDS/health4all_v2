@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Dashboard extends CI_Controller {	
+class Dashboard extends CI_Controller {
 
 	function __construct(){
 		parent::__construct();
@@ -14,6 +14,7 @@ class Dashboard extends CI_Controller {
 		}
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
+		$this->load->view('pages/dashboard_refresh');
 	}
 
 	public function view($organization="")
@@ -23,9 +24,9 @@ class Dashboard extends CI_Controller {
 		{
 			$this->load->helper('form');
 			$this->data['organization']=$organization;
-			$this->data['report']=$this->reports_model->dashboard($organization);	
+			$this->data['report']=$this->reports_model->dashboard($organization);
 			$this->data['title']=$this->data['report'][0];
-			$this->load->view('templates/header',$this->data);		
+			$this->load->view('templates/header',$this->data);
 			$this->load->view('pages/dashboard',$this->data);
 		}
 		else{
@@ -33,21 +34,21 @@ class Dashboard extends CI_Controller {
 		}
 		$this->load->view('templates/footer');
 	}
-	
+
 	public function state($state=""){
 			$this->load->model('reports_model');
 			if(!!$state) //if $organization variable is not empty
 		{
 				$this->load->helper('form');
 				$this->data['state']=$state;
-				
+
 				$this->data['result']=$this->reports_model->dashboard("","state",$state);
 				$this->data['title']=$this->data['result'][0];
 				$this->data['report']=$this->data['result'][1];
-				$this->load->view('templates/header',$this->data);		
+				$this->load->view('templates/header',$this->data);
 				$this->load->view('pages/state_dashboard',$this->data);
 
-		}		
+		}
 		else{
 			show_404();
 		}
@@ -58,22 +59,24 @@ class Dashboard extends CI_Controller {
 		$this->data['title']="Helpline Dashboard";
 		$this->load->model('helpline_model');
 		$this->load->model('staff_model');
-		$this->data['caller_type_report']=$this->helpline_model->dashboard('caller_type');	
-		$this->data['call_category_report']=$this->helpline_model->dashboard('call_category');	
-		$this->data['hospital_report']=$this->helpline_model->dashboard('hospital');	
-		$this->data['district_report']=$this->helpline_model->dashboard('district');	
-		$this->data['volunteer_report']=$this->helpline_model->dashboard('volunteer');	
-		$this->data['call_type_report']=$this->helpline_model->dashboard('call_type');	
-		$this->data['to_number_report']=$this->helpline_model->dashboard('to_number');	
-		$this->data['op_ip_report']=$this->helpline_model->dashboard('op_ip');	
-		$this->data['duration']=$this->helpline_model->dashboard('duration');			
+		$this->data['caller_type_report']=$this->helpline_model->dashboard('caller_type');
+		$this->data['call_category_report']=$this->helpline_model->dashboard('call_category');
+		$this->data['hospital_report']=$this->helpline_model->dashboard('hospital');
+		$this->data['district_report']=$this->helpline_model->dashboard('district');
+		$this->data['volunteer_report']=$this->helpline_model->dashboard('volunteer');
+		$this->data['call_type_report']=$this->helpline_model->dashboard('call_type');
+		$this->data['to_number_report']=$this->helpline_model->dashboard('to_number');
+		$this->data['op_ip_report']=$this->helpline_model->dashboard('op_ip');
+		$this->data['duration']=$this->helpline_model->dashboard('duration');
+		$this->data['resolution_status']=$this->helpline_model->dashboard('resolution_status');
+		$this->data['closed_tat']=$this->helpline_model->dashboard('closed_tat');
+		$this->data['open_tat']=$this->helpline_model->dashboard('open_tat');
 		$this->data['caller_type']=$this->helpline_model->get_caller_type();
 		$this->data['call_category']=$this->helpline_model->get_call_category();
-		$this->data['resolution_status']=$this->helpline_model->get_resolution_status();
 		$this->data['all_hospitals']=$this->staff_model->get_hospital();
 		$this->data['hospital_districts']=$this->helpline_model->get_hospital_district();
-		$this->load->view('templates/header',$this->data);		
-		$this->load->view('pages/helpline/helpline_dashboard',$this->data);		
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('pages/helpline/helpline_dashboard',$this->data);
 		$this->load->view('templates/footer');
 	}
 
@@ -89,19 +92,19 @@ class Dashboard extends CI_Controller {
 		$this->data['hospital_districts']=$this->helpline_model->get_hospital_district();
 		$this->data['report']=$this->helpline_model->helpline_trend();
 		//var_dump($this->data['report']);
-		$this->load->view('templates/header',$this->data);		
-		$this->load->view('pages/helpline/helpline_trend',$this->data);		
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('pages/helpline/helpline_trend',$this->data);
 		$this->load->view('templates/footer');
 	}
-	
+
 	public function bloodbanks(){
 		$this->load->helper('form');
 		$this->data['title']="Blood Banks Dashboard";
 		$this->load->model('bloodbank/reports_model');
 		$this->data['available']=$this->reports_model->get_available_blood(1);
-		$this->load->view('templates/header',$this->data);		
-		$this->load->view('pages/bloodbank/bloodbank_dashboard',$this->data);		
-		$this->load->view('templates/footer');	
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('pages/bloodbank/bloodbank_dashboard',$this->data);
+		$this->load->view('templates/footer');
 	}
 	public function hospital($organization=""){
 		$this->load->model('reports_model');

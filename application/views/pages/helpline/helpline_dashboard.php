@@ -3,15 +3,15 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/flaticon2.css" >
 
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/moment.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/bootstrap-datetimepicker.js"></script>	
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/bootstrap-datetimepicker.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/highcharts.js"></script>
 
 	<style>
 		.panel-body { padding-top:0px; }
-		
+
 	</style>
-	
-	<?php 
+
+	<?php
 		$total=0;
 		foreach($hospital_report as $h){
 			$total+=$h->count;
@@ -23,7 +23,7 @@
 			$d_array[]= strtotime($d->dial_call_duration)-$default_time;
 			$total_time += strtotime($d->dial_call_duration)-$default_time;
 		}
-	
+
 		$average = calculate_average($d_array);
 		$median = calculate_median($d_array);
 	?>
@@ -32,7 +32,7 @@
 		$(".date").datetimepicker({
 			format : "D-MMM-YYYY"
 		});
-	
+
 	Highcharts.chart('hospitalChart', {
 		chart : {type:'bar'},
 		title: false,
@@ -52,7 +52,7 @@
 			$total_hospitals=0;
 			foreach($hospital_report as $a){
 				$total_hospitals +=$a->count;
-			} 
+			}
 		?>
 	});
 	Highcharts.chart('districtChart', {
@@ -71,7 +71,7 @@
 			data: [<?php $i=1;foreach($district_report as $a) { echo $a->count;if($i<count($district_report)) echo " ,"; $i++; }?>]
 		}]
 	});
-	
+
 	Highcharts.chart('volunteerChart', {
 		chart : {type:'bar'},
 		title: false,
@@ -104,12 +104,12 @@
 			data: [<?php echo $average;?>, <?php echo $median;?>]
 		}]
 	});
-	
-	
+
+
 	var pie_chart = {
-		plotBackgroundColor: null, 
-		plotBorderWidth: null, 
-		plotShadow: false, 
+		plotBackgroundColor: null,
+		plotBorderWidth: null,
+		plotShadow: false,
 		type: 'pie'
 	};
 	var pie_credits = {enabled: false};
@@ -140,7 +140,7 @@
 		y:10,
 		reversed:true
 	};
-	
+
 	Highcharts.chart('callCategory', {
 		chart: pie_chart,
 		credits: pie_credits,
@@ -206,11 +206,68 @@
 			data: [<?php $i=1;foreach($to_number_report as $a) { echo "{ name: '$a->to_number', y: $a->count }"; if($i<count($to_number_report)) echo " ,"; $i++; }?>]
 		}]
 	});
+	<?php if($resolution_status[0]->open){ ?>
+	Highcharts.chart('resolutionStatus', {
+		chart: pie_chart,
+		credits: pie_credits,
+		title: false,
+		tooltip: pie_tooltip,
+		plotOptions: pie_plotOptions,
+		legend: pie_legend,
+		series: [{
+			name: 'Calls',
+			colorByPoint: true,
+			data: [<?php echo "{ name: 'Open', y: ".$resolution_status[0]->open." }, { name: 'Closed', y: ".$resolution_status[0]->closed." }"; ?>]
+		}]
+	});
+	<?php } ?>
+	<?php if($closed_tat[0]->count24hrs){ ?>
+	Highcharts.chart('closedTat', {
+		chart: pie_chart,
+		credits: pie_credits,
+		title: false,
+		tooltip: pie_tooltip,
+		plotOptions: pie_plotOptions,
+		legend: pie_legend,
+		series: [{
+			name: 'Time',
+			colorByPoint: true,
+			data: [<?php echo "
+			{ name: '7+ Days', y: ".$closed_tat[0]->count7plus."  },
+			{ name: '3-7 Days', y: ".$closed_tat[0]->count3_7days."  },
+			{ name: '24-48 hrs', y: ".$closed_tat[0]->count24_48hrs."  },
+				{ name: '<24h', y: ".$closed_tat[0]->count24hrs." }
+			 "; ?>]
+		}]
+	});
+	<?php } ?>
+
+	<?php if($open_tat[0]->count24hrs){ ?>
+
+	Highcharts.chart('openTat', {
+		chart: pie_chart,
+		credits: pie_credits,
+		title: false,
+		tooltip: pie_tooltip,
+		plotOptions: pie_plotOptions,
+		legend: pie_legend,
+		series: [{
+			name: 'Time',
+			colorByPoint: true,
+			data: [<?php echo "
+			{ name: '7+ Days', y: ".$open_tat[0]->count7plus."  },
+			{ name: '3-7 Days', y: ".$open_tat[0]->count3_7days."  },
+			{ name: '24-48 hrs', y: ".$open_tat[0]->count24_48hrs."  },
+			{ name: '<24h', y: ".$open_tat[0]->count24hrs." }
+			 "; ?>]
+		}]
+	});
+	<?php } ?>
 	});
 	</script>
-<div class="row" style="position:relative;">	
+<div class="row" style="position:relative;">
 	<span style="font-size:24px;font-weight:bold"><span class="flaticon-telephone-line-24-hours-service"></span> Hospital Helpline <small>040 - 39 56 53 39</small></span>
-			<?php 
+			<?php
 			if($this->input->post('from_date')) $from_date = date("d-M-Y",strtotime($this->input->post('from_date'))); else $from_date = date("d-M-Y");
 			if($this->input->post('to_date')) $to_date = date("d-M-Y",strtotime($this->input->post('to_date'))); else $to_date = date("d-M-Y");
 			?>
@@ -221,13 +278,13 @@
 			<input type="text" class="date form-control" name="from_date" class="form-control" value="<?php echo $from_date;?>" />
 			</div>
 			<div  style="position:relative;display:inline;">
-			<input type="text" class="date form-control" name="to_date" class="form-control" value="<?php echo $to_date;?>" />	
+			<input type="text" class="date form-control" name="to_date" class="form-control" value="<?php echo $to_date;?>" />
 			</div>
 			<select name="hospital" style="width:100px" class="form-control">
 				<option value="">Hospital</option>
 				<?php foreach($all_hospitals as $hosp){ ?>
 					<option value="<?php echo $hosp->hospital_id;?>"
-					<?php if($this->input->post('hospital') == $hosp->hospital_id) echo " selected "; ?>																		
+					<?php if($this->input->post('hospital') == $hosp->hospital_id) echo " selected "; ?>
 					><?php echo $hosp->hospital;?></option>
 				<?php } ?>
 			</select>
@@ -235,18 +292,18 @@
 				<option value="">District</option>
 				<?php foreach($hospital_districts as $district){ ?>
 					<option value="<?php echo $district->district;?>"
-					<?php if($this->input->post('district') == $district->district) echo " selected "; ?>																		
+					<?php if($this->input->post('district') == $district->district) echo " selected "; ?>
 					><?php echo $district->district;?></option>
 				<?php } ?>
-			</select>	
+			</select>
 			<select name="call_category" style="width:100px" class="form-control">
 				<option value="">Category</option>
 				<?php foreach($call_category as $cc){ ?>
 					<option value="<?php echo $cc->call_category_id;?>"
-					<?php if($this->input->post('call_category') == $cc->call_category_id) echo " selected "; ?>									
+					<?php if($this->input->post('call_category') == $cc->call_category_id) echo " selected "; ?>
 					><?php echo $cc->call_category;?></option>
 				<?php } ?>
-			</select>	
+			</select>
 			<select name="caller_type" style="width:100px" class="form-control">
 				<option value="">Caller</option>
 				<?php foreach($caller_type as $ct){ ?>
@@ -258,23 +315,23 @@
 			<select name="visit_type" style="width:100px" class="form-control">
 				<option value="">Visit Type</option>
 					<option value="OP"
-					<?php if($this->input->post('visit_type') == "OP") echo " selected "; ?>																		
+					<?php if($this->input->post('visit_type') == "OP") echo " selected "; ?>
 					>OP</option>
 					<option value="IP"
-					<?php if($this->input->post('visit_type') == "IP") echo " selected "; ?>																		
+					<?php if($this->input->post('visit_type') == "IP") echo " selected "; ?>
 					>IP</option>
-			</select>	
+			</select>
 			<input type="submit" name="submit" value="Go" class="btn btn-primary btn-sm" />
 			<a href="<?php echo base_url()."dashboard/helpline_trend/";?>" class="btn btn-warning btn-sm"><i class="fa fa-line-chart"></i> Trends</a>
 			</form>
 			<br />
 		</div>
 		</div>
-		
-		
 
 
-	<div class="row"> 		
+
+
+	<div class="row">
 		<div class="col-md-4">
 			<div class="panel panel-default">
 				<div class="panel panel-heading">
@@ -333,7 +390,7 @@
 		<div class="col-md-4">
 			<div class="panel panel-default">
 			<div class="panel panel-heading">
-				<h4><i class="fa fa-clock-o fa-1.5x" aria-hidden="true"></i>&nbsp Duration
+				<h4><i class="fa fa-clock-o fa-1.5x" aria-hidden="true"></i>&nbsp Call Duration
 				<span style="font-size:15px; float:right;">Total time: <?php echo (int)($total_time/60); ?>mins <?php echo (int)($total_time%60); ?>sec</span></h4>
 
 			</div>
@@ -345,7 +402,7 @@
 		<div class="col-md-4">
 			<div class="panel panel-default">
 			<div class="panel panel-heading">
-				<h4><i class="flaticon-old-telephone-ringing  aria-hidden="true"></i>&nbsp Status</h4>
+				<h4><i class="flaticon-old-telephone-ringing"  aria-hidden="true"></i>&nbsp Status</h4>
 			</div>
 			<div class="panel-body">
 			<div id="callType" style="width:300px;height:250px"></div>
@@ -374,13 +431,46 @@
 			</div>
 			</div>
 		</div>
+		<div class="col-md-4">
+			<div class="panel panel-default">
+			<div class="panel panel-heading">
+				<h4><i class="fa fa-check" aria-hidden="true"></i>&nbsp Resolution Status</h4>
+
+			</div>
+			<div class="panel-body">
+			<div id="resolutionStatus" style="width:300px;height:250px"></div>
+			</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="panel panel-default">
+			<div class="panel panel-heading">
+				<h4><i class="fa fa-clock-o" aria-hidden="true"></i>&nbsp Closed Call TAT</h4>
+
+			</div>
+			<div class="panel-body">
+			<div id="closedTat" style="width:300px;height:250px"></div>
+			</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="panel panel-default">
+			<div class="panel panel-heading">
+				<h4><i class="fa fa-clock-o" aria-hidden="true"></i>&nbsp Open Call TAT</h4>
+
+			</div>
+			<div class="panel-body">
+			<div id="openTat" style="width:300px;height:250px"></div>
+			</div>
+			</div>
+		</div>
 	</div>
 	</div>
 
-	
-	
-	
-<?php 
+
+
+
+<?php
 function calculate_median($arr) {
     $count = count($arr); //total numbers in array
     $middleval = floor(($count-1)/2); // find the middle value, or the lowest middle value

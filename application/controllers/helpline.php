@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Helpline extends CI_Controller {	
+class Helpline extends CI_Controller {
 
 	function __construct(){
 		parent::__construct();
@@ -18,37 +18,67 @@ class Helpline extends CI_Controller {
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
 	}
 
-	
-	function detailed_report(){
-		if(!$this->session->userdata('logged_in')){
-			show_404();
-		}
-		$access=0;
-		foreach($this->data['functions'] as $function){
-			if($function->user_function=="Helpline Reports"){
-					$access=1;
-			}
-		}
-		if($access==1){
-		$this->load->helper('form');
-		$this->load->library('form_validation');
-		$user=$this->session->userdata('logged_in');
-		$this->data['user_id']=$user['user_id'];	  
-		$this->data['title']="HelpLine Calls - Detailed Report";
-		$this->load->view('templates/header',$this->data);
-		$this->data['calls']=$this->helpline_model->get_detailed_report();
-		$this->data['caller_type']=$this->helpline_model->get_caller_type();
-		$this->data['call_category']=$this->helpline_model->get_call_category();
-		$this->data['resolution_status']=$this->helpline_model->get_resolution_status();
-		$this->data['all_hospitals']=$this->staff_model->get_hospital();
-		$this->data['emails_sent']=$this->helpline_model->get_emails();
-		$this->load->view('pages/helpline/report_detailed',$this->data);
-		$this->load->view('templates/footer');
-		}
-		else show_404();
-	}
 
-	
+		function detailed_report(){
+			if(!$this->session->userdata('logged_in')){
+				show_404();
+			}
+			$access=0;
+			foreach($this->data['functions'] as $function){
+				if($function->user_function=="Helpline Reports"){
+						$access=1;
+				}
+			}
+			if($access==1){
+			$this->load->helper('form');
+			$this->load->library('form_validation');
+			$user=$this->session->userdata('logged_in');
+			$this->data['user_id']=$user['user_id'];
+			$this->data['title']="HelpLine Calls - Detailed Report";
+			$this->load->view('templates/header',$this->data);
+			$this->data['calls']=$this->helpline_model->get_detailed_report();
+			$this->data['caller_type']=$this->helpline_model->get_caller_type();
+			$this->data['call_category']=$this->helpline_model->get_call_category();
+			$this->data['resolution_status']=$this->helpline_model->get_resolution_status();
+			$this->data['all_hospitals']=$this->staff_model->get_hospital();
+			$this->data['emails_sent']=$this->helpline_model->get_emails();
+			$this->load->view('pages/helpline/report_detailed',$this->data);
+			$this->load->view('templates/footer');
+			}
+			else show_404();
+		}
+
+			function report_groupwise(){
+				if(!$this->session->userdata('logged_in')){
+					show_404();
+				}
+				$access=0;
+				foreach($this->data['functions'] as $function){
+					if($function->user_function=="Helpline Reports"){
+							$access=1;
+					}
+				}
+				if($access==1){
+				$this->load->helper('form');
+				$this->load->library('form_validation');
+				$user=$this->session->userdata('logged_in');
+				$this->data['user_id']=$user['user_id'];
+				$this->data['title']="HelpLine Calls - Group Wise Report";
+				$this->load->view('templates/header',$this->data);
+				$this->data['calls']=$this->helpline_model->get_detailed_report();
+				$this->data['caller_type']=$this->helpline_model->get_caller_type();
+				$this->data['call_category']=$this->helpline_model->get_call_category();
+				$this->data['resolution_status']=$this->helpline_model->get_resolution_status();
+				$this->data['all_hospitals']=$this->staff_model->get_hospital();
+				$this->data['groups']=$this->helpline_model->get_groups();
+				$this->data['emails_sent']=$this->helpline_model->get_emails();
+				$this->load->view('pages/helpline/report_group_wise',$this->data);
+				$this->load->view('templates/footer');
+				}
+				else show_404();
+			}
+
+
 	function update_call(){
 		if(!$this->session->userdata('logged_in')){
 			show_404();
@@ -63,7 +93,7 @@ class Helpline extends CI_Controller {
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 		$user=$this->session->userdata('logged_in');
-		$this->data['user_id']=$user['user_id'];	  
+		$this->data['user_id']=$user['user_id'];
 		$this->data['title']="Update HelpLine Calls";
 		$this->load->view('templates/header',$this->data);
 		$this->form_validation->set_rules('call[]','Call','trim|xss_clean');
@@ -75,7 +105,7 @@ class Helpline extends CI_Controller {
 		if ($this->form_validation->run() === FALSE){
 			$this->load->view('pages/helpline/update_calls',$this->data);
 		}
-		else{	
+		else{
 			if(($this->input->post('submit'))) {
 				if(!!$this->input->post('call')){
 					if($this->helpline_model->update_call()){
@@ -89,7 +119,7 @@ class Helpline extends CI_Controller {
 				else {
 						$this->data['msg']="Please select at least one call to update.";
 				}
-				$this->load->view('pages/helpline/update_calls',$this->data);					
+				$this->load->view('pages/helpline/update_calls',$this->data);
 			}
 			else if($this->input->post('send_email')){
 				$result = $this->helpline_model->send_email();
@@ -103,7 +133,7 @@ class Helpline extends CI_Controller {
 				else{
 					$this->data['msg']="Email not sent.";
 				}
-				$this->load->view('pages/helpline/update_calls',$this->data);					
+				$this->load->view('pages/helpline/update_calls',$this->data);
 			}
 			else{
 			$this->load->view('pages/helpline/update_calls',$this->data);
@@ -113,12 +143,25 @@ class Helpline extends CI_Controller {
 		}
 		else show_404();
 	}
-	
-	
+
+
 	function insert_call(){
 		if(!!$this->input->get('CallSid')) {
 			$this->helpline_model->insert_call();
 		}
 		else show_404();
 	}
+
+
+	function search_call_groups(){
+		if($groups = $this->helpline_model->get_call_groups()){
+			$list=array(
+				'groups'=>$groups
+			);
+
+				echo json_encode($list);
+		}
+		else return false;
+	}
+
 }

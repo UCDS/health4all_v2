@@ -65,7 +65,7 @@ $(function(){
 </script>
 
 <div class="row">
-	<?php if(!!$msg) { ?>
+	<?php if(isset($msg) && !!$msg) { ?>
 		<div class="alert alert-info">
 			<?php echo $msg; ?>
 		</div>
@@ -80,9 +80,9 @@ $(function(){
 				$to_date = date("d-M-Y",strtotime($this->input->post('to_date')));
 			}
 			else $to_date = date("d-M-Y");
-			echo form_open('helpline/detailed_report',array('role'=>'form','class'=>'form-custom'));
+			echo form_open('helpline/report_groupwise',array('role'=>'form','class'=>'form-custom'));
 	?>
-			<h3>Helpline Calls Detailed Report</h3>
+			<h3>Helpline Calls Group Wise Report</h3>
 			<hr>
 			<h4>Calls during
 				<input type="text" class="date form-control" value="<?php echo $from_date;?>" name="from_date" /> to 
@@ -109,10 +109,16 @@ $(function(){
 				<th>Note</th>
 				<th>Emails</th>
 			</thead>
-			<tbody>
 			<?php
+				foreach($groups as $group){ ?>
+				<thead>
+					<th colspan="20"><h4><?php if(!!$group->group_name) echo $group->group_name; else echo "Ungrouped Calls";?></h4></th>
+				</thead>
+				<?php
 				$i=1;
-				foreach($calls as $call){ ?>
+				foreach($calls as $call){
+					if($call->call_group_id == $group->call_group_id) {?>
+					<tbody>
 					<tr>
 						<td>
 							<?php echo $i++;?>
@@ -237,9 +243,11 @@ $(function(){
 							<?php } ?>
 						</td>
 					</tr>
-				<?php }
-				?>
 				</tbody>
+				<?php }
+				}
+			}
+				?>
 			</table>
 		<?php
 			echo form_close();

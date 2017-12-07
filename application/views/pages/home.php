@@ -7,7 +7,7 @@
 	}
 </style>
 	<div class="row">
-		
+
 	    <h2>Welcome to Health4All <small>- a Free and Open Source application developed and supported by <a href="http://www.yousee.in/c4c" target="_blank">YouSee</a></small></h2>
 		<br />
 		<div class="col-md-6">
@@ -69,7 +69,7 @@
                             </ul>
                     </ul>
                 </div>
-            
+
 		    <div class="alert alert-danger" role="alert">
                     <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                     <span class="">Note:</span>
@@ -86,6 +86,7 @@
 				<a href="<?= base_url()."dashboard/view/dmetelangana";?>"><div class="alert alert-success col-md-4 col-md-offset-1"><i class="fa fa-bar-chart"></i> DME Telangana</div></a>
 				<a href="<?= base_url()."dashboard/view/dmeap";?>"><div class="alert alert-success col-md-4 col-md-offset-1"><i class="fa fa-area-chart"></i> DME AP</div></a>
 				<a href="<?= base_url()."dashboard/bloodbanks";?>"><div class="alert alert-success col-md-4 col-md-offset-1"><i class="fa fa-tint"></i> Blood Banks</div></a>
+				<a href="<?= base_url()."dashboard/view/npo";?>"><div class="alert alert-success col-md-4 col-md-offset-1"><i class="fa fa-bar-chart"></i> NPOs</div></a>
 			</div>
 		</div>
 	</div>
