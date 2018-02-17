@@ -7,8 +7,8 @@ class Api extends CI_Controller {
 		$this->load->model('api_model');
 	}
 
-	public function eaushadi($visit_id)
+	public function eaushadi($patient_id)
 	{
-    echo json_encode($this->api_model->get_data_aushadi($visit_id));
+    echo json_encode($this->api_model->get_data_aushadi($patient_id));
   }
 }

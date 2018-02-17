@@ -3,11 +3,11 @@ class api_model extends CI_Model {
     function __construct() {
         parent::__construct();
     }
-    function get_data_aushadi($visit_id){
+    function get_data_aushadi($patient_id){
         //$this->db->select("*")->from("api_updates")->where('api_name','aushadi');
         //$query=$this->db->get();
         //$result = $query->row();
-        if($visit_id!=0){
+        if($patient_id!=0){
         $this->db->select('visit_id "Visit ID", patient_visit.patient_id "Patient ID", visit_type "Visit Type", first_name "First Name",
         last_name "Last Name",
         IF(age_years < 12, IF(gender="M", "Male Child", "Female Child") , IF(gender="M", "Male", "Female") ) as "Gender",
@@ -17,8 +17,8 @@ class api_model extends CI_Model {
         ->from('patient_visit')->join('patient','patient_visit.patient_id = patient.patient_id')->join('hospital','patient_visit.hospital_id = hospital.hospital_id')
         ->where('hospital.type6','VVP')
         ->where('hospital.state','Telangana')
-        ->where('patient_visit.visit_id',$visit_id)
-        ->order_by('visit_id','asc')
+        ->where('patient_visit.patient_id',$patient_id)
+        ->order_by('visit_id','desc')
         ->limit('1');
         $query = $this->db->get();
         $result = $query->row();
