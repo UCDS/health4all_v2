@@ -15,6 +15,6 @@
 </div>
 <div class="col-md-3 col-md-offset-4">
 </br>
-<button class="btn btn-lg btn-primary btn-block" type="submit" value="submit" name="micro_organism_add">Submit</button>
+<button class="btn btn-lg btn-primary btn-block" type="submit" value="submit" name="submit">Submit</button>
 </div>
 </div>

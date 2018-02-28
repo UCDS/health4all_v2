@@ -17,16 +17,16 @@ class Register extends CI_Controller {
 	}
 	public function index($donor_id=""){
 		if(!$this->session->userdata('logged_in')){
-		  show_404();
-	  }
-	  $this->data['userdata']=$this->session->userdata('logged_in');
-	  foreach ($this->data['functions'] as $f ){
-		if($f->user_function=="Bloodbank"){
-		$access=1;
-		}		
+			show_404();
+		}
+		$this->data['userdata']=$this->session->userdata('logged_in');
+		foreach ($this->data['functions'] as $f ){
+			if($f->user_function=="Bloodbank"){
+				$access=1;
+			}
 		}
 		if($access==0)
-		show_404();
+			show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -411,16 +411,16 @@ class Register extends CI_Controller {
 	
 	public function bleeding(){
 		if(!$this->session->userdata('logged_in')){
-		show_404();
+			show_404();
 	    }
 	    $this->data['userdata']=$this->session->userdata('logged_in');
 	    foreach ($this->data['functions'] as $f ){
-		if($f->user_function=="Bloodbank"){
-		$access=1;
-		}		
+			if($f->user_function=="Bloodbank"){
+				$access=1;
+			}		
 		}
 		if($access==0)
-		show_404();
+			show_404();
 		$this->data['userdata']=$this->session->userdata('hospital');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -433,8 +433,8 @@ class Register extends CI_Controller {
 		$this->form_validation->set_rules('blood_unit_num','Donation ID',
 		'trim|required|xss_clean|callback_check_unique');
 		if ($this->form_validation->run() === FALSE){
-		$this->data['donors']=$this->register_model->get_checked_donors();
-		$this->load->view('pages/bloodbank/bleeding',$this->data);
+			$this->data['donors']=$this->register_model->get_checked_donors();
+			$this->load->view('pages/bloodbank/bleeding',$this->data);
 		}
 		else{
 			$donation_id=$this->input->post('donation_id');
@@ -507,40 +507,42 @@ class Register extends CI_Controller {
 		 return true;
 	   }	
 	}
-public function request(){
+	
+	public function request(){
         if($this->session->userdata('logged_in')){
-        $this->data['userdata']=$this->session->userdata('hospital');
-        $this->load->helper('form');
-        $this->load->library('form_validation');
-        $this->data['hospitals']=$this->staff_model->get_hospital();
-        $this->data['title']="Request Form";
-        $this->load->view('templates/header',$this->data);
-        $this->load->view('templates/panel_nav',$this->data);
-        $this->form_validation->set_rules('blood_group[]', 'Blood Group',
-        'trim|required|xss_clean');
-        if ($this->form_validation->run() === FALSE){
-        $this->load->view('pages/bloodbank/request');
-        }
-        else{
-        if($this->register_model->make_request()){
-        $this->data['msg']='success';
-        $this->load->view('pages/bloodbank/request',$this->data);
-        }
-        else{
-        $this->data['msg']='failed';
-        $this->load->view('pages/bloodbank/request',$this->data);        
-        }
-        $this->load->view('templates/footer');
-        }
+			$this->data['userdata']=$this->session->userdata('hospital');
+			$this->load->helper('form');
+			$this->load->library('form_validation');
+			$this->data['hospitals']=$this->staff_model->get_hospital();
+			$this->data['title']="Request Form";
+			$this->load->view('templates/header',$this->data);
+			$this->load->view('templates/panel_nav',$this->data);
+			$this->form_validation->set_rules('blood_group[]', 'Blood Group',
+			'trim|required|xss_clean');
+			if ($this->form_validation->run() === FALSE){
+				$this->load->view('pages/bloodbank/request');
+			}
+			else{
+				if($this->register_model->make_request()){
+					$this->data['msg']='success';
+					$this->load->view('pages/bloodbank/request',$this->data);
+				}
+				else{
+					$this->data['msg']='failed';
+					$this->load->view('pages/bloodbank/request',$this->data);        
+				}
+				$this->load->view('templates/footer');
+			}
         }
         else 
-        show_404();
+			show_404();
     }
-function search_patients(){
-    if($patients = $this->register_model->search_patients()){
-        $list=array(
-            'patients'=>$patients
-        );
+	
+	function search_patients(){
+		if($patients = $this->register_model->search_patients()){
+			$list=array(
+				'patients'=>$patients
+			);
         
             echo json_encode($list);
     }

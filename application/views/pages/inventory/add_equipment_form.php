@@ -1,7 +1,6 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<style>
 
-</style>
+
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <script type="text/javascript">
 $(function(){
@@ -23,12 +22,12 @@ $(function(){
 	//});
 });
 </script>
+  
+<div class="col-md-10 col-md-offset-2">
 
-<div class="col-md-8 col-md-offset-2">
- 
 	<center>
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
-		<h3><i class="glyph-icon flaticon-medical-equipment" ></i>  Add Equipment Details</h3>
+		<h3><i class="glyph-icon flaticon-medical-equipment" style="color:#E84F4F" ></i>  Add Equipment Details</h3>
 	</center><br>
 	
 	<center>
@@ -169,7 +168,7 @@ $(function(){
 		<label for="supply_date" > 	Service Engineer Contact</label>
 		</div>
 		<div  class="col-md-6">
-		<input type="text" class="form-control date" placeholder="	Service Engineer Contact" id="service_engineer_contact" form="add_equipment" name="service_engineer_contact" />
+		<input type="text" class="form-control date" placeholder="Service Engineer Contact" id="service_engineer_contact" form="add_equipment" name="service_engineer_contact" />
 		</div>
 	</div>
 	
@@ -238,7 +237,7 @@ $(function(){
 	</div>	
 
    	<div class="col-md-3 col-md-offset-4">
-	<button class="btn btn-lg btn-primary btn-block" type="submit" value="submit">Submit</button>
+	<button class="btn btn-lg btn-primary btn-block" type="submit" name="submit" value="submit">Submit</button>
 	</div>
 	
 </i>

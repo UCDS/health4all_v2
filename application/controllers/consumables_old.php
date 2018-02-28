@@ -3,7 +3,6 @@
 class Consumables extends CI_Controller {
 	function __construct(){
 		parent::__construct();
-		$this->load->model('projects_model');
 		$this->load->model('masters_model');
 		$this->load->model('staff_model');
 		if($this->session->userdata('logged_in')){
@@ -23,14 +22,14 @@ class Consumables extends CI_Controller {
 		$this->data['user_id']=$user['user_id'];
 		$access=0;
 		foreach($this->data['functions'] as $function){
-			if($function['user_function']=="Consumables" && $function['add']==1){
+			if($function->user_function=="Consumables" && $function->add==1){
 				$access=1;
 			}
 		}
 		if($access==1){
 		if($type=="drug_type"){
 			$title="Add Drug";
-		
+
 			$config=array(
                array(
                      'field'   => 'drug_type',
@@ -44,14 +43,14 @@ class Consumables extends CI_Controller {
                   )
 			);
 /*			$this->data['drug_type']=$this->masters_model->insert_data("drug_type");
-			$this->data['divisions']=$this->masters_model->get_data("divisions");	
+			$this->data['divisions']=$this->masters_model->get_data("divisions");
 		*/
 
 
 		}
 	else if($type=="dosages"){
 		 	$title="Add dosage";
-		
+
 			$config=array(
                array(
                      'field'   => 'dosage_unit',
@@ -67,57 +66,57 @@ class Consumables extends CI_Controller {
 }
 else if($type=="equipment_type"){
 		 	$title="Add Equipment Type";
-		
+
 			$config=array(
                array(
                      'field'   => 'equipment_name',
                      'label'   => 'Equipment Name',
                      'rules'   => 'required|trim|xss_clean'
                   )
-             
+
 			);
 }
 
 else if($type=="service"){
 		 	$title="Add Service Records";
-		
+
 			$config=array(
                          array(
                      'field'   => 'working_status',
                      'label'   =>  'Working Status',
                      'rules'   => 'trim|xss_clean'
                   )
-        
-      
-             
+
+
+
 			);
 $this->data['service']=$this->masters_model->get_data("service");
-     		
+
 }
 
 
 
 else if($type=="service_records"){
 		 	$title="Add Service Records";
-		
+
 			$config=array(
                          array(
                      'field'   => 'working_status',
                      'label'   =>  'Working Status',
                      'rules'   => 'required|trim|xss_clean'
                   )
-        
-             
-             
+
+
+
 			);
 $this->data['user']=$this->masters_model->get_data("user");
-		
+
 }
 
 
 	else if($type=="equipment"){
 		 	$title="Add Equipment";
-		
+
 			$config=array(
                array(
                      'field'   => 'make',
@@ -135,10 +134,10 @@ $this->data['user']=$this->masters_model->get_data("user");
 		$this->data['hospital']=$this->masters_model->get_data("hospital");
 		$this->data['department']=$this->masters_model->get_data("department");
 		$this->data['user']=$this->masters_model->get_data("user");
-		
+
 
 }
-	
+
 		else if($type=="generic"){
 			$title="Add Generic Details";
 			$config=array(
@@ -146,12 +145,12 @@ $this->data['user']=$this->masters_model->get_data("user");
                      'field'   => 'generic_name',
                      'label'   => 'Generic Name',
                      'rules'   => 'required|trim|xss_clean'
-                  ) 	
-		     
+                  )
+
 			);
 			$this->data['item_type']=$this->masters_model->get_data("item_type");
 		$this->data['drug_type']=$this->masters_model->get_data("drug_type");
-		
+
 		}
 		else if($type=="division"){
 			$title="Add Division";
@@ -161,7 +160,7 @@ $this->data['user']=$this->masters_model->get_data("user");
                      'label'   => 'Division Name',
                      'rules'   => 'required|trim|xss_clean'
                   )
-			);	
+			);
 			$this->data['district']=$this->masters_model->get_data("districts");
 		}
 		else if($type=="grant"){
@@ -190,7 +189,7 @@ $this->data['user']=$this->masters_model->get_data("user");
                   )
 			);
 		}
-			
+
 		else{
 			show_404();
 		}
@@ -216,7 +215,7 @@ $this->data['user']=$this->masters_model->get_data("user");
 		$this->load->view('templates/footer');
 		}
 		else show_404();
-  	}	
+  	}
 function edit($type=""){
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -235,12 +234,12 @@ function edit($type=""){
                      'label'   => 'Description',
                      'rules'   => 'trim|xss_clean'
                   )
-		
+
 			);
 $this->data['drug_type']=$this->masters_model->get_data("drug_type");
 
 		/*	$this->data['facility_types']=$this->masters_model->get_data("facility_types");
-			$this->data['divisions']=$this->masters_model->get_data("divisions");	
+			$this->data['divisions']=$this->masters_model->get_data("divisions");
 		*/}
 		else if($type=="agency"){
 			$title="Edit Agency";
@@ -256,47 +255,47 @@ $this->data['drug_type']=$this->masters_model->get_data("drug_type");
 		}
 		else if($type=="service"){
 		 	$title="Edit Service Records";
-		
+
 			$config=array(
                          array(
                      'field'   => 'working_status',
                      'label'   =>  'Working Status',
                      'rules'   => 'trim|xss_clean'
                   )
-        
-             
-             
+
+
+
 			);
 $this->data['equipments']=$this->masters_model->get_data("equipments");
-		
+
 }
 
 		else if($type=="equipment_type"){
 		 	$title="Edit Equipment Type";
-		
+
 			$config=array(
                array(
                      'field'   => 'equipment_name',
                      'label'   => 'Equipment Name',
                      'rules'   => 'trim|xss_clean'
                   )
-             
+
 			);
-      
+
 $this->data['equipment_types']=$this->masters_model->get_data("equipment_type");
 
 }
 
 else if($type=="equipments"){
 		 	$title="Edit Equipment Details";
-		
+
 			$config=array(
                array(
                      'field'   => 'equipment_name',
                      'label'   => 'Equipment Name ',
                      'rules'   => 'trim|xss_clean'
                   )
-             
+
 			);
 $this->data['equipments']=$this->masters_model->get_data("equipments");
 
@@ -318,7 +317,7 @@ $this->data['user']=$this->masters_model->get_data("user");
 		$this->data['generic']=$this->masters_model->get_data("generics");
 		$this->data['item_type']=$this->masters_model->get_data("item_type");
 		$this->data['drug_type']=$this->masters_model->get_data("drug_type");
-		
+
 		}
 		else if($type=="dosages"){
 			$title="Edit Dosage";
@@ -333,14 +332,14 @@ $this->data['user']=$this->masters_model->get_data("user");
                      'label'   => 'Dosage',
                      'rules'   => 'trim|xss_clean'
                   )
-		
+
 			);
 			$this->data['dosage']=$this->masters_model->get_data("dosages");
 /*$this->data['generic']=$this->masters_model->get_data("generics");
 $this->data['item_type']=$this->masters_model->get_data("item_type");
 */
 		}
-		
+
 		else if($type=="division"){
 			$title="Edit Division";
 			$config=array(
@@ -349,9 +348,9 @@ $this->data['item_type']=$this->masters_model->get_data("item_type");
                      'label'   => 'Division',
                      'rules'   => 'required|trim|xss_clean'
                   )
-			);	
+			);
 			$this->data['district']=$this->masters_model->get_data("districts");
-			$this->data['divisions']=$this->masters_model->get_data("division");	
+			$this->data['divisions']=$this->masters_model->get_data("division");
 		}
 		else if($type=="grant"){
 			$title="Edit Grant";
@@ -375,16 +374,16 @@ $this->data['item_type']=$this->masters_model->get_data("item_type");
 			);
 				$this->data['users']=$this->masters_model->get_data("user");
 		}
-			
+
 		else{
 			show_404();
 		}
-		
+
 		$page="pages/inventory/edit_".$type."_form";
 		$this->data['title']=$title;
 		$this->load->view('templates/header',$this->data);
       $this->load->view('templates/leftnav',$this->data);
-		
+
 		$this->form_validation->set_rules($config);
 
 		if ($this->form_validation->run() === FALSE)
@@ -395,7 +394,7 @@ $this->data['item_type']=$this->masters_model->get_data("item_type");
 			if($this->input->post('update')){
 				if($this->masters_model->update_data($type)){
 					$this->data['msg']="Updated Successfully";
-		
+
 					$this->load->view($page,$this->data);
 				}
 				else{
@@ -406,7 +405,7 @@ $this->data['item_type']=$this->masters_model->get_data("item_type");
 			else if($this->input->post('select')){
             $this->data['mode']="select";
 			   $this->data[$type]=$this->masters_model->get_data($type);
-         
+
          	$this->load->view($page,$this->data);
 			}
 			else if($this->input->post('search')){
@@ -417,6 +416,5 @@ $this->data['item_type']=$this->masters_model->get_data("item_type");
 		}
 		$this->load->view('templates/footer');
 	}
-	
-}
 
+}

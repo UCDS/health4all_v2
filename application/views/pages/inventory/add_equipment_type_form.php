@@ -12,6 +12,6 @@
 		</div>
 	</div>
    	<div class="col-md-3 col-md-offset-4">
-		<button class="btn btn-lg btn-primary btn-block" type="submit" value="submit">Submit</button>
+		<button class="btn btn-lg btn-primary btn-block" type="submit" name="submit" value="submit">Submit</button>
 	</div>
 </div>

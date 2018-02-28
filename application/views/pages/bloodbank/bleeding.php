@@ -19,7 +19,7 @@ $(document).ready(function(){
                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                 <span class="">Note:</span>
                 <ul>
-                    <li>Blood Unit is the Blood bag number</li>
+                    <li>Blood Unit is the Blood bag number. It's unique within a Blood Bank for the calendar year.</li>
                     <li>Segment number is the pilot tube number</li>
                     <li>Blood Group selected here is not final, Blood Group selected in Grouping stage is final.</li>
                     <li>Select <strong>UC(Under Collection)</strong> if the volume collected is less than the volume of the bag. Bags selected as UC don't show up in Grouping or Inventory, they are shown in Discard.</li>

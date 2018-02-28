@@ -7,27 +7,6 @@
 <script type="text/javascript"
  src="<?php echo base_url();?>assets/js/jquery.mousewheel.js"></script>
 <script type="text/javascript">
-$(function(){
-   $('.name').keydown(function (e) {
-   if (e.shiftKey || e.ctrlKey || e.altKey) {
-   e.preventDefault();
-   } else {
-    var key = e.keyCode;
-   if (!((key == 8) || (key == 32) || (key == 46) || (key >= 35 && key <= 40) || (key >= 65 && key <= 90))) {
-   e.preventDefault();
-   }
-   }
-   });
-   $('.number').keydown(function (e) {
-   if (e.shiftKey || e.ctrlKey || e.altKey) {
-   e.preventDefault();
-   } else {
-  var key = e.keyCode;
-   if (((key >= 35 && key <= 40) || (key >= 65 && key <= 90))) {
-   e.preventDefault();
-     }
-    }
-   });
   var options = {
 			widthFixed : true,
 			showProcessing: true,
@@ -93,7 +72,7 @@ $(function(){
          document.getElementById("donor_name").value="";
 		 document.getElementById("donor_email").value="";
 		 document.getElementById("donor_mobile").value="";
-		 
+
 	}
 </script>
 <style>
@@ -110,44 +89,44 @@ select{
 }
 </style>
 <div class="col-md-10 col-sm-9">
-	<?php 
+	<?php
 	if(isset($msg)) { ?>
 		<div class="alert alert-info">
 			<b><?php echo $msg; ?></b>
 		</div>
-	<?php 
+	<?php
 	}
 	?>
-		<?php 
+		<?php
 		$from_date=0;$to_date=0;
 		if($this->input->post('from_date')) $from_date=date("Y-m-d",strtotime($this->input->post('from_date'))); else $from_date = date("Y-m-d");
 		if($this->input->post('to_date')) $to_date=date("Y-m-d",strtotime($this->input->post('to_date'))); else $to_date = date("Y-m-d");
 		?>
 		<div class="row" style="border:1px solid #dddddd;">
 			<div class="panel-default">
-				<div class="panel-heading">		
+				<div class="panel-heading">
 					<h4>Search For Donor at
-					<?php 
+					<?php
 						$place=$this->session->userdata('place');
 						echo $place['name'];
 					?>
-					</h4>	
+					</h4>
 				</div>
 			</div>
 			<div class="panel-body" style="color:black;">
 
 				<?php echo form_open("bloodbank/register/repeat_donor",array('class'=>'form-custom')); ?>
 				<p>
-					
+
 					<label for="donor_id">  Donor ID </label> <input class="number" class="form-control"  type="text" value="<?php echo htmlentities($this->input->post('donor_id')); ?>" name="donor_id" id="donor_id" />
 				    <label for="donor_name">Donor Name </label> <input class="name" class="form-control"  type="text" name="donor_name" id="donor_name" value="<?php echo htmlentities($this->input->post('donor_name'))?>"  />
 					<label for="donor_email">Email </label> <input class="form-control" type="email"  value="<?php echo htmlentities($this->input->post('donor_email')); ?>" name="donor_email" id="donor_email" />
-					
+
 				</p>
-			
+
 				<p>
 		            <label for="donor_mobile">Mobile Number </label> <input class="number" class="form-control"  type="text" value="<?php echo htmlentities($this->input->post('donor_mobile')); ?>" name="donor_mobile" id="donor_mobile"/>
-					<label for="blood_group">Blood Group </label> 
+					<label for="blood_group">Blood Group </label>
 					<select name="blood_group" id="blood_group" class="form-control" >
 						<option value="" disabled selected>Blood Group</option>
 						<option value="A+" <?php if($this->input->post('blood_group') && $this->input->post('blood_group') == "A+" ) echo "selected"; ?>>A+</option>
@@ -166,11 +145,11 @@ select{
 					</span>
 				</p>
 			</div>
-			
+
 			<div class=" panel-default" style="width:100%;">
 				<div class="panel-heading">
-					<input class="btn btn-sm btn-primary" type="submit" value="Search" name="search" onClick="clearall();" />
-					<input class="btn btn-sm btn-primary" type="reset" value="Reset"/>
+					<input class="btn btn-sm btn-primary" type="submit" value="Search" name="search" />
+					<input class="btn btn-sm btn-primary" type="reset" value="Reset" onClick="clearall();"/>
 				</div>
 			</div>
 			</form>

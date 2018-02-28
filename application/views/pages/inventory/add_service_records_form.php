@@ -170,21 +170,21 @@ $(function(){
 
 	<center>
 	<!--when add is clicked this form is displayed  --->	
-	<h3>Add Service Issue Details</h3>
+	
 	</center><br>
 	
 	    <div class="col-md-12">
 		
 		<div class="panel panel-default">
-  <div class="panel-heading"></div>
-  <div class="panel-body">
+  <div class="panel-heading"> <h4 align="center">Your Adding Service issue for this equipment</h4></div>
+ 
 
   
   
      <input type='hidden' class="form-control" name='equipment_type' value="equipment_type" />
      <input type='hidden' class="form-control" name='equipment_id' value='<?php  echo $equipments[0]->equipment_id; ?>' />
-	     <table class="table">
-		 <tr>
+	     <table class="table table-striped">
+		 <tr> </tr>
 		<td><label><b>Equipment Type</b></label> </td>  <td> <?php  echo $equipments[0]->equipment_type; ?><br></td></tr>
 		<tr><td><label><b>Model</b></label>  </td><td><?php echo $equipments[0]->model; ?><br></td></tr>
 	    <tr><td><label><b>Serial Number</b></label> </td> <td>  <?php echo $equipments[0]->serial_number; ?><br></td></tr>
@@ -192,12 +192,12 @@ $(function(){
 		<tr><td><label><b>Department</b></label> </td> <td> <?php echo $equipments[0]->department; ?><br></td></tr>
 		</table>
        </div>
-	   </div>
+	  
  
   
-  
+         <br><br>  
 
-		  <div class="col-md-12">
+		  <div class="col-md-12 align-center">
 	<div class="form-group">
 		<div class="col-md-3">
 		<label for="drug_type" >Call Date<font color='red'>*</font></label>
@@ -387,7 +387,7 @@ $(function(){
 	?>
 			<h3 class="col-md-12">List of Equipments </h3>
 <!--when filter is clicked this form will load --->
-
+	<div class="col-md-12">
 	<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
 	<th>S.No</th><th>Equipment Type </th><th>Make</th><th>Model</th><th>Serial Number</th><th>Asset Number</th><!--<th>Procured By</th><th>Cost</th><th>Supplier</th>-->
@@ -420,46 +420,130 @@ $(function(){
 		<td><?php echo $equipment['equipment']->department; ?></td>
 		<td><?php if($equipment['equipment']->equipment_status==1)
 				{
-					echo "Working";
+					echo "<h4 class='label label-success' >Working</h4>";
 				}
 						else{
-                        echo "Not working";	}?></td>
+                        echo "<h4 class='label label-danger' >Not working</h4>";	}?></td>
 		
 	
 		<td>
-		<button class='btn btn-danger btn-sm' value="<?php echo $equipment['equipment']->equipment_id;?>" type="submit" onclick="$('#select_equipment_form_<?php echo $equipment['equipment']->equipment_id;?>').submit();">Add </button>
+		<button class='btn btn-warning btn-sm' value="<?php echo $equipment['equipment']->equipment_id;?>" type="submit" onclick="$('#select_equipment_form_<?php echo $equipment['equipment']->equipment_id;?>').submit();">&nbsp&nbsp&nbsp&nbsp &nbsp Add &nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp</button>
 		    <input type='hidden' class="form-control" name='equipment_type' value="equipment_type" />
 		   <input type="hidden" value="<?php echo $equipment['equipment']->equipment_id; ?>" form="select_equipment_form_<?php echo $equipment['equipment']->equipment_id;?>" name="equipment_id" />
 		
 		<input type="hidden" value="select" form="select_equipment_form_<?php echo $equipment['equipment']->equipment_id;?>" name="select" />
-		</form>
-		           <br><br>
-			      <?php foreach($equipment['service_record'] as $s){ ?>
-				   <?php echo form_open('equipments/edit/service_records',array('id'=>'select_service_records_form_'.$service_record->request_id,'role'=>'form')); ?>
-						<?php if($s['status']== 'Closed') {?>
-						
-						 <button class='btn btn-success btn-sm' value="<?php echo $s['service_record_id'];?>" type="submit" onclick="$('#select_service_records_form_<?php echo $s['service_record_id'];?>').submit();" >Closed</button>					
-					    <input type="hidden" value="<?php echo $s['service_record_id']; ?>" name="request_id" />
-		                            <input type="hidden" value="select" name="select"/>
-					          
-					</form>
-				  <?php }} ?><br>
-				  <?php foreach($equipment['service_record'] as $s){ ?>
-				   <?php echo form_open('equipments/edit/service_records',array('id'=>'select_service_records_form_'.$s['service_record_id'],'role'=>'form')); ?>
-						<?php		if($s['status']== 'Existing') {?>
-									<button class='btn btn-warning btn-sm' value="<?php echo $s['service_record_id'];?>" type="submit"  value="<?php echo $s['service_record_id'];?>" type="submit" onclick="$('#select_service_records_form_<?php echo $s['service_record_id'];?>').submit();" >Existing</button>					
-									<input type="hidden" value="<?php echo $s['service_record_id']; ?>" name="request_id" />
-		                            <input type="hidden" value="select" name="select" />
+		</br></form>
+		           <br>
+			     
+					  <?php  
+							 foreach($working_count as $status_count) 
+							 {?>
+								 		<?php if($status_count->working_status == 1 )
+							  { 
+								   if($equipment['equipment']->equipment_id==$status_count->equipment_id)
+								   { ?>
+							 	 <?php echo form_open('equipments/edit/service_records',array('id'=>'select_service_records_form_'.$status_count->equipment_id,'role'=>'form')); ?>
+							   <button class='btn btn-success btn-sm' value="<?php echo $status_count->equipment_id;?>" type="submit" onclick="$('#select_service_records_form_<?php echo $status_count->equipment_id;?>').submit();" >Closed &nbsp&nbsp<span class="badge"><?php   echo $status_count->working_count; ?></span> </button>			
+									<input type="hidden" value="<?php echo $status_count->equipment_id; ?>" name="equipment_id" />
+									<input type="hidden" value="<?php echo $status_count->working_status; ?>" name="working_status" />
+		                            <input type="hidden" value="select" name="filter" />
 									</form>
-				  <?php }} ?>
+							  <?php  
+							 } } } ?>
+								</br>
+							 <?php 
+								  
+								 foreach($count_services as $number)
+					{         ?>
+					     <?php if($number->working_status == 0 )
+							  { ?>
+					    <?php if($equipment['equipment']->equipment_id==$number->equipment_id)
+						 { ?>
+							</br>
 							
-						
+							 <?php echo form_open('equipments/edit/service_records',array('id'=>'select_service_records_form_'.$number->equipment_id,'role'=>'form')); ?>
+							 <?php $sub_url="equipments/edit/service_records/"; ?>
+							<button class='btn btn-danger btn-sm' value="<?php echo $number->equipment_id;?>" type="submit" onclick="<?php echo base_url().$sub_url."$number->equipment_type_id/-1";?>">Existing &nbsp&nbsp<span class="badge"><?php echo $number->working_count; ?></span> </button>
+									<input type="hidden" value="<?php echo $number->equipment_id; ?>" name="equipment_id" />
+									<input type="hidden" value="<?php echo $number->working_status; ?>" name="working_status" />
+		                            <input type="hidden" value="select" name="filter" />
+									</form>
+						<?php }?>
+							 <?php } }  ?>  
+							  
+							  
+								  <?php 
+							 
+						 }
+					
+					?>
+					
+				  <?php  ?>
+
+				 
+					
+					  <br>
 		</td>	
 	    
 						</td></tr>			
-	<?php } 
+	<?php  
 	 }?>
+	<?php /* if(isset($mode)&&($mode)== "filter"){   ?>
+	 <!--when filter is clicked this form will load --->
+	<h3 class="col-md-12">List of Service Records </h3>
+	<div class="col-md-12 ">
+	</div>	
+<button type="button" class="btn btn-default btn-md print">
+		  <span class="glyphicon glyphicon-print"></span> Print
+		</button>
+		<table class="table table-bordered table-striped" id="table-sort">
+	<thead>
+	<th>S.No</th><th>Equipment type</th><th>Call Date </th><th>Call Time</th><th>Call Information Type</th><th>Call Information</th><th>Vendor</th><th>Contact Person</th><th>Service Person Remarks</th>
+	<th>Service Date</th><th>Service Time</th><th>Problem Status</th><th>Working Status</th></thead>
+	<tbody>
+	<?php 
+	$i=1;
+	foreach($service_records as $a){ ?>
+	<?php echo form_open('equipments/edit/service_records',array('id'=>'select_service_records_form_'.$a->request_id,'role'=>'form')); ?>
+	<tr onclick="$('#select_service_records_form_<?php echo $a->request_id;?>').submit();" >
+		<td><?php echo $i++; ?></td>
+		<td> <?php echo $a->equipment_type; ?></td>
+		<td><?php echo date("d-M-Y", strtotime("$a->call_date"));   ?>
+		
+		<input type="hidden" value="<?php echo $a->request_id; ?>" name="request_id" />
+		<input type="hidden" value="select" name="select" />
+		</td>
+	
+	     
+		<td><?php echo date("h:i A", strtotime("$a->call_time"));  ?></td>
+		<td><?php echo $a->call_information_type; ?></td>
+		<td><?php echo $a->call_information; ?></td>
+		<td><?php echo $a->vendor_name; ?></td>
+	
+		<td><?php echo $a->contact_person_first_name; ?>
+		</td>
+		<td><?php echo $a->service_person_remarks; ?></td>
+		<td><?php  echo date("d-M-Y", strtotime("$a->service_date"));  ?></td>
+		<td><?php  echo date("h:i A", strtotime("$a->service_time"));  ?></td>
+		<td><?php echo $a->problem_status; ?></td>
+		<td><?php
+				if($a->working_status==1)
+				{
+					echo "<h4 class='label label-success' >Working</h4>";
+				}
+						else{
+                        echo "<h4 class='label label-danger'>Not working</h4>";	}?></td>
+		                
+		
+
+
+			</tr>
+	</form>
+	<?php } ?>
+	</tbody>
+	</table>
+	<?php } */?>
 	 </div>
 	</tbody>
 	</table>
-	
+	</div>

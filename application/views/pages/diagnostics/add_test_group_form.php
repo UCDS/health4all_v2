@@ -154,7 +154,7 @@ function remove_test_name(i){
    	<div class="col-md-3 col-md-offset-4">
 	</br>
 	<input class="form-control" id="submit" name="submit" value="submit" type="hidden"/>
-	<button class="btn btn-lg btn-primary btn-block" type="submit" value="submit" name="tm_add">Submit</button>
+	<button class="btn btn-lg btn-primary btn-block" type="submit" value="submit" name="submit">Submit</button>
 	</div>
 	</form>
 

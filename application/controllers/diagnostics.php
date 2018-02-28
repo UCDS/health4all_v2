@@ -428,6 +428,7 @@ function add($type=""){
 	if($type=="test_area"){
 			$title="Test Area";
 			$config=array(array('field' => 'test_area','label'=>'Test Area','rules'=>'required|trim|xss_clean' ));
+			$this->data['departments']=$this->staff_model->get_department(-1);
 		}
 	if($type=="antibiotic"){
 			$title="antibiotic";

@@ -20,6 +20,8 @@ class Staff_Report_Model extends CI_Model {
     // @author Gokul -- 28 Jan 17.
     */
     function get_patient_records(){
+		$hospital=$this->session->userdata('hospital');
+		$this->db->where('patient_visit.hospital_id',$hospital['hospital_id']);
         $from_date = $this->input->post('from_date');
         $to_date = $this->input->post('to_date');
         
@@ -57,6 +59,8 @@ class Staff_Report_Model extends CI_Model {
     }
     
     function get_lab_records(){
+		$hospital=$this->session->userdata('hospital');
+		$this->db->where('patient_visit.hospital_id',$hospital['hospital_id']);
         $from_date = $this->input->post('from_date');
         $to_date = $this->input->post('to_date');
         

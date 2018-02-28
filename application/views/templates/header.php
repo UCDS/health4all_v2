@@ -3,12 +3,13 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title><?php echo $title; ?> - Health4All</title>
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/bootstrap.css" media='screen,print'>
+	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/youseelogo.css" media='screen,print'>
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/font-awesome.min.css" >
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/flaticon.css" >
-	
+
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.min.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.chained.min.js"></script>
@@ -26,23 +27,23 @@
     <div class="navbar navbar-default navbar-static-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
-		<!-- Bootstrap toggle menu for mobile devices, only visible on small screens --> 
-		<a class="navbar-brand" href="http://www.yousee.in" target="_blank"><img src="<?php echo base_url();?>assets/images/uc-logo.png" alt="Yousee Logo" height="22" width="22"></a>	  
+		<!-- Bootstrap toggle menu for mobile devices, only visible on small screens -->
+		<a class="navbar-brand" href="https://yousee.in/c4c" target="_blank"><span style="position:absolute;font-size:2.7em;left:5%;top:10px" class="logo logo-yousee"> </span> </a>
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="<?php echo base_url();?>">Health4All</a>
+          <a class="navbar-brand" href="<?php echo base_url();?>"> Health4All</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-			<?php if($this->session->userdata('logged_in')) {	
+			<?php if($this->session->userdata('logged_in')) {
 			//Loop through the session data to check if the user has access to each function and only display those.
 			foreach($functions as $f){
-					//Check if the user has access to Out Patient Registration forms or In Patient Registration forms 
-					if($f->user_function=="Out Patient Registration" || $f->user_function=="In Patient Registration" || $f->user_function == "View Patients" || $f->user_function == "Update Patients"){ 
+					//Check if the user has access to Out Patient Registration forms or In Patient Registration forms
+					if($f->user_function=="Out Patient Registration" || $f->user_function=="In Patient Registration" || $f->user_function == "View Patients" || $f->user_function == "Update Patients"){
 					// If they do, display dropdown menu which will contain all the links to the forms. ?>
 						<li class="dropdown  <?php if(preg_match("^".base_url()."register^",current_url())){ echo "active";}?>">
 									<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><i class="fa fa-user"></i> Patients <b class="caret"></b></a>
@@ -59,9 +60,9 @@
 									//When the match is found, break the loop.
 									break;
 								}
-							}?>	
+							}?>
 						  <li class="divider"></li>
-						<?php 
+						<?php
 						//Repeat for all list items, and menu items.
 						foreach($functions as $f){
 								if($f->user_function=="In Patient Registration"){ ?>
@@ -77,25 +78,25 @@
 								foreach($functions as $f){
 									if($f->user_function == "View Patients"){ ?>
 										<li><a href="<?php echo base_url()."register/view_patients"; ?>">View Patients</a></li>
-									<?php 
+									<?php
 									break;
-									} 
+									}
 								} ?>
 							<?php
 								foreach($functions as $f){
 									if($f->user_function == "Update Patients"){ ?>
 										<li><a href="<?php echo base_url()."register/update_patients"; ?>">Update Patients</a></li>
-									<?php 
+									<?php
 									break;
-									} 
+									}
 								} ?>
 							</ul>
-						  </li>	
+						  </li>
 					<?php
-							break; 
-						} 
-					} 
-				?> 
+							break;
+						}
+					}
+				?>
 			<?php foreach($functions as $f){
 					if($f->user_function=="Diagnostics" ||$f->user_function=="Diagnostics - Order All" || $f->user_function=="Bloodbank" || $f->user_function == "Sanitation Evaluation"){ ?>
 					<li class="dropdown  <?php if(preg_match("^".base_url()."services^",current_url())){ echo "active";}?>">
@@ -128,7 +129,7 @@
 								}
 							}
 						}
-						?>	
+						?>
 
 						<?php foreach($functions as $f){
 								if($f->user_function=="Bloodbank"){ ?>
@@ -137,7 +138,7 @@
 									break;
 								}
 							}
-						?>	
+						?>
 						<?php foreach($functions as $f){
 								if($f->user_function=="Patient Transport"){ ?>
 									<li><a href="<?php echo base_url();?>register/transport">Transport</a></li>
@@ -145,9 +146,9 @@
 									break;
 								}
 							}
-						?>	
-						
-						<?php 
+						?>
+
+						<?php
 						$evaluate=0;
 						foreach($functions as $f){
 								if($f->user_function=="Sanitation Evaluation" && ($f->add==1 || $f->edit==1)){ ?>
@@ -166,15 +167,15 @@
 								}
 							}
 						}
-						?>	
+						?>
 						</ul>
 					  </li>
 					<?php
-							break; 
-						} 
-					} 
-				?> 
-                                 
+							break;
+						}
+					}
+				?>
+
 			<?php foreach($functions as $f){
 					if($f->user_function=="Equipment" || $f->user_function=="Consumables" || $f->user_function=="HR" || $f->user_function=="Vendor"){ ?>
 			<li class="dropdown  <?php if(preg_match("^".base_url()."inventory^",current_url())){ echo "active";}?>">
@@ -187,7 +188,7 @@
 									break;
 								}
 							}
-						?>	
+						?>
 
 						<?php foreach($functions as $f){
 								if($f->user_function=="Equipment"){ ?>
@@ -197,12 +198,26 @@
 								}
 							}
 						?>
+						<?php $consumables=0; ?>
 						<?php foreach($functions as $f){
-								if($f->user_function=="Consumables"){ ?>
-						  <li><a href="<?php echo base_url()."consumables/add/dosages";?>"><i class="glyph-icon flaticon-drugs5"></i> Consumables</a></li>
+								if($f->user_function=="Consumables"){ 
+								$consumables=1;?>
+						  <li><a href="<?php echo base_url()."consumables/indent/add_indent";?>"><i class="glyph-icon flaticon-drugs5"></i> Consumables</a></li>
 						<?php
 									break;
-								}
+								}							
+							}
+						?>
+						<?php 
+						
+						if($consumables == 0) 
+							foreach($functions as $f){
+								if($f->user_function=="Masters - Consumables"){
+									?>
+						  <li><a href="<?php echo base_url()."consumables/generic_item/add_generic";?>"><i class="glyph-icon flaticon-drugs5"></i> Consumables</a></li>
+						<?php
+									break;
+								}							
 							}
 						?>
 						<?php foreach($functions as $f){
@@ -216,29 +231,29 @@
 						</ul>
 					</li>
 					<?php
-							break; 
-						} 
-					} 
-				?> 
-                              
-			<?php 
+							break;
+						}
+					}
+				?>
+
+			<?php
 			foreach($functions as $f){
-					if($f->user_function=="OP Summary" || $f->user_function=="IP Summary" || 
-					$f->user_function=="OP Detail" || $f->user_function=="IP Detail" || 
-					$f->user_function=="Diagnostics - Detail" || $f->user_function=="Diagnostics - Summary" || 
-					($f->user_function == "Sanitation Evaluation" && $f->view==1) || 
-					$f->user_function == "Bloodbank" || $f->user_function == "Outcome Summary"){ ?>
+					if($f->user_function=="OP Summary" || $f->user_function=="IP Summary" ||
+					$f->user_function=="OP Detail" || $f->user_function=="IP Detail" ||
+					$f->user_function=="Diagnostics - Detail" || $f->user_function=="Diagnostics - Summary" ||
+					($f->user_function == "Sanitation Evaluation" && $f->view==1) ||
+					$f->user_function == "Bloodbank" || $f->user_function == "Outcome Summary" || $f->user_function == "Helpline Reports"){ ?>
 					<li class="dropdown  <?php if(preg_match("^".base_url()."reports^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><i class="fa fa-line-chart"></i> Reports <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-			<?php	
+			<?php
 				foreach($functions as $f){
 					if($f->user_function=="OP Summary" || $f->user_function=="IP Summary" || $f->user_function == "Bloodbank" || $f->user_function == "Outcome Summary"){ ?>
 						  <li class="dropdown-header">Summary reports</li>
 			<?php
 				break;
 				}
-				}	
+				}
 				foreach($functions as $f){
 				if($f->user_function=="OP Summary"){ ?>
                                             <li><a href="<?php echo base_url()."reports/op_summary";?>">OP Summary</a></li>
@@ -247,37 +262,38 @@
 				foreach($functions as $f){
 					if($f->user_function=="IP Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/ip_summary";?>">IP Summary</a></li>
+						  <li><a href="<?php echo base_url()."op_ip_report/op_ip_summary_report";?>">District Wise IP/OP Summary</a></li>
 						  <li><a href="<?php echo base_url()."patient/casesheet_mrd_status";?>">MRD Report</a></li>
 						  <li><a href="<?php echo base_url()."staff_report/get_patient_records";?>">Staff Activity OP/IP</a></li>
 						  <li><a href="<?php echo base_url()."staff_report/get_lab_records";?>">Diagnostics Staff Activity</a></li>
 						  <li><a href="<?php echo base_url()."reports/ip_op_trends";?>">IP/OP Trends</a></li>
 						  <li><a href="<?php echo base_url()."reports/icd_summary";?>">ICD Code Summary</a></li>
 						  <li><a href="<?php echo base_url()."reports/transfer_summary";?>">Transfers Summary</a></li>
-                   
-				<?php	} 
+
+				<?php	}
                       if($f->user_function=="Outcome Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/outcome_summary";?>">Outcome Summary</a></li>
-				<?php                      }     
+				<?php                      }
                       if($f->user_function=="Patient Transport Report"){ ?>
 						  <li><a href="<?php echo base_url()."reports/transport_summary";?>">Transport Summary</a></li>
-				<?php                      }             
+				<?php                      }
 				}
 				foreach($functions as $f){
 					if($f->user_function=="Diagnostics - Summary"){ ?>
 						  <li><a href="<?php echo base_url()."reports/order_summary/department";?>">Orders Summary</a></li>
 						  <li><a href="<?php echo base_url()."reports/sensitivity_summary";?>">Sensitivity Report</a></li>
                                                   <li><a href="<?php echo base_url()."diagnostics/lab_turnaround_time";?>">Diagnostics Turn Around Time</a></li>
-				<?php	}                
+				<?php	}
 					if($f->user_function=="Bloodbank"){ ?>
 						  <li><a href="<?php echo base_url()."bloodbank/user_panel/donation_summary";?>">Bloodbank Reports</a></li>
-				<?php	} 
+				<?php	}
 					if($f->user_function=="Bloodbank"){ ?>
 						  <li><a href="<?php echo base_url()."reports/audiology_summary";?>">Diagnostics Audiology Report</a></li>
 				<?php	}
 					if($f->user_function=="Masters - Sanitation" || $f->user_function == "Sanitation Summary"){ ?>
 						<li><a href="<?php echo base_url()."sanitation/view_summary";?>">Sanitation Evaluation</a></li>
-				<?php	
-					} 
+				<?php
+					}
 				?>
 			<?php	}	?>
 			<li class="divider"></li>
@@ -299,40 +315,49 @@
 			<?php }
 			if($f->user_function=="Sanitation Evaluation"){ ?>
 								<li><a href="<?php echo base_url()."sanitation/view_scores";?>">Sanitation Evaluation</a></li>
-					<?php	}  
-					
+					<?php	}
+
 			if($f->user_function=="Patient Transport Report"){ ?>
 								<li><a href="<?php echo base_url()."reports/transport_detail";?>">Transport Detailed</a></li>
-					<?php	}  
-					
+					<?php	}
+
+			if($f->user_function=="Helpline Reports"){ ?>
+								<li><a href="<?php echo base_url()."helpline/detailed_report";?>">Helpline Detailed</a></li>
+								<li><a href="<?php echo base_url()."helpline/report_groupwise";?>">Helpline Group Wise</a></li>
+					<?php	}
+
 			} ?>
 			</ul>
-			<?php 
+			<?php
 				break;
-				}  
+				}
 			}
 			?>
-                        		<li class="dropdown  <?php if(preg_match("^".base_url()."help^",current_url())){ echo "active";}?>">
-						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><i class="fa fa-question"></i> Help <b class="caret"></b></a>
-						<ul class="dropdown-menu">
-			                        			<li><a href="<?php echo base_url()."issue_tracker";?>"><i class="fa fa-phone"> </i> Issue Tracker</a></li>
-                                                                        <li><a href="<?php echo base_url()."contact_us";?>"><i class="fa fa-question"> </i> Contact us</a></li>
-						
-                                              </ul>
-					</li>
-					
-			
-                       
+            <li class="dropdown  <?php if(preg_match("^".base_url()."help^",current_url())){ echo "active";}?>">
+			<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><i class="fa fa-question"></i> Help <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="<?php echo base_url()."issue_tracker";?>"><i class="fa fa-phone"> </i> Issue Tracker</a></li>
+
+			<?php foreach($functions as $f){
+			if($f->user_function=="Helpline Update"){ ?>
+					<li><a href="<?php echo base_url()."helpline/update_call";?>"><i class="fa fa-phone"></i>HelpLine Update</a></li>
+			<?php } } ?>
+                    <li><a href="<?php echo base_url()."contact_us";?>"><i class="fa fa-question"> </i> Contact us</a></li>
+				</ul>
+			</li>
+
+
+
 			<?php } ?>
-					
+
 		</ul>
-	<?php if($this->session->userdata('logged_in')) { ?>
           <ul class="nav navbar-nav navbar-right">
+			<?php if($this->session->userdata('logged_in')) { ?>
             <li class="dropdown  <?php if(preg_match("^".base_url()."user_panel^",current_url())){ echo "active";}?>"><a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">
-				<?php 
+				<?php
 					$logged_in=$this->session->userdata('logged_in');
 					$hospital=$this->session->userdata('hospital');
-					echo $hospital['hospital']." | ".$logged_in['username']; ?> <b class="caret"></b></a>
+					echo $hospital['hospital_short_name']." | ".$logged_in['username']; ?> <b class="caret"></b></a>
                 <ul class="dropdown-menu">
 				<?php
 				foreach($functions as $f){
@@ -347,10 +372,29 @@
 				  <li><a href="<?php echo base_url();?>home/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
                 </ul>
 			</li>
-          </ul>	
-	<?php } ?>
+			<?php }  else { ?>
+            <li class="<?php if(preg_match("^".base_url()."home/login^",current_url())){ echo " active";}?>">
+				<a href="<?php echo base_url()."home/login";?>"><i class="fa fa-sign-in"></i> Login</a>
+			</li>
+			<?php } ?>
+            <li class="dropdown  <?php if(preg_match("^".base_url()."dashboard^",current_url())){ echo "active";}?>">
+				<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">
+				<i class="fa fa-bar-chart"></i> Dashboards
+				<b class="caret"></b>
+				</a>
+                <ul class="dropdown-menu">
+                  <li><a href="<?php echo base_url()."dashboard/helpline";?>">Helpline</a></li>
+                  <li><a href="<?php echo base_url()."dashboard/state/telangana";?>">State - TS</a></li>
+                  <li><a href="<?php echo base_url()."dashboard/view/tvvp";?>">TVVP</a></li>
+                  <li><a href="<?php echo base_url()."dashboard/view/dmetelangana";?>">DME Telangana</a></li>
+                  <li><a href="<?php echo base_url()."dashboard/view/dmeap";?>">DME AP</a></li>
+                  <li><a href="<?php echo base_url()."dashboard/bloodbanks";?>">Blood Banks</a></li>
+                  <li><a href="<?= base_url()."dashboard/view/npo";?>">NPOs</a></li>
+                </ul>
+			</li>
+          </ul>
         </div><!--/.nav-collapse -->
       </div>
     </div>
-	
+
 	<div class="container">

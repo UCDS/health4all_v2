@@ -53,7 +53,8 @@
 		});
 	</script>
 <div class="col-md-10 col-md-offset-2">
-<?php 	echo validation_errors(); ?>
+<?php
+	echo validation_errors(); ?>
 <?php if(isset($msg)){ ?> 
 	<div class="alert alert-info"> <?php echo $msg;?>
 	</div>
@@ -191,7 +192,7 @@
 						else{	
 							$result = $test->test_result_text;
 						?>
-							<textarea name="text_result" class="form-control"><?php echo $result;?></textarea>
+							<textarea name="text_result_<?=$test->test_id;?>" class="form-control"><?php echo $result;?></textarea>
 						<?php
 						}
 					 }
@@ -401,5 +402,5 @@ if(count($orders)>0){ ?>
 	}
 } 
 ?>
-<p><b style="color:red">*</b>Not under NABL</p>
+<!--<p><b style="color:red">*</b>Not under NABL</p>-->
 </div>

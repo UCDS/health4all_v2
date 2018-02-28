@@ -36,28 +36,10 @@ class Register extends CI_Controller {
 		if($this->session->userdata('hospital')){ //If the user has selected a hospital after log-in.
 			if($form_id=="") //Form ID cannot be null, if so show a 404 error.
 				show_404();
-			else{			
-			// Turn on output buffering
-			ob_start();
-			//Get the ipconfig details using system commond
-			system('ipconfig /all');
-			 
-			// Capture the output into a variable
-			$mycom=ob_get_contents();
-			// Clean (erase) the output buffer
-			ob_clean();
-			 echo $mycom;
-			$findme = "Physical";
-			//Search the "Physical" | Find the position of Physical text
-			$pmac = strpos($mycom, $findme);
-			 
-			// Get Physical Address
-			$user_physical=substr($mycom,($pmac+36),17);
-			
-			$this->data['physical_addresses']=$this->staff_model->physical_address();
-			$access=1;          //Change this back when you figure out IP based access.
-			foreach($this->data['physical_addresses'] as $pa){
-				if(($pa->user_function=="Out Patient Registration" || $pa->user_function == "IP Registration") && $pa->physical_address==$user_physical){
+			else{		
+			$access=1;        
+			foreach($this->data['functions'] as $f){
+				if(($f->user_function=="Out Patient Registration" || $f->user_function == "IP Registration")){
 					$access = 1;
 					break;
 				}

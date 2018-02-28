@@ -370,15 +370,15 @@ $(function(){
 		</td>
 		<td><?php echo $a->service_person_remarks; ?></td>
 		<td><?php  echo date("d-M-Y", strtotime("$a->service_date"));  ?></td>
-		<td><?php  echo date("h:i A", strtotime("$s->service_time"));  ?></td>
+		<td><?php  echo date("h:i A", strtotime("$a->service_time"));  ?></td>
 		<td><?php echo $a->problem_status; ?></td>
 		<td><?php
 				if($a->working_status==1)
 				{
-					echo "Working";
+					echo "<h4 class='label label-success' >Working</h4>";
 				}
 						else{
-                        echo "Not working";	}?></td>
+                        echo "<h4 class='label label-danger'>Not working</h4>";	}?></td>
 		                
 		
 

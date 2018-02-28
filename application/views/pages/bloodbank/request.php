@@ -170,8 +170,20 @@
 				<td> Patient : </td>
 				<td>
 				<div class="col-md-12">
-					<div class="col-md-12">
-					<input class="form-control sr-only enter-patient" type="hidden" name="hospital_internal_id" />
+					<div class="col-md-6 select-patient">
+						<select class="form-control" name="visit_type">
+							<option value="OP" selected>OP</option>
+							<option value="IP">IP</option>
+						</select>
+					<font color='red'>*</font>
+					</div>
+					<div class="col-md-6 select-patient">
+					
+						<select class="form-control" id="year" style="width:100px"  name="year">
+							<option value="" disabled>Select Admission Year</option>
+							<option value="<?php echo date("Y",strtotime("Last Year"));?>"><?php echo date("Y",strtotime("Last Year"));?></option>
+							<option value="<?php echo date("Y");?>" selected><?php echo date("Y");?></option>
+						</select>
 					<font color='red'>*</font>
 					</div>
 					<div class="col-md-6 select-patient">
@@ -194,9 +206,9 @@
 						<input class="form-control" placeholder="Ward/Unit" name="ward_unit" size="50" />
 					</div>
 					<div class="col-md-8 sr-only enter-patient">
-						<label><input type="radio" value="0" name="gender" id="male" checked />Male</label>
-					   <label><input type="radio" value="1" name="gender" id="female" />Female</label>
-					    <label><input type="radio" value="2" name="gender" id="female" />Others</label>
+						<label><input type="radio" value="Male" name="gender" id="male" checked />Male</label>
+					   <label><input type="radio" value="Female" name="gender" id="female" />Female</label>
+					    <label><input type="radio" value="Other" name="gender" id="female" />Others</label>
 					</div>
 					
 					
