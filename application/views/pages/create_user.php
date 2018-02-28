@@ -1,3 +1,9 @@
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.chained.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#staff_id").chained("#hospital_id");
+});
+</script>
 <div class="row col-md-offset-2">
 	<?php if(isset($msg)){ ?>
 		<div class="alert alert-info"><?php echo $msg;?></div>
@@ -29,14 +35,29 @@
 					</div>
 					<div class="form-group col-md-12">
 						<div class="col-md-3">
+						<label class="control-label">Hospital</label>
+						</div>
+						<div class="col-md-6">						
+						<select name="hospital_id" id="hospital_id" class="form-control" >
+						<option value="all">--Select--</option>
+						<?php 
+						foreach($hospital as $h){
+							echo "<option value='".$h->hospital_id."' >".$h->hospital."</option>";
+						}
+						?>
+						</select>
+						</div>
+					</div>
+					<div class="form-group col-md-12">
+						<div class="col-md-3">
 						<label class="control-label">Staff</label>
 						</div>
 						<div class="col-md-6">						
-						<select name="staff" class="form-control" required >
+						<select name="staff" id="staff_id" class="form-control" required >
 						<option value="">--Select--</option>
 						<?php 
 						foreach($staff as $s){
-							echo "<option value='".$s->staff_id."' >".$s->staff_name."</option>";
+							echo "<option value='".$s->staff_id."' class='".$s->hospital_id." all' >".$s->staff_name."</option>";
 						}
 						?>
 						</select>

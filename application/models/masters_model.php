@@ -44,9 +44,10 @@ class Masters_model extends CI_Model{
 			$this->db->select("*")->from("icd_code")->order_by('code_title');
 		}
 		else if($type=="user"){
-			$this->db->select("user.user_id,username,password,user.staff_id,first_name,last_name,designation,phone,department")
+			$this->db->select("hospital.hospital,user.user_id,username,password,user.staff_id,first_name,last_name,designation,phone,department")
 			->from("user")
 			->join('staff','user.staff_id=staff.staff_id')
+			->join('hospital','staff.hospital_id=hospital.hospital_id')
 			->join('department','staff.department_id=department.department_id');
 			if($this->input->post('search'))
 			{

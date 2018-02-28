@@ -38,6 +38,7 @@ class User_panel extends CI_Controller {
 		$this->data['title']="Create User";
 		$this->data['userdata']=$this->session->userdata('logged_in');
 		$this->data['user_functions']=$this->staff_model->get_user_function();
+		$this->data['hospital']=$this->staff_model->get_hospital();
 		$this->data['staff']=$this->staff_model->get_staff();
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/leftnav',$this->data);

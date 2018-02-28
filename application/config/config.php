@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= '/health4all/';
+$config['base_url']	= '/health4all_v2/';
 
 /*
 |--------------------------------------------------------------------------
