@@ -137,8 +137,9 @@ class Staff_model extends CI_Model{
 	function get_staff($department=0){
 		if(!!$department)
 			$this->db->where('department',$department);
-		$this->db->select("staff_id,CONCAT(IF(first_name!='',first_name,''),' ',IF(last_name!='',last_name,'')) staff_name,department",false)
+		$this->db->select("staff_id,staff.hospital_id,hospital.hospital,CONCAT(IF(first_name!='',first_name,''),' ',IF(last_name!='',last_name,'')) staff_name,department",false)
 		->from("staff")
+		->join('hospital', 'staff.hospital_id=hospital.hospital_id')
 		->join('department','staff.department_id=department.department_id');
 		$query=$this->db->get();
 		return $query->result();

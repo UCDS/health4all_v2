@@ -215,6 +215,7 @@ $(document).ready(function(){
 		<table class="table table-bordered table-striped" id="table-sort">
 	<thead>
 		<th style="text-align:center">S.no</th>
+		<th style="text-align:center">Hospital</th>
 		<th style="text-align:center">Department</th>
 		<th style="text-align:center">Designation</th>
 		<th style="text-align:center">Name</th>
@@ -231,6 +232,7 @@ $(document).ready(function(){
 			<?php echo form_open('user_panel/edit_user',array('id'=>'select_user_edit_form_'.$a->user_id,'role'=>'form')); ?>
 			<?php echo $i++; ?>
 		</td>
+		<td><?php echo $a->hospital;?></td>
 		<td><?php echo $a->department;?></td>
 		<td><?php echo $a->designation;?> </td>
 		<td><?php echo  $a->first_name." ".$a->last_name;  ?></td>
