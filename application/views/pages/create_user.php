@@ -39,7 +39,7 @@ $(function(){
 						</div>
 						<div class="col-md-6">						
 						<select name="hospital_id" id="hospital_id" class="form-control" >
-						<option value="">--Select--</option>
+						<option value="all">--Select--</option>
 						<?php 
 						foreach($hospital as $h){
 							echo "<option value='".$h->hospital_id."' >".$h->hospital."</option>";
@@ -57,7 +57,7 @@ $(function(){
 						<option value="">--Select--</option>
 						<?php 
 						foreach($staff as $s){
-							echo "<option value='".$s->staff_id."' class='".$s->hospital_id."' >".$s->staff_name."</option>";
+							echo "<option value='".$s->staff_id."' class='".$s->hospital_id." all' >".$s->staff_name."</option>";
 						}
 						?>
 						</select>
