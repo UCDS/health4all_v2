@@ -39,8 +39,21 @@
                                 <td>Department : <?php echo $registered->department; ?> </td>
                                 <td> 
                                 <?php 
-                                if(!!$registered->op_room_no) echo '<h4>'."Room No:";
-                                if(!!$registered->op_room_no) echo $registered->op_room_no.'</h4>';
+                                if(!!$registered->op_room_no){ 
+                                        echo '<h4>'."Room No:";
+                                        $m_room = $registered->op_room_no;
+                                        if(strpos($registered->op_room_no,'~')){
+                                                $rooms = explode('~', $registered->op_room_no);
+                                                foreach($rooms as $room){                                                        
+                                                        if($registered->gender=='M' && strpos($room,'M')){
+                                                                $m_room = str_replace('M',' ',$room);           
+                                                        }else if($registered->gender=='F' && strpos($room,'F')){
+                                                                $m_room = str_replace('F',' ',$room);           
+                                                        }
+                                                }        
+                                        }
+                                        echo $m_room.'</h4>';
+                                }
                                 ?>
                                 </td>
                 </tr>
