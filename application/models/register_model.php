@@ -395,7 +395,7 @@ class Register_model extends CI_Model{
         if(($this->input->post('mlc_radio')=='1' || $this->input->post('mlc_radio')=='-1')) $mlc_radio= $this->input->post('mlc_radio'); else $mlc_radio=0;                
 		if(!!$outcome) {
 			if($this->input->post('outcome_date')) $outcome_date=date("Y-m-d",strtotime($this->input->post('outcome_date'))); else $outcome_date = 0;
-			if($this->input->post('outcome_date')) $outcome_time=date("H:i:s",strtotime($this->input->post('outcome_date'))); else $outcome_time = 0;
+			if($this->input->post('outcome_date')) $outcome_time=date("H:i:s",strtotime($this->input->post('outcome_time'))); else $outcome_time = 0;
 		}
 		else { $outcome_date = 0; $outcome_time = 0;}
 		if($this->input->post('final_diagnosis')) $final_diagnosis=$this->input->post('final_diagnosis'); else $final_diagnosis="";
