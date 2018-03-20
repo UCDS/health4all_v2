@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+<link rel="stylesheet" type="text/css" href="<?php echo base_url();?>assets/css/main.css" media="print" >
 <style>
 .mandatory{
 	color:red;
