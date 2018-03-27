@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
+<link rel="stylesheet" type="text/css" href="<?php echo base_url();?>assets/css/main.css" media="print" >
 <style>
 .mandatory{
 	color:red;
@@ -94,7 +95,7 @@ pri.print();
 			<div class="alert alert-danger">Entered IP/Patient Manual ID Number already exists.</div>
 		<?php } 
 		else if(isset($registered)){ ?>
-		<iframe id="ifmcontentstoprint" style="height: 0px; width: 0px; position: absolute;display:none"></iframe>
+		<iframe id="ifmcontentstoprint" style="height: 0px; width: 0px; position: absolute;" class="sr-only"></iframe>
 		<div id="print-div" class="sr-only" style="width:100%;height:100%;"> 
 		<?php $this->load->view($print_layout);?>
 		</div>
