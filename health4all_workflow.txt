@@ -1,0 +1,22 @@
+Problem Solutions.
+1. Adding test ranges to test_range table
+        INSERT into test_range (gender, min, max, range_text, from_year, to_year, from_month, to_month, from_day, to_day, range_type, age_type, range_active)  
+        SELECT  master_hospital.test_master_id, master_hospital.test_name,
+                        range_data.gender, range_data.min, range_data.max, range_data.range_text, range_data.from_year, range_data.to_year, range_data.from_month, 
+                range_data.from_day, range_data.to_day, range_data.range_type, range_data.age_type, range_data.range_active
+        FROM 
+        (SELECT * from test_master where hospital_id=16) master_hospital
+        JOIN 
+        (SELECT test_range.gender, test_range.min, test_range.max, test_range.range_text, test_range.from_year, test_range.to_year, test_range.from_month, 
+                test_range.from_day, test_range.to_day, test_range.range_type, test_range.age_type, test_range.range_active,
+                test_master.test_name
+        FROM test_master 
+        JOIN test_range ON test_master.test_master_id = test_range.test_master_id ) 
+        range_data ON master_hospital.test_name = range_data.test_name
+2. Inserting range when ordering test
+   1. Get all the input data, build an array
+   2. Get patient_information needed to place the order
+   3. Build an array with all the tests ordered
+        1. loop through the tests array and for each Get test range data
+        2. if filter is applicable, apply filter
+   4.          

@@ -28,7 +28,7 @@ function test_order($departments=0){
 	$this->data['title']="Order Test";
 	$page="pages/diagnostics/test_order_form";
 	$this->load->view('templates/header',$this->data);
-	$this->load->view('templates/leftnav');
+//	$this->load->view('templates/leftnav');
 	$this->form_validation->set_rules('visit_id','Patient','required|trim|xss_clean');
 	if($departments==0){
 		$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
