@@ -1,0 +1,5 @@
+1)  {Register numbers, poll each number for sometime{30 seconds}}
+2)  {Log who recieved the call}
+3)  {Call gets transfered to voice mail, <- two emergency numbers}
+4)  {Alternate call flow}
+

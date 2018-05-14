@@ -36,8 +36,8 @@ class Register extends CI_Controller {
 		if($this->session->userdata('hospital')){ //If the user has selected a hospital after log-in.
 			if($form_id=="") //Form ID cannot be null, if so show a 404 error.
 				show_404();
-			else{		
-			$access=1;        
+			else{	
+			$access=0;
 			foreach($this->data['functions'] as $f){
 				if(($f->user_function=="Out Patient Registration" || $f->user_function == "IP Registration")){
 					$access = 1;

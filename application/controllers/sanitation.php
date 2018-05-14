@@ -32,7 +32,8 @@ class Sanitation extends CI_Controller {
 	 	$this->load->helper('form');
 		$this->load->library('form_validation');
 		$hospitals=$this->data['hospitals'];
-		$this->data['area']=$this->masters_model->get_data('area',0,0,0,0,0,$hospitals);
+		$this->load->model('staff_model');
+		$this->data['area']=$this->staff_model->get_areas();
 		$this->form_validation->set_rules('area', 'Area', 'trim|xss_clean');
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/leftnav');
@@ -56,9 +57,9 @@ class Sanitation extends CI_Controller {
 				}
 			}
 		}
-		$this->load->view('templates/footer');
-				
+		$this->load->view('templates/footer');				
 	}
+	
 	function view_scores(){
 		$access=0;
 		foreach($this->data['functions'] as $f){
@@ -246,7 +247,8 @@ class Sanitation extends CI_Controller {
                   )
 			  
 			);
-		 $this->data['area']=$this->masters_model->get_data("area");
+			$this->data['area']=$this->staff_model->get_areas();	 			
+		 //$this->data['area']=$this->masters_model->get_data("area");
 		 $this->data['area_activity']=$this->masters_model->get_data("area_activity");
 			 $this->data['hospitals']=$this->masters_model->get_data("hospital");			
 		}

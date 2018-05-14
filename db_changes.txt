@@ -636,7 +636,8 @@ CREATE TABLE IF NOT EXISTS `state_codes` (
 54.
 ALTER TABLE  `counter` ADD  `auto_increment` VARCHAR( 3 ) NOT NULL ;
 
-
+ALTER TABLE `department` CHANGE `op_room_no` `op_room_no` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+ALTER TABLE `test_master` CHANGE `binary_positive` `binary_positive` VARCHAR(40) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, CHANGE `binary_negative` `binary_negative`VARCHAR(40) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL; 
 
 
 

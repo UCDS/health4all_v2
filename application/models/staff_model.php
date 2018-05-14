@@ -34,11 +34,12 @@ class Staff_model extends CI_Model{
 	}
 	
 	//user_hospital() takes user ID as parameter and returns a list of all the hospitals the user has access to.	
-	function user_hospital($user_id){
+	function user_hospital($user_id = false){
+		if(!!$user_id)
+			$this->db->where('user_hospital_link.user_id',$user_id);
 		$this->db->select('hospital.hospital_id,hospital,hospital_short_name,description,place,district,state,logo')->from('user')
 		->join('user_hospital_link','user.user_id=user_hospital_link.user_id')
-		->join('hospital','user_hospital_link.hospital_id=hospital.hospital_id')
-		->where('user_hospital_link.user_id',$user_id)
+		->join('hospital','user_hospital_link.hospital_id=hospital.hospital_id')		
 		->order_by('hospital');
 		$query=$this->db->get();
 		return $query->result();
@@ -63,11 +64,25 @@ class Staff_model extends CI_Model{
 	//get_department() selects the clinical departments from the database and returns the result
 	function get_department($clinical=1){
 		$hospital=$this->session->userdata('hospital');
-		$this->db->where('hospital_id',$hospital['hospital_id']);
+		if(!!$hospital){
+			$this->db->where('hospital_id',$hospital['hospital_id']);
+		}		
 		if($clinical != -1){
 			$this->db->where('clinical',$clinical);
 		}
-		$this->db->select("department_id,department")->from("department")->order_by('department');
+		$this->db->select("hospital_id,department_id,department")->from("department")->order_by('department');
+		$query=$this->db->get();
+		return $query->result();
+	}
+	function get_areas(){
+		$hospital=$this->session->userdata('hospital');
+		if(!!$hospital){
+			$this->db->where('hospital_id',$hospital['hospital_id']);
+		}
+		$this->db->select("department.hospital_id,department.department, area.*")
+					->from("area")
+					->join("department","department.department_id = area.department_id","left")
+					->order_by('department');
 		$query=$this->db->get();
 		return $query->result();
 	}
@@ -137,10 +152,14 @@ class Staff_model extends CI_Model{
 	function get_staff($department=0){
 		if(!!$department)
 			$this->db->where('department',$department);
-		$this->db->select("staff_id,staff.hospital_id,hospital.hospital,CONCAT(IF(first_name!='',first_name,''),' ',IF(last_name!='',last_name,'')) staff_name,department",false)
+		$this->db->select("staff.staff_id,staff.hospital_id,hospital.hospital, staff.designation, 
+			CONCAT(IF(first_name!='',first_name,''),' ',IF(last_name!='',last_name,'')) staff_name,
+			department, user.user_id, user.username, staff.phone",
+			false)
 		->from("staff")
 		->join('hospital', 'staff.hospital_id=hospital.hospital_id')
-		->join('department','staff.department_id=department.department_id');
+		->join('department','staff.department_id=department.department_id', 'left')
+		->join('user','staff.staff_id=user.staff_id', 'left');
 		$query=$this->db->get();
 		return $query->result();
 	}
@@ -490,8 +509,43 @@ class Staff_model extends CI_Model{
 		->order_by("$sub_by,designation,staff_category");
 		$query = $this->db->get();
 		return $query->result();
+	}   
+	
+	function user_hospital_link() {
+		$user_id = $this->input->post('user_id');
+		$user_hospital = $this->input->post('user_hospital'); 
+		
+		$user_hospital_data = array();
+		foreach($user_hospital as $uh){ 
+			$user_hospital_data[] = array(
+				'user_id'=>$user_id,
+				'hospital_id'=>$uh
+			);
+		}
+		$this->db->insert_batch('user_hospital_link',$user_hospital_data);
 	}
 	
-    		
+	function get_user_hospitals() {
+		if(!!$this->input->post('user_id')){
+			$this->db->where('user.user_id',$this->input->post('user_id'));
+		}
+		$this->db->select("user.user_id, user.username, hospital.hospital_id, hospital.hospital,
+					hospital.hospital_short_name")
+				 ->from("user")
+				 ->join("user_hospital_link","user_hospital_link.user_id = user.user_id")
+				 ->join("hospital","hospital.hospital_id = user_hospital_link.hospital_id");
+		$query=$this->db->get();
+		return $query->result();
+	}
+
+	function get_user() {
+		$this->db->select("staff.staff_id,staff.hospital_id, staff.designation, 
+		staff.first_name, staff.last_name,
+		user.user_id, user.username, staff.phone")
+			->from("user")
+			->join("staff", "user.staff_id = staff.staff_id");
+		$query=$this->db->get();
+		return $query->result();
+	}
 }
 ?>

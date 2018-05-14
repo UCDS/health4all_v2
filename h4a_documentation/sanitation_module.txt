@@ -1,0 +1,4 @@
+1.  Evaluate should come as a tab
+2.  Select (hospital, area, area_type)
+Step 1. Define area activities(ward, theator, classroom)
+Step 2. Select activities for facility(hospital or college){Buggy}

@@ -19,7 +19,7 @@
 	       <td colspan="3">
 			<div style="float:middle;text-align:center">
 			   <b>Government of TELANGANA</b><br />
-					<font size="4"><?php echo $registered->hospital;?></font>
+				<b>	<font size="4"><?php $hospital=$this->session->userdata('hospital'); echo $hospital['hospital'];?></font> </b>
 					<font size="3"><?php // echo $registered->description; ?> </font>
 					<font size="2"><?php echo $registered->district; ?><font>
 					<br>
@@ -37,7 +37,7 @@
 		<td>&nbsp
 		</tr>
 		<tr>
-			<td><b>Registration No:</b><?php echo $registered->patient_id; ?></td>
+			<td><b>OP Registration No:</b><?php echo $registered->hosp_file_no; ?></td>
 			<td><b>Date & Time:</b> 
 				<?php echo date("d-M-Y",strtotime($registered->admit_date)); ?> &
 				<?php echo date("g:iA",strtotime($registered->admit_time)); ?>

@@ -12,7 +12,7 @@ class api_model extends CI_Model {
         last_name "Last Name",
         IF(age_years < 12, IF(gender="M", "Male Child", "Female Child") , IF(gender="M", "Male", "Female") ) as "Gender",
         father_name "Father Name", mother_name "Mother Name", spouse_name "Spouse Name",
-        (CASE WHEN dob != 0 THEN dob ELSE DATE_SUB(DATE_SUB(DATE_SUB(CURDATE(),INTERVAL age_years YEAR), INTERVAL age_months MONTH), INTERVAL age_days DAY) END) as "DOB",
+        (CASE WHEN dob != 0 THEN dob ELSE DATE_SUB(DATE_SUB(DATE_SUB(admit_date,INTERVAL age_years YEAR), INTERVAL age_months MONTH), INTERVAL age_days DAY) END) as "DOB",
         address "Address", district_id "District ID"',false)
         ->from('patient_visit')->join('patient','patient_visit.patient_id = patient.patient_id')->join('hospital','patient_visit.hospital_id = hospital.hospital_id')
         ->where('hospital.type6','VVP')
