@@ -15,9 +15,11 @@
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.chained.min.js"></script>
 	<script>
 	$(function () {
-	  $('[data-toggle="popover"]').popover({trigger:'hover',html:true});
+	  	$('[data-toggle="popover"]').popover({trigger:'hover',html:true});
 		$("#unit").chained("#department");
 		$("#area").chained("#department");
+		$("#department_id").chained("#hospital_id");
+		$("#facility_area_id").chained('#hospital_id');
 	});
 	</script>
 </head>

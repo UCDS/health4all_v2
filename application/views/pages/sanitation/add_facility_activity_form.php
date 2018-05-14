@@ -1,5 +1,4 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <script type="text/javascript">
 $(function(){
@@ -48,7 +47,7 @@ $(function(){
 		<select name="area" id="area" class="form-control">
 		<option value="">Area</option>
 		<?php foreach($area as $d){
-			echo "<option value='$d->area_id' class='$d->hospital_id' hidden disabled>$d->area_name</option>";
+			echo "<option value='$d->area_id' class='$d->hospital_id'>$d->area_name - $d->department</option>";
 		}
 		?>
 		</select>

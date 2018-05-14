@@ -1577,5 +1577,11 @@ else if($type=="dosage"){
 		else return true;
    }
 
+   function add_test_name() {
+	   $hospital = $this->session->userdata('hospital');
+	   $test_area = $this->input->post('test_area');
+	   $test_method = $this->input->post('test_method');
+	   $test_name = $this->input->post('test_name');
+   }
 }
 ?>

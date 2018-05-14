@@ -9,7 +9,7 @@ class Diagnostics_model extends CI_Model{
 		$test_area_id=$this->input->post('test_area');
 		$order_date_time=date("Y-m-d H:i:s",strtotime($this->input->post('order_date')." ".$this->input->post('order_time')));
 		$order_status=0;
-		
+
 		//Sample fields
 		$sample_code=$this->input->post('sample_id');
 		$sample_date_time = date("Y-m-d H:i:s");
@@ -58,19 +58,18 @@ class Diagnostics_model extends CI_Model{
 			$age_months = $age_months + floor(($diff - $age_years * 365*60*60*24) / (30*60*60*24));
 			$age_days = $age_days + floor(($diff - $age_years * 365*60*60*24 - $age_months*30*60*60*24)/ (60*60*24));
 		}
-		echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".$age_years." ".$age_months." ".$age_days;
 
 		//Getting test data
 		$test_groups = $this->input->post('test_group');
 		$test_master = $this->input->post('test_master');
 		$test_data=array();
 		if(!!$test_groups){
-			foreach($test_groups as $test_group) {
+			foreach($test_groups as $test_group_id) {
 				$this->db->select('test_master.test_master_id,has_result')->from('test_master')
 				->join('test_group_link','test_master.test_master_id=test_group_link.test_master_id')
 				->join('test_group','test_group_link.group_id=test_group.group_id')
 				->where('hospital_id',$hospital['hospital_id'])
-				->where('test_group.group_id',$test_group);
+				->where('test_group.group_id',$test_group_id);
 				$query=$this->db->get();
 				$results = $query->result();
 				foreach($results as $result){
@@ -78,18 +77,18 @@ class Diagnostics_model extends CI_Model{
 						'order_id'=>'',					
 						'sample_id'=>'',				
 						'test_master_id'=>$result->test_master_id,	
-						'group_id'=>$test_group,							
+						'group_id'=>$test_group_id,							
 						'test_range_id'=>''									
 					);
 				}
 			}
 		}
 		if(!!$test_master){
-			foreach($test_master as $test){
+			foreach($test_master as $test_id){
 				$test_data[] = array(
 					'order_id'=>'',					
 					'sample_id'=>'',				
-					'test_master_id'=>$test,			
+					'test_master_id'=>$test_id,			
 					'group_id'=>0,						
 					'test_range_id'=>''
 				);
@@ -106,12 +105,24 @@ class Diagnostics_model extends CI_Model{
 				->limit(1);
 			$query = $this->db->get();
 			$row = $query->row();
-			echo $this->db->last_query();
+			
 			if(sizeof($row) > 0){
-				$test_data[$i]['test_master_id'] = $row->test_range_id;
+				$test_data[$i]['test_range_id'] = $row->test_range_id;
 			}			
 		}
-
+		//Setting test_master_id = 0 where group set
+		if(!!$test_groups){
+			foreach($test_groups as $test_group_id) {
+				$test_data[] = array(
+					'order_id'=>'',					
+					'sample_id'=>'',				
+					'test_master_id'=>0,			
+					'group_id'=>$test_group_id,						
+					'test_range_id'=>''
+				);
+			}
+		}
+		
 		//test_order_data array
 		$data=array(
 			'visit_id'=>$visit_id,					//Got
@@ -145,7 +156,7 @@ class Diagnostics_model extends CI_Model{
 			$test_data[$i]['order_id'] = $order_id;
 			$test_data[$i]['sample_id'] = $sample_id;
 		}
-		var_dump($test_data);
+		
 		$this->db->insert_batch('test',$test_data);
 		
 		$this->db->trans_complete();
@@ -418,7 +429,7 @@ class Diagnostics_model extends CI_Model{
 		->group_by('test_id');
 		$this->db->where('test_order.order_id',$order_id);
 		$query=$this->db->get();
-	
+		
 		return $query->result();
 	}		
 	

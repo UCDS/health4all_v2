@@ -1,6 +1,6 @@
-
 <?php 
 echo validation_errors();
+
 if (isset($msg)){ ?>
 	<div class="alert alert-info">
 		<?php echo $msg;?>
@@ -26,15 +26,7 @@ if (isset($msg)){ ?>
 							<div class = "col-xs-12 col-sm-12 col-md-6 col-lg-4">
 								<div class="form-group">
 									<label for="inputdepartment" >Department Name</label>
-									<select name="department" id="department" class="form-control">
-												<option value="">select</option>
-													<?php 
-														foreach($list_departments as $dept){
-														echo "<option value='".$dept->department_name."'>".$dept->department_name."</option>";
-																						}
-													?>
-									</select>
-						
+									<input type="TEXT" class="form-control" name="department" id="department" placeholder="Enter Department name">						
 								</div>
 							</div>
 								

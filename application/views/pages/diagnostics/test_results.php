@@ -120,7 +120,6 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
         <?php
         $assay_set = 0;                                                               // Display Mehod coloumn in report only if assay_set flag is 1.
         foreach ($order as $o) {
-
             if ($o->assay != '') {
                 $assay_set = 1;
                 break;
@@ -143,39 +142,39 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
                 }
             }
         ?>
-    <?php
+<?php
 // The following flags are set to display only the coloums that have atleast one value.
 // Binary coloumn is shown only if there is atleast one binary result, similarly numeric and text.
-                    $binary_flag = 0;                                              // Flag to display the preset binary results, if the binary_result flag is set to 1 in test_master table.
-                    $numeric_flag = 0;                                             // Flag to display the typed numeric result if the numeric_flag is set to 1 in test_master table.
-                    $text_flag = 0;                                                // Flag to display the test result typed if the text_flag is set to 1 in test_master table.
-                    $test_range_flag = 0;                                          // Flag to display the preset standard test ranges, that a test result can take if range_type is > 1 in test_master table.
-                    $text_result_flag = 0;
-                    foreach ($order as $test) {                                    // Set the flags to one if alteast one record satisfies the above conditions.
-                        if ($test->binary_result == 1) {
-                            $binary_flag = 1;
-                        }
-                        if ($test->numeric_result == 1) {
-                            $numeric_flag = 1;
-                        }
-                        if ($test->text_range == 1) {
-                            $text_flag = 1;
-                        }                        
-                        if ($test->nabl == 1) {
-                            $nabl_flag = 1;
-                        }
-                        if ($test->nabl == 0 && $test->test_master_id != 0) {
-                            $nabl_missing_flag = 1;
-                        }
-                        if($test->text_result == 1){
-                            $text_result_flag = 1;
-                        }
-                    }
-                    if ($numeric_flag == 1 ||  $text_flag == 1) {
-                            $test_range_flag = 1;
-                    }
-                    // End of set flags loop
-                    ?>
+    $binary_flag = 0;                                              // Flag to display the preset binary results, if the binary_result flag is set to 1 in test_master table.
+    $numeric_flag = 0;                                             // Flag to display the typed numeric result if the numeric_flag is set to 1 in test_master table.
+    $text_flag = 0;                                                // Flag to display the test result typed if the text_flag is set to 1 in test_master table.
+    $test_range_flag = 0;                                          // Flag to display the preset standard test ranges, that a test result can take if range_type is > 1 in test_master table.
+    $text_result_flag = 0;
+    foreach ($order as $test) {                                    // Set the flags to one if alteast one record satisfies the above conditions.
+        if ($test->binary_result == 1) {
+            $binary_flag = 1;
+        }
+        if ($test->numeric_result == 1) {
+            $numeric_flag = 1;
+        }
+        if ($test->text_range == 1) {
+            $text_flag = 1;
+        }                        
+        if ($test->nabl == 1) {
+            $nabl_flag = 1;
+        }
+        if ($test->nabl == 0 && $test->test_master_id != 0) {
+            $nabl_missing_flag = 1;
+        }
+        if($test->text_result == 1){
+            $text_result_flag = 1;
+        }
+    }
+    if ($numeric_flag == 1 ||  $text_flag == 1) {
+            $test_range_flag = 1;
+    }
+    // End of set flags loop
+?>
         <!--displaying the order date-->
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -464,7 +463,7 @@ src="<?php echo base_url(); ?>assets/js/jquery.tablesorter.widgets.min.js"></scr
                             <!--Output of individual tests -->
                             <?php
                             foreach ($order as $test) {								
-                                if($test->group_id == 0  && !preg_match("^Culture*^", $test ->test_method)){?>
+                                if($test->group_id == 0  && !preg_match("^Culture*^", $test->test_method)){?>
                                     <tr>
                                     <td><?php echo $sno ?></td>
                                     <td>
