@@ -1,11 +1,7 @@
 
 	<div class="row">
             
-            
-            
-            
-	    <a class="navbar-brand" href="http://www.yousee.in" target="_blank"><img src="<?php echo base_url();?>assets/images/uc-logo.png" alt="Yousee Logo" height="52" width="52"></a>
-	    <h1>Welcome to Health4All! <small>a Free and Open Source application supported by <a href="http://www.yousee.in" target="_blank">YouSee</a></small></h1>
+	    <h1>Welcome to Health4All <small>- a Free and Open Source application supported by <a href="http://www.yousee.in" target="_blank">YouSee</a></small></h1>
 		
 		<br />
 		<?php 
