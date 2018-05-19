@@ -114,6 +114,45 @@ class Dashboard extends CI_Controller {
         ->set_output(json_encode($hospitalstarts));
 
 	}
+		public function diagnostics_dashboard_1(){
+		$this->data['title']="Diagnostics Dashboard - 1";
+		$this->load->model('reports_model');
+		$this->data['report']=$this->reports_model->diagnostic_dashboard_HospitalWise();
+		$this->data['report1']=$this->reports_model->diagnostic_dashboard_AreaWise();
+		$this->load->view('templates/header',$this->data);
+		$this->load->helper('form');
+		$this->load->view('pages/diagnostics_dashboard_1',$this->data);
+		$this->load->view('templates/footer');
+	}
+
+	public function diagnostics_dashboard_2(){
+		$this->data['title']="Diagnostics Board - 2";
+		$this->load->model('reports_model');
+		$this->data['report']=$this->reports_model->diagnostic_board();
+		$this->data['report1']=$this->reports_model->diagnostic_board('lab_area');
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('pages/diagnostics_dashboard_2',$this->data);
+		$this->load->view('templates/footer');
+	}
+
+	public function diagnostic_dashboard_hospital($hospital_type=" "){
+		$this->data['title']="Diagnostics Board";
+		$this->data['type']="$hospital_type";
+		$this->load->model('reports_model');
+		$this->data['report']=$this->reports_model->diagnostic_hospital_board($hospital_type);
+		$this->data['report1']=$this->reports_model->diagnostic_hospital_board($hospital_type,'lab_area');
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('pages/diagnostic_hospital_board',$this->data);
+		$this->load->view('templates/footer');
+	}
+	/**
+	* diagnostics_dashboard_1
+	* diagnostics_dashboard_2
+	* diagnostic_board_hospital
+	* Added by : Manish Kumar
+	*
+	**/
+
 	public function department($organization=""){
 		$this->load->model('reports_model');
 		$deptstarts=$this->reports_model->dashboard($organization,'department');
