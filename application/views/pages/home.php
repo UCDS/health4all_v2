@@ -87,6 +87,8 @@
 				<a href="<?= base_url()."dashboard/view/dmeap";?>"><div class="alert alert-success col-md-4 col-md-offset-1"><i class="fa fa-area-chart"></i> DME AP</div></a>
 				<a href="<?= base_url()."dashboard/bloodbanks";?>"><div class="alert alert-success col-md-4 col-md-offset-1"><i class="fa fa-tint"></i> Blood Banks</div></a>
 				<a href="<?= base_url()."dashboard/view/npo";?>"><div class="alert alert-success col-md-4 col-md-offset-1"><i class="fa fa-bar-chart"></i> NPOs</div></a>
+                <a href="<?= base_url()."dashboard/diagnostics_dashboard_1";?>"><div class="alert alert-success col-md-4 col-md-offset-1"><i class="fa fa-medkit"></i> Diagnostics - 1</div></a>
+                <a href="<?= base_url()."dashboard/diagnostics_dashboard_2";?>"><div class="alert alert-success col-md-4 col-md-offset-1"><i class="fa fa-medkit"></i> Diagnostics - 2</div></a>
 			</div>
 		</div>
 	</div>
