@@ -1442,7 +1442,7 @@ class Reports_model extends CI_Model{
 		->join('test_master','test.test_master_id = test_master.test_master_id')
 		->join('test_method','test_master.test_method_id = test_method.test_method_id')
 		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')")
-		->where('hospital.type4',$hospital_type)
+		->where("REPLACE(hospital.type4, ' ', '')=" , $hospital_type) 
 		->group_by('hospital.hospital_id');
 		if($type == "lab_area" ){
 			$this->db->select("test_area.test_area lab_area")

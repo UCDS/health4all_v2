@@ -387,7 +387,7 @@
                         ?>
                             <tr>
                                 <td><?php echo $i++; ?></td>
-                                <td style="text-align:center; text-decoration:underline;"><a href="<?php echo base_url()."dashboard/diagnostic_dashboard_hospital/$r->hospital_type" ?>"><?php echo $r->hospital_type; ?></a></td>
+                                <td style="text-align:center; text-decoration:underline;"><a href="<?php $str=str_replace(' ','',$r->hospital_type); ; echo base_url()."dashboard/diagnostic_dashboard_hospital/$str" ?>"><?php echo $str; ?></a></td>
                                 <td style="text-align:center;"><?php echo $r->hospital_count; ?></td>
                                 <td style="text-align:center;"><?php if(isset($r->tests_ordered_daybefore))  echo $r->tests_ordered_daybefore; else echo "0"; ?></td>
                                 <td style="text-align:center;"><?php if(isset($r->tests_completed_daybefore))  echo $r->tests_completed_daybefore; else echo "0"; ?></td>
