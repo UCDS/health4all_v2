@@ -392,7 +392,9 @@
                   <li><a href="<?php echo base_url()."dashboard/view/dmetelangana";?>">DME Telangana</a></li>
                   <li><a href="<?php echo base_url()."dashboard/view/dmeap";?>">DME AP</a></li>
                   <li><a href="<?php echo base_url()."dashboard/bloodbanks";?>">Blood Banks</a></li>
-                  <li><a href="<?= base_url()."dashboard/view/npo";?>">NPOs</a></li>
+                  <li><a href="<?= base_url()."dashboard/diagnostics_dashboard_1";?>">Diagnostics - 1</a></li>
+				  <li><a href="<?= base_url()."dashboard/diagnostics_dashboard_2";?>">Diagnostics - 2</a></li>
+				  <li><a href="<?= base_url()."dashboard/view/npo";?>">NPOs</a></li>
                 </ul>
 			</li>
           </ul>

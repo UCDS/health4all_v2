@@ -74,7 +74,7 @@ $(function(){
 		<select name="area" id="area" class="form-control" required >
 		<option value="">Select Area</option>
 		<?php foreach($area as $d){
-			echo "<option value='$d->area_id' class='$d->hospital_id' hidden disabled>$d->area_name</option>";
+			echo "<option value='$d->area_id' class='$d->hospital_id'>$d->area_name</option>";
 		}
 		?>
 		</select>

@@ -1,0 +1,72 @@
+Diagnostics Module
+1. test
+        -test_id, order_id, sample_id, test_master_id, group_id, test_range_id
+2. test_area
+        -test_area_id, department_id, hospital_id
+3. test_assay
+        -assay_id, hospital_id
+4. test_group
+        -group_id, test_method_id
+5. test_group_link
+        -link_id, group_id, test_master_id
+6. test_master
+        -test_master_id, test_name, assay_id, test_method_id, test_area_id, hospital_id
+7. test_method
+        -test_method_id, test_method, hospital_id
+8. test_order
+        -order_id, visit_id, test_area_id, order_status
+9. test_range
+        -test_range_id, test_master_id
+10.test_result_suggestion
+        -suggestion_id, test_master_id, temp_suggestion_id
+11.test_sample
+        -sample_id, sample_code, order_id, specimen_type_id, sample_status_id
+11.test_status
+        - ...
+12.test_status_type
+        - ...               
+Problem Solutions.
+1. Adding test ranges to test_range table
+        INSERT into test_range (test_master_id, gender, min, max, range_text, from_year, to_year, from_month, to_month, from_day, to_day, range_type, age_type, range_active)  
+        SELECT  master_hospital.test_master_id, range_data.gender, range_data.min, range_data.max, range_data.range_text, range_data.from_year, 
+                range_data.to_year, range_data.from_month, range_data.to_month, range_data.from_day, range_data.to_day, range_data.range_type, range_data.age_type, range_data.range_active
+        FROM 
+        (SELECT * from test_master where hospital_id=16) master_hospital
+        JOIN 
+        (SELECT test_range.gender, test_range.min, test_range.max, test_range.range_text, test_range.from_year, test_range.to_year, test_range.from_month,test_range.to_month, 
+                test_range.from_day, test_range.to_day, test_range.range_type, test_range.age_type, test_range.range_active,
+                test_master.test_name
+        FROM test_master 
+        JOIN test_range ON test_master.test_master_id = test_range.test_master_id ) 
+        range_data ON master_hospital.test_name = range_data.test_name
+2. Inserting range when ordering test
+   1. Get all the input data, build an array
+   2. Get patient_information needed to place the order
+   3. Build an array with all the tests ordered
+        1. loop through the tests array and for each Get test range data
+        2. if filter is applicable, apply filter
+   4.   
+3. test_group -> test_method_id
+   test_master -> test_method_id
+   test_group -> test_master
+   insert into `test_group_link` (group_id, test_master_id)
+SELECT test_master.test_master_id, test_group.group_id FROM `test_master` 
+JOIN test_method on test_method.test_method_id = test_master.test_method_id 
+JOIN test_group on test_method.test_method_id = test_group.test_method_id WHERE test_master.hospital_id = 15
+
+SELECT test.test_id, test.test_master_id, test_order.order_id, test_sample.sample_id,test_master.test_name, tms.test_method, ts.test_name, department, visit_type, patient.first_name, patient.last_name, staff.first_name staff_name, hosp_file_no, 
+sample_code, specimen_type, specimen_source, sample_container_type, test_status, ts.nabl 
+FROM (`test_order`) 
+JOIN `test` ON `test_order`.`order_id`=`test`.`order_id` 
+LEFT JOIN `test_sample` ON `test_order`.`order_id`=`test_sample`.`order_id` 
+LEFT JOIN `test_group` ON `test`.`group_id`=`test_group`.`group_id` 
+LEFT JOIN test_group_link on test_group_link.group_id = test_group.group_id
+LEFT JOIN test_master on test_group_link.test_master_id = test_master.test_master_id
+LEFT JOIN `test_master` as ts ON `test`.`test_master_id`=`ts`.`test_master_id` 
+LEFT JOIN `test_method` tms ON `ts`.`test_method_id`=`tms`.`test_method_id` 
+LEFT JOIN `staff` ON `test_order`.`doctor_id`=`staff`.`staff_id` 
+JOIN `patient_visit` ON `test_order`.`visit_id`=`patient_visit`.`visit_id` 
+JOIN `patient` ON `patient_visit`.`patient_id`=`patient`.`patient_id` 
+JOIN `department` ON `patient_visit`.`department_id`=`department`.`department_id` 
+LEFT JOIN `specimen_type` ON `test_sample`.`specimen_type_id`=`specimen_type`.`specimen_type_id` 
+WHERE (DATE(order_date_time) BETWEEN '2018-04-01' AND '2018-04-01') AND `order_status` < 2 AND `test_order`.`test_area_id` = '34' AND `test_order`.`hospital_id` = '15' 

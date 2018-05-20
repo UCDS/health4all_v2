@@ -11,8 +11,6 @@
              i++;
          });
 
-
-
          $("#binary_output").click(function () {
              if ($(this).is(":checked")) {
                  $(".binary_output_labels").show();
@@ -293,7 +291,9 @@
 		<h3>Add Test Name </h3>
 	</center><br>
 	<center>
-		<?php  echo validation_errors(); echo form_open('diagnostics/add/test_name',array('role'=>'form','class'=>'form-custom','id'=>'add_test_name')); ?>
+        <?php  echo validation_errors(); 
+               echo form_open('diagnostics/add/test_name',array('role'=>'form','class'=>'form-custom','id'=>'add_test_name')); 
+        ?>
 	</center>
 	
 	<div class="form-group">
@@ -396,7 +396,7 @@
                     <label for="gender_male">Male</label>
                     <input type="radio" id="gender_female" form="add_test_name" value="2" name="gender1" />
                     <label for="gender_female">Female</label>
-                    <input type="radio" id="gender_both" form="add_test_name" value="3" name="gender1" />
+                    <input type="radio" id="gender_both" form="add_test_name" value="0" name="gender1" />
                     <label for="gender_both">Both</label>
                 </div>
                 

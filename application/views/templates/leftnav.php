@@ -130,6 +130,7 @@
 			if($f->user_function=="Masters - Sanitation" || $f->user_function=="Masters - Facility" || $f->user_function == "Masters - Application"){ ?>
 <div class="col-sm-3 col-md-2 sidebar-left">
     <ul class="nav nav-sidebar">
+	<li <?php if(preg_match("^sanitation/evaluate^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>sanitation/evaluate">Evaluate</a></li>	
     			<li class="nav-header">Add</li>
 						<?php foreach($functions as $f){
 								if($f->user_function=="Masters - Sanitation" && ($f->add==1 || $f->edit==1)){ ?>
@@ -291,15 +292,17 @@
 
 				<li class="nav-divider"></li>
 
-				<li class="navbar-text">Users</li>
+				<li class="navbar-text">User</li>
 				<li <?php if(preg_match("^user_panel/create_user^",current_url())) echo 'class="active"';?> >
-					<a href="<?php echo base_url()."user_panel/create_user";?>">Create New</a>
+					<a href="<?php echo base_url()."user_panel/create_user";?>">Create</a>
 				</li>
-
+				
 				<li <?php if(preg_match("^user_panel/edit_user^",current_url())) echo 'class="active"';?>>
-				<a href="<?php echo base_url()."user_panel/edit_user";?>">Edit User</a>
+					<a href="<?php echo base_url()."user_panel/edit_user";?>">Edit</a>
 				</li>
-
+				<li <?php if(preg_match("^user_panel/user_hospital_link^",current_url())) echo 'class="active"';?>>
+					<a href="<?php echo base_url()."user_panel/user_hospital_link";?>">Hospital</a>
+				</li>
 				<li class="nav-divider"></li>
 
 				<li class="navbar-text">Helpline</li>
