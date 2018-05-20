@@ -15,6 +15,24 @@ class Helpline_model extends CI_Model{
 		$call_type = $this->input->get('CallType');
 		$recording_url = $this->input->get('RecordingUrl');
 		$dial_whom_number = $this->input->get('DialWhomNumber');
+
+		$hospital_id = 0;
+		$helpline_category = 0;
+		$helpline_caller_type = 0;
+		$visit_type = "";
+		$resolution_status = 0;
+		$resolution_date_time = 0;
+		if($call_type == 'voicemail'){
+			$this->db->select('*')->from('helpline_numbers')->where('number',$to_number);
+			$query = $this->db->get();
+			$result = $query->row();
+			$hospital_id = $result->hospital_id;
+			$helpline_category = $result->helpline_category;
+			$helpline_caller_type = $result->caller_type;
+			$visit_type = $result->visit_type;
+			$resolution_status = $result->resolution_status;
+			$resolution_date_time = date("Y-m-d H:i:s");
+		}
 		$data = array(
 			'callsid'=>$callsid,
 			'from_number' => $from_number,
@@ -27,7 +45,13 @@ class Helpline_model extends CI_Model{
 			'call_type' => $call_type,
 			'recording_url' => $recording_url,
 			'dial_whom_number' => $dial_whom_number,
-			'create_date_time' => date("Y-m-d H:i:s")
+			'create_date_time' => date("Y-m-d H:i:s"),
+			'hospital_id' => $hospital_id,
+			'call_category_id' => $helpline_category,
+			'caller_type_id' => $helpline_caller_type,
+			'ip_op' => $visit_type,
+			'resolution_status_id' => $resolution_status,
+			'resolution_date_time' => $resolution_date_time
 		);
 
 		if($this->db->insert('helpline_call',$data)){
@@ -204,6 +228,25 @@ class Helpline_model extends CI_Model{
 		->join('helpline_call_group','helpline_call.call_group_id = helpline_call_group.call_group_id','left')
 		->join('helpline_resolution_status','helpline_call.resolution_status_id = helpline_resolution_status.resolution_status_id','left')
 		->join('hospital','helpline_call.hospital_id = hospital.hospital_id','left')
+		->where('from_number NOT IN (SELECT number FROM helpline_numbers)')
+		->order_by('start_time','desc');
+		$query = $this->db->get();
+		return $query->result();
+	}
+	function get_voicemail_calls(){
+		if($this->input->post('date')){
+			$this->db->where('DATE(start_time)',date("Y-m-d",strtotime($this->input->post('date'))));
+		}
+		else
+			$this->db->where('DATE(start_time)',date("Y-m-d"));
+		$this->db->select('helpline_call.*,group_name,caller_type,call_category,resolution_status,hospital')->from('helpline_call')
+		->join('helpline_numbers','helpline_call.from_number = helpline_numbers.number')
+		->join('helpline_caller_type','helpline_call.caller_type_id = helpline_caller_type.caller_type_id','left')
+		->join('helpline_call_category','helpline_call.call_category_id = helpline_call_category.call_category_id','left')
+		->join('helpline_call_group','helpline_call.call_group_id = helpline_call_group.call_group_id','left')
+		->join('helpline_resolution_status','helpline_call.resolution_status_id = helpline_resolution_status.resolution_status_id','left')
+		->join('hospital','helpline_call.hospital_id = hospital.hospital_id','left')
+		->where('from_number IN (SELECT number FROM helpline_numbers)')
 		->order_by('start_time','desc');
 		$query = $this->db->get();
 		return $query->result();
@@ -230,6 +273,25 @@ class Helpline_model extends CI_Model{
 	}
 
 	function get_detailed_report(){
+		if($this->input->post('from_date') && $this->input->post('to_date')){
+			$this->db->where('(DATE(start_time) BETWEEN "'.date("Y-m-d",strtotime($this->input->post('from_date'))).'" AND "'.date("Y-m-d",strtotime($this->input->post('to_date'))).'")');
+		}
+		else
+			$this->db->where('DATE(start_time)',date("Y-m-d"));
+		$this->db->select('*,helpline_call.call_id,helpline_call.call_group_id, helpline_call.note,count(helpline_email_id) email_count')->from('helpline_call')
+		->join('helpline_caller_type','helpline_call.caller_type_id = helpline_caller_type.caller_type_id','left')
+		->join('helpline_call_category','helpline_call.call_category_id = helpline_call_category.call_category_id','left')
+		->join('helpline_resolution_status','helpline_call.resolution_status_id = helpline_resolution_status.resolution_status_id','left')
+		->join('helpline_call_group','helpline_call.call_group_id = helpline_call_group.call_group_id','left')
+		->join('hospital','helpline_call.hospital_id = hospital.hospital_id','left')
+		->join('helpline_email','helpline_call.call_id = helpline_email.call_id','left')
+		->group_by('helpline_call.call_id')
+		->where('from_number NOT IN (SELECT number FROM helpline_numbers)')		
+		->order_by('start_time','desc');
+		$query = $this->db->get();
+		return $query->result();
+	}
+	function get_voicemail_detailed_report(){
 			if($this->input->post('from_date') && $this->input->post('to_date')){
 				$this->db->where('(DATE(start_time) BETWEEN "'.date("Y-m-d",strtotime($this->input->post('from_date'))).'" AND "'.date("Y-m-d",strtotime($this->input->post('to_date'))).'")');
 			}
@@ -242,11 +304,12 @@ class Helpline_model extends CI_Model{
 			->join('helpline_call_group','helpline_call.call_group_id = helpline_call_group.call_group_id','left')
 			->join('hospital','helpline_call.hospital_id = hospital.hospital_id','left')
 			->join('helpline_email','helpline_call.call_id = helpline_email.call_id','left')
+			->where('from_number IN (SELECT number FROM helpline_numbers)')
 			->group_by('helpline_call.call_id')
 			->order_by('start_time','desc');
 			$query = $this->db->get();
 			return $query->result();
-		}
+	}
 	function get_groups(){
 				if($this->input->post('from_date') && $this->input->post('to_date')){
 					$this->db->where('(DATE(start_time) BETWEEN "'.date("Y-m-d",strtotime($this->input->post('from_date'))).'" AND "'.date("Y-m-d",strtotime($this->input->post('to_date'))).'")');
@@ -261,8 +324,13 @@ class Helpline_model extends CI_Model{
 				return $query->result();
 			}
 
-	function dashboard($type=""){
-
+	function dashboard($type="", $call_type = 0){
+		if($call_type == 1){
+			$this->db->where('from_number IN (select number FROM helpline_numbers)');
+		}
+		else{
+			$this->db->where('from_number NOT IN (select number FROM helpline_numbers)');			
+		}
 		if($type == "caller_type"){
 			$this->db->select('caller_type,count(call_id) as count');
 			$this->db->group_by('helpline_caller_type.caller_type_id');
