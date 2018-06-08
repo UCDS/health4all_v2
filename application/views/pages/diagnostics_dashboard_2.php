@@ -390,7 +390,9 @@
                         ?>
                             <tr>
                                 <td><?php echo $i++; ?></td>
-                                <td style="text-align:center; text-decoration:underline;"><a href="<?php $str=str_replace(' ','',$r->hospital_type); ; echo base_url()."dashboard/diagnostic_dashboard_hospital/$str" ?>"><?php echo $r->hospital_type;; ?></a></td>
+
+                                <td style="text-align:center; text-decoration:underline;"><a href="<?php $str=str_replace(' ','',$r->hospital_type); ; echo base_url()."dashboard/diagnostic_dashboard_hospital/$str" ?>"><?php echo $r->hospital_type; ?></a></td>
+
                                 <td style="text-align:center;"><?php echo $r->hospital_count; ?></td>
                                 <td style="text-align:center;"><?php if(isset($r->patient_count_daybefore))  echo $r->patient_count_daybefore; else echo "0"; ?></td>
                                 <td style="text-align:center;"><?php if(isset($r->orders_count_daybefore))  echo $r->orders_count_daybefore; else echo "0"; ?></td>

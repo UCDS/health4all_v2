@@ -79,6 +79,31 @@ class Dashboard extends CI_Controller {
 		$this->load->view('pages/helpline/helpline_dashboard',$this->data);
 		$this->load->view('templates/footer');
 	}
+	public function helpline_voicemail(){
+		$this->load->helper('form');
+		$this->data['title']="Helpline Services Dashboard";
+		$this->load->model('helpline_model');
+		$this->load->model('staff_model');
+		$this->data['caller_type_report']=$this->helpline_model->dashboard('caller_type',1);
+		$this->data['call_category_report']=$this->helpline_model->dashboard('call_category',1);
+		$this->data['hospital_report']=$this->helpline_model->dashboard('hospital',1);
+		$this->data['district_report']=$this->helpline_model->dashboard('district',1);
+		$this->data['volunteer_report']=$this->helpline_model->dashboard('volunteer',1);
+		$this->data['call_type_report']=$this->helpline_model->dashboard('call_type',1);
+		$this->data['to_number_report']=$this->helpline_model->dashboard('to_number',1);
+		$this->data['op_ip_report']=$this->helpline_model->dashboard('op_ip',1);
+		$this->data['duration']=$this->helpline_model->dashboard('duration',1);
+		$this->data['resolution_status']=$this->helpline_model->dashboard('resolution_status',1);
+		$this->data['closed_tat']=$this->helpline_model->dashboard('closed_tat',1);
+		$this->data['open_tat']=$this->helpline_model->dashboard('open_tat',1);
+		$this->data['caller_type']=$this->helpline_model->get_caller_type();
+		$this->data['call_category']=$this->helpline_model->get_call_category();
+		$this->data['all_hospitals']=$this->staff_model->get_hospital();
+		$this->data['hospital_districts']=$this->helpline_model->get_hospital_district();
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('pages/helpline/helpline_voicemail_dashboard',$this->data);
+		$this->load->view('templates/footer');
+	}
 
 	public function helpline_trend(){
 		$this->load->helper('form');

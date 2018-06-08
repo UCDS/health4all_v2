@@ -323,6 +323,7 @@
 
 			if($f->user_function=="Helpline Reports"){ ?>
 								<li><a href="<?php echo base_url()."helpline/detailed_report";?>">Helpline Detailed</a></li>
+								<li><a href="<?php echo base_url()."helpline/voicemail_detailed_report";?>">Helpline Voicemail Detailed</a></li>
 								<li><a href="<?php echo base_url()."helpline/report_groupwise";?>">Helpline Group Wise</a></li>
 					<?php	}
 
@@ -341,6 +342,7 @@
 			<?php foreach($functions as $f){
 			if($f->user_function=="Helpline Update"){ ?>
 					<li><a href="<?php echo base_url()."helpline/update_call";?>"><i class="fa fa-phone"></i>HelpLine Update</a></li>
+					<li><a href="<?php echo base_url()."helpline/update_voicemail_calls";?>"><i class="fa fa-phone"></i>HelpLine Voicemail Update</a></li>
 			<?php } } ?>
                     <li><a href="<?php echo base_url()."contact_us";?>"><i class="fa fa-question"> </i> Contact us</a></li>
 				</ul>
@@ -384,6 +386,7 @@
 				</a>
                 <ul class="dropdown-menu">
                   <li><a href="<?php echo base_url()."dashboard/helpline";?>">Helpline</a></li>
+                  <li><a href="<?php echo base_url()."dashboard/helpline_voicemail";?>">Transport Services</a></li>
                   <li><a href="<?php echo base_url()."dashboard/state/telangana";?>">State - TS</a></li>
                   <li><a href="<?php echo base_url()."dashboard/view/tvvp";?>">TVVP</a></li>
                   <li><a href="<?php echo base_url()."dashboard/view/dmetelangana";?>">DME Telangana</a></li>
