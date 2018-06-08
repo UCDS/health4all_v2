@@ -349,33 +349,36 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h3  style="display:inline; padding-left:380px;">Diagnostics Dashboard Hospital Wise</h3>
+                    <div class="panel-heading" style="text-align:center;">
+                        <h3  style="display:inline;">Diagnostics Dashboard Hospital Wise</h3>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="panel panel-info">
+                <div class="panel-heading" style="text-align:center;">
+                    <h3  style="display:inline; padding-left:0px;">Tests:Day Before<?php echo "("; ?><?php echo date('d-M-Y',strtotime("-2 days"));?>)</h3>
                 </div>
-                <div class="panel-body"> 
-                    <table class="table table-striped" style="font-size:medium;">
+                <div class="panel-body" > 
+                    <table class="table table-striped " style="font-size:medium;">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th class="text-left" style="text-align:center ">Hospital Type</th>
                                 <th></th>
-                                <th class="text-left" colspan="3" style="text-align:center; padding-right:35px; color:#0000FF; ">Day Before<?php echo "<br>("; ?><?php echo date('d-M-Y',strtotime("-2 days"));?>)</th>
-                                <th class="text-left" colspan="3" style="text-align:center; padding-right:35px; color:#dd4b39; ">Yesterday<?php echo "<br>("; ?><?php echo date('d-M-Y',strtotime("-1 days"));?>)</th>
-                                <th class="text-left" colspan="3" style="text-align:center; padding-right:35px; color:#f39c12; ">Today<?php echo "<br>("; ?><?php echo date("d-M-Y");?>)</th>
+                                <th class="text-left" colspan="5" style="text-align:center;  color:#0000FF; padding-left:150px;">Tests</th>
                             </tr>
                             <tr>
                                 <th></th>
                                 <th></th>
-                                <th>Hospital Count</th>
+                                <th>Hospitals</th>
+                                <th>Patients</th>
+                                <th>Orders</th>
                                 <th style="color:#0000FF">Ordered</th>
                                 <th style="color:#0000FF">Completed</th>
-                                <th style="color:#0000FF">Reported</th>
-                                <th style="color:#dd4b39">Ordered</th>
-                                <th style="color:#dd4b39">Completed</th>
-                                <th style="color:#dd4b39">Reported</th>
-                                <th style="color:#f39c12">Ordered</th>
-                                <th style="color:#f39c12">Completed</th>
-                                <th style="color:#f39c12">Reported</th>
+                                <th style="color:#0000FF">Reported</th> 
                             </tr>
                         </thead>
                         <tbody>
@@ -387,18 +390,13 @@
                         ?>
                             <tr>
                                 <td><?php echo $i++; ?></td>
-                                <td style="text-align:center; text-decoration:underline;"><a href="<?php $str=str_replace(' ','',$r->hospital_type); ; echo base_url()."dashboard/diagnostic_dashboard_hospital/$str" ?>"><?php echo $str; ?></a></td>
+                                <td style="text-align:center; text-decoration:underline;"><a href="<?php $str=str_replace(' ','',$r->hospital_type); ; echo base_url()."dashboard/diagnostic_dashboard_hospital/$str" ?>"><?php echo $r->hospital_type;; ?></a></td>
                                 <td style="text-align:center;"><?php echo $r->hospital_count; ?></td>
+                                <td style="text-align:center;"><?php if(isset($r->patient_count_daybefore))  echo $r->patient_count_daybefore; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($r->orders_count_daybefore))  echo $r->orders_count_daybefore; else echo "0"; ?></td>
                                 <td style="text-align:center;"><?php if(isset($r->tests_ordered_daybefore))  echo $r->tests_ordered_daybefore; else echo "0"; ?></td>
                                 <td style="text-align:center;"><?php if(isset($r->tests_completed_daybefore))  echo $r->tests_completed_daybefore; else echo "0"; ?></td>
                                 <td style="text-align:center;"><?php if(isset($r->tests_reported_daybefore))  echo $r->tests_reported_daybefore; else echo "0"; ?></td>
-                                <td style="text-align:center;"><?php if(isset($r->tests_ordered_yesterday))  echo $r->tests_ordered_yesterday; else echo "0"; ?></td>
-                                <td style="text-align:center;"><?php if(isset($r->tests_completed_yesterday))  echo $r->tests_completed_yesterday; else echo "0"; ?></td>
-                                <td style="text-align:center;"><?php if(isset($r->tests_reported_yesterday))  echo $r->tests_reported_yesterday; else echo "0"; ?></td>
-                                <td style="text-align:center;"><?php if(isset($r->tests_ordered_today))  echo $r->tests_ordered_today; else echo "0"; ?></td>
-                                <td style="text-align:center;"><?php if(isset($r->tests_completed_today))  echo $r->tests_completed_today; else echo "0"; ?></td>
-                                <td style="text-align:center;"><?php if(isset($r->tests_reported_today))  echo $r->tests_reported_today; else echo "0"; ?></td>
-                                
                             </tr>
                         </tbody>
                         <?php 
@@ -409,10 +407,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="panel panel-default">
+        <div class="col-md-5">
+            <div class="panel panel-default" ">
                 <div class="panel-heading" >
                     <h4 style="display:inline; color:#0000FF; padding-left:30px; "  font-family:"Helvetica Neue, Helvetica, Arial, sans-serif;">Tests: Day Before<?php echo "("; ?><?php echo date('d-M-Y',strtotime("-2 days"));?>)</h4>
                 </div>
@@ -421,7 +417,59 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+    </div>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="panel panel-info">
+                <div class="panel-heading" style="text-align:center;">
+                    <h3  style="display:inline; padding-left:0px;">Tests:Yesterday<?php echo "("; ?><?php echo date('d-M-Y',strtotime("-1 days"));?>)</h3>
+                </div>
+                <div class="panel-body" > 
+                    <table class="table table-striped " style="font-size:medium;">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th class="text-left" style="text-align:center ">Hospital Type</th>
+                                <th></th>
+                                <th class="text-left" colspan="5" style="text-align:center;  color:#0000FF; padding-left:150px;">Tests</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Hospitals</th>
+                                <th>Patients</th>
+                                <th>Orders</th>
+                                <th style="color:#0000FF">Ordered</th>
+                                <th style="color:#0000FF">Completed</th>
+                                <th style="color:#0000FF">Reported</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php 
+                        $i=1;
+                        $l=0;
+                        $q=0;
+                          foreach($report as $r){
+                        ?>
+                            <tr>
+                                <td><?php echo $i++; ?></td>
+                                <td style="text-align:center; text-decoration:underline;"><a href="<?php $str=str_replace(' ','',$r->hospital_type); ; echo base_url()."dashboard/diagnostic_dashboard_hospital/$str" ?>"><?php echo $r->hospital_type;; ?></a></td>
+                                <td style="text-align:center;"><?php echo $r->hospital_count; ?></td>
+                                <td style="text-align:center;"><?php if(isset($r->patient_count_yesterday))  echo $r->patient_count_yesterday; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($r->orders_count_yesterday))  echo $r->orders_count_yesterday; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($r->tests_ordered_yesterday))  echo $r->tests_ordered_yesterday; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($r->tests_completed_yesterday))  echo $r->tests_completed_yesterday; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($r->tests_reported_yesterday))  echo $r->tests_reported_yesterday; else echo "0"; ?></td>
+                            </tr>
+                        </tbody>
+                        <?php     
+                          }
+                        ?>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
             <div class="panel panel-default">
                 <div class="panel-heading" >
                     <h4 style="display:inline; color:#dd4b39; padding-left:30px; "  font-family:"Helvetica Neue, Helvetica, Arial, sans-serif;">Tests: Yesterday<?php echo "("; ?><?php echo date('d-M-Y',strtotime("-1 days"));?>)</h4>
@@ -431,7 +479,59 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+    </div>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="panel panel-info">
+                <div class="panel-heading" style="text-align:center;">
+                    <h3  style="display:inline; padding-left:0px;">Tests:Today<?php echo "("; ?><?php echo date("d-M-Y");?>)</h3>
+                </div>
+                <div class="panel-body" > 
+                    <table class="table table-striped " style="font-size:medium;">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th class="text-left" style="text-align:center ">Hospital Type</th>
+                                <th></th>
+                                <th class="text-left" colspan="5" style="text-align:center;  color:#0000FF; padding-left:150px;">Tests</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Hospitals</th>
+                                <th>Patients</th>
+                                <th>Orders</th>
+                                <th style="color:#0000FF">Ordered</th>
+                                <th style="color:#0000FF">Completed</th>
+                                <th style="color:#0000FF">Reported</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php 
+                        $i=1;
+                        $l=0;
+                        $q=0;
+                          foreach($report as $r){
+                        ?>
+                            <tr>
+                                <td><?php echo $i++; ?></td>
+                                <td style="text-align:center; text-decoration:underline;"><a href="<?php $str=str_replace(' ','',$r->hospital_type); ; echo base_url()."dashboard/diagnostic_dashboard_hospital/$str" ?>"><?php echo $r->hospital_type;; ?></a></td>
+                                <td style="text-align:center;"><?php echo $r->hospital_count; ?></td>
+                                <td style="text-align:center;"><?php if(isset($r->patient_count_today))  echo $r->patient_count_today; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($r->orders_count_today))  echo $r->orders_count_today; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($r->tests_ordered_today))  echo $r->tests_ordered_today; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($r->tests_completed_today))  echo $r->tests_completed_today; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($r->tests_reported_today))  echo $r->tests_reported_today; else echo "0"; ?></td>
+                            </tr>
+                        </tbody>
+                        <?php     
+                          }
+                        ?>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
             <div class="panel panel-default">
                 <div class="panel-heading" >
                     <h4 style="display:inline; color:#f39c12; padding-left:30px; "  font-family:"Helvetica Neue, Helvetica, Arial, sans-serif;">Tests: Today <?php echo "("; ?><?php echo date('d-M-Y');?>)</h4>
@@ -448,30 +548,33 @@
                 <div class="panel-heading">
                     <h3  style="display:inline; padding-left:380px;">Diagnostics Dashboard Lab Area Wise</h3>
                 </div>
+            </div>                  
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-7"> <!-- Table to display tests grouped by dates and Areas-->
+            <div class="panel panel-info">
+                <div class="panel-heading" style="text-align:center;">
+                    <h3  style="display:inline;  padding-left:0px;">Tests:Day Before<?php echo "("; ?><?php echo date('d-M-Y',strtotime("-2 days"));?>)</h3>
+                </div>
                 <div class="panel-body"> 
                     <table class="table table-striped" style="font-size:medium;">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th class="text-left" style="text-align:center">Lab Area</th>
+                                <th class="text-left" style="text-align:center ">Lab Area</th>
                                 <th></th>
-                                <th class="text-left" colspan="3" style="text-align:center; padding-right:35px; color:#0000FF; ">Day Before<?php echo "<br>("; ?><?php echo date('d-M-Y',strtotime("-2 days"));?>)</th>
-                                <th class="text-left" colspan="3" style="text-align:center; padding-right:35px; color:#dd4b39; ">Yesterday<?php echo "<br>("; ?><?php echo date('d-M-Y',strtotime("-1 days"));?>)</th>
-                                <th class="text-left" colspan="3" style="text-align:center; padding-right:35px; color:#f39c12; ">Today<?php echo "<br>("; ?><?php echo date("d-M-Y");?>)</th>
+                                <th class="text-left" colspan="5" style="text-align:center;  color:#0000FF; padding-left:150px;">Tests</th>
                             </tr>
                             <tr>
                                 <th></th>
                                 <th></th>
-                                <th>Hospital count</th>
+                                <th>Hospitals</th>
+                                <th>Patients</th>
+                                <th>Orders</th>
                                 <th style="color:#0000FF">Ordered</th>
                                 <th style="color:#0000FF">Completed</th>
-                                <th style="color:#0000FF">Reported</th>
-                                <th style="color:#dd4b39">Ordered</th>
-                                <th style="color:#dd4b39">Completed</th>
-                                <th style="color:#dd4b39">Reported</th>
-                                <th style="color:#f39c12">Ordered</th>
-                                <th style="color:#f39c12">Completed</th>
-                                <th style="color:#f39c12">Reported</th>
+                                <th style="color:#0000FF">Reported</th> 
                             </tr>
                         </thead>
                         <tbody>
@@ -486,27 +589,21 @@
                                 <td><?php echo $i++; ?></td>
                                 <td style="text-align:left;"><?php echo $s->lab_area; ?></td>
                                 <td style="text-align:center;"><?php echo $s->hospital_count; ?></td>
+                                <td style="text-align:center;"><?php if(isset($s->patient_count_daybefore))  echo $s->patient_count_daybefore; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($s->orders_count_daybefore))  echo $s->orders_count_daybefore; else echo "0"; ?></td>
                                 <td style="text-align:center;"><?php if(isset($s->tests_ordered_daybefore))  echo $s->tests_ordered_daybefore; else echo "0"; ?></td>
                                 <td style="text-align:center;"><?php if(isset($s->tests_completed_daybefore))  echo $s->tests_completed_daybefore; else echo "0"; ?></td>
                                 <td style="text-align:center;"><?php if(isset($s->tests_reported_daybefore))  echo $s->tests_reported_daybefore; else echo "0"; ?></td>
-                                <td style="text-align:center;"><?php if(isset($s->tests_ordered_yesterday))  echo $s->tests_ordered_yesterday; else echo "0"; ?></td>
-                                <td style="text-align:center;"><?php if(isset($s->tests_completed_yesterday))  echo $s->tests_completed_yesterday; else echo "0"; ?></td>
-                                <td style="text-align:center;"><?php if(isset($s->tests_reported_yesterday))  echo $s->tests_reported_yesterday; else echo "0"; ?></td>
-                                <td style="text-align:center;"><?php if(isset($s->tests_ordered_today))  echo $s->tests_ordered_today; else echo "0"; ?></td>
-                                <td style="text-align:center;"><?php if(isset($s->tests_completed_today))  echo $s->tests_completed_today; else echo "0"; ?></td>
-                                <td style="text-align:center;"><?php if(isset($s->tests_reported_today))  echo $s->tests_reported_today; else echo "0"; ?></td>                            </tr>
+                            </tr>
                         </tbody>
                         <?php 
-                          
                           }
                         ?>
                     </table>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-5">
             <div class="panel panel-default">
                 <div class="panel-heading" >
                     <h4 style="display:inline; color:#0000FF; padding-left:30px; "  font-family:"Helvetica Neue, Helvetica, Arial, sans-serif;">Tests: Day Before<?php echo "("; ?><?php echo date('d-M-Y',strtotime("-2 days"));?>)</h4>
@@ -516,7 +613,59 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+    </div>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="panel panel-info">
+                <div class="panel-heading" style="text-align:center;">
+                    <h3  style="display:inline; padding-left:0px;">Tests:Yesterday<?php echo "("; ?><?php echo date('d-M-Y',strtotime("-1 days"));?>)</h3>
+                </div>
+                <div class="panel-body" > 
+                    <table class="table table-striped " style="font-size:medium;">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th class="text-left" style="text-align:center ">Lab Area</th>
+                                <th></th>
+                                <th class="text-left" colspan="5" style="text-align:center;  color:#0000FF; padding-left:150px;">Tests</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Hospitals</th>
+                                <th>Patients</th>
+                                <th>Orders</th>
+                                <th style="color:#0000FF">Ordered</th>
+                                <th style="color:#0000FF">Completed</th>
+                                <th style="color:#0000FF">Reported</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php 
+                        $i=1;
+                        $l=0;
+                        $q=0;
+                          foreach($report1 as $s){
+                        ?>
+                            <tr>
+                                <td><?php echo $i++; ?></td>
+                                <td style="text-align:left;"><?php echo $s->lab_area; ?></td>
+                                <td style="text-align:center;"><?php echo $s->hospital_count; ?></td>
+                                <td style="text-align:center;"><?php if(isset($s->patient_count_yesterday))  echo $s->patient_count_yesterday; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($s->orders_count_yesterday))  echo $s->orders_count_yesterday; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($s->tests_ordered_yesterday))  echo $s->tests_ordered_yesterday; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($s->tests_completed_yesterday))  echo $s->tests_completed_yesterday; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($s->tests_reported_yesterday))  echo $s->tests_reported_yesterday; else echo "0"; ?></td>
+                            </tr>
+                        </tbody>
+                        <?php     
+                          }
+                        ?>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
             <div class="panel panel-default">
                 <div class="panel-heading" >
                     <h4 style="display:inline; color:#dd4b39; padding-left:30px; "  font-family:"Helvetica Neue, Helvetica, Arial, sans-serif;">Tests: Yesterday<?php echo "("; ?><?php echo date('d-M-Y',strtotime("-1 days"));?>)</h4>
@@ -526,7 +675,59 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+    </div>
+    <div class="row">
+       <div class="col-md-7"> 
+           <div class="panel panel-info">
+                <div class="panel-heading" style="text-align:center;">
+                    <h3  style="display:inline; padding-left:0px;">Tests:Today<?php echo "("; ?><?php echo date("d-M-Y");?>)</h3>
+                </div>
+                <div class="panel-body" > 
+                    <table class="table table-striped " style="font-size:medium;">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th class="text-left" style="text-align:center ">Lab Area</th>
+                                <th></th>
+                                <th class="text-left" colspan="5" style="text-align:center;  color:#0000FF; padding-left:150px;">Tests</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Hospitals</th>
+                                <th>Patients</th>
+                                <th>Orders</th>
+                                <th style="color:#0000FF">Ordered</th>
+                                <th style="color:#0000FF">Completed</th>
+                                <th style="color:#0000FF">Reported</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php 
+                        $i=1;
+                        $l=0;
+                        $q=0;
+                          foreach($report1 as $s){
+                        ?>
+                            <tr>
+                                <td><?php echo $i++; ?></td>
+                                <td style="text-align:left;"><?php echo $s->lab_area; ?></td>
+                                <td style="text-align:center;"><?php echo $s->hospital_count; ?></td>
+                                <td style="text-align:center;"><?php if(isset($s->patient_count_today))  echo $s->patient_count_today; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($s->orders_count_today))  echo $s->orders_count_today; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($s->tests_ordered_today))  echo $s->tests_ordered_today; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($s->tests_completed_today))  echo $s->tests_completed_today; else echo "0"; ?></td>
+                                <td style="text-align:center;"><?php if(isset($s->tests_reported_today))  echo $s->tests_reported_today; else echo "0"; ?></td>
+                            </tr>
+                        </tbody>
+                        <?php     
+                          }
+                        ?>
+                    </table>
+                </div>
+            </div>
+       </div>
+        <div class="col-md-5">
             <div class="panel panel-default">
                 <div class="panel-heading" >
                     <h4 style="display:inline; color:#f39c12; padding-left:30px; "  font-family:"Helvetica Neue, Helvetica, Arial, sans-serif;">Tests: Today <?php echo "("; ?><?php echo date('d-M-Y');?>)</h4>
