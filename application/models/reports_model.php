@@ -1285,7 +1285,7 @@ class Reports_model extends CI_Model{
 		return $resource->result();
 	}
 
-		// diagnostics dashboard to group data by hospital type
+	// diagnostics dashboard to group data by hospital type
 	function diagnostic_dashboard_HospitalWise(){
 		if($this->input->post('from_date') && $this->input->post('to_date')){
 			$from_date=date("Y-m-d",strtotime($this->input->post('from_date')));
@@ -1305,7 +1305,7 @@ class Reports_model extends CI_Model{
 		SUM(CASE WHEN test.test_status IN (1,2,3) THEN 1 ELSE 0 END) tests_completed,
 		SUM(CASE WHEN test.test_status = 2 THEN 1 ELSE 0 END) tests_reported,
 		SUM(CASE WHEN test.test_status = 3 THEN 1 ELSE 0 END) tests_rejected,count(DISTINCT hospital.hospital_id) hospital_count,
-		test_method.test_method_id,test_master.test_master_id,hospital.type4 type,test_master.test_name,test_area.test_area_id",false)
+		test_method.test_method_id,test_master.test_master_id,hospital.type4 type,count(DISTINCT patient_visit.patient_id) patient_count,count(DISTINCT test_order.order_id) orders_count,test_master.test_name,test_area.test_area_id",false)
 		->from('test_order')
 		->join('test_sample','test_order.order_id = test_sample.order_id','left')
 		->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
@@ -1319,7 +1319,7 @@ class Reports_model extends CI_Model{
 		->group_by('hospital.type4');
 		
 		$resource=$this->db->get();
-	//	echo $this->db->last_query();
+		// echo $this->db->last_query();
 		return $resource->result();		
 	}
 	// Diagnostics dashboard to group data by lab area 
@@ -1342,7 +1342,7 @@ class Reports_model extends CI_Model{
 		SUM(CASE WHEN test.test_status IN (1,2,3) THEN 1 ELSE 0 END) tests_completed,
 		SUM(CASE WHEN test.test_status = 2 THEN 1 ELSE 0 END) tests_reported,
 		SUM(CASE WHEN test.test_status = 3 THEN 1 ELSE 0 END) tests_rejected,count(DISTINCT hospital.hospital_id) hospital_count,
-		test_area.test_area_id,test_area.test_area",false)
+		test_area.test_area_id,count(DISTINCT patient_visit.patient_id) patient_count,count(DISTINCT test_order.order_id) orders_count,test_area.test_area",false)
 		->from('test_order')
 		->join('test_sample','test_order.order_id = test_sample.order_id','left')
 		->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
@@ -1369,22 +1369,31 @@ class Reports_model extends CI_Model{
 		//$to_date='2016-01-08';
 		$from_date=strtotime( '-2 day' ,strtotime ( $to_date ) );
 		$yesterday=strtotime( '-1 day' ,strtotime ( $to_date ) );
+		
 		$yesterday=date( "Y-m-d" , $yesterday );
 		$from_date=date( "Y-m-d" , $from_date );
+		//var_dump($yesterday);
+		//var_dump($from_date);
 		$this->db->select("DATE(order_date_time) date,
 		SUM(CASE WHEN test.test_status IN (0,1,2,3) and DATE(order_date_time)='$from_date' THEN 1 ELSE 0 END) tests_ordered_daybefore,
 		SUM(CASE WHEN test.test_status IN (1,2,3) and DATE(order_date_time)='$from_date' THEN 1 ELSE 0 END) tests_completed_daybefore,
 		SUM(CASE WHEN test.test_status = 2 and DATE(order_date_time)='$from_date' THEN 1 ELSE 0 END) tests_reported_daybefore,
-		
+		(CASE WHEN DATE(order_date_time)='$from_date' THEN COUNT( DISTINCT patient_visit.patient_id) ELSE 0 END) patient_count_daybefore,
+		(CASE WHEN DATE(order_date_time)='$from_date' THEN COUNT( DISTINCT test_order.order_id) ELSE 0 END) orders_count_daybefore,
+
 		SUM(CASE WHEN test.test_status IN (0,1,2,3) and DATE(order_date_time)='$yesterday' THEN 1 ELSE 0 END)tests_ordered_yesterday,
 		SUM(CASE WHEN test.test_status IN (1,2,3) and DATE(order_date_time)='$yesterday' THEN 1 ELSE 0 END) tests_completed_yesterday,
 		SUM(CASE WHEN test.test_status = 2 and DATE(order_date_time)='$yesterday' THEN 1 ELSE 0 END) tests_reported_yesterday,
+		(CASE WHEN DATE(order_date_time)='$yesterday' THEN COUNT( DISTINCT patient_visit.patient_id) ELSE 0 END) patient_count_yesterday,
+		(CASE WHEN DATE(order_date_time)='$yesterday' THEN COUNT( DISTINCT test_order.order_id) ELSE 0 END) orders_count_yesterday,
 
 		SUM(CASE WHEN test.test_status IN (0,1,2,3) and DATE(order_date_time)='$to_date' THEN 1 ELSE 0 END) tests_ordered_today,
 		SUM(CASE WHEN test.test_status IN (1,2,3) and DATE(order_date_time)='$to_date' THEN 1 ELSE 0 END) tests_completed_today,
 		SUM(CASE WHEN test.test_status = 2 and DATE(order_date_time)='$to_date' THEN 1 ELSE 0 END) tests_reported_today,
-		
-		SUM(CASE WHEN test.test_status = 3 THEN 1 ELSE 0 END) tests_rejected,hospital.type4 hospital_type, count(DISTINCT hospital.hospital_id) hospital_count,
+		(CASE WHEN DATE(order_date_time)='$to_date'  THEN COUNT( DISTINCT patient_visit.patient_id) ELSE 0 END) patient_count_today,
+		(CASE WHEN DATE(order_date_time)='$to_date' THEN COUNT( DISTINCT test_order.order_id) ELSE 0 END) orders_count_today,
+
+		SUM(CASE WHEN test.test_status = 3 THEN 1 ELSE 0 END) tests_rejected, count(DISTINCT hospital.hospital_id) hospital_count,
 		",false)
 		->from('test_order')
 		->join('test_sample','test_order.order_id = test_sample.order_id','left')
@@ -1394,8 +1403,11 @@ class Reports_model extends CI_Model{
 		->join('test','test_order.order_id = test.order_id','left')
 		->join('test_master','test.test_master_id = test_master.test_master_id')
 		->join('test_method','test_master.test_method_id = test_method.test_method_id')
-		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')")
-		->group_by('hospital.type4');
+		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')");
+		if($type == ""){
+			$this->db->select("hospital.type4 hospital_type")
+			->group_by('hospital.type4');
+		}
 		
 		if($type == "lab_area" ){
 			$this->db->select("test_area.test_area lab_area")
@@ -1403,7 +1415,7 @@ class Reports_model extends CI_Model{
 			->group_by('test_area.test_area');
 		}			
  		$resource=$this->db->get();
-	//	echo $this->db->last_query();
+		//echo $this->db->last_query();
 		return $resource->result();		
 	}
 	/**
@@ -1422,15 +1434,21 @@ class Reports_model extends CI_Model{
 		SUM(CASE WHEN test.test_status IN (0,1,2,3) and DATE(order_date_time)='$from_date' THEN 1 ELSE 0 END) tests_ordered_daybefore,
 		SUM(CASE WHEN test.test_status IN (1,2,3) and DATE(order_date_time)='$from_date' THEN 1 ELSE 0 END) tests_completed_daybefore,
 		SUM(CASE WHEN test.test_status = 2 and DATE(order_date_time)='$from_date' THEN 1 ELSE 0 END) tests_reported_daybefore,
-		
+		SUM(CASE WHEN DATE(order_date_time)='$from_date' THEN 1 ELSE 0 END) patient_count_daybefore,
+		SUM(CASE WHEN DATE(order_date_time)='$from_date' THEN 1 ELSE 0 END) orders_count_daybefore,
+
 		SUM(CASE WHEN test.test_status IN (0,1,2,3) and DATE(order_date_time)='$yesterday' THEN 1 ELSE 0 END)tests_ordered_yesterday,
 		SUM(CASE WHEN test.test_status IN (1,2,3) and DATE(order_date_time)='$yesterday' THEN 1 ELSE 0 END) tests_completed_yesterday,
 		SUM(CASE WHEN test.test_status = 2 and DATE(order_date_time)='$yesterday' THEN 1 ELSE 0 END) tests_reported_yesterday,
+		SUM(CASE WHEN DATE(order_date_time)='$yesterday'  THEN 1 ELSE 0 END) patient_count_yesterday,
+		SUM(CASE WHEN DATE(order_date_time)='$yesterday' THEN 1 ELSE 0 END) orders_count_yesterday,
 
 		SUM(CASE WHEN test.test_status IN (0,1,2,3) and DATE(order_date_time)='$to_date' THEN 1 ELSE 0 END) tests_ordered_today,
 		SUM(CASE WHEN test.test_status IN (1,2,3) and DATE(order_date_time)='$to_date' THEN 1 ELSE 0 END) tests_completed_today,
 		SUM(CASE WHEN test.test_status = 2 and DATE(order_date_time)='$to_date' THEN 1 ELSE 0 END) tests_reported_today,
-		
+		SUM(CASE WHEN DATE(order_date_time)='$to_date'  THEN 1 ELSE 0 END) patient_count_today,
+		SUM(CASE WHEN DATE(order_date_time)='$to_date'  THEN 1 ELSE 0 END) orders_count_today,
+
 		SUM(CASE WHEN test.test_status = 3 THEN 1 ELSE 0 END) tests_rejected,hospital.hospital_short_name hospital,hospital.type4 hospital_type, 
 		",false)
 		->from('test_order')
@@ -1443,21 +1461,21 @@ class Reports_model extends CI_Model{
 		->join('test_method','test_master.test_method_id = test_method.test_method_id')
 		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')")
 		->where("REPLACE(hospital.type4, ' ', '')=" , $hospital_type) 
+		//->where('hospital.type3',$hospital_type) 
 		->group_by('hospital.hospital_id');
 		if($type == "lab_area" ){
 			$this->db->select("test_area.test_area lab_area")
 			->join('test_area','test_order.test_area_id = test_area.test_area_id')
-			->group_by('test_area.test_area');
+			->group_by('test_area.test_area_id');
 		}			
  		$resource=$this->db->get();
-		//echo $this->db->last_query();
+	//	echo $this->db->last_query();
 		return $resource->result();		
 	}
 	/**
     * Added By : Manish Kumar Sadhu
     */
 
-		
 	function dashboard($organization="",$type="",$state=""){
 
 		if($type == "state" && $state != "") {
@@ -1465,7 +1483,7 @@ class Reports_model extends CI_Model{
 			$query = $this->db->get();
 			$dashboard = $query->result();
 		}
-		else {
+		else {	
 		$this->db->select('organization, short_name, type6, state')->from('dashboards')->where('LOWER(short_name)',strtolower($organization));
 		$query = $this->db->get();
 		$dashboard = $query->result();
@@ -1565,8 +1583,7 @@ class Reports_model extends CI_Model{
 		}
 
 		$query = $this->db->get();
-
-
+	//	echo $this->db->last_query();
 		$resource = $query->result();
 		if($type == "state") {
 			return array($dashboard[0]->state,$resource);

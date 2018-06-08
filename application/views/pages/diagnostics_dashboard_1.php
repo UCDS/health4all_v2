@@ -162,11 +162,15 @@
                             <tr>
                                 <th>#</th>
                                 <th class="text-left" style="text-align:center;">Hospital Type</th>
-                                <th class="text-left" style="text-align:center;">Hospital Count</th>
+                                <th class="text-left" style="text-align:center;">Hospitals</th>
+                                <th class="text-left" style="text-align:center;">Patients</th>
+                                <th class="text-left" style="text-align:center;">Orders</th>
                        <!--         <th colspan="3" style="padding-left:120px; font-size:medium;">Yesterday</th>-->
-                                <th colspan="3" style="padding-left:100px;">Tests</th>
+                                <th colspan="3" style="padding-left:70px;">Tests</th>
                             </tr>
-                            <tr>
+                            <tr style="font-size:10px;">
+                                <th></th>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -187,10 +191,12 @@
                             <td><?php echo $i++;?></td>
                             <td style="text-align:center;"><?php echo $r->type;?></td>
                             <td style="text-align:center;"><?php echo $r->hospital_count;?></td>
+                            <td style="text-align:center;"><?php echo $r->patient_count;?></td>
+                            <td style="text-align:center;"><?php echo $r->orders_count;?></td>
                           <!--  <td></td>
                             <td></td>
                             <td></td>-->
-                            <td  class="text-right"  style="text-align:center;"><?php echo $r->tests_ordered?></td>
+                            <td class="text-right"  style="text-align:center;"><?php echo $r->tests_ordered?></td>
                             <td class="text-right" style="text-align:center;"><?php echo $r->tests_completed?></td>
                             <td class="text-right" style="text-align:center;"><?php echo $r->tests_reported?></td>
                             </tr>
@@ -218,20 +224,21 @@
                             <tr>
                                 <th>#</th>
                                 <th class="text-left" style="text-align:center;">Lab Area</th>
-                                <th class="text-left" style="text-align:center;">Hospital Count</th>
+                                <th class="text-left" style="text-align:center;">Hospitals</th>
+                                <th class="text-left" style="text-align:center;">Patients</th>
+                                <th class="text-left" style="text-align:center;">Orders</th>
                        <!--         <th colspan="3" style="padding-left:120px; font-size:medium;">Yesterday</th>-->
-                                <th colspan="3" style="padding-left:100px;">Tests</th>
+                                <th colspan="3" style="padding-left:70px;">Tests</th>
                             </tr>
-                            <tr>
+                            <tr style="font-size:10px;">
                                 <th></th>
                                 <th></th>
                                 <th></th>
-                             <!--   <th style="text-align:center;">Ordered</th>
-                                <th style="text-align:center;">Completed</th>
-                                <th style="text-align:center;">Reported</th>-->
+                                <th></th>
+                                <th></th>
                                 <th style="text-align:center;">Ordered</th>
                                 <th style="text-align:center;">Completed</th>
-                                <th style="text-align:center;"> Reported</th>
+                                <th style="text-align:center;">Reported</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -241,12 +248,11 @@
                             ?>
                             <tr>
                             <td><?php echo $i++;?></td>
-                            <td style="text-align:center;"><?php echo $r->test_area;?></td>
+                            <td style="text-align:center;font-size:13px; "><?php echo $r->test_area;?></td>
                             <td style="text-align:center;"><?php echo $r->hospital_count;?></td>
-                          <!--  <td></td>
-                            <td></td>
-                            <td></td>-->
-                            <td  class="text-right"  style="text-align:center;"><?php echo $r->tests_ordered?></td>
+                            <td style="text-align:center;"><?php echo $r->patient_count;?></td> 
+                            <td style="text-align:center;"><?php echo $r->orders_count;?></td>
+                            <td class="text-right"  style="text-align:center;"><?php echo $r->tests_ordered?></td>
                             <td class="text-right" style="text-align:center;"><?php echo $r->tests_completed?></td>
                             <td class="text-right" style="text-align:center;"><?php echo $r->tests_reported?></td>
                             </tr>
