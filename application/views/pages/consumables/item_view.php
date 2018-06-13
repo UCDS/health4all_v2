@@ -59,6 +59,7 @@ $(function(){
 					<label for="item_form" >Item form<font style="color:red">*</font></label>
 					<select name="item_form" id="item_form" class="form-control" required>
 						<option value="">Select</option>
+						<option>selected one</option>
 						<?php foreach($item_form as $d){
 							echo "<option value='$d->item_form_id'>$d->item_form</option>";
 						}?>

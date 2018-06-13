@@ -176,7 +176,7 @@ class Register_model extends CI_Model{
 		if(count($args)>0){
 			$this->db->where('donation_id',func_get_arg(0));
 		}
-		$this->db->where('camp_id',$place['camp_id']);
+		//$this->db->where('camp_id',$place['camp_id']);//removed (12/05/17)
 		$this->db->select('*')
 			->from('bb_donation')
 			->join('blood_donor','bb_donation.donor_id=blood_donor.donor_id')
@@ -240,7 +240,7 @@ class Register_model extends CI_Model{
 		if(count($args)>0){
 			$this->db->where('donation_id',func_get_arg(0));
 		}
-		$this->db->where('camp_id',$place['camp_id']);
+		//$this->db->where('camp_id',$place['camp_id']);
 		$this->db->select('*')
 			->from('bb_donation')
 			->join('blood_donor','bb_donation.donor_id=blood_donor.donor_id')

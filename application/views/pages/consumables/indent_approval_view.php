@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css">
+ <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css">
     <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css">
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
  <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.ptTimeSelect.js"></script>
@@ -313,6 +313,8 @@ $('#to_id').change(function(){
 									<label for="from_id">From Party</label>
 										<select name="from_id" id="from_id" class="form-control">
 											<option value="">Select</option>
+											<option>form party 1</option>
+											<option>form party 2</option>
 											<?php
 												foreach($parties as $fro)
 												{
@@ -329,6 +331,7 @@ $('#to_id').change(function(){
 									<label for="inputto_id">To Party</label>
 										<select name="to_id" id="to_id" class="form-control" >
 											<option value="">Select</option>
+											<option>to party</option>
 												<?php
 													foreach($parties as $t)
 													{

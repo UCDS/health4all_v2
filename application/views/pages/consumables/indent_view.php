@@ -94,6 +94,8 @@ $('#to_id').change(function(){
 								<label for="from_id">From Party<font color='red'>*</font></label>
 								<select name="from_id" id="from_id" class="form-control" required>
 								<option value="">Select</option>
+								<option>form 1</option>
+								<option>form 2</option>
 								<?php
 								foreach($parties as $fro)
 									{
@@ -109,6 +111,7 @@ $('#to_id').change(function(){
 								<label for="inputto_id">To Party<font color='red'>*</font></label>
 								<select name="to_id" id="to_id" class="form-control" required>
 								<option value="">Select</option>
+								<option>party</option>
 								<?php
 								foreach($parties as $t)
 									{
@@ -141,6 +144,8 @@ $('#to_id').change(function(){
 									<div class="form-group">	<!--Item-->
 										<select name="item[]" id="item" class="form-control" required>
 										<option value="">Select</option>
+										<option> select 1</option>
+										<option>select 2</option>
 										<?php
 										foreach($all_item as $t)
 											{

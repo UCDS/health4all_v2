@@ -120,7 +120,7 @@ class Register_model extends CI_Model{
 			$this->db->select('count')->from('counter')->where('counter_name',$form_type)->where('hospital_id',$hospital['hospital_id']);
 			$query=$this->db->get();
 			$result=$query->row();
-			$hosp_file_no=++$result->count;
+			$hosp_file_no="";
 		}
 		//Creating an array with the database column names as keys and the post values as values. 
 		$data=array(

@@ -138,7 +138,7 @@
 		<div class="col-md-6">
 			<label>Specimen Type</label>
 			<select class="form-control" name="specimen_type" required>
-				<option value="" selected disabled>Select</option>
+				<option value="" selected enabled>Select</option>
 				<?php foreach($specimen_types as $specimen){ ?>
 					<option value="<?php echo $specimen->specimen_type_id;?>"><?php echo $specimen->specimen_type;?></option>
 				<?php } ?>
