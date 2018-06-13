@@ -37,7 +37,7 @@ class Dashboard extends CI_Controller {
 
 	public function state($state=""){
 			$this->load->model('reports_model');
-			if(!!$state) //if $organization variable is not empty
+			if(!!$state) //if $state variable is not empty
 		{
 				$this->load->helper('form');
 				$this->data['state']=$state;
@@ -79,31 +79,45 @@ class Dashboard extends CI_Controller {
 		$this->load->view('pages/helpline/helpline_dashboard',$this->data);
 		$this->load->view('templates/footer');
 	}
-	public function helpline_voicemail(){
-		$this->load->helper('form');
-		$this->data['title']="Helpline Services Dashboard";
-		$this->load->model('helpline_model');
-		$this->load->model('staff_model');
-		$this->data['caller_type_report']=$this->helpline_model->dashboard('caller_type',1);
-		$this->data['call_category_report']=$this->helpline_model->dashboard('call_category',1);
-		$this->data['hospital_report']=$this->helpline_model->dashboard('hospital',1);
-		$this->data['district_report']=$this->helpline_model->dashboard('district',1);
-		$this->data['volunteer_report']=$this->helpline_model->dashboard('volunteer',1);
-		$this->data['call_type_report']=$this->helpline_model->dashboard('call_type',1);
-		$this->data['to_number_report']=$this->helpline_model->dashboard('to_number',1);
-		$this->data['op_ip_report']=$this->helpline_model->dashboard('op_ip',1);
-		$this->data['duration']=$this->helpline_model->dashboard('duration',1);
-		$this->data['resolution_status']=$this->helpline_model->dashboard('resolution_status',1);
-		$this->data['closed_tat']=$this->helpline_model->dashboard('closed_tat',1);
-		$this->data['open_tat']=$this->helpline_model->dashboard('open_tat',1);
-		$this->data['caller_type']=$this->helpline_model->get_caller_type();
-		$this->data['call_category']=$this->helpline_model->get_call_category();
-		$this->data['all_hospitals']=$this->staff_model->get_hospital();
-		$this->data['hospital_districts']=$this->helpline_model->get_hospital_district();
+
+	public function diagnostics_dashboard_1(){
+		$this->data['title']="Diagnostics Dashboard - 1";
+		$this->load->model('reports_model');
+		$this->data['report']=$this->reports_model->diagnostic_dashboard_HospitalWise();
+		$this->data['report1']=$this->reports_model->diagnostic_dashboard_AreaWise();
 		$this->load->view('templates/header',$this->data);
-		$this->load->view('pages/helpline/helpline_voicemail_dashboard',$this->data);
+		$this->load->helper('form');
+		$this->load->view('pages/diagnostics_dashboard_1',$this->data);
 		$this->load->view('templates/footer');
 	}
+
+	public function diagnostics_dashboard_2(){
+		$this->data['title']="Diagnostics Board - 2";
+		$this->load->model('reports_model');
+		$this->data['report']=$this->reports_model->diagnostic_board();
+		$this->data['report1']=$this->reports_model->diagnostic_board('lab_area');
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('pages/diagnostics_dashboard_2',$this->data);
+		$this->load->view('templates/footer');
+	}
+
+	public function diagnostic_dashboard_hospitalwise($hospital_type=" "){
+		$this->data['title']="Diagnostics Board";
+		$this->data['type']="$hospital_type";
+		$this->load->model('reports_model');
+		$this->data['report']=$this->reports_model->diagnostic_hospital_board($hospital_type);
+		$this->data['report1']=$this->reports_model->diagnostic_hospital_board($hospital_type,'lab_area');
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('pages/diagnostic_dashboard_hospitalwise',$this->data);
+		$this->load->view('templates/footer');
+	}
+	/**
+	* diagnostics_dashboard_1
+	* diagnostics_dashboard_2
+	* diagnostic_board_hospital
+	* Added by : Manish Kumar
+	*
+	**/
 
 	public function helpline_trend(){
 		$this->load->helper('form');
@@ -139,45 +153,6 @@ class Dashboard extends CI_Controller {
         ->set_output(json_encode($hospitalstarts));
 
 	}
-		public function diagnostics_dashboard_1(){
-		$this->data['title']="Diagnostics Dashboard - 1";
-		$this->load->model('reports_model');
-		$this->data['report']=$this->reports_model->diagnostic_dashboard_HospitalWise();
-		$this->data['report1']=$this->reports_model->diagnostic_dashboard_AreaWise();
-		$this->load->view('templates/header',$this->data);
-		$this->load->helper('form');
-		$this->load->view('pages/diagnostics_dashboard_1',$this->data);
-		$this->load->view('templates/footer');
-	}
-
-	public function diagnostics_dashboard_2(){
-		$this->data['title']="Diagnostics Board - 2";
-		$this->load->model('reports_model');
-		$this->data['report']=$this->reports_model->diagnostic_board();
-		$this->data['report1']=$this->reports_model->diagnostic_board('lab_area');
-		$this->load->view('templates/header',$this->data);
-		$this->load->view('pages/diagnostics_dashboard_2',$this->data);
-		$this->load->view('templates/footer');
-	}
-
-	public function diagnostic_dashboard_hospital($hospital_type=" "){
-		$this->data['title']="Diagnostics Board";
-		$this->data['type']="$hospital_type";
-		$this->load->model('reports_model');
-		$this->data['report']=$this->reports_model->diagnostic_hospital_board($hospital_type);
-		$this->data['report1']=$this->reports_model->diagnostic_hospital_board($hospital_type,'lab_area');
-		$this->load->view('templates/header',$this->data);
-		$this->load->view('pages/diagnostic_hospital_board',$this->data);
-		$this->load->view('templates/footer');
-	}
-	/**
-	* diagnostics_dashboard_1
-	* diagnostics_dashboard_2
-	* diagnostic_board_hospital
-	* Added by : Manish Kumar
-	*
-	**/
-
 	public function department($organization=""){
 		$this->load->model('reports_model');
 		$deptstarts=$this->reports_model->dashboard($organization,'department');
