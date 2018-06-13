@@ -1305,7 +1305,7 @@ class Reports_model extends CI_Model{
 		SUM(CASE WHEN test.test_status IN (1,2,3) THEN 1 ELSE 0 END) tests_completed,
 		SUM(CASE WHEN test.test_status = 2 THEN 1 ELSE 0 END) tests_reported,
 		SUM(CASE WHEN test.test_status = 3 THEN 1 ELSE 0 END) tests_rejected,count(DISTINCT hospital.hospital_id) hospital_count,
-		test_method.test_method_id,test_master.test_master_id,hospital.type4 type,count(DISTINCT patient_visit.patient_id) patient_count,count(DISTINCT test_order.order_id) orders_count,test_master.test_name,test_area.test_area_id",false)
+		test_method.test_method_id,test_master.test_master_id,hospital.type4 type,count(DISTINCT test_order.visit_id) patient_count,count(DISTINCT test_order.order_id) orders_count,test_master.test_name,test_area.test_area_id",false)
 		->from('test_order')
 		->join('test_sample','test_order.order_id = test_sample.order_id','left')
 		->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
@@ -1342,7 +1342,7 @@ class Reports_model extends CI_Model{
 		SUM(CASE WHEN test.test_status IN (1,2,3) THEN 1 ELSE 0 END) tests_completed,
 		SUM(CASE WHEN test.test_status = 2 THEN 1 ELSE 0 END) tests_reported,
 		SUM(CASE WHEN test.test_status = 3 THEN 1 ELSE 0 END) tests_rejected,count(DISTINCT hospital.hospital_id) hospital_count,
-		test_area.test_area_id,count(DISTINCT patient_visit.patient_id) patient_count,count(DISTINCT test_order.order_id) orders_count,test_area.test_area",false)
+		test_area.test_area_id,count(DISTINCT test_order.visit_id) patient_count,count(DISTINCT test_order.order_id) orders_count,test_area.test_area",false)
 		->from('test_order')
 		->join('test_sample','test_order.order_id = test_sample.order_id','left')
 		->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
@@ -1366,7 +1366,7 @@ class Reports_model extends CI_Model{
 	function diagnostic_board($type=""){
 		$to_date=date("Y-m-d");
 		//var_dump($to_date);
-		//$to_date='2016-01-08';
+		$to_date='2016-01-08';
 		$from_date=strtotime( '-2 day' ,strtotime ( $to_date ) );
 		$yesterday=strtotime( '-1 day' ,strtotime ( $to_date ) );
 		
@@ -1374,27 +1374,12 @@ class Reports_model extends CI_Model{
 		$from_date=date( "Y-m-d" , $from_date );
 		//var_dump($yesterday);
 		//var_dump($from_date);
-		$this->db->select("DATE(order_date_time) date,
-		SUM(CASE WHEN test.test_status IN (0,1,2,3) and DATE(order_date_time)='$from_date' THEN 1 ELSE 0 END) tests_ordered_daybefore,
-		SUM(CASE WHEN test.test_status IN (1,2,3) and DATE(order_date_time)='$from_date' THEN 1 ELSE 0 END) tests_completed_daybefore,
-		SUM(CASE WHEN test.test_status = 2 and DATE(order_date_time)='$from_date' THEN 1 ELSE 0 END) tests_reported_daybefore,
-		(CASE WHEN DATE(order_date_time)='$from_date' THEN COUNT( DISTINCT patient_visit.patient_id) ELSE 0 END) patient_count_daybefore,
-		(CASE WHEN DATE(order_date_time)='$from_date' THEN COUNT( DISTINCT test_order.order_id) ELSE 0 END) orders_count_daybefore,
-
-		SUM(CASE WHEN test.test_status IN (0,1,2,3) and DATE(order_date_time)='$yesterday' THEN 1 ELSE 0 END)tests_ordered_yesterday,
-		SUM(CASE WHEN test.test_status IN (1,2,3) and DATE(order_date_time)='$yesterday' THEN 1 ELSE 0 END) tests_completed_yesterday,
-		SUM(CASE WHEN test.test_status = 2 and DATE(order_date_time)='$yesterday' THEN 1 ELSE 0 END) tests_reported_yesterday,
-		(CASE WHEN DATE(order_date_time)='$yesterday' THEN COUNT( DISTINCT patient_visit.patient_id) ELSE 0 END) patient_count_yesterday,
-		(CASE WHEN DATE(order_date_time)='$yesterday' THEN COUNT( DISTINCT test_order.order_id) ELSE 0 END) orders_count_yesterday,
-
-		SUM(CASE WHEN test.test_status IN (0,1,2,3) and DATE(order_date_time)='$to_date' THEN 1 ELSE 0 END) tests_ordered_today,
-		SUM(CASE WHEN test.test_status IN (1,2,3) and DATE(order_date_time)='$to_date' THEN 1 ELSE 0 END) tests_completed_today,
-		SUM(CASE WHEN test.test_status = 2 and DATE(order_date_time)='$to_date' THEN 1 ELSE 0 END) tests_reported_today,
-		(CASE WHEN DATE(order_date_time)='$to_date'  THEN COUNT( DISTINCT patient_visit.patient_id) ELSE 0 END) patient_count_today,
-		(CASE WHEN DATE(order_date_time)='$to_date' THEN COUNT( DISTINCT test_order.order_id) ELSE 0 END) orders_count_today,
-
-		SUM(CASE WHEN test.test_status = 3 THEN 1 ELSE 0 END) tests_rejected, count(DISTINCT hospital.hospital_id) hospital_count,
-		",false)
+		$this->db->select("test_method,test_id,DATE(order_date_time) date,
+		SUM(CASE WHEN test.test_status IN (0,1,2,3) THEN 1 ELSE 0 END) tests_ordered,
+		SUM(CASE WHEN test.test_status IN (1,2,3) THEN 1 ELSE 0 END) tests_completed,
+		SUM(CASE WHEN test.test_status = 2 THEN 1 ELSE 0 END) tests_reported,
+		SUM(CASE WHEN test.test_status = 3 THEN 1 ELSE 0 END) tests_rejected,count(DISTINCT hospital.hospital_id) hospital_count,
+		test_method.test_method_id,test_master.test_master_id,hospital.type4 type,count(DISTINCT test_order.visit_id) patient_count,count(DISTINCT test_order.order_id) orders_count,test_master.test_name",false)
 		->from('test_order')
 		->join('test_sample','test_order.order_id = test_sample.order_id','left')
 		->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
@@ -1403,16 +1388,18 @@ class Reports_model extends CI_Model{
 		->join('test','test_order.order_id = test.order_id','left')
 		->join('test_master','test.test_master_id = test_master.test_master_id')
 		->join('test_method','test_master.test_method_id = test_method.test_method_id')
-		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')");
+		->where("(DATE(order_date_time) BETWEEN '$from_date' AND '$to_date')")
+		->group_by('DATE(order_date_time)');
 		if($type == ""){
 			$this->db->select("hospital.type4 hospital_type")
 			->group_by('hospital.type4');
 		}
 		
 		if($type == "lab_area" ){
-			$this->db->select("test_area.test_area lab_area")
+			$this->db->select("test_area.test_area lab_area,test_area.test_area_id")
 			->join('test_area','test_order.test_area_id = test_area.test_area_id')
-			->group_by('test_area.test_area');
+			->group_by('test_area.test_area_id')
+			->order_by('test_area.test_area','asc');
 		}			
  		$resource=$this->db->get();
 		//echo $this->db->last_query();
@@ -1425,32 +1412,19 @@ class Reports_model extends CI_Model{
 	function diagnostic_hospital_board($hospital_type=" " , $type=" "){
 		$to_date=date("Y-m-d");
 		//var_dump($hospital_type);
-		//$to_date='2016-01-08';
+		$to_date='2016-01-08';
 		$from_date=strtotime( '-2 day' ,strtotime ( $to_date ) );
 		$yesterday=strtotime( '-1 day' ,strtotime ( $to_date ) );
 		$yesterday=date( "Y-m-d" , $yesterday );
 		$from_date=date( "Y-m-d" , $from_date );
-		$this->db->select("DATE(order_date_time) date,
-		SUM(CASE WHEN test.test_status IN (0,1,2,3) and DATE(order_date_time)='$from_date' THEN 1 ELSE 0 END) tests_ordered_daybefore,
-		SUM(CASE WHEN test.test_status IN (1,2,3) and DATE(order_date_time)='$from_date' THEN 1 ELSE 0 END) tests_completed_daybefore,
-		SUM(CASE WHEN test.test_status = 2 and DATE(order_date_time)='$from_date' THEN 1 ELSE 0 END) tests_reported_daybefore,
-		SUM(CASE WHEN DATE(order_date_time)='$from_date' THEN 1 ELSE 0 END) patient_count_daybefore,
-		SUM(CASE WHEN DATE(order_date_time)='$from_date' THEN 1 ELSE 0 END) orders_count_daybefore,
-
-		SUM(CASE WHEN test.test_status IN (0,1,2,3) and DATE(order_date_time)='$yesterday' THEN 1 ELSE 0 END)tests_ordered_yesterday,
-		SUM(CASE WHEN test.test_status IN (1,2,3) and DATE(order_date_time)='$yesterday' THEN 1 ELSE 0 END) tests_completed_yesterday,
-		SUM(CASE WHEN test.test_status = 2 and DATE(order_date_time)='$yesterday' THEN 1 ELSE 0 END) tests_reported_yesterday,
-		SUM(CASE WHEN DATE(order_date_time)='$yesterday'  THEN 1 ELSE 0 END) patient_count_yesterday,
-		SUM(CASE WHEN DATE(order_date_time)='$yesterday' THEN 1 ELSE 0 END) orders_count_yesterday,
-
-		SUM(CASE WHEN test.test_status IN (0,1,2,3) and DATE(order_date_time)='$to_date' THEN 1 ELSE 0 END) tests_ordered_today,
-		SUM(CASE WHEN test.test_status IN (1,2,3) and DATE(order_date_time)='$to_date' THEN 1 ELSE 0 END) tests_completed_today,
-		SUM(CASE WHEN test.test_status = 2 and DATE(order_date_time)='$to_date' THEN 1 ELSE 0 END) tests_reported_today,
-		SUM(CASE WHEN DATE(order_date_time)='$to_date'  THEN 1 ELSE 0 END) patient_count_today,
-		SUM(CASE WHEN DATE(order_date_time)='$to_date'  THEN 1 ELSE 0 END) orders_count_today,
-
-		SUM(CASE WHEN test.test_status = 3 THEN 1 ELSE 0 END) tests_rejected,hospital.hospital_short_name hospital,hospital.type4 hospital_type, 
-		",false)
+		$this->db->select("test_method,test_id,DATE(order_date_time) date,
+		SUM(CASE WHEN test.test_status IN (0,1,2,3) THEN 1 ELSE 0 END) tests_ordered,
+		SUM(CASE WHEN test.test_status IN (1,2,3) THEN 1 ELSE 0 END) tests_completed,
+		SUM(CASE WHEN test.test_status = 2 THEN 1 ELSE 0 END) tests_reported,
+		SUM(CASE WHEN test.test_status = 3 THEN 1 ELSE 0 END) tests_rejected,count(DISTINCT hospital.hospital_id) hospital_count,
+		test_method.test_method_id,test_master.test_master_id,hospital.type4 type,hospital.hospital_short_name hospital,
+		count(DISTINCT test_order.visit_id) patient_count,count(DISTINCT test_order.order_id) orders_count,
+		test_master.test_name",false)
 		->from('test_order')
 		->join('test_sample','test_order.order_id = test_sample.order_id','left')
 		->join('patient_visit','test_order.visit_id = patient_visit.visit_id')
@@ -1466,10 +1440,11 @@ class Reports_model extends CI_Model{
 		if($type == "lab_area" ){
 			$this->db->select("test_area.test_area lab_area")
 			->join('test_area','test_order.test_area_id = test_area.test_area_id')
-			->group_by('test_area.test_area_id');
+			->group_by('test_area.test_area_id')
+			->order_by('test_area.test_area','asc');
 		}			
  		$resource=$this->db->get();
-	//	echo $this->db->last_query();
+		// echo $this->db->last_query();
 		return $resource->result();		
 	}
 	/**

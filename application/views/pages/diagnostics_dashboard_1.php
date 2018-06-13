@@ -5,6 +5,10 @@
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.ptTimeSelect.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/Chart.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>assets/js/bootstrap-datetimepicker.js"></script>
+
+<style>
+tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
+</style>
     <script type="text/javascript">
     $(function(){
         $('#from_time').ptTimeSelect();
@@ -157,7 +161,7 @@
                     <?php echo form_close(); ?>
                 </div><!--panel heading-->
                 <div class="panel-body"> 
-                    <table class="table table-striped" style="font-size:medium;">
+                    <table class="table " style="font-size:medium;">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -219,7 +223,7 @@
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table class="table table-striped" style="font-size:medium;">
+                    <table class="table " style="font-size:medium;">
                         <thead>
                             <tr>
                                 <th>#</th>

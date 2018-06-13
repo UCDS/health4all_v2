@@ -14,24 +14,24 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
 <?php         
             // To create a associated array of hospital types , dates and tests 
 
-            $hospitals_type = array();
+            $hospitals = array();
             foreach($report as $r) {                    
                 
-                if(array_key_exists($r->hospital_type,$hospitals_type)) {
+                if(array_key_exists($r->hospital,$hospitals)) {
                     
-                    $hospitals_type[$r->hospital_type][$r->date] = array("tests_ordered"=>$r->tests_ordered,
+                    $hospitals[$r->hospital][$r->date] = array("tests_ordered"=>$r->tests_ordered,
                     "tests_completed"=>$r->tests_completed, "tests_reported"=>$r->tests_reported, "hospital_count"=>$r->hospital_count,
                     "patients_count"=>$r->patient_count ,"orders_count"=>$r->orders_count);
                 }else{
-                    $unique_hospitals_type=array();
-                    $unique_hospitals_type[$r->date] = array("tests_ordered"=>$r->tests_ordered,
+                    $unique_hospitals=array();
+                    $unique_hospitals[$r->date] = array("tests_ordered"=>$r->tests_ordered,
                     "tests_completed"=>$r->tests_completed, "tests_reported"=>$r->tests_reported , "hospital_count"=>$r->hospital_count,
                     "patients_count"=>$r->patient_count ,"orders_count"=>$r->orders_count); 
-                    $hospitals_type[$r->hospital_type] = $unique_hospitals_type;
+                    $hospitals[$r->hospital] = $unique_hospitals;
                 }
             }
             // $unique_hospitals_type= array_unique($hospitals_type);
-              // var_dump($hospitals_type);
+               //var_dump($hospitals);
             $lab_areas = array();
             foreach($report1 as $r){
                 if(array_key_exists($r->lab_area,$lab_areas)){
@@ -47,8 +47,8 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
                     $lab_areas[$r->lab_area] = $lab_areas_type;
                 }
             }
-              // var_dump($lab_areas);
-              // var_dump($hospital_count_array);
+                //var_dump($lab_areas);
+               //var_dump($lab_areas_type);
             //  foreach($lab_areas as )
               $k=0;
         ?>
@@ -60,7 +60,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
 		var myChart = new Chart(hospitalctx, {
 			type: 'horizontalBar',
 			data: {
-                labels: [<?php $i=1; foreach($hospitals_type as $key=>$value) { echo "'".$key;if($i<count($hospitals_type)) echo "' ,"; else echo "'"; $i++; }?>],
+                labels: [<?php $i=1; foreach($hospitals as $key=>$value) { echo "'".$key;if($i<count($hospitals)) echo "' ,"; else echo "'"; $i++; }?>],
 				datasets: [
 					{
 						type: 'horizontalBar',
@@ -68,7 +68,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
 						xAxisID : "A",
 						backgroundColor: "rgba(255,102,0,0.6)",
 						borderColor: "rgba(255,102,0,0.6)",
-						data:[<?php $i=1; foreach($hospitals_type as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-2 days"))]['tests_ordered'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_ordered']; else echo $k ; if($i<count($hospitals_type)) echo ",";  $i++; } ?>],
+						data:[<?php $i=1; foreach($hospitals as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-2 days"))]['tests_ordered'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_ordered']; else echo $k ; if($i<count($hospitals)) echo ",";  $i++; } ?>],
 					},
                     {
 						type: 'horizontalBar',
@@ -76,7 +76,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
 						xAxisID : "A",
 						backgroundColor: "rgba(153,204,0, 0.7)",
 							borderColor: "rgba(153,204,0, 0.7)",
-						data: [<?php $i=1; foreach($hospitals_type as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-2 days"))]['tests_completed'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_completed']; else echo $k ; if($i<count($hospitals_type)) echo ",";  $i++; } ?>],
+						data: [<?php $i=1; foreach($hospitals as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-2 days"))]['tests_completed'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_completed']; else echo $k ; if($i<count($hospitals)) echo ",";  $i++; } ?>],
 					},
                     {
 						type: 'horizontalBar',
@@ -84,7 +84,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
 						xAxisID : "A",
 						backgroundColor: "#428bca",
 						borderColor: "#428bca",
-						data:[<?php $i=1; foreach($hospitals_type as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-2 days"))]['tests_reported'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_reported']; else echo $k ; if($i<count($hospitals_type)) echo ",";  $i++; } ?>],
+						data:[<?php $i=1; foreach($hospitals as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-2 days"))]['tests_reported'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_reported']; else echo $k ; if($i<count($hospitals)) echo ",";  $i++; } ?>],
 					}
 				]
 			},
@@ -114,7 +114,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
 		var myChart = new Chart(hospitalctx1, {
 			type: 'horizontalBar',
 			data: {
-                labels: [<?php $i=1; foreach($hospitals_type as $key=>$value) { echo "'".$key;if($i<count($hospitals_type)) echo "' ,"; else echo "'"; $i++; }?>],
+                labels: [<?php $i=1; foreach($hospitals as $key=>$value) { echo "'".$key;if($i<count($hospitals)) echo "' ,"; else echo "'"; $i++; }?>],
 				datasets: [
 					{
 						type: 'horizontalBar',
@@ -122,7 +122,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
 						xAxisID : "A",
 						backgroundColor: "rgba(255,102,0,0.6)",
 						borderColor: "rgba(255,102,0,0.6)",
-						data:[<?php $i=1; foreach($hospitals_type as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_ordered'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_ordered']; else echo $k ; if($i<count($hospitals_type)) echo ",";  $i++; } ?>],
+						data:[<?php $i=1; foreach($hospitals as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_ordered'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_ordered']; else echo $k ; if($i<count($hospitals)) echo ",";  $i++; } ?>],
 					},
                     {
 						type: 'horizontalBar',
@@ -130,7 +130,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
 						xAxisID : "A",
 						backgroundColor: "rgba(153,204,0, 0.7)",
 							borderColor: "rgba(153,204,0, 0.7)",
-						data: [<?php $i=1; foreach($hospitals_type as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_completed'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_completed']; else echo $k ; if($i<count($hospitals_type)) echo ",";  $i++; } ?>],
+						data: [<?php $i=1; foreach($hospitals as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_completed'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_completed']; else echo $k ; if($i<count($hospitals)) echo ",";  $i++; } ?>],
 					},
                     {
 						type: 'horizontalBar',
@@ -138,7 +138,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
 						xAxisID : "A",
 						backgroundColor: "#428bca",
 						borderColor: "#428bca",
-						data:[<?php $i=1; foreach($hospitals_type as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_reported'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_reported']; else echo $k ; if($i<count($hospitals_type)) echo ",";  $i++; } ?>],
+						data:[<?php $i=1; foreach($hospitals as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_reported'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_reported']; else echo $k ; if($i<count($hospitals)) echo ",";  $i++; } ?>],
 					}
 				]
 			},
@@ -169,7 +169,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
             var myChart = new Chart(hospitalctx2, {
                 type: 'horizontalBar',
                 data: {
-                    labels: [<?php $i=1; foreach($hospitals_type as $key=>$value) { echo "'".$key;if($i<count($hospitals_type)) echo "' ,"; else echo "'"; $i++; }?>],
+                    labels: [<?php $i=1; foreach($hospitals as $key=>$value) { echo "'".$key;if($i<count($hospitals)) echo "' ,"; else echo "'"; $i++; }?>],
                     datasets: [
                         {
                             type: 'horizontalBar',
@@ -177,7 +177,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
                             xAxisID : "A",
                             backgroundColor: "rgba(255,102,0,0.6)",
                             borderColor: "rgba(255,102,0,0.6)",
-                            data:[<?php $i=1; foreach($hospitals_type as $key=>$value) { if(isset($value[date('Y-m-d')]['tests_ordered'])) echo $value[date('Y-m-d')]['tests_ordered']; else echo $k ; if($i<count($hospitals_type)) echo ",";  $i++; } ?>],
+                            data:[<?php $i=1; foreach($hospitals as $key=>$value) { if(isset($value[date('Y-m-d')]['tests_ordered'])) echo $value[date('Y-m-d')]['tests_ordered']; else echo $k ; if($i<count($hospitals)) echo ",";  $i++; } ?>],
                         },
                         {
                             type: 'horizontalBar',
@@ -185,7 +185,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
                             xAxisID : "A",
                             backgroundColor: "rgba(153,204,0, 0.7)",
                                 borderColor: "rgba(153,204,0, 0.7)",
-                            data: [<?php $i=1; foreach($hospitals_type as $key=>$value) { if(isset($value[date('Y-m-d')]['tests_completed'])) echo $value[date('Y-m-d')]['tests_completed']; else echo $k ; if($i<count($hospitals_type)) echo ",";  $i++; } ?>],
+                            data: [<?php $i=1; foreach($hospitals as $key=>$value) { if(isset($value[date('Y-m-d')]['tests_completed'])) echo $value[date('Y-m-d')]['tests_completed']; else echo $k ; if($i<count($hospitals)) echo ",";  $i++; } ?>],
                         },
                         {
                             type: 'horizontalBar',
@@ -193,7 +193,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
                             xAxisID : "A",
                             backgroundColor: "#428bca",
                             borderColor: "#428bca",
-                            data:[<?php $i=1; foreach($hospitals_type as $key=>$value) { if(isset($value[date('Y-m-d')]['tests_reported'])) echo $value[date('Y-m-d')]['tests_reported']; else echo $k ; if($i<count($hospitals_type)) echo ",";  $i++; } ?>],
+                            data:[<?php $i=1; foreach($hospitals as $key=>$value) { if(isset($value[date('Y-m-d')]['tests_reported'])) echo $value[date('Y-m-d')]['tests_reported']; else echo $k ; if($i<count($hospitals)) echo ",";  $i++; } ?>],
                         }
 				]
                 },
@@ -394,7 +394,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
         <div class="col-md-12">
             <div class="panel panel-info">
                     <div class="panel-heading" style="text-align:center;">
-                        <h3  style="display:inline;">Diagnostics Dashboard Hospital Wise</h3>
+                        <h3  style="display:inline;">Diagnostics Dashboard - <?php echo $type;?></h3>
                     </div>
             </div>
         </div>
@@ -406,7 +406,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
                     <h3  style="display:inline; padding-left:0px;">Tests:Day Before<?php echo "("; ?><?php echo date('d-M-Y',strtotime("-2 days"));?>)</h3>
                 </div>
                 <div class="panel-body" > 
-                    <table class="table  " style="font-size:medium;">
+                    <table class="table " style="font-size:medium;">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -428,11 +428,11 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
                         <tbody>
                         <?php 
                         $i=1;
-                        foreach($hospitals_type as $key=>$value){
+                        foreach($hospitals as $key=>$value){
                         ?>
                             <tr>
                                 <td><?php echo $i++; ?></td>
-                                <td style="text-align:center; text-decoration:underline;"><a href="<?php $str=str_replace(' ','',$key);  echo base_url()."dashboard/diagnostic_dashboard_hospitalwise/$str" ?>"><?php echo $key; ?></a></td>
+                                <td style="text-align:center;"><?php echo $key; ?></td>
                                 <td style="text-align:center;"><?php if(isset($value[date('Y-m-d',strtotime("-2 days"))]['hospital_count']))  echo $value[date('Y-m-d',strtotime("-2 days"))]['hospital_count']; else echo "0"; ?></td>
                                 <td style="text-align:center;"><?php if(isset($value[date('Y-m-d',strtotime("-2 days"))]['patients_count']))  echo $value[date('Y-m-d',strtotime("-2 days"))]['patients_count']; else echo "0"; ?></td>
                                 <td style="text-align:center;"><?php if(isset($value[date('Y-m-d',strtotime("-2 days"))]['orders_count']))  echo $value[date('Y-m-d',strtotime("-2 days"))]['orders_count']; else echo "0"; ?></td>
@@ -490,11 +490,11 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
                         <tbody>
                         <?php 
                         $i=1;
-                        foreach($hospitals_type as $key=>$value){
+                        foreach($hospitals as $key=>$value){
                             ?>
                             <tr>
                                 <td><?php echo $i++; ?></td>
-                                <td style="text-align:center; text-decoration:underline;"><a href="<?php $str=str_replace(' ','',$key);  echo base_url()."dashboard/diagnostic_dashboard_hospitalwise/$str" ?>"><?php echo $key; ?></a></td>
+                                <td style="text-align:center;"><?php echo $key; ?></td>
                                 <td style="text-align:center;"><?php if(isset($value[date('Y-m-d',strtotime("-1 days"))]['hospital_count']))  echo $value[date('Y-m-d',strtotime("-1 days"))]['hospital_count']; else echo "0"; ?></td>
                                 <td style="text-align:center;"><?php if(isset($value[date('Y-m-d',strtotime("-1 days"))]['patients_count']))  echo $value[date('Y-m-d',strtotime("-1 days"))]['patients_count']; else echo "0"; ?></td>
                                 <td style="text-align:center;"><?php if(isset($value[date('Y-m-d',strtotime("-1 days"))]['orders_count']))  echo $value[date('Y-m-d',strtotime("-1 days"))]['orders_count']; else echo "0"; ?></td>
@@ -551,11 +551,11 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
                         <tbody>
                         <?php 
                         $i=1;
-                        foreach($hospitals_type as $key=>$value){
+                        foreach($hospitals as $key=>$value){
                             ?>
                             <tr>
                                 <td><?php echo $i++; ?></td>
-                                <td style="text-align:center; text-decoration:underline;"><a href="<?php $str=str_replace(' ','',$key);  echo base_url()."dashboard/diagnostic_dashboard_hospitalwise/$str" ?>"><?php echo $key; ?></a></td>
+                                <td style="text-align:center;"><?php echo $key; ?></td>
                                 <td style="text-align:center;"><?php if(isset($value[date('Y-m-d')]['hospital_count']))  echo $value[date('Y-m-d')]['hospital_count']; else echo "0"; ?></td>
                                 <td style="text-align:center;"><?php if(isset($value[date('Y-m-d')]['patients_count']))  echo $value[date('Y-m-d')]['patients_count']; else echo "0"; ?></td>
                                 <td style="text-align:center;"><?php if(isset($value[date('Y-m-d')]['orders_count']))  echo $value[date('Y-m-d' )]['orders_count']; else echo "0"; ?></td>
