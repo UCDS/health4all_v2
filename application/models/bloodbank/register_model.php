@@ -173,15 +173,16 @@ class Register_model extends CI_Model{
 		$userdata=$this->session->userdata('hospital');
 		$hospital=$userdata['hospital_id'];
 
-		if(count($args)>0){
+		if(count($args)>0)
+		{
 			$this->db->where('donation_id',func_get_arg(0));
 		}
-		$this->db->where('camp_id',$place['camp_id']);
 		$this->db->select('*')
 			->from('bb_donation')
 			->join('blood_donor','bb_donation.donor_id=blood_donor.donor_id')
 			->where('status_id',1)
 			->where('bb_donation.hospital_id',$hospital);
+		//$this->db->where('camp_id',$place['camp_id']);
 		$query=$this->db->get();
 		return $query->result();
 	}// get_registered_donors
@@ -233,14 +234,13 @@ class Register_model extends CI_Model{
 	function get_checked_donors(){
 		$args=func_get_args();
 		$place=$this->session->userdata('place');
-
 		$userdata=$this->session->userdata('hospital');
 		$hospital=$userdata['hospital_id'];
 
 		if(count($args)>0){
 			$this->db->where('donation_id',func_get_arg(0));
 		}
-		$this->db->where('camp_id',$place['camp_id']);
+		//$this->db->where('camp_id',$place['camp_id']);
 		$this->db->select('*')
 			->from('bb_donation')
 			->join('blood_donor','bb_donation.donor_id=blood_donor.donor_id')
@@ -506,7 +506,8 @@ class Register_model extends CI_Model{
         $packed_cell_units=$this->input->post('packed_cell_units');
         $fp_units=$this->input->post('fp_units');
         $ffp_units=$this->input->post('ffp_units');
-        $prp_units=$this->input->post('prp_units');
+		$prp_units=$this->input->post('prp_units');
+		//$swpc_units=$this->input->post('swpc_units');
         $platelet_concentrate_units=$this->input->post('platelet_concentrate_units');
         $cryoprecipitate_units=$this->input->post('cryoprecipitate_units');
         $request_date=date("Y-m-d",strtotime($this->input->post('request_date')));

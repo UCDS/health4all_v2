@@ -41,6 +41,7 @@
           <ul class="nav navbar-nav">
 			<?php if($this->session->userdata('logged_in')) {
 			//Loop through the session data to check if the user has access to each function and only display those.
+
 			foreach($functions as $f){
 					//Check if the user has access to Out Patient Registration forms or In Patient Registration forms
 					if($f->user_function=="Out Patient Registration" || $f->user_function=="In Patient Registration" || $f->user_function == "View Patients" || $f->user_function == "Update Patients"){

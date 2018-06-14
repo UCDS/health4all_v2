@@ -50,7 +50,6 @@ class Staff extends CI_Controller {
 				);
 				$this->data['hospital']=$this->masters_model->get_data("hospital");
 				$this->data['department']=$this->masters_model->get_data("department");
-			
 				$this->data['staff_category']=$this->masters_model->get_data("staff_category");
 				$this->data['unit']=$this->masters_model->get_data("unit");
 				$this->data['area']=$this->masters_model->get_data("area");
