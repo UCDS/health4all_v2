@@ -117,6 +117,7 @@
 						<td>
 								<select name="staff" class="form-control" required >
 									<option value="" disabled selected>Issued By</option>
+									<option>mr.Kranthi Kumar</option>
 									<?php foreach($staff as $s){
 										echo '<option value='.$s->staff_id.'>'.$s->first_name." ".$s->last_name." ".$s->name.'</option>';
 									}
@@ -124,6 +125,7 @@
 								</select><br />
 								<select name="cross_matched_by" class="form-control" required>
 									<option value="" disabled selected>Cross Matched By</option>
+									<option>yes</option><option>no</option>
 									<?php foreach($staff as $s){
 										echo '<option value='.$s->staff_id.'>'.$s->first_name." ".$s->last_name." ".$s->name.'</option>';
 									}

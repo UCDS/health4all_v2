@@ -300,6 +300,8 @@
 		<label for="test_area" class="col-md-4">Test Area<font color='red'>*</font></label>
 		<div  class="col-md-8">
 		<select name="test_area" id="test_area" class="form-control">
+			<option>test area 1</option>
+			<option>test area 2</option>
 		<?php foreach($test_areas as $d){
 			echo "<option value='$d->test_area_id'>$d->test_area</option>";
 		}
@@ -312,6 +314,7 @@
 		<label for="test_method" class="col-md-4">Test Method<font color='red'>*</font></label>
 		<div  class="col-md-8">
 		<select name="test_method" id="test_method" class="form-control">
+			<option>test method 1</option><option>test method 2</option>
 		<?php foreach($test_methods as $d){
 			echo "<option value='$d->test_method_id'>$d->test_method</option>";
 		}

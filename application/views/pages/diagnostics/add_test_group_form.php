@@ -65,6 +65,8 @@ function remove_test_name(i){
 		<label for="test_method" class="col-md-4">Test Method<font color='red'>*</font></label>
 		<div  class="col-md-8">
 		<select name="test_method" id="test_method" class="form-control">
+			<option>Test Method1 </option>
+			<option>test method2</option>
 		<?php foreach($test_methods as $d){
 			echo "<option value='$d->test_method_id'>$d->test_method</option>";
 		}
@@ -85,7 +87,8 @@ function remove_test_name(i){
 		<div class="col-md-10">
 		<select name="test_name[]" id="test_name" class="form-control" form="add_test_group">
 		<option value="">Test Name</option> 
-		
+		<option>test name1</option>
+		<option>test name 2</option>
 		<?php foreach($test_names as $d){
 		echo "<option value='$d->test_master_id'>$d->test_name -- $d->test_area</option>";
 		}

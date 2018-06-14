@@ -379,7 +379,7 @@ class Inventory_model extends CI_Model{
 		->join('area','patient_visit.area = area.area_id','left')
 		->join('hospital','blood_request.request_hospital_id=hospital.hospital_id','left')
 		->where('request_status','Pending')
-	//	->where('blood_request.bloodbank_id',$hospital)
+		//->where('blood_request.bloodbank_id',$hospital)
 		/**
 		 * Multi hospital support
 		 * 
@@ -455,6 +455,7 @@ class Inventory_model extends CI_Model{
 
 		$this->db->where_in('inventory_id',$inventory);
 		$this->db->update('blood_inventory',array('status_id'=>8));
+
 
 		$this->db->where('request_id',$this->input->post('request_id'));
 		$this->db->update('blood_request',array('request_status'=>'issued'));

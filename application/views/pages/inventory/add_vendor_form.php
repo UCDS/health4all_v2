@@ -153,6 +153,7 @@ $(function(){
 		</div>
 		<div class="col-md-6">
 			<select name="contact_person_id" id="vendor" class="form-control" required>
+			<option>one of any one</option>
 		<?php 
 		if(sizeof($contact_persons) <= 0)
 			echo "<option value=''>Add atleast one contact person without vendor to add new vendor</option>";
