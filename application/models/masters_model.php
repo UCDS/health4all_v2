@@ -16,11 +16,7 @@ class Masters_model extends CI_Model{
 		 $this->db->where('hospital_id',$hospital['hospital_id']);
 		$this->db->select("department_id,hospital_id,department")->from("department")
 		 ->order_by('department');
-		}
-		
-	
-		
-		
+		}		
 		else if($type=="area"){
 			if($hospitals!=0){
 				$hosp_id=array();

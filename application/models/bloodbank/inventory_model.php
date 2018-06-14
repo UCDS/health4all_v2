@@ -419,7 +419,7 @@ class Inventory_model extends CI_Model{
 		ORDER BY component_type,blood_unit_num ASC,expiry_date ASC
 		'); //AND bb_donation.hospital_id='.$hospital.'
 		$data[]=$result->result();
-		$data[]=$result->num_rows();
+		$d2ata[]=$result->num_rows();
 		return $data;
 	}
 	

@@ -131,6 +131,8 @@ treatment episode">
 		<td colspan="3" >	
 			<div class="form-group col-lg-8"><select name="staff" class="form-control" required>
 				<option value="" disabled selected>Done By</option>
+				<option>Ms.Bhanu</option>
+				<option>Mr.Kranthi</option>
 				<?php foreach($staff as $s){
 					echo '<option value='.$s->staff_id.'>'.$s->first_name." ".$s->last_name." ".$s->name.'</option>';
 				}
