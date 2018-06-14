@@ -220,7 +220,7 @@ class Inventory extends CI_Controller {
 		if(!$this->session->userdata('logged_in')){
 		show_404();
 	    }
-	    $this->data['userd ata']=$this->session->userdata('logged_in');
+	    $this->data['userdata']=$this->session->userdata('logged_in');
 	    foreach ($this->data['functions'] as $f ){
 		if($f->user_function=="Bloodbank"){
 		$access=1;
