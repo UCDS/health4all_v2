@@ -105,8 +105,6 @@ $(document).ready(function(){
 			<td><div class="form-group">
 			<select name="staff" class="form-control" required >
 				<option value="" disabled selected>Done By</option>
-				<option>mr.Kranthi</option>
-				<option>MR>Kumar</option>
 				<?php foreach($staff as $s){
 					echo '<option value='.$s->staff_id.'>'.$s->first_name." ".$s->last_name." ".$s->name.'</option>';
 				}
