@@ -229,7 +229,6 @@
 		<td colspan="20" width="18%" >	
 			<div class="form-group col-lg-3"><select class="form-control" name="forward_by" required>
 				<option value="" disabled selected>Forward Done By</option>
-				<option>kranthi</option>
 				<?php foreach($staff as $s){
 					echo '<option value='.$s->staff_id.'>'.$s->first_name." ".$s->last_name." ".$s->name.'</option>';
 				}
@@ -238,7 +237,6 @@
 		
 			<div class="form-group col-lg-3"><select name="reverse_by" class="form-control" required>
 				<option value="" disabled selected>Reverse Done By</option>
-				<option>kumar</option>
 				<?php foreach($staff as $s){
 					echo '<option value='.$s->staff_id.'>'.$s->first_name." ".$s->last_name." ".$s->name.'</option>';
 				}
