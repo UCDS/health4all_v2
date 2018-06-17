@@ -1366,7 +1366,7 @@ class Reports_model extends CI_Model{
 	function diagnostic_board($type=""){
 		$to_date=date("Y-m-d");
 		//var_dump($to_date);
-		$to_date='2016-01-08';
+		//$to_date='2016-01-08';
 		$from_date=strtotime( '-2 day' ,strtotime ( $to_date ) );
 		$yesterday=strtotime( '-1 day' ,strtotime ( $to_date ) );
 		
@@ -1412,7 +1412,7 @@ class Reports_model extends CI_Model{
 	function diagnostic_hospital_board($hospital_type=" " , $type=" "){
 		$to_date=date("Y-m-d");
 		//var_dump($hospital_type);
-		$to_date='2016-01-08';
+		//$to_date='2016-01-08';
 		$from_date=strtotime( '-2 day' ,strtotime ( $to_date ) );
 		$yesterday=strtotime( '-1 day' ,strtotime ( $to_date ) );
 		$yesterday=date( "Y-m-d" , $yesterday );
