@@ -19,15 +19,15 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
                 
                 if(array_key_exists($r->hospital,$hospitals)) {
                     
-                    $hospitals[$r->hospital][$r->date] = array("tests_ordered"=>$r->number_format(tests_ordered),
-                    "tests_completed"=>number_format($r->tests_completed), "tests_reported"=>$r->number_format(tests_reported),
+                    $hospitals[$r->hospital][$r->date] = array("tests_ordered"=>number_format($r->tests_ordered),
+                    "tests_completed"=>number_format($r->tests_completed), "tests_reported"=>number_format($r->tests_reported),
                      "hospital_count"=>number_format($r->hospital_count), "patients_count"=>number_format($r->patient_count) ,
                      "orders_count"=>number_format($r->orders_count));
                 }else{
                     $unique_hospitals=array();
                     $unique_hospitals[$r->date] = array("tests_ordered"=>number_format($r->tests_ordered),
-                    "tests_completed"=>$r->number_format(tests_completed), "tests_reported"=>number_format($r->tests_reported) ,
-                     "hospital_count"=>$r->number_format(hospital_count),"patients_count"=>number_format($r->patient_count) ,
+                    "tests_completed"=>number_format($r->tests_completed), "tests_reported"=>number_format($r->tests_reported) ,
+                     "hospital_count"=>number_format($r->hospital_count),"patients_count"=>number_format($r->patient_count) ,
                      "orders_count"=>number_format($r->orders_count)); 
                     $hospitals[$r->hospital] = $unique_hospitals;
                 }
@@ -126,7 +126,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
 						xAxisID : "A",
 						backgroundColor: "rgba(255,102,0,0.6)",
 						borderColor: "rgba(255,102,0,0.6)",
-						data:[<?php $i=1; foreach($hospitals as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_ordered'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_ordered']; else echo $k ; if($i<count($hospitals)) echo ",";  $i++; } ?>],
+						data:[<?php $i=1; foreach($hospitals as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_ordered'])) echo $value[date('Y-m-d',strtotime("-1 days"))]['tests_ordered']; else echo $k ; if($i<count($hospitals)) echo ",";  $i++; } ?>],
 					},
                     {
 						type: 'horizontalBar',
@@ -134,7 +134,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
 						xAxisID : "A",
 						backgroundColor: "rgba(153,204,0, 0.7)",
 							borderColor: "rgba(153,204,0, 0.7)",
-						data: [<?php $i=1; foreach($hospitals as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_completed'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_completed']; else echo $k ; if($i<count($hospitals)) echo ",";  $i++; } ?>],
+						data: [<?php $i=1; foreach($hospitals as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_completed'])) echo $value[date('Y-m-d',strtotime("-1 days"))]['tests_completed']; else echo $k ; if($i<count($hospitals)) echo ",";  $i++; } ?>],
 					},
                     {
 						type: 'horizontalBar',
@@ -142,7 +142,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
 						xAxisID : "A",
 						backgroundColor: "#428bca",
 						borderColor: "#428bca",
-						data:[<?php $i=1; foreach($hospitals as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_reported'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_reported']; else echo $k ; if($i<count($hospitals)) echo ",";  $i++; } ?>],
+						data:[<?php $i=1; foreach($hospitals as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_reported'])) echo $value[date('Y-m-d',strtotime("-1 days"))]['tests_reported']; else echo $k ; if($i<count($hospitals)) echo ",";  $i++; } ?>],
 					}
 				]
 			},
@@ -291,7 +291,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
                             xAxisID : "A",
                             backgroundColor: "rgba(255,102,0,0.6)",
                             borderColor: "rgba(255,102,0,0.6)",
-                            data:[<?php $i=1; foreach($lab_areas as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_ordered'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_ordered']; else echo $k ; if($i<count($lab_areas)) echo ",";  $i++; } ?>],
+                            data:[<?php $i=1; foreach($lab_areas as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_ordered'])) echo $value[date('Y-m-d',strtotime("-1 days"))]['tests_ordered']; else echo $k ; if($i<count($lab_areas)) echo ",";  $i++; } ?>],
                         },
                         {
                             type: 'horizontalBar',
@@ -299,7 +299,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
                             xAxisID : "A",
                             backgroundColor: "rgba(153,204,0, 0.7)",
                                 borderColor: "rgba(153,204,0, 0.7)",
-                            data: [<?php $i=1; foreach($lab_areas as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_completed'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_completed']; else echo $k ; if($i<count($lab_areas)) echo ",";  $i++; } ?>],
+                            data: [<?php $i=1; foreach($lab_areas as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_completed'])) echo $value[date('Y-m-d',strtotime("-1 days"))]['tests_completed']; else echo $k ; if($i<count($lab_areas)) echo ",";  $i++; } ?>],
                         },
                         {
                             type: 'horizontalBar',
@@ -307,7 +307,7 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
                             xAxisID : "A",
                             backgroundColor: "#428bca",
                             borderColor: "#428bca",
-                            data:[<?php $i=1; foreach($lab_areas as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_reported'])) echo $value[date('Y-m-d',strtotime("-2 days"))]['tests_reported']; else echo $k ; if($i<count($lab_areas)) echo ",";  $i++; } ?>],
+                            data:[<?php $i=1; foreach($lab_areas as $key=>$value) { if(isset($value[date('Y-m-d',strtotime("-1 days"))]['tests_reported'])) echo $value[date('Y-m-d',strtotime("-1 days"))]['tests_reported']; else echo $k ; if($i<count($lab_areas)) echo ",";  $i++; } ?>],
                         }
 				    ]
                 },
