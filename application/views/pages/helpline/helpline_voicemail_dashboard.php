@@ -36,7 +36,7 @@
 			?>
 		<div class="row">
 		<div class="col-md-12">
-			<?php echo form_open('dashboard/helpline/',array('role'=>'form','class'=>'form-custom')); ?>
+			<?php echo form_open('dashboard/helpline_voicemail/',array('role'=>'form','class'=>'form-custom')); ?>
 			<div style="position:relative;display:inline;">
 			<input type="text" class="date form-control" name="from_date" class="form-control" value="<?php echo $from_date;?>" />
 			</div>

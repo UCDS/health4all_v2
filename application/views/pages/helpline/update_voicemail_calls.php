@@ -76,7 +76,7 @@ $(function(){
 				$date = date("d-M-Y",strtotime($this->input->post('date')));
 			}
 			else $date = date("d-M-Y");
-			echo form_open('helpline/update_voicemail_call',array('role'=>'form','class'=>'form-custom'));
+			echo form_open('helpline/update_voicemail_calls',array('role'=>'form','class'=>'form-custom'));
 	?>
 		<h4>Calls on <input type="text" class="date" value="<?php echo $date;?>" name="date" /> <input type="submit" value="Go" name="change_date" class="btn btn-primary btn-sm" /></form></h4>
 	</form>
@@ -85,7 +85,7 @@ $(function(){
 	<?php
 		if(!!$calls){
 	?>
-	<?php echo form_open("helpline/update_voicemail_call",array("class"=>"form-custom","role"=>"form"));?>
+	<?php echo form_open("helpline/update_voicemail_calls",array("class"=>"form-custom","role"=>"form"));?>
 		<p><b>Select the calls to update.</b></p>
 		<table class="table table-striped table-bordered" id="table-sort">
 			<thead>
@@ -281,7 +281,7 @@ $(function(){
 		</div>
 		</div>
 		<div class="row">
-		<?php echo form_open("helpline/update_voicemail_call",array("class"=>"form-custom","role"=>"form","id"=>"send_email_form"));?>
+		<?php echo form_open("helpline/update_voicemail_calls",array("class"=>"form-custom","role"=>"form","id"=>"send_email_form"));?>
 		<div class="col-md-3">To</div>
 		<div class="col-md-9"><input type="text" class="form-control" name="to_email" form="send_email_form" required placeholder="Comma separated for multiple emails" style="width:100%" /></div>
         <div class="col-md-3">CC</div>

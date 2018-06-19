@@ -23,15 +23,17 @@ class Helpline_model extends CI_Model{
 		$resolution_status = 0;
 		$resolution_date_time = 0;
 		if($call_type == 'voicemail'){
-			$this->db->select('*')->from('helpline_numbers')->where('number',$to_number);
+			$this->db->select('*')->from('helpline_numbers')->where('number',$from_number);
 			$query = $this->db->get();
 			$result = $query->row();
-			$hospital_id = $result->hospital_id;
-			$helpline_category = $result->helpline_category;
-			$helpline_caller_type = $result->caller_type;
-			$visit_type = $result->visit_type;
-			$resolution_status = $result->resolution_status;
-			$resolution_date_time = date("Y-m-d H:i:s");
+			if(!!$result){
+				$hospital_id = $result->hospital_id;
+				$helpline_category = $result->helpline_category_id;
+				$helpline_caller_type = $result->caller_type_id;
+				$visit_type = $result->visit_type;
+				$resolution_status = $result->resolution_status_id;
+				$resolution_date_time = date("Y-m-d H:i:s");
+			}
 		}
 		$data = array(
 			'callsid'=>$callsid,

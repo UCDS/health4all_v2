@@ -39,7 +39,8 @@ class Staff_model extends CI_Model{
 			$this->db->where('user_hospital_link.user_id',$user_id);
 		$this->db->select('hospital.hospital_id,hospital,hospital_short_name,description,place,district,state,logo')->from('user')
 		->join('user_hospital_link','user.user_id=user_hospital_link.user_id')
-		->join('hospital','user_hospital_link.hospital_id=hospital.hospital_id')		
+		->join('hospital','user_hospital_link.hospital_id=hospital.hospital_id')	
+		->group_by('hospital.hospital_id')			
 		->order_by('hospital');
 		$query=$this->db->get();
 		return $query->result();
@@ -533,7 +534,8 @@ class Staff_model extends CI_Model{
 					hospital.hospital_short_name")
 				 ->from("user")
 				 ->join("user_hospital_link","user_hospital_link.user_id = user.user_id")
-				 ->join("hospital","hospital.hospital_id = user_hospital_link.hospital_id");
+				 ->join("hospital","hospital.hospital_id = user_hospital_link.hospital_id")
+				 ->order_by('hospital','asc');
 		$query=$this->db->get();
 		return $query->result();
 	}
