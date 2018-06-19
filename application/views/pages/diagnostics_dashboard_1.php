@@ -5,6 +5,10 @@
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.ptTimeSelect.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/Chart.js"></script>
     <script type="text/javascript" src="<?php echo base_url();?>assets/js/bootstrap-datetimepicker.js"></script>
+
+<style>
+tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
+</style>
     <script type="text/javascript">
     $(function(){
         $('#from_time').ptTimeSelect();
@@ -157,16 +161,20 @@
                     <?php echo form_close(); ?>
                 </div><!--panel heading-->
                 <div class="panel-body"> 
-                    <table class="table table-striped" style="font-size:medium;">
+                    <table class="table " style="font-size:medium;">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th class="text-left" style="text-align:center;">Hospital Type</th>
-                                <th class="text-left" style="text-align:center;">Hospital Count</th>
+                                <th class="text-left" style="text-align:center;">Hospitals</th>
+                                <th class="text-left" style="text-align:center;">Patients</th>
+                                <th class="text-left" style="text-align:center;">Orders</th>
                        <!--         <th colspan="3" style="padding-left:120px; font-size:medium;">Yesterday</th>-->
-                                <th colspan="3" style="padding-left:100px;">Tests</th>
+                                <th colspan="3" style="padding-left:70px;">Tests</th>
                             </tr>
-                            <tr>
+                            <tr style="font-size:10px;">
+                                <th></th>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -186,13 +194,15 @@
                             <tr>
                             <td><?php echo $i++;?></td>
                             <td style="text-align:center;"><?php echo $r->type;?></td>
-                            <td style="text-align:center;"><?php echo $r->hospital_count;?></td>
+                            <td style="text-align:center;"><?php echo number_format($r->hospital_count);?></td>
+                            <td style="text-align:center;"><?php echo number_format($r->patient_count);?></td>
+                            <td style="text-align:center;"><?php echo number_format($r->orders_count);?></td>
                           <!--  <td></td>
                             <td></td>
                             <td></td>-->
-                            <td  class="text-right"  style="text-align:center;"><?php echo $r->tests_ordered?></td>
-                            <td class="text-right" style="text-align:center;"><?php echo $r->tests_completed?></td>
-                            <td class="text-right" style="text-align:center;"><?php echo $r->tests_reported?></td>
+                            <td class="text-right"  style="text-align:center;"><?php echo number_format($r->tests_ordered);?></td>
+                            <td class="text-right" style="text-align:center;"><?php echo number_format($r->tests_completed);?></td>
+                            <td class="text-right" style="text-align:center;"><?php echo number_format($r->tests_reported);?></td>
                             </tr>
                                 <?php }
                                 ?>
@@ -213,25 +223,26 @@
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table class="table table-striped" style="font-size:medium;">
+                    <table class="table " style="font-size:medium;">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th class="text-left" style="text-align:center;">Lab Area</th>
-                                <th class="text-left" style="text-align:center;">Hospital Count</th>
+                                <th class="text-left" style="text-align:center;">Hospitals</th>
+                                <th class="text-left" style="text-align:center;">Patients</th>
+                                <th class="text-left" style="text-align:center;">Orders</th>
                        <!--         <th colspan="3" style="padding-left:120px; font-size:medium;">Yesterday</th>-->
-                                <th colspan="3" style="padding-left:100px;">Tests</th>
+                                <th colspan="3" style="padding-left:70px;">Tests</th>
                             </tr>
-                            <tr>
+                            <tr style="font-size:10px;">
                                 <th></th>
                                 <th></th>
                                 <th></th>
-                             <!--   <th style="text-align:center;">Ordered</th>
-                                <th style="text-align:center;">Completed</th>
-                                <th style="text-align:center;">Reported</th>-->
+                                <th></th>
+                                <th></th>
                                 <th style="text-align:center;">Ordered</th>
                                 <th style="text-align:center;">Completed</th>
-                                <th style="text-align:center;"> Reported</th>
+                                <th style="text-align:center;">Reported</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -241,14 +252,13 @@
                             ?>
                             <tr>
                             <td><?php echo $i++;?></td>
-                            <td style="text-align:center;"><?php echo $r->test_area;?></td>
-                            <td style="text-align:center;"><?php echo $r->hospital_count;?></td>
-                          <!--  <td></td>
-                            <td></td>
-                            <td></td>-->
-                            <td  class="text-right"  style="text-align:center;"><?php echo $r->tests_ordered?></td>
-                            <td class="text-right" style="text-align:center;"><?php echo $r->tests_completed?></td>
-                            <td class="text-right" style="text-align:center;"><?php echo $r->tests_reported?></td>
+                            <td style="text-align:center;font-size:13px; "><?php echo $r->test_area;?></td>
+                            <td style="text-align:center;"><?php echo number_format($r->hospital_count);?></td>
+                            <td style="text-align:center;"><?php echo number_format($r->patient_count);?></td> 
+                            <td style="text-align:center;"><?php echo number_format($r->orders_count);?></td>
+                            <td class="text-right"  style="text-align:center;"><?php echo number_format($r->tests_ordered);?></td>
+                            <td class="text-right" style="text-align:center;"><?php echo number_format($r->tests_completed);?></td>
+                            <td class="text-right" style="text-align:center;"><?php echo number_format($r->tests_reported);?></td>
                             </tr>
                                 <?php }
                                 ?>

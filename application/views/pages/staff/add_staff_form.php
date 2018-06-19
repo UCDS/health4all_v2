@@ -37,7 +37,6 @@ $(function(){
 		<strong><?php if(isset($msg)){ echo $msg;}?></strong>
 		<h3>Add Staff Details</h3>
 	</center><br>
-	
 	<center>
 		<?php echo validation_errors(); ?>
 	</center>
