@@ -19,15 +19,15 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
                 
                 if(array_key_exists($r->hospital_type,$hospitals_type)) {
                     
-                    $hospitals_type[$r->hospital_type][$r->date] = array("tests_ordered"=>$r->number_format(tests_ordered),
-                    "tests_completed"=>number_format($r->tests_completed), "tests_reported"=>$r->number_format(tests_reported),
+                    $hospitals_type[$r->hospital_type][$r->date] = array("tests_ordered"=>number_format($r->tests_ordered),
+                    "tests_completed"=>number_format($r->tests_completed), "tests_reported"=>number_format($r->tests_reported),
                      "hospital_count"=>number_format($r->hospital_count), "patients_count"=>number_format($r->patient_count) ,
                      "orders_count"=>number_format($r->orders_count));
                 }else{
                     $unique_hospitals_type=array();
                     $unique_hospitals_type[$r->date] = array("tests_ordered"=>number_format($r->tests_ordered),
-                    "tests_completed"=>$r->number_format(tests_completed), "tests_reported"=>number_format($r->tests_reported) ,
-                     "hospital_count"=>$r->number_format(hospital_count),"patients_count"=>number_format($r->patient_count) ,
+                    "tests_completed"=>number_format($r->tests_completed), "tests_reported"=>number_format($r->tests_reported) ,
+                     "hospital_count"=>number_format($r->hospital_count),"patients_count"=>number_format($r->patient_count) ,
                      "orders_count"=>number_format($r->orders_count));  
                     $hospitals_type[$r->hospital_type] = $unique_hospitals_type;
                 }
