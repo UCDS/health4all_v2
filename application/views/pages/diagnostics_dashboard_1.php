@@ -194,15 +194,15 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
                             <tr>
                             <td><?php echo $i++;?></td>
                             <td style="text-align:center;"><?php echo $r->type;?></td>
-                            <td style="text-align:center;"><?php echo $r->hospital_count;?></td>
-                            <td style="text-align:center;"><?php echo $r->patient_count;?></td>
-                            <td style="text-align:center;"><?php echo $r->orders_count;?></td>
+                            <td style="text-align:center;"><?php echo number_format($r->hospital_count);?></td>
+                            <td style="text-align:center;"><?php echo number_format($r->patient_count);?></td>
+                            <td style="text-align:center;"><?php echo number_format($r->orders_count);?></td>
                           <!--  <td></td>
                             <td></td>
                             <td></td>-->
-                            <td class="text-right"  style="text-align:center;"><?php echo $r->tests_ordered?></td>
-                            <td class="text-right" style="text-align:center;"><?php echo $r->tests_completed?></td>
-                            <td class="text-right" style="text-align:center;"><?php echo $r->tests_reported?></td>
+                            <td class="text-right"  style="text-align:center;"><?php echo number_format($r->tests_ordered);?></td>
+                            <td class="text-right" style="text-align:center;"><?php echo number_format($r->tests_completed);?></td>
+                            <td class="text-right" style="text-align:center;"><?php echo number_format($r->tests_reported);?></td>
                             </tr>
                                 <?php }
                                 ?>
@@ -253,12 +253,12 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
                             <tr>
                             <td><?php echo $i++;?></td>
                             <td style="text-align:center;font-size:13px; "><?php echo $r->test_area;?></td>
-                            <td style="text-align:center;"><?php echo $r->hospital_count;?></td>
-                            <td style="text-align:center;"><?php echo $r->patient_count;?></td> 
-                            <td style="text-align:center;"><?php echo $r->orders_count;?></td>
-                            <td class="text-right"  style="text-align:center;"><?php echo $r->tests_ordered?></td>
-                            <td class="text-right" style="text-align:center;"><?php echo $r->tests_completed?></td>
-                            <td class="text-right" style="text-align:center;"><?php echo $r->tests_reported?></td>
+                            <td style="text-align:center;"><?php echo number_format($r->hospital_count);?></td>
+                            <td style="text-align:center;"><?php echo number_format($r->patient_count);?></td> 
+                            <td style="text-align:center;"><?php echo number_format($r->orders_count);?></td>
+                            <td class="text-right"  style="text-align:center;"><?php echo number_format($r->tests_ordered);?></td>
+                            <td class="text-right" style="text-align:center;"><?php echo number_format($r->tests_completed);?></td>
+                            <td class="text-right" style="text-align:center;"><?php echo number_format($r->tests_reported);?></td>
                             </tr>
                                 <?php }
                                 ?>

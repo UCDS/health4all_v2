@@ -19,14 +19,16 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
                 
                 if(array_key_exists($r->hospital,$hospitals)) {
                     
-                    $hospitals[$r->hospital][$r->date] = array("tests_ordered"=>$r->tests_ordered,
-                    "tests_completed"=>$r->tests_completed, "tests_reported"=>$r->tests_reported, "hospital_count"=>$r->hospital_count,
-                    "patients_count"=>$r->patient_count ,"orders_count"=>$r->orders_count);
+                    $hospitals[$r->hospital][$r->date] = array("tests_ordered"=>$r->number_format(tests_ordered),
+                    "tests_completed"=>number_format($r->tests_completed), "tests_reported"=>$r->number_format(tests_reported),
+                     "hospital_count"=>number_format($r->hospital_count), "patients_count"=>number_format($r->patient_count) ,
+                     "orders_count"=>number_format($r->orders_count));
                 }else{
                     $unique_hospitals=array();
-                    $unique_hospitals[$r->date] = array("tests_ordered"=>$r->tests_ordered,
-                    "tests_completed"=>$r->tests_completed, "tests_reported"=>$r->tests_reported , "hospital_count"=>$r->hospital_count,
-                    "patients_count"=>$r->patient_count ,"orders_count"=>$r->orders_count); 
+                    $unique_hospitals[$r->date] = array("tests_ordered"=>number_format($r->tests_ordered),
+                    "tests_completed"=>$r->number_format(tests_completed), "tests_reported"=>number_format($r->tests_reported) ,
+                     "hospital_count"=>$r->number_format(hospital_count),"patients_count"=>number_format($r->patient_count) ,
+                     "orders_count"=>number_format($r->orders_count)); 
                     $hospitals[$r->hospital] = $unique_hospitals;
                 }
             }
@@ -35,15 +37,17 @@ tbody > tr:nth-child(odd) {background-color: #f2f2f2;}
             $lab_areas = array();
             foreach($report1 as $r){
                 if(array_key_exists($r->lab_area,$lab_areas)){
-                    $lab_areas[$r->lab_area][$r->date] = array("tests_ordered"=>$r->tests_ordered,
-                    "tests_completed"=>$r->tests_completed, "tests_reported"=>$r->tests_reported , "hospital_count"=>$r->hospital_count,
-                    "patients_count"=>$r->patient_count ,"orders_count"=>$r->orders_count);
+                    $lab_areas[$r->lab_area][$r->date] = array("tests_ordered"=>number_format($r->tests_ordered),
+                    "tests_completed"=>number_format($r->tests_completed), "tests_reported"=>number_format($r->tests_reported) ,
+                     "hospital_count"=>number_format($r->hospital_count),"patients_count"=>number_format($r->patient_count) ,
+                     "orders_count"=>number_format($r->orders_count));
                 }
                 else{
                     $lab_areas_type=array();
-                    $lab_areas_type[$r->date] = array("tests_ordered"=>$r->tests_ordered,
-                    "tests_completed"=>$r->tests_completed, "tests_reported"=>$r->tests_reported , "hospital_count"=>$r->hospital_count,
-                    "patients_count"=>$r->patient_count ,"orders_count"=>$r->orders_count); 
+                    $lab_areas_type[$r->date] = array("tests_ordered"=>number_format($r->tests_ordered),
+                    "tests_completed"=>number_format($r->tests_completed), "tests_reported"=>number_format($r->tests_reported) ,
+                     "hospital_count"=>number_format($r->hospital_count),"patients_count"=>number_format($r->patient_count) ,
+                     "orders_count"=>number_format($r->orders_count)); 
                     $lab_areas[$r->lab_area] = $lab_areas_type;
                 }
             }
