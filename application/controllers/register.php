@@ -48,7 +48,7 @@ class Register extends CI_Controller {
 				else{
 					$access=0;
 				}
-			}
+		}
 			if($access==1){
 			//Load data required for the select options in views.
 			$this->data['id_proof_types']=$this->staff_model->get_id_proof_type();

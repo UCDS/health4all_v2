@@ -1,5 +1,5 @@
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
+
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/zebra_datepicker.min.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/selectize.css">
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.mousewheel.js"></script>
@@ -1488,6 +1488,42 @@ pri.print();
 					</label>
 					<textarea name="cns" cols="40" class="form-control" placeholder="CNS" <?php if($f->edit==1 && empty($patient->cns)) echo ''; else echo ' readonly'; ?> ><?php echo $patient->cns;?></textarea>
 				</div>
+			</div>
+			<div class="row alt">
+					<div class="col-md-12 col-xs-12">
+						<table class="table table-bordered table-striped">
+							<thead>
+								<tr>
+								<th>Note</th>
+								<th>Date & Time</th>
+								<th></th>
+								</tr>
+							</thead>
+							<tbody class="daily_notes">
+								<tr>
+									<td><textarea rows="4" cols="60" name="clinical_note_1"  class="daily_notes form-control"></textarea></td>
+									<td><input type="text" class="daily_notes_date form-control" name="note_date_1" /> </td>
+									<td><button  type="button" class="btn btn-sm btn-primary" value="+" id="add_daily_note">+</button></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				<script>
+					$(function(){
+						$(".daily_notes_date").Zebra_DatePicker({
+							format:'d-M-Y g:iA'
+						});
+						$("#add_daily_note").click(function(){
+							var row = '
+								<tr>
+									<td><textarea rows="4" cols="60" name="clinical_note_'+i+'"  class="daily_notes form-control"></textarea></td>
+									<td><input type="text" class="daily_notes_date form-control" name="note_date_'+i+'" /> </td>
+									<td></td>
+								</tr>';
+							$('.daily_notes').append(row);
+						});
+					});
+				</script>
 			</div>
 		</div>
 		<?php 

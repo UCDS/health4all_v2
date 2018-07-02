@@ -9,13 +9,12 @@
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
- <script type="text/javascript">
+<script type="text/javascript">
 $(function(){
 		$("#from_date,#to_date").Zebra_DatePicker();
 		
 });
 </script>
-
 <script type="text/javascript">
 $(function(){
 		var options = {
