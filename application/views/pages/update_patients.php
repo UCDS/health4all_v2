@@ -92,6 +92,14 @@
 			opacity: 0.4;
 		}
 </style>
+<style>
+	     #selectedFiles img {
+        max-width: 200px;
+        max-height: 200px;
+        float: left;
+        margin-bottom:10px;
+        }
+</style>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.selectize.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.timeentry.min.js"></script>
 <script type="text/javascript">
@@ -232,7 +240,7 @@ pri.print();
 	<?php if(isset($msg)) { ?>
 		<div class="alert alert-info"><?php echo $msg;?></div>
 	<?php } ?>
-	<?php echo form_open('register/update_patients',array('class'=>'form-custom','role'=>'form')); ?>
+	<?php echo form_open_multipart('register/update_patients',array('class'=>'form-custom','role'=>'form')); ?>
 	<div class="panel panel-default">
 	<div class="panel-body">
 	  <!-- Nav tabs -->
@@ -301,6 +309,16 @@ pri.print();
 				 } 
 			}
 		?>
+		<?php 
+			foreach($functions as $f){ 
+				if($f->user_function == "Update Patients") { ?>
+					<li role="presentation"><a href="#upload" aria-controls="upload" role="tab" data-toggle="tab"><i class="fa fa-user"></i>Upload</a></li>
+				<?php 
+				break;
+				 } 
+			}
+		?>
+
 		<?php 
 			foreach($functions as $f){ 
 				if($f->user_function == "Procedures" && ($f->add==1 || $f->edit==1)) { ?>
@@ -1057,6 +1075,96 @@ pri.print();
                       </div>                                            
                   </div>
               </div>              
+                        <?php
+                        break;
+                    }
+                }
+              ?>
+			  <?php 
+                foreach($functions as $f){
+                    if($f->user_function== "Update Patients"){
+                        ?>
+                       <div role="tabpanel" class="tab-pane" id="upload">
+                            <div class="row alt">
+                                <div class="col-md-4 col-xs-6">
+                                <b>Patient ID: <?php echo $patient->patient_id; ?> </b>
+                            </div>
+                            <div class="col-md-4 col-xs-6">
+                                <b><?php echo $patient->visit_type; ?> Number: </b><?php echo $patient->hosp_file_no;?>
+                            </div>
+                                <div class="col-md-4 col-xs-6">
+                                <b><?php if( $patient->visit_type == "IP") echo "Admit Date:"; else echo "Visit Date:";?></b>
+                                <?php echo date("d-M-Y", strtotime($patient->admit_date)).", ".date("g:ia", strtotime($patient->admit_time));?>
+                            </div>
+		                </div>  
+						<div class="row alt">
+                            <div class="row-md-8">
+							<br>
+							     <canter><lable>Upload</lable>
+                                 <input type="file"  id="files" name="files[]" class="btn btn-md btn-primary" multiple><br>                
+                        
+								 <div id="selectedFiles"></div>
+								 
+							</div>
+                        </div> 
+						</div> 
+						<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script>
+		var selDiv = "";
+    var storedFiles = [];
+    
+    $(document).ready(function() {
+        $("#files").on("change", handleFileSelect);
+        
+        selDiv = $("#selectedFiles"); 
+        
+        $("body").on("click", ".fa-trash", removeFile);
+    });
+        
+    function handleFileSelect(e) {
+        var files = e.target.files;
+        var filesArr = Array.prototype.slice.call(files);
+        filesArr.forEach(function(f) {          
+
+            var ext = f.name.split('.').pop();
+			var icon = "";
+			switch (ext) {
+				case 'png':
+					icon = "fa fa-file-photo-o";
+					break;
+				case 'txt':
+					icon = "fa fa-file-text-o";
+					break;
+				default:
+					icon = "fa fa-file";
+				     
+				
+			}			
+			
+            storedFiles.push(f);
+			var html = "<div><i class='" + icon + "'></i><span class=name>" + f.name + "</span> <i class='fa fa-trash'></i> <br clear=\"left\"/></div>";
+			selDiv.append(html);
+                
+           
+        });
+        
+    }
+	
+    function removeFile(e) {
+		var ele = $(e.target).parent().find(".name")[0]
+        var file = ele.innerText;
+        for(var i=0;i<storedFiles.length;i++) {
+            if(storedFiles[i].name === file) {
+                storedFiles.splice(i,1);
+                break;
+            }
+        }
+        $(this).parent().remove();
+        console.log(storedFiles);
+    }
+
+    </script>
+ 
                         <?php
                         break;
                     }
@@ -1905,7 +2013,7 @@ pri.print();
 			<div class="col-md-12 text-center">
 				<input type="text" name="visit_id" class="sr-only" value="<?php echo $patient->visit_id;?>" hidden readonly />
 				<input type="text" name="patient_id" class="sr-only" value="<?php echo $patient->patient_id;?>" hidden readonly />
-				<button class="btn btn-md btn-primary" value="Update" name="update_patient">Update</button>
+				<button class="btn btn-md btn-primary" name="fileSubmit" value="upload" name="update_patient">Update</button>
 				<button class="btn btn-md btn-warning" value="Print" type="button" onclick="printDiv('print-div')">Print Summary</button>
 			</div>
 	</div>

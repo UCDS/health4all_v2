@@ -197,6 +197,7 @@ function add_obstetric_history(tableName){
 		<td><?php echo $p->visit_type." #".$p->hosp_file_no;?></td>
 		<td><?php echo $p->first_name." ".$p->last_name." | ".$age." | ".$p->gender;?></td>
 		<td><?php echo date("d-M-Y",strtotime($p->admit_date));?></td>
+
 		<td><?php echo $p->department;?></td>
 		<td><?php echo $p->phone;?></td>
 		<td><?php echo $p->parent_spouse;?></td>
@@ -212,14 +213,14 @@ function add_obstetric_history(tableName){
 	<?php if(isset($msg)) { ?>
 		<div class="alert alert-info"><?php echo $msg;?></div>
 	<?php } ?>
-	<?php echo form_open('register/update_patients',array('class'=>'form-custom','role'=>'form')); ?>
+	<?php echo form_open_multipart('register/update_patients',array('class'=>'form-custom','role'=>'form')); ?>
 	<div class="panel panel-default">
 	<div class="panel-body">
 	  <!-- Nav tabs -->
 	  <ul class="nav nav-tabs" role="tablist">
 		<?php 
 			foreach($functions as $f){ 
-				if($f->user_function == "Update Patients"  || $f->user_function == "Clinical" || $f->user_function == "Diagnostics" || $f->user_function == "Procedures" || $f->user_function == "Prescription" || $f->user_function == "Discharge") { ?>
+				if($f->user_function == "Update Patients" || $f->user_function == "Clinical" || $f->user_function == "Diagnostics" || $f->user_function == "Procedures" || $f->user_function == "Prescription" || $f->user_function == "Discharge") { ?>
 					<li role="presentation" class="active"><a href="#patient" aria-controls="patient" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Patient Info</a></li>
 				<?php 
 				break;
@@ -267,6 +268,15 @@ function add_obstetric_history(tableName){
 			foreach($functions as $f){ 
 				if($f->user_function == "View Diagnostics") { ?>
 					<li role="presentation"><a href="#diagnostics" aria-controls="diagnostics" role="tab" data-toggle="tab"><i class="glyph-icon flaticon-chemistry20"></i> Diagnostics</a></li>
+				<?php 
+				break;
+				 } 
+			}
+		?>
+		<?php 
+			foreach($functions as $f){ 
+				if($f->user_function == "Update Patients") { ?>
+					<li role="presentation"><a href="#upload" aria-controls="upload" role="tab" data-toggle="tab"><i class="glyph-icon flaticon-chemistry20"></i>Upload</a></li>
 				<?php 
 				break;
 				 } 
@@ -894,7 +904,7 @@ function add_obstetric_history(tableName){
                         }
                     }
               ?>
-              <?php 
+	        <?php 
                 foreach($functions as $f){
                     if($f->user_function== "mlc"){
                         ?>
@@ -962,6 +972,33 @@ function add_obstetric_history(tableName){
                     }
                 }
               ?>
+			  <?php 
+                foreach($functions as $f){
+                    if($f->user_function=="Update Patients"){
+                        ?>
+              <div role="tabpanel" class="tab-pane" id="upload">
+                  <div class="row alt">
+                                <div class="col-md-4 col-xs-6">
+                                    <b>Patient ID: <?php echo $patient->patient_id; ?> </b>
+                                </div>
+                                <div class="col-md-4 col-xs-6">
+                                    <b><?php echo $patient->visit_type; ?> Number: </b><?php echo $patient->hosp_file_no;?>
+                                </div>
+                                <div class="col-md-4 col-xs-6">
+                                    <b><?php if( $patient->visit_type == "IP") echo "Admit Date:"; else echo "Visit Date:";?></b>
+                                    <?php echo date("d-M-Y", strtotime($patient->admit_date)).", ".date("g:ia", strtotime($patient->admit_time));?>
+                                </div>
+                  </div>
+				  <div class="row alt">
+                        <div class="row-md-8">
+                                <input type="file" name="files[]" size="20"  multiple/>
+                        </div>
+                    </div>   
+                        break;
+                    }
+                }
+              ?>
+            
               <?php 
                 foreach($functions as $f){
                     if($f->user_function== "obg"){
@@ -1798,7 +1835,7 @@ function add_obstetric_history(tableName){
 			<div class="col-md-12 text-center">
 				<input type="text" name="visit_id" class="sr-only" value="<?php echo $patient->visit_id;?>" hidden readonly />
 				<input type="text" name="patient_id" class="sr-only" value="<?php echo $patient->patient_id;?>" hidden readonly />
-				<button class="btn btn-md btn-primary" value="Update" name="update_patient">Update</button>
+				<button class="btn btn-md btn-primary"   name="file" value="upload" name="update_patient">Update</button>
 				<button class="btn btn-md btn-warning" value="Print" type="button" onclick="printDiv('print-div')">Print Summary</button>
 			</div>
 	</div>
@@ -1817,7 +1854,7 @@ function add_obstetric_history(tableName){
 		<h4>Search Patients</h4>	
 		</div>
 		<div class="panel-body">
-		<?php echo form_open("register/update_patients",array('role'=>'form','class'=>'form-custom')); ?>
+		<?php echo form_open_multipart("register/update_patients",array('role'=>'form','class'=>'form-custom')); ?>
 					<div class="row">
 					<div class="col-md-10">
 						<div class="form-group">

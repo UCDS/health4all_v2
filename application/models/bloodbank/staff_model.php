@@ -66,7 +66,7 @@ class Staff_model extends CI_Model{
 			'district'=>$this->input->post('district'),
 			'state'=>$this->input->post('state')
 		);
-		$this->db->trans_start();
+		$this->db->trans_start();i
 		$this->db->insert('hospitals',$data);
 		$this->db->trans_complete();
 		if($this->db->trans_status() === FALSE){

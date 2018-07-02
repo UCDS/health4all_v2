@@ -1,4 +1,4 @@
-<?php
+j<?php
 
 class department_model extends CI_Model {
     

@@ -20,6 +20,7 @@ class Register_model extends CI_Model{
 		if($this->input->post('dob'))$dob=date("Y-m-d",strtotime($this->input->post('dob'))); else $dob=0;
 		if($this->input->post('spouse_name'))$spouse_name=$this->input->post('spouse_name'); else $spouse_name="";
 		if($this->input->post('father_name'))$father_name=$this->input->post('father_name'); else $father_name="";
+		if($this->input->post('upload'))$upload=$this->input->post('upload');else $upload="";
 		if($this->input->post('mother_name'))$mother_name=$this->input->post('mother_name'); else $mother_name="";
 		if($this->input->post('id_proof_type'))$id_proof_type=$this->input->post('id_proof_type'); else $id_proof_type="";
 		if($this->input->post('id_proof_no'))$id_proof_no=$this->input->post('id_proof_no'); else $id_proof_no="";
@@ -132,6 +133,7 @@ class Register_model extends CI_Model{
 			'gender'=>$gender,
 			'spouse_name'=>$spouse_name,
 			'father_name'=>$father_name,
+			'upload'=>$upload,
 			'mother_name'=>$mother_name,
 			'id_proof_type_id'=>$id_proof_type,
 			'id_proof_number'=>$id_proof_no,
@@ -333,6 +335,7 @@ class Register_model extends CI_Model{
 		if($this->input->post('dob'))$dob=date("Y-m-d",strtotime($this->input->post('dob'))); else $dob=0;
 		if($this->input->post('spouse_name'))$spouse_name=$this->input->post('spouse_name'); else $spouse_name="";
 		if($this->input->post('father_name'))$father_name=$this->input->post('father_name'); else $father_name="";
+		if($this->input->post('upload'))$upload=$this->input->post('upload');else $upload="";
 		if($this->input->post('mother_name'))$mother_name=$this->input->post('mother_name'); else $mother_name="";
 		if($this->input->post('id_proof_type'))$id_proof_type=$this->input->post('id_proof_type'); else $id_proof_type="";
 		if($this->input->post('id_proof_no'))$id_proof_no=$this->input->post('id_proof_no'); else $id_proof_no="";
@@ -417,6 +420,7 @@ class Register_model extends CI_Model{
 			'gender'=>$gender,
 			'spouse_name'=>$spouse_name,
 			'father_name'=>$father_name,
+			'upload'=>$upload,
 			'mother_name'=>$mother_name,
 			'id_proof_type_id'=>$id_proof_type,
 			'id_proof_number'=>$id_proof_no,
@@ -745,7 +749,6 @@ class Register_model extends CI_Model{
 		}
 		if(!$this->input->post('load_other_hospitals'))
 		$this->db->where('patient_visit.hospital_id',$hospital['hospital_id']);
-			
 		//Build the query to retrieve the patient records based on the search query.
 		$this->db->select("patient.*,patient_visit.*,CONCAT(first_name,' ',last_name) name,
 		IF(father_name IS NULL OR father_name='',spouse_name,father_name) parent_spouse,patient.*,patient_visit.*,mlc.*,occupation.occupation,id_proof_type,

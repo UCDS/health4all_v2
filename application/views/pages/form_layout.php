@@ -211,11 +211,26 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
+					<div class="layout-div col-md-4 upload">
+					    <div class="form-group">
+						    <br>
+						    <lable class="control-lable">Upload</lable><br>
+                            <?php echo form_open_multipart('upload/do_upload');?>
+                            <br>
+                             <input type="file" name="upload" size="20" multiple />
+
+                             
+
+                             </form>
+
+						     <span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
+					    </div>
+					</div>
 					<div class="layout-div col-md-4 country">
 						<div class="form-group">
 						<label class="control-label">   Country   </label>
 						<select name="country" class="form-control">
-						<option value="">--Select--</option>
+						<option value="">select</option>
 						<?php 
 						foreach($states as $state){
 							echo "<option value='".$state->state_id."'>".$state->state."</option>";
@@ -239,6 +254,7 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
+					
 					<div class="layout-div col-md-4 district">
 						<div class="form-group">
 						<label class="control-label">   District   </label>
@@ -287,10 +303,7 @@
 					<div class="form-group">
 						<label class="control-label"> ID Proof Type</label>
 						<select class="form-control" name="id_proof_type" id="id_proof_type" required >
-							<option value="">Select</option>				
-							<option value="id type1">Pan Card</option>
-							<option value="id type2">Aadhar Card</option>
-							<option value="id type3">Voter Card</option>
+							<option value="">Select</option>		
                         </select>
 				       <span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 				      </div>
@@ -319,7 +332,7 @@
 					 </div>
 					</div>
 					<!-- here we use select class in order to obtain a drop-down box for Education Qualification -->
-					<div class="layout-div col-md-4 education_qualification">
+					<div class="layout-div col-md-4 education_qualification">\\
 						<div class="form-group">
 						<label class="control-label">Education Qualification</label>
 						<select class="form-control" name="education_qualification" id="education_qualification" required >
@@ -447,11 +460,6 @@
 						<label class="control-label">  Department   </label>
 						<select name="department" style="width: 170px" class="form-control">
 						<option value="">--Select--</option>
-						<?php 
-						foreach($departments as $department){
-							echo "<option value='".$department->department_id."'>".$department->department."</option>";
-						}
-						?>
 						</select>	
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
@@ -806,6 +814,7 @@
 				</div>
 				<div class="panel-footer">
 					<button type="submit" class="btn btn-primary" id="save-form">Save</button>
+
 				</div>
 				</div>
 			</div>
@@ -928,6 +937,11 @@
 						<label><input type="checkbox" value="1" id="patient_picture" class="checklist" />Picture</label>
 					</div>
 				</li>
+				<li>
+				    <div class="checkbox">
+						<label><input type="checkbox" value="1" id="upload" class="checklist" />Upload</label>
+					</div>
+                </li>
 			</ul>
 			<strong>Birth Information</strong>
 			  <ul class="nav nav-sidebar">

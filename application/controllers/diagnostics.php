@@ -28,7 +28,7 @@ function test_order($departments=0){
 	$this->data['title']="Order Test";
 	$page="pages/diagnostics/test_order_form";
 	$this->load->view('templates/header',$this->data);
-	$this->load->view('templates/leftnav');
+	$this->load->view('templates/leftnav',$this->data);
 	$this->form_validation->set_rules('visit_id','Patient','required|trim|xss_clean');
 	if($departments==0){
 		$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
@@ -72,7 +72,7 @@ function view_orders($access=1){
 	$this->data['title']="View Orders";
 	$page="pages/diagnostics/test_orders";
 	$this->load->view('templates/header',$this->data);
-	$this->load->view('templates/leftnav');
+	$this->load->view('templates/leftnav',$this->data);
 	$this->form_validation->set_rules('order_id','Order','trim|xss_clean');
 	if($access=='0'){
 	$this->data['test_areas']=$this->masters_model->get_data('test_area',0);
@@ -148,7 +148,7 @@ function view_updated_tests(){
 	$this->data['title']="View Updated Tests";
 	$page="pages/diagnostics/view_updated_tests";
 	$this->load->view('templates/header',$this->data);
-	$this->load->view('templates/leftnav');
+	$this->load->view('templates/leftnav',$this->data);
 	$this->form_validation->set_rules('order_id','Order','trim|xss_clean');
 	$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
 	$this->data['test_methods']=$this->masters_model->get_data("test_method");
@@ -193,7 +193,7 @@ function view_results(){
 	$this->data['title']="Test Results";
 	$page="pages/diagnostics/test_results";
 	$this->load->view('templates/header',$this->data);
-	$this->load->view('templates/leftnav');
+	$this->load->view('templates/leftnav',$this->data);
 	$this->form_validation->set_rules('order_id','Order','trim|xss_clean');
 	$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
 	$this->data['test_methods']=$this->masters_model->get_data("test_method");
@@ -238,7 +238,7 @@ function approve_results(){
 	$this->data['title']="Approve Results";
 	$page="pages/diagnostics/approve_results";
 	$this->load->view('templates/header',$this->data);
-	$this->load->view('templates/leftnav');
+	$this->load->view('templates/leftnav',$this->data);
 	$this->form_validation->set_rules('order_id','Order','trim|xss_clean');
 	$this->data['test_areas']=$this->masters_model->get_data('test_area',0,$this->data['departments']);
 	$this->data['test_methods']=$this->masters_model->get_data("test_method");

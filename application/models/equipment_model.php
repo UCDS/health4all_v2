@@ -11,8 +11,14 @@ class Equipment_Model extends CI_Model {
 		
 		$hospital=$this->session->userdata('hospital');
 		if($type=="equipment_type"){
-			$this->db->select("equipment_type_id,equipment_type")->from("equipment_type");
-			$this->db->order_by("equipment_type");
+				if($this->input->post('select')){
+							$equipment_type_id=$this->input->post('equipment_type_id');
+
+							$this->db->where('equipment_type_id',$equipment_type_id);
+			}
+		$this->db->select("equipment_type_id,equipment_type,equipment_category.category_id,category_name")->from("equipment_type")
+		->join("equipment_category","equipment_type.category_id=equipment_category.category_id",'left' )
+		->order_by("equipment_type");
 		}
 		
 		else if($type=="hospital"){
@@ -73,6 +79,17 @@ class Equipment_Model extends CI_Model {
 			elseif($type=="equipment_filter")
 		{
 			
+			 if($this->input->post('from_date') && $this->input->post('to_date')){
+			$from_date=date("d-m-Y",strtotime($this->input->post('from_date')));
+			$to_date=date("d-m-Y",strtotime($this->input->post('to_date')));
+			
+		}
+		
+		else {
+			
+			$from_date=date("Y-m-d");
+			$to_date=$from_date;
+		} 
 		if($this->input->post('department')){
 			$this->db->where('equipment.department_id',$this->input->post('department'));
 		}
@@ -85,17 +102,31 @@ class Equipment_Model extends CI_Model {
 		if($this->input->post('equipment_status')!=NULL){
 			$this->db->where('equipment.equipment_status',$this->input->post('equipment_status'));
 		}
+		if($this->input->post('purchase_Status')){
+			$this->db->where('equipment.equipment_status_id',$this->input->post('purchase_Status'));
+		}
+		if($this->input->post('location')){
+			$this->db->where('equipment.equipment_location_id',$this->input->post('location'));
+		}
+		if($this->input->post('equipment_category')){
+			$this->db->where('equipment.category_id',$this->input->post('equipment_category'));
+		}
 		if($this->input->post('equipment_type')){
 			$this->db->where('equipment.equipment_type_id',$this->input->post('equipment_type'));
 		}
-		$this->db->select("equipment.equipment_type_id,equipment_type,equipment.department_id,department,equipment.area_id,area_name,equipment.unit_id,unit_name,equipment_status,equipment_id,make,model,serial_number,asset_number,procured_by,cost,supply_date,warranty_start_date,warranty_end_date,service_engineer,service_engineer_contact,department
+		$this->db->select("equipment.equipment_type_id,equipment.equipment_status_id,equipment_purchase_status.equipment_status_id,equipment.category_id,equipment.contributed_by,equipment.equipment_location_id,status_name,equipment_type,vendor_name,voucher_no,purchase_order_date,accessories,journal_type,contributed_by,equipment_location_id,category_name,hospital,equipment.department_id,department,equipment.area_id,area_name,equipment.unit_id,unit_name,equipment_status,equipment_id,make,model,serial_number,asset_number,procured_by,cost,supply_date,warranty_start_date,warranty_end_date,service_engineer,service_engineer_contact,department
 		")
 		->from("equipment")
-		->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id")
+		->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id",'left')
 		->join("department","equipment.department_id=department.department_id")
-		->join("unit","equipment.unit_id=unit.unit_id","left")
-		->join("area","equipment.area_id=area.area_id","left")
-		->group_by("equipment_type,department,equipment.area_id,equipment.unit_id")
+		->join("unit","equipment.unit_id=unit.unit_id")
+		->join("area","equipment.area_id=area.area_id")
+		->join("equipment_purchase_status","equipment.equipment_status_id=equipment_purchase_status.equipment_status_id")
+		->join("equipment_category","equipment.category_id=equipment_category.category_id")
+		->join("hospital","equipment.equipment_location_id=hospital.hospital_id",'left')
+		->join("vendor","equipment.contributed_by=vendor.vendor_id")
+		->where("(supply_date BETWEEN '$from_date' AND '$to_date')")
+		->where("(purchase_order_date BETWEEN '$from_date' AND '$to_date')")
 		->order_by("equipment_type");
 		$query=$this->db->get();
 		return $query->result();
@@ -105,6 +136,7 @@ class Equipment_Model extends CI_Model {
 		elseif($type=="filter")
 		{
 			
+		
 		if($this->input->post('department')){
 			$this->db->where('equipment.department_id',$this->input->post('department'));
 		}
@@ -117,18 +149,29 @@ class Equipment_Model extends CI_Model {
 		if($this->input->post('equipment_status')!=NULL){
 			$this->db->where('equipment.equipment_status',$this->input->post('equipment_status'));
 		}
+		if($this->input->post('purchase_Status')){
+			$this->db->where('equipment.equipment_status_id',$this->input->post('purchase_Status'));
+		}
+		if($this->input->post('location')){
+			$this->db->where('equipment.equipment_location_id',$this->input->post('location'));
+		}
+		if($this->input->post('equipment_category')){
+			$this->db->where('equipment.category_id',$this->input->post('equipment_category'));
+		}
 		if($this->input->post('equipment_type')){
 			$this->db->where('equipment.equipment_type_id',$this->input->post('equipment_type'));
 		}
-		$this->db->select("equipment.equipment_type_id,equipment_type,equipment.department_id,department,equipment_id,equipment.equipment_id,equipment.area_id,area_name,equipment.unit_id,unit_name,equipment_status,equipment_id,make,model,serial_number,asset_number,procured_by,cost,supply_date,warranty_start_date,warranty_end_date,service_engineer,service_engineer_contact,department,equipment_status
+		$this->db->select("equipment.equipment_type_id,equipment.equipment_status_id,equipment_purchase_status.equipment_status_id,equipment.category_id,equipment.contributed_by,equipment.equipment_location_id,status_name,equipment_type,vendor_name,voucher_no,purchase_order_date,accessories,journal_type,contributed_by,equipment_location_id,category_name,hospital,equipment.department_id,department,equipment.area_id,area_name,equipment.unit_id,unit_name,equipment_status,equipment_id,make,model,serial_number,asset_number,procured_by,cost,supply_date,warranty_start_date,warranty_end_date,service_engineer,service_engineer_contact,department
 		")
 		->from("equipment")
-		->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id")
+		->join("equipment_type","equipment.equipment_type_id=equipment_type.equipment_type_id",'left')
 		->join("department","equipment.department_id=department.department_id")
-		->join("unit","equipment.unit_id=unit.unit_id","left")
-		->join("area","equipment.area_id=area.area_id","left")
-		//->join("service_record","equipment.equipment_id=service_record.equipment_id","left")
-		//->group_by("equipment_type,department,equipment.area_id,equipment.unit_id")
+		->join("unit","equipment.unit_id=unit.unit_id")
+		->join("area","equipment.area_id=area.area_id")
+		->join("equipment_purchase_status","equipment.equipment_status_id=equipment_purchase_status.equipment_status_id")
+		->join("equipment_category","equipment.category_id=equipment_category.category_id")
+		->join("hospital","equipment.equipment_location_id=hospital.hospital_id",'left')
+		->join("vendor","equipment.contributed_by=vendor.vendor_id")
 		->order_by("equipment_type");
 		$query=$this->db->get();
 		return $query->result();
@@ -198,6 +241,7 @@ class Equipment_Model extends CI_Model {
 						$this->db->like('LOWER(equipment_type)',$equipment,'after');
 						
 			}
+			
 			if($equipment_type!=0){
 				$this->db->where("equipment.equipment_type_id",$equipment_type);
 			}
@@ -210,18 +254,23 @@ class Equipment_Model extends CI_Model {
 			if($unit!=0){
 				$this->db->where("equipment.unit_id",$unit);
 			}
+			
 			if($status!="-1"){
 				$this->db->where("equipment.equipment_status",$status);
 			}
-			$this->db->select("equipment_id,make,serial_number,asset_number,equipment_type,equipment_type.equipment_type_id,model,procured_by,cost,supplier,service_engineer,service_engineer_contact,vendor_name,supply_date,warranty_start_date,warranty_end_date,contact_person_first_name,contact_person_last_name, contact_person_contact,hospital,department,equipment_status,hospital.hospital_id,department.department_id")->from("equipment")
+		
+			$this->db->select("equipment_id,make,serial_number,asset_number,equipment.equipment_status_id,equipment_type,hospital,category_name,equipment_type.equipment_type_id,status_name,model,procured_by,cost,supplier,service_engineer,service_engineer_contact,vendor_name,supply_date,warranty_start_date,warranty_end_date,contact_person_first_name,contact_person_last_name, contact_person_contact,hospital,department,equipment_status,hospital.hospital_id,department.department_id")->from("equipment")
 				->join('equipment_type','equipment.equipment_type_id=equipment_type.equipment_type_id','left')
-				->join('hospital','equipment.hospital_id=hospital.hospital_id','left')
+				//->join('hospital','equipment.hospital_id=hospital.hospital_id','left')
+				->join("hospital","equipment.equipment_location_id=hospital.hospital_id",'left')
 				->join('department','equipment.department_id=department.department_id','left')
+				->join("equipment_category","equipment.category_id=equipment_category.category_id")
+				->join("equipment_purchase_status","equipment.equipment_status_id=equipment_purchase_status.equipment_status_id")
 				->join('vendor','vendor.vendor_id=equipment.vendor_id','left')
 				->join('contact_person','contact_person.contact_person_id=equipment.contact_person_id','left')
 				->join('user','equipment.user_id=user.user_id','left')
-				
 				->order_by('equipment_type');	
+			
 			
 		}
 			else if($type=="services"){
@@ -268,6 +317,8 @@ class Equipment_Model extends CI_Model {
 	function update_data($type){
 		
 		 if($type=="equipment_type"){
+			
+		
 			$data = array(
 					  'equipment_type'=>$this->input->post('equipment_type')
 				);
@@ -370,12 +421,14 @@ class Equipment_Model extends CI_Model {
 		 if($type=="equipment"){
 			if($this->input->post('supply_date')) $date_supply = date("Y-m-d",strtotime($this->input->post('supply_date')));
 			else $date_supply=0;
+			if($this->input->post('purchase_Order_Date')) $purchase_date = date("Y-m-d",strtotime($this->input->post('purchase_Order_Date')));
+			else $purchase_date=0;
 			if($this->input->post('warranty_start_date')) $warranty_start_date = date("Y-m-d",strtotime($this->input->post('warranty_start_date')));
 			else $warranty_start_date=0;
 			if($this->input->post('warranty_end_date')) $warranty_end_date = date("Y-m-d",strtotime($this->input->post('warranty_end_date')));
 			else $warranty_end_date=0;
 		$data = array(
-				'equipment_type_id'=>$this->input->post('equipment_type'),
+				'equipment_type_id'=>$this->input->post('equipment_type'),	
 				'make'=>$this->input->post('make'),
 				'model'=>$this->input->post('model'),
 				'serial_number'=>$this->input->post('serial_number'),
@@ -386,6 +439,7 @@ class Equipment_Model extends CI_Model {
 				'service_engineer'=>$this->input->post('service_engineer'),
 				'service_engineer_contact'=>$this->input->post('service_engineer_contact'),
 				'vendor_id'=>$this->input->post('vendor'),
+				'purchase_order_date'=>$purchase_date,
 				'supply_date'=>$date_supply,
 				'warranty_start_date'=>$warranty_start_date,
 				'warranty_end_date'=>$warranty_end_date,
@@ -396,7 +450,14 @@ class Equipment_Model extends CI_Model {
 				'area_id'=>$this->input->post('area'),
 				'unit_id'=>$this->input->post('unit'),
 				//'user_id'=>$this->input->post('user'),
-				'equipment_status'=>$this->input->post('equipment_status')
+				'equipment_status'=>$this->input->post('equipment_status'),
+				'category_id'=>$this->input->post('equipment_category'),
+				'equipment_location_id'=>$this->input->post('location'),
+				'equipment_status_id'=>$this->input->post('purchase_Status'),
+				'contributed_by'=>$this->input->post('Countributed'),
+				'journal_type'=>$this->input->post('journal_Type'),
+				'voucher_no'=>$this->input->post('voucher_no'),	
+				'accessories'=>$this->input->post('accessories')
 				);
 
 		$table="equipment";
@@ -404,7 +465,10 @@ class Equipment_Model extends CI_Model {
 		else if($type=="equipment_type")
 		{
 			
-			$data = array('equipment_type'=>$this->input->post('equipment_type'));
+			$data = array(
+			'equipment_type'=>$this->input->post('equipment_type'),
+			'category_id'=>$this->input->post('equipment_category')
+			);
 			$table="equipment_type";
 		}
 			elseif($type=="services"){

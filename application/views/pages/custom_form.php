@@ -158,7 +158,7 @@ pri.print();
                                 <?php        foreach($functions as $f){ 
 				if($f->user_function == "Update Patients"  || $f->user_function == "Clinical" || $f->user_function == "Diagnostics" || $f->user_function == "Procedures" || $f->user_function == "Prescription" || $f->user_function == "Discharge") { ?>
                                             <button type="button" class="btn btn-warning" onclick="$('#select_patient_<?php echo $registered->visit_id1;?>').submit()" autofocus>Update Patient Info</button>
-                                            <?php echo form_open('register/update_patients',array('role'=>'form','id'=>'select_patient_'.$registered->visit_id1));?>
+                                            <?php echo form_open_multipart('register/update_patients',array('role'=>'form','id'=>'select_patient_'.$registered->visit_id1));?>
                                             <input type="text" class="sr-only" hidden value="<?php echo $registered->visit_id1;?>" form="select_patient_<?php echo $registered->visit_id1;?>" name="selected_patient" />
                                 </form>
                                 <?php break; }}?>                                
@@ -175,7 +175,7 @@ pri.print();
 		?>
 		<?php echo validation_errors(); ?>
 		<?php if($form_type=="OP" || count($patient)>0){ ?>
-		<?php echo form_open("register/custom_form/$form_id",array('role'=>'form','class'=>'form-custom')); ?>
+		<?php echo form_open_multipart("register/custom_form/$form_id",array('role'=>'form','class'=>'form-custom')); ?>
 		<input type="text" class="sr-only" value="<?php echo $form_type;?>" name="form_type" />
 		<div class="row">
 		<div class="panel panel-default">
@@ -314,7 +314,7 @@ pri.print();
 						<div class="form-group">
 						<label class="control-label">Country<?php if($field->mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<select name="country" id="country" onchange="getStates()" class="form-control" <?php if($field->mandatory) echo "required"; ?> style="max-width:200px !important;">
-						<option value="">--Select--</option>
+						<option value="">--select--</option>
 						<?php  						
 						foreach($countries as $country){
 							echo "<option value='".$country->country."'";
@@ -351,15 +351,14 @@ pri.print();
 						<div class="form-group">
 						<label class="control-label">District<?php if($field->mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
 						<select name="district" id="district" class="form-control" <?php if($field->mandatory) echo "required"; ?> style="width:200px;">
-						<option value="">--Select--</option>
-
+						<option value="">--Select</option>
 						<?php /* 						
 						foreach($districts_codes as $district){
 							echo "<option value='".$district->place_code."'";
 							if($district->place_code==$this->session->userdata('district_id')) echo " selected ";
 							echo ">".$district->place_name."</option>";
 						} */
-                                                foreach($districts as $district){
+                            foreach($districts as $district){
 							echo "<option value='".$district->district_id."'";
 							if($patient) if($district->district_id==$patient->district_id) echo " selected ";
 							echo ">".$district->district."</option>";
@@ -395,7 +394,17 @@ pri.print();
 						<input type="text" name="father_name" class="form-control" value="<?php if($patient) echo $patient->father_name;?>" <?php if($field->mandatory) echo "required"; ?> />
 						</div>
 					</div>
-				
+				<?php
+				break;
+				    case "upload" :  ?>
+					
+				    <div class="<?php echo $class;?>">
+				        <div class="form-group">
+				            <label class="control-lable">Upload<br></br><?php if($field->mandatory) { ?><span class="mandatory">*</span><?php } ?></label>
+                          <input type="file" name="upload" multiple>
+				        </div>
+					</div>
+					
 				<?php 
 					break;
 					case "mother_name" : ?>
@@ -420,8 +429,7 @@ pri.print();
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Id Proof Type<?php if($field->mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-						<select name="id_proof_type" class="form-control" <?php if($field->mandatory) echo "required"; ?>>
-						<option value="">--Select--</option>
+						<select class="form-control" name="id_proof_type" id="id_proof_type" required <?php if($field->mandatory) echo "required"; ?> >							
 						<?php 
 						foreach($id_proof_types as $id_proof_type){
 							echo "<option value='".$id_proof_type->id_proof_type_id."'";
@@ -658,11 +666,11 @@ pri.print();
 						foreach($departments as $department){
 							echo "<option value='".$department->department_id."'";
 							if($update){ 
-                                                          if($department->department_id==$patient->department_id) 
-                                                            echo " selected ";                                                           
-                                                        }
-                                                        else if($department->department_id == (int)$field->default_value)
-                                                                echo " selected ";
+										if($department->department_id==$patient->department_id) 
+										echo " selected ";                                                           
+										}
+									else if($department->department_id == (int)$field->default_value)
+											echo " selected ";
 							echo ">".$department->department."</option>";
 						}
 						?>
@@ -1039,7 +1047,7 @@ pri.print();
 			?>
 			</div>
 			<div class="panel-footer">
-				<button class="btn btn-primary btn-lg col-md-offset-5" name="register" value="1" ><?php if($update) echo "Update"; else echo "Submit";?></button>
+				<button class="btn btn-primary btn-lg col-md-offset-5" name="register" value="upload" ><?php if($update) echo "Update"; else echo "Submit";?></button>
 			</div>
 			</div>
 		</div>

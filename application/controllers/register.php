@@ -8,9 +8,10 @@ class Register extends CI_Controller {
 		$this->load->model('register_model');
 		$this->load->model('staff_model');
 		$this->load->model('masters_model');
-                $this->load->model('patient_model');
-         //       $this->load->model('hospital_model');
-                $this->load->model('counter_model');
+        $this->load->model('patient_model');
+		 //       $this->load->model('hospital_model');
+		// $this->load->model('upload_model');
+		$this->load->model('counter_model');
 		if($this->session->userdata('logged_in')){
 		$userdata=$this->session->userdata('logged_in');
 		$user_id=$userdata['user_id'];
@@ -21,6 +22,8 @@ class Register extends CI_Controller {
 		//The OP and IP forms in the application are loaded into a data variable for the menu.
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
+		//$this->data['upload']=$this->upload_model->do_upload();
+		
 	}
 	
 	//custom_form() accepts a form ID to display the selected form (OP or IP) 
@@ -32,7 +35,6 @@ class Register extends CI_Controller {
 		}
 		//Loading the form helper
 		$this->load->helper('form');
-		
 		if($this->session->userdata('hospital')){ //If the user has selected a hospital after log-in.
 			if($form_id=="") //Form ID cannot be null, if so show a 404 error.
 				show_404();
@@ -195,6 +197,7 @@ class Register extends CI_Controller {
 		}
 	}
 	function update_patients(){
+		$this->load->helper(array('form', 'url'));
 		if($this->session->userdata('logged_in')){
 		$this->data['userdata']=$this->session->userdata('logged_in');
 		$access=0;
@@ -206,6 +209,7 @@ class Register extends CI_Controller {
 		if($access==1){
 		$this->data['title']="Update Patients";
 		$this->load->view('templates/header',$this->data);
+		$this->load->model('Upload_Model');
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 		$this->data['all_departments']=$this->staff_model->get_department();
@@ -218,9 +222,10 @@ class Register extends CI_Controller {
 		$this->data['drugs'] = $this->masters_model->get_data("drugs");
 		$this->data['procedures'] = $this->masters_model->get_data("procedure");
 		$this->data['defaults'] = $this->staff_model->get_transport_defaults();
+		$this->data['upload']=$this->Upload_Model->index();
               //  $this->data['hospitals'] = $this->hospital_model->get_hospitals();
               //  $this->data['arrival_modes'] = $this->patient_model->get_arrival_modes();
-        $this->data['visit_names'] = $this->staff_model->get_visit_name();
+		$this->data['visit_names'] = $this->staff_model->get_visit_name();
 		$this->form_validation->set_rules('patient_number', 'IP/OP Number',
 		'trim|xss_clean');
 		if ($this->form_validation->run() === FALSE)
@@ -236,6 +241,31 @@ class Register extends CI_Controller {
 					//If register function returns value 2 then we are setting a duplicate ip no error.
 					$this->data['duplicate']=1;
 				}
+		/*$config['upload_path'] = './assets/patients/';
+		$config['allowed_types'] = 'gif|jpg|png';
+		$config['max_size']	= '100';
+		$config['max_width']  = '1024';
+		$config['max_height']  = '768';
+
+		$this->load->library('upload', $config);
+
+		if ( ! $this->upload->do_upload('upload'))
+		{
+		    echo "file not uploaded";
+			$error = array('error' => $this->upload->display_errors());
+
+			//$this->load->view('upload_form', $error);
+		}
+		else
+		{
+			echo "file uploaded";
+			$data = array('upload_data' => $this->upload->data());
+
+			//$this->load->view('upload_success', $data);
+		}
+		$file_info=$this->upload->data('upload');
+		$file_name=$file_info['file_name'];
+		echo $file_name;*/
 				$this->data['transfers'] = $this->patient_model->get_transfers_info();
 				$this->data['transport'] = $this->staff_model->get_transport_log();
 				$this->data['patients']=$this->register_model->search();

@@ -44,6 +44,7 @@
             <li><a ng-href="#/visit_procedures/{{ routeController.getPatientID() }}">Procedures</a></li>
             <li><a ng-href="#/visit_prescription/{{ routeController.getPatientID() }}">Prescription</a></li>
             <li><a ng-href="#/visit_discharge/{{ routeController.getPatientID() }}">Discharge</a></li>
+            <li><a ng-href="#/visit_discharge/{{routeController.getPatientID()}}">Upload</a></li>
         </ul>
     </div>
 </div>

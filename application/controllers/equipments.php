@@ -33,9 +33,9 @@ class Equipments extends CI_Controller {
                   )
              
 			);
-			
+			$this->data['categorys']=$this->masters_model->get_data("category");
 		}
-
+			
 /*		else if($type=="service"){
 		 	$title="Add Service Records";
 		
@@ -97,6 +97,9 @@ else if($type=="service_records"){
 				$this->data['equipments']=$this->equipment_model->get_data("equipment");
 				$this->data['summary']=$this->equipment_model->get_data("filter");
 			    $this->data['equipment_types']=$this->equipment_model->get_data("equipment_types");
+				$this->data['equipment_categorys']=$this->masters_model->get_data("equipment_category");
+				$this->data['equipment_purchase_statuss']=$this->masters_model->get_data("equipment_purchase_status");
+				$this->data['categorys']=$this->masters_model->get_data("category");
 				$this->data['all_departments']=$this->masters_model->get_data("department");
 				$this->data['areas']=$this->equipment_model->get_data("area");
 				$this->data['units']=$this->masters_model->get_data("unit");
@@ -130,6 +133,9 @@ else if($type=="service_records"){
 		$this->data['department']=$this->masters_model->get_data("department");
 		$this->data['areas']=$this->equipment_model->get_data("area");
 		$this->data['units']=$this->masters_model->get_data("unit");
+		$this->data['equipment_categorys']=$this->masters_model->get_data("equipment_category");
+		$this->data['equipment_purchase_statuss']=$this->masters_model->get_data("equipment_purchase_status");
+		$this->data['categorys']=$this->masters_model->get_data("category");
 		$this->data['vendors']=$this->masters_model->get_data("vendor");
 		$this->data['contact_persons']=$this->masters_model->get_data("contact_person");
 
@@ -163,6 +169,9 @@ else if($type=="service_records"){
 				$this->data['mode'] = 'select';
 				$this->data['vendors']=$this->masters_model->get_data("vendors");
 		        $this->data['contact_persons']=$this->masters_model->get_data("contact_persons");
+				$this->data['categorys']=$this->masters_model->get_data("category");
+				$this->data['equipment_purchase_statuss']=$this->masters_model->get_data("equipment_purchase_status");
+					$this->data['equipment_categorys']=$this->masters_model->get_data("equipment_category");
 				$this->data[$type]=$this->equipment_model->get_data($type);
          		$this->load->view($page,$this->data);
 			}
@@ -175,6 +184,9 @@ else if($type=="service_records"){
 			    $this->data['equipment_types']=$this->equipment_model->get_data("equipment_types");
 				$this->data['all_departments']=$this->masters_model->get_data("department");
 				$this->data['department']=$this->masters_model->get_data("department");
+				$this->data['equipment_categorys']=$this->masters_model->get_data("equipment_category");
+				$this->data['equipment_purchase_statuss']=$this->masters_model->get_data("equipment_purchase_status");
+				$this->data['categorys']=$this->masters_model->get_data("category");
 				$this->data['areas']=$this->equipment_model->get_data("area");
 				$this->data['units']=$this->masters_model->get_data("unit");
 				$this->data['vendors']=$this->masters_model->get_data("vendor");
@@ -323,6 +335,7 @@ else if($type=="equipment"){
 			//$this->data[$type]=$this->masters_model->get_data($type);
 			$this->data[$type]=$this->equipment_model->get_data($type);
 			
+			//$this->data['equipment_types']=$this->equipment_model->get_data("equipment_type");
 			$this->data['vendors']=$this->masters_model->get_data("vend");
 		    $this->data['contact_persons']=$this->masters_model->get_data("contact");
          
@@ -331,7 +344,7 @@ else if($type=="equipment"){
 			else if($this->input->post('filter')){
             $this->data['mode']="filter";
 			$this->data['equipments']=$this->equipment_model->get_data("equipment");
-			$this->data['summary']=$this->equipment_model->get_data("equipment_filter");
+			$this->data['summary']=$this->equipment_model->get_data("filter");
 			    $this->data['equipment_types']=$this->equipment_model->get_data("equipment_types");
 				$this->data['all_departments']=$this->masters_model->get_data("department");
 				$this->data['areas']=$this->equipment_model->get_data("area");
@@ -354,12 +367,16 @@ else if($type=="equipment"){
 		$this->load->view('templates/footer');
 	}
 
-	function view($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=-1){	
+	function view($type,$equipment_type=0,$department=0,$area=0,$unit=0,$status=-1,$purchase_Status=0,$location=0,$equipment_category=0){	
 		$this->load->helper('form_helper');
 		switch($type){
 			case "equipments_detailed" : 
 				$this->data['title']="Equipments Detailed report";
-				$this->data['equipments']=$this->equipment_model->get_data("equipment",$equipment_type,$department,$area,$unit,$status);
+				$this->data['equipments']=$this->equipment_model->get_data("equipment",$equipment_type,$department,$area,$unit,$status,$purchase_Status,$location,$equipment_category);
+				
+				$this->data['equipment_purchase_statuss']=$this->masters_model->get_data("equipment_purchase_status");
+				$this->data['equipment_categorys']=$this->masters_model->get_data("equipment_category");
+				$this->data['categorys']=$this->masters_model->get_data("category");
 				$this->data['all_departments']=$this->staff_model->get_department();
 				$this->data['units']=$this->staff_model->get_unit();
 				$this->data['areas']=$this->staff_model->get_area();
@@ -368,6 +385,9 @@ else if($type=="equipment"){
 				$this->data['title']="Equipments Summary report";
 				$this->data['summary']=$this->reports_model->get_equipment_summary();
 			    $this->data['equipment_types']=$this->equipment_model->get_data("equipment_types");
+				$this->data['equipment_purchase_statuss']=$this->masters_model->get_data("equipment_purchase_status");
+				$this->data['equipment_categorys']=$this->masters_model->get_data("equipment_category");
+				$this->data['categorys']=$this->masters_model->get_data("category");
 				$this->data['all_departments']=$this->masters_model->get_data("department");
 				$this->data['areas']=$this->equipment_model->get_data("area");
 				$this->data['units']=$this->masters_model->get_data("unit");
@@ -379,6 +399,9 @@ else if($type=="equipment"){
 				$this->data['title']="Equipments detailed report";
 				$this->data['equipments']=$this->equipment_model->get_data("equipment");
 				$this->data['equipment_type']=$this->equipment_model->get_data("equipment_types");
+				$this->data['equipment_purchase_statuss']=$this->masters_model->get_data("equipment_purchase_status");
+				$this->data['equipment_categorys']=$this->masters_model->get_data("equipment_category");
+				$this->data['categorys']=$this->masters_model->get_data("category");
 				$this->data['hospital']=$this->masters_model->get_data("hospital");
 				$this->data['department']=$this->masters_model->get_data("department");
 				$this->data['areas']=$this->equipment_model->get_data("area");
@@ -396,6 +419,9 @@ else if($type=="equipment"){
 			  
 			    $this->data['service_summary']=$this->reports_model->get_service_records();
 			    $this->data['equipment_types']=$this->equipment_model->get_data("equipment_types");
+				$this->data['equipment_purchase_statuss']=$this->masters_model->get_data("equipment_purchase_status");
+				$this->data['equipment_categorys']=$this->masters_model->get_data("equipment_category");
+				$this->data['categorys']=$this->masters_model->get_data("category");
 				$this->data['all_departments']=$this->masters_model->get_data("department");
 				$this->data['areas']=$this->equipment_model->get_data("area");
 				$this->data['units']=$this->masters_model->get_data("unit");
@@ -406,6 +432,9 @@ else if($type=="equipment"){
 			    $this->data['service_records']=$this->equipment_model->get_data("service_records");		
 			    $this->data['service_summary']=$this->reports_model->get_service_records();
 			    $this->data['equipment_types']=$this->masters_model->get_data("equipment_types");
+				$this->data['equipment_categorys']=$this->masters_model->get_data("equipment_category");
+				$this->data['equipment_purchase_statuss']=$this->masters_model->get_data("equipment_purchase_status");
+				$this->data['categorys']=$this->masters_model->get_data("category");
 				$this->data['all_departments']=$this->masters_model->get_data("department");
 				$this->data['areas']=$this->equipment_model->get_data("area");
 				$this->data['units']=$this->masters_model->get_data("unit");
