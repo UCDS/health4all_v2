@@ -1,6 +1,6 @@
 
-<link rel="stylesheet" href="<?php echo base_url();?>assets/css/zebra_datepicker.min.css" >
-<script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
+<link rel="stylesheet" href="<?php echo base_url();?>assets/css/zebra_datepicker_new.min.css" >
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker_new.js"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/selectize.css">
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.mousewheel.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.timeentry.min.js"></script>
@@ -1383,8 +1383,42 @@ pri.print();
 			</div>
 			<div class="row alt">
 					<div class="col-md-12 col-xs-12">
+						<?php 
+							if(isset($clinical_notes) && !!$clinical_notes){ ?>
+						
 						<table class="table table-bordered table-striped">
 							<thead>
+								<tr>
+									<th colspan="4">Clinical Notes</th>
+								</tr>
+								<tr>
+									<th>#</th>
+									<th>Date</th>
+									<th>Note</th>
+									<th>Added by</th>
+								</tr>
+							</thead>
+							<tbody>
+							<?php
+							$i=1;
+							 foreach($clinical_notes as $note){ ?>
+								<tr>
+									<td><?php echo $i++; ?></td>
+									<td><?php if($note->note_time!=0) echo date("d-M-Y g:iA",strtotime($note->note_time)); ?></td>
+									<td><?php echo $note->clinical_note;?></td>
+									<td><?php echo $note->first_name." ".$note->last_name;?></td>
+								</tr>
+								<?php  } ?>
+							</tbody>
+						</table>
+						<?php
+							}
+						?>
+						<table class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th colspan="4">Add Clinical Notes</th>
+								</tr>
 								<tr>
 								<th>Note</th>
 								<th>Date & Time</th>
@@ -1393,26 +1427,31 @@ pri.print();
 							</thead>
 							<tbody class="daily_notes">
 								<tr>
-									<td><textarea rows="4" cols="60" name="clinical_note_1"  class="daily_notes form-control"></textarea></td>
-									<td><input type="text" class="daily_notes_date form-control" name="note_date_1" /> </td>
+									<td><textarea rows="4" cols="60" name="clinical_note[]"  class="form-control"></textarea></td>
+									<td><input type="text" class="daily_notes_date form-control" name="note_date[]" /> </td>
 									<td><button  type="button" class="btn btn-sm btn-primary" value="+" id="add_daily_note">+</button></td>
 								</tr>
 							</tbody>
 						</table>
-					</div>
+				</div>
 				<script>
 					$(function(){
+						var i=2;
 						$(".daily_notes_date").Zebra_DatePicker({
 							format:'d-M-Y g:iA'
 						});
 						$("#add_daily_note").click(function(){
-							var row = '
-								<tr>
-									<td><textarea rows="4" cols="60" name="clinical_note_'+i+'"  class="daily_notes form-control"></textarea></td>
-									<td><input type="text" class="daily_notes_date form-control" name="note_date_'+i+'" /> </td>
-									<td></td>
-								</tr>';
+							var row = "<tr>"+
+									"<td><textarea rows=\"4\" cols=\"60\" name=\"clinical_note[]\"  class=\"form-control\"></textarea></td>"+
+									"<td><input type=\"text\" class=\"daily_notes_date form-control\" form-control\" name=\"note_date[]\" /> </td>"+
+									"<td></td>"+
+								"</tr>";
 							$('.daily_notes').append(row);
+							$(".daily_notes_date").Zebra_DatePicker({
+								format:'d-M-Y g:iA'
+							});
+							i++;
+
 						});
 					});
 				</script>

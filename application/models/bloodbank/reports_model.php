@@ -221,7 +221,7 @@ class Reports_model extends CI_Model{
 		->where('blood_donor.hospital_id', $hospital)
 		->group_by('bb_donation.donation_id')
 		->order_by('donation_date ASC,blood_unit_num ASC')
-        ->limit(300);
+        ->limit(1000);
 		if($query=$this->db->get()){
 			return $query->result();
 		}

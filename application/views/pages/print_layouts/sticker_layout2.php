@@ -3,7 +3,7 @@
 <br><table style='border-collapse:collapse;padding-top:0px; vertical-align: top;' width='100%'><tr>
 <?php
 $count=0;
-for($i=1;$i<=4;$i++)
+for($i=1;$i<=2;$i++)
 {?>
         <script>
             $(function(){
