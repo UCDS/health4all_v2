@@ -562,7 +562,7 @@ class Register extends CI_Controller {
         if($access==0){
             show_404();
         }
-        $this->data['userdata']=$this->session->userdata('hospital');
+		$this->data['userdata']=$this->session->userdata('hospital');
         $this->load->helper('form');
         $this->load->library('form_validation');
         if($donor_id!=0 && $donor_id!='0'){

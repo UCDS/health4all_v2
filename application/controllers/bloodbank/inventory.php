@@ -247,13 +247,18 @@ class Inventory extends CI_Controller {
 		else{
 				if($this->input->post('select_request')){
 					$this->data['request']=$this->inventory_model->get_requests();
+					
+					
 					$this->data['inventory']=$this->inventory_model->check_inventory();
-                                        $inventory = $this->data['inventory'];
+										$inventory = $this->data['inventory'];
+										
+										
 					$this->data['inv']=$this->data['inventory'][0];
-					$this->data['count_inv']=$this->data['inventory'][1];
+					$this->data['count_inv']=$this->data['inventory'];
 					$this->load->view('pages/bloodbank/issue',$this->data);
 				}
 				else if($this->input->post('issue_request') && $this->input->post('inventory_id')){
+					
 					if($this->data['donors']=$this->inventory_model->issue()){
 					$this->data['msg']="Issued Successfully.";
 					$this->load->library('email');
@@ -276,7 +281,3 @@ class Inventory extends CI_Controller {
 	}
 
 }
-	
-	
-	
-	

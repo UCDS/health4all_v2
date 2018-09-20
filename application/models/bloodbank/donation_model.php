@@ -68,7 +68,7 @@ class Donation_Model extends CI_Model{
                .$result[0]->volume.'-'
                .$result[0]->camp_id;
         $staff_id = $this->session->userdata('staff_id');
-       
+        
         $data_trail = array(
            'trail' => $log,
            'staff_id' => $staff_id

@@ -4,10 +4,8 @@ class Inventory_model extends CI_Model{
 		parent::__construct();
 	}
 	function get_ungrouped_blood(){
-		
 		$userdata=$this->session->userdata('hospital');
 		$hospital=$userdata['hospital_id'];
-		
 		if($this->input->post('from_id') && $this->input->post('to_id')){
 			$from=$this->input->post('from_id');
 			$to=$this->input->post('to_id');
@@ -17,13 +15,15 @@ class Inventory_model extends CI_Model{
 			$this->input->post('from_id')!=""?$id=$this->input->post('from_id'):$id=$this->input->post('to_id');
 			$this->db->where('blood_unit_num',$id);
 		}
+		if($this->input->post('year')) $year = $this->input->post('year'); 
+		else $year = date("Y");
 		$this->db->select('*')
 		->from('blood_inventory')
 		->join('bb_donation','blood_inventory.donation_id=bb_donation.donation_id')
 		->join('blood_donor','bb_donation.donor_id=blood_donor.donor_id')
 		->where('bb_donation.status_id',4)
 		->where('bb_donation.hospital_id',$hospital)
-		->where('YEAR(donation_date)',date("Y"))
+		->where('YEAR(donation_date)',$year)
 		->order_by('blood_unit_num');
 		$query=$this->db->get();
 		return $query->result();
@@ -115,6 +115,8 @@ class Inventory_model extends CI_Model{
 		if($this->input->post('bag_type')){
 			$this->db->where('bag_type',$this->input->post('bag_type'));
 		}
+		if($this->input->post('year')) $year = $this->input->post('year'); 
+		else $year = date("Y");
 		$this->db->select('*')
 		->from('blood_inventory')
 		->join('bb_donation','blood_inventory.donation_id=bb_donation.donation_id')
@@ -123,7 +125,7 @@ class Inventory_model extends CI_Model{
 		->where('blood_inventory.status_id <',8,false)
 		->where('component_type','WB')
 		->where('bb_donation.hospital_id',$hospital)
-		->where('YEAR(donation_date)',date("Y"))
+		->where('YEAR(donation_date)',$year)
 		->order_by('blood_unit_num')
                 ->limit('500');
 		$query=$this->db->get();
@@ -401,22 +403,23 @@ class Inventory_model extends CI_Model{
 		
 		$result=$this->db->query('
 		SELECT * FROM blood_inventory
-		JOIN bb_donation ON blood_inventory.donation_id=bb_donation.donation_id
+		JOIN bb_donation ON blood_inventory.donation_id=bb_donation.donation_id AND bb_donation.hospital_id='.$hospital.'
 		JOIN blood_donor ON bb_donation.donor_id=blood_donor.donor_id
 		WHERE ("WB" IN ('.$components.')) AND component_type="WB" AND bb_donation.status_id=6 AND screening_result=1 AND blood_inventory.status_id=7 AND blood_group="'.$blood_group.'" AND blood_inventory.hospital_id="'.$hospital.'" 
 		UNION
 		SELECT * FROM blood_inventory
-		JOIN bb_donation ON blood_inventory.donation_id=bb_donation.donation_id
+		JOIN bb_donation ON blood_inventory.donation_id=bb_donation.donation_id AND bb_donation.hospital_id='.$hospital.'
 		JOIN blood_donor ON bb_donation.donor_id=blood_donor.donor_id
 		WHERE ("FP" IN ('.$components.') OR "FFP" IN ('.$components.') OR "PC" IN ('.$components.')) AND component_type IN ("PC","FP","FFP") AND bb_donation.status_id=6 AND screening_result=1 AND blood_inventory.status_id=7  AND blood_group LIKE "'.trim($blood_group,'+-').'%" AND blood_inventory.hospital_id="'.$hospital.'" 
 		UNION
 		SELECT * FROM blood_inventory
-		JOIN bb_donation ON blood_inventory.donation_id=bb_donation.donation_id
+		JOIN bb_donation ON blood_inventory.donation_id=bb_donation.donation_id AND bb_donation.hospital_id='.$hospital.' 
 		JOIN blood_donor ON bb_donation.donor_id=blood_donor.donor_id
 		WHERE ("Cryo" IN ('.$components.') OR "PRP" IN ('.$components.') OR "Platelet Concentrate" IN ('.$components.'))
 		AND component_type IN ("Cryo","PRP","Platelet Concentrate") 
 		AND bb_donation.status_id=6  AND screening_result=1 AND blood_inventory.status_id=7 AND blood_inventory.hospital_id="'.$hospital.'" 
 		ORDER BY component_type,blood_unit_num ASC,expiry_date ASC
+		LIMIT 1000
 		'); //AND bb_donation.hospital_id='.$hospital.'
 		$data[]=$result->result();
 		$data[]=$result->num_rows();

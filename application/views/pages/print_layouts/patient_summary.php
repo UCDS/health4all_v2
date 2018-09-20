@@ -1,20 +1,36 @@
 		<link rel="stylesheet" href="<?php echo base_url();?>assets/css/main.css" media="print" >
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/font-awesome.min.css" media="print">
+		<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-barcode.min.js"></script>
+		
 		<?php $patient=$patients[0];?>
+
+		<script type="text/javascript">
+			$(function(){
+
+				var settings = {
+				barHeight: 20
+				};
+				$("#patient_barcode").barcode(
+					"<?php echo $patient->patient_id;?>",
+					"code128",
+					settings
+				);
+			});
+		</script>
 		<table style="width:98%;padding:5px">
 				<tr>
 				<td colspan="3">
 				<img style="float:right" style="margin-top:-20px" src="<?php echo base_url();?>assets/images/ap-logo.png" width="60px" />
 				<img style="float:left" src="<?php echo base_url();?>assets/images/<?php $hospital=$this->session->userdata('hospital');echo $hospital['logo'];?>" width="60px" />
 				<div style="float:middle;text-align:center">
-				<b>Government of Andhra Pradesh</b><br />
 				<font size="4"><?php echo $hospital['hospital'];?></font>
 					<?php echo $hospital['description'];?> 
 					@ 
 					<?php echo $hospital['district'];?>
 					<br />
 					<br />
-				<span style="border:1px solid #ccc;padding:5px;margin:5px;"><u><b>DISCHARGE SUMMARY</b></u></span>
+				<span style="border:1px solid #ccc;padding:5px;margin:5px;"><u><b>
+					<?php if($patient->visit_type == "OP") echo "CONSULTATION"; else echo "DISCHARGE";?> SUMMARY</b></u></span>
 				<br />
 				<br />
 				</div>
@@ -22,15 +38,19 @@
 				</tr>
 				<tbody height="10%" style="border:1px solid black;">
 				<tr width="95%">
+					<td>
+						<span>Patient ID: <b><?php echo $patient->patient_id;?></b></span> <span style="position:relative;float:right" id="patient_barcode"></span>
+					</td>
+				</tr>
+				<tr width="95%">
 						<td style="padding:5px;">Name: <?php echo $patient->name; ?></td>
 						<td>Age/Sex: <?php 
-						
 							if($patient->age_years!=0){ echo $patient->age_years." Yrs "; } 
 							if($patient->age_months!=0){ echo $patient->age_months." Mths "; }
 							if($patient->age_days!=0){ echo $patient->age_days." Days "; }
 							if($patient->age_years==0 && $patient->age_months == 0 && $patient->age_days==0) echo "0 Days";
 							echo "/".$patient->gender; ?></td>
-						<td>Admit Date:<?php echo date("d-M-Y",strtotime($patient->admit_date)); 
+						<td> <?php if($patient->visit_type == "OP") echo "Consultation"; else echo "Admit";?> Date:<?php echo date("d-M-Y",strtotime($patient->admit_date)); 
 						echo date("g:iA",strtotime($patient->admit_time)); ?></td>
 				</tr>
 				<tr width="95%">
@@ -41,10 +61,14 @@
 				<tr width="95%">
 						<td>Department : <?php echo $patient->department; ?> </td>
 						<td  style="padding:5px;"><?php echo $patient->visit_type;?> number : <?php echo $patient->hosp_file_no; ?></td>
-						<td><?php if(!!$patient->outcome) echo $patient->outcome; else echo "Discharge"?> 
-						Date: <?php 
-						if(!!$patient->outcome_date) echo date("d-M-Y",strtotime($patient->outcome_date)); 
-						if(!!$patient->outcome_time) echo date("g:iA",strtotime($patient->outcome_time)); 
+						<td>
+						<?php if($patient->visit_type != "OP"){ 
+							if(!!$patient->outcome) echo $patient->outcome; else echo "Discharge"?> 
+							Date: 
+							<?php 
+							if($patient->outcome_date != 0) echo date("d-M-Y",strtotime($patient->outcome_date)); 
+							if($patient->outcome_time != 0) echo date("g:iA",strtotime($patient->outcome_time)); 
+						}
 						?></td>
 				</tr>
 				</tbody>
@@ -55,10 +79,40 @@
 					</td>
 				</tr>
 				<?php } ?>
+				<?php if(isset($clinical_notes) &&  !!$clinical_notes) { ?>
+				<tr class="print-element" width="95%" height="80px">				
+					<td colspan="3"><b><u>Cinical Notes</u></b></td>
+				</tr>
+				<tr class="print-element" width="95%" height="80px">				
+					<td colspan="3">
+							<table border=1 cellpadding="5" style="border-collapse:collapse;width:100%;">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Date</th>
+									<th>Note</th>
+								</tr>
+							</thead>
+							<tbody>
+							<?php
+							$i=1;
+							 foreach($clinical_notes as $note){ ?>
+								<tr>
+									<td><?php echo $i++; ?></td>
+									<td><?php if($note->note_time!=0) echo date("d-M-Y g:iA",strtotime($note->note_time)); ?></td>
+									<td><?php echo $note->clinical_note;?></td>
+								</tr>
+								<?php  } ?>
+							</tbody>
+							</table>
+							<br />
+					</td>
+				</tr>
+				<?php } ?>
 				<?php 
 				if(isset($tests) && count($tests)>0){ ?>				
 				<tr  class="print-element" style="width:100%">
-					<td colspan="3"><hr><b><u>Diagnositcs</u></b><br></td>
+					<td colspan="3"><b><u>Diagnositcs</u></b><br></td>
 				</tr>
 				<?php
 					$count=0;
@@ -73,8 +127,7 @@
 					}
 					if(count($text_result_tests)>0) { 
 				?>
-				
-							<?php 
+				<?php 
 							$o=array();
 							foreach($text_result_tests as $order){
 								$o[]=$order->order_id;

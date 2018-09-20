@@ -123,6 +123,9 @@
 		echo "<div class='alert alert-info'>$msg</div>";
 		echo "<br />";
 	}
+	
+	if($this->input->post('year')) $year = $this->input->post('year'); 
+	else $year = date("Y");
 	?>
 	<div>
 	
@@ -132,6 +135,9 @@
 		</div>
 		<div class="form-group col-lg-2">
 			<input type="text" id="to_id" value="<?php echo $this->input->post('to_id');?>" placeholder="To Number" class="form-control" name="to_id" />
+		</div>
+		<div class="form-group col-lg-2">
+			<input type="text" id="year" value="<?php echo $year;?>" placeholder="Year" class="form-control" name="year" />
 		</div>
 		<div class="form-group"><input type="submit" class="btn btn-primary" value="Filter" name="filter" /></div>
 		</form>

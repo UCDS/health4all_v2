@@ -24,6 +24,8 @@ $(document).ready(function(){
 		echo "<div class='alert alert-info'>$msg</div>";
 		echo "<br />";
 	}
+	if($this->input->post('year')) $year = $this->input->post('year'); 
+	else $year = date("Y");
 	?>
 	<div>
 	
@@ -37,6 +39,10 @@ $(document).ready(function(){
 			<option value="3">Triple</option>
 			<option value="4">Quadruple</option>
 		</select></div>
+
+		<div class="form-group fields">
+			<input type="text" id="year" value="<?php echo $year;?>" placeholder="Year" class="form-control" name="year" />
+		</div>
 		<div class="form-group fields"><input type="submit" class="btn btn-primary" value="Filter" name="filter" /></div>
 		<hr>
 		</form>

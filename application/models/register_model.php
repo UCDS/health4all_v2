@@ -317,7 +317,7 @@ class Register_model extends CI_Model{
 
 	//update() function for updating the existing patient records.
 	function update(){
-	
+		
 		$userdata = $this->session->userdata('logged_in');
 		$user_id = $userdata['user_id'];
 		//// All the post variables are stored in local variables; 
@@ -381,7 +381,30 @@ class Register_model extends CI_Model{
 	    if($this->input->post('cvs')) $cvs=$this->input->post('cvs'); else $cvs="";
 	    if($this->input->post('rs')) $rs=$this->input->post('rs'); else $rs="";
 	    if($this->input->post('pa')) $pa=$this->input->post('pa'); else $pa="";
-	    if($this->input->post('cns')) $cns=$this->input->post('cns'); else $cns="";
+		if($this->input->post('cns')) $cns=$this->input->post('cns'); else $cns="";
+		if(!!$this->input->post('clinical_note')) {			
+			$clinical_note = $this->input->post('clinical_note');
+			$note_date = $this->input->post('note_date');
+			$clinical_data = array();
+			for($i=0;$i<count($clinical_note);$i++){
+				if(!!$note_date[$i]) { $note_date[$i]=date("Y-m-d H:i:s",strtotime($note_date[$i]));}
+				else $note_date[$i] = 0;
+				if($note_date[$i]!=0 && !!$clinical_note[$i])
+				{
+					$clinical_data[]=array(
+						'clinical_note' => $clinical_note[$i],
+						'note_time' => $note_date[$i],
+						'user_id' => $user_id,
+						'visit_id' => $this->input->post('visit_id')
+					);
+				}
+			}
+			if(!!$clinical_data)
+			$this->db->insert_batch('patient_clinical_notes',$clinical_data);
+		}
+		
+
+		
 		
             $ip_file_received = 0;
             if($this->input->post('ip_file_received')){
@@ -394,8 +417,8 @@ class Register_model extends CI_Model{
 		$outcome=$this->input->post('outcome');
         if(($this->input->post('mlc_radio')=='1' || $this->input->post('mlc_radio')=='-1')) $mlc_radio= $this->input->post('mlc_radio'); else $mlc_radio=0;                
 		if(!!$outcome) {
-			if($this->input->post('outcome_date')) $outcome_date=date("Y-m-d",strtotime($this->input->post('outcome_date'))); else $outcome_date = 0;
-			if($this->input->post('outcome_date')) $outcome_time=date("H:i:s",strtotime($this->input->post('outcome_time'))); else $outcome_time = 0;
+			if(!!$this->input->post('outcome_date') != 0) $outcome_date=date("Y-m-d",strtotime($this->input->post('outcome_date'))); else $outcome_date = 0;
+			if(!!$this->input->post('outcome_date')) $outcome_time=date("H:i:s",strtotime($this->input->post('outcome_date'))); else $outcome_time = 0;
 		}
 		else { $outcome_date = 0; $outcome_time = 0;}
 		if($this->input->post('final_diagnosis')) $final_diagnosis=$this->input->post('final_diagnosis'); else $final_diagnosis="";
@@ -831,6 +854,15 @@ class Register_model extends CI_Model{
 		return $query->result();
 	}
 	
+	function get_clinical_notes($visit_id){
+		$this->db->select('patient_clinical_notes.*,staff.first_name, staff.last_name')->from('patient_clinical_notes')
+		->join('user','patient_clinical_notes.user_id = user.user_id','left')
+		->join('staff','user.staff_id = staff.staff_id','left')
+		->where('visit_id',$visit_id)
+		->order_by('note_time','desc');
+		$query = $this->db->get();
+		return $query->result();
+	}
 	
 	function transport(){
         if($this->input->post('transport_from_area')) $transport_from_area=$this->input->post('transport_from_area'); else $transport_from_area="";

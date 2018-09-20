@@ -46,7 +46,7 @@ class Register extends CI_Controller {
 				else{
 					$access=0;
 				}
-			}
+		}
 			if($access==1){
 			//Load data required for the select options in views.
 			$this->data['id_proof_types']=$this->staff_model->get_id_proof_type();
@@ -181,6 +181,7 @@ class Register extends CI_Controller {
 				$this->data['prescription']=$this->register_model->get_prescription($visit_id);
 				$this->data['previous_visits']=$this->register_model->get_visits($patient_id);
 				$this->data['tests']=$this->diagnostics_model->get_all_tests($visit_id);
+				$this->data['clinical_notes']=$this->register_model->get_clinical_notes($visit_id);				
 			}
 			$this->load->view('pages/view_patients',$this->data);
 		}
@@ -245,6 +246,7 @@ class Register extends CI_Controller {
 					$visit_id = $this->data['patients'][0]->visit_id;
 					$this->data['prescription']=$this->register_model->get_prescription($visit_id);
 					$this->data['tests']=$this->diagnostics_model->get_all_tests($visit_id);
+					$this->data['clinical_notes']=$this->register_model->get_clinical_notes($visit_id);
 				}
 				$this->load->view('pages/update_patients',$this->data);
 			}
@@ -257,6 +259,7 @@ class Register extends CI_Controller {
 					$this->data['transport'] = $this->staff_model->get_transport_log();
 					$this->data['prescription']=$this->register_model->get_prescription($visit_id);
 					$this->data['tests']=$this->diagnostics_model->get_all_tests($visit_id);
+					$this->data['clinical_notes']=$this->register_model->get_clinical_notes($visit_id);
 				}
 				$this->load->view('pages/update_patients',$this->data);
 			}

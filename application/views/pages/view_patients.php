@@ -4,8 +4,8 @@
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
 
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.colsel.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
+		<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-barcode.min.js"></script>
 <style>
 	.row{
 		margin-bottom: 1.5em;
@@ -18,6 +18,7 @@
 		background:#eee;
 	}
 </style>
+
 <script type="text/javascript">
 $(function(){
 	$("#from_date,#to_date").Zebra_DatePicker();
@@ -342,7 +343,42 @@ pri.print();
 					<?php echo $patient->cns;?>
 				</div>
 			</div>
-		</div>
+			<?php 
+				if(isset($clinical_notes) && !!$clinical_notes){ ?>
+			<div class="row alt">
+					<div class="col-md-12 col-xs-12">
+						
+						<table class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th colspan="4">Clinical Notes</th>
+								</tr>
+								<tr>
+									<th>#</th>
+									<th>Date</th>
+									<th>Note</th>
+									<th>Added by</th>
+								</tr>
+							</thead>
+							<tbody>
+							<?php
+							$i=1;
+							 foreach($clinical_notes as $note){ ?>
+								<tr>
+									<td><?php echo $i++; ?></td>
+									<td><?php if($note->note_time!=0) echo date("d-M-Y g:iA",strtotime($note->note_time)); ?></td>
+									<td><?php echo $note->clinical_note;?></td>
+									<td><?php echo $note->first_name." ".$note->last_name;?></td>
+								</tr>
+								<?php  } ?>
+							</tbody>
+						</table>
+				</div>
+			</div>
+				<?php
+					}
+				?>
+			</div>
 		<div role="tabpanel" class="tab-pane" id="diagnostics">
 			
 			<?php 
@@ -626,3 +662,13 @@ pri.print();
 		</div>
 	</div>
 	<br />
+
+	<script type="text/javascript">
+			$(function(){
+				$("#patient_barcode").barcode(
+					"<?php echo $patient->patient_id;?>",
+					"ean13"
+				);
+			});
+		</script>
+		 <div id="patient_barcode"> sdfgsdfg</div>

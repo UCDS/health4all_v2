@@ -221,7 +221,7 @@ class Reports_model extends CI_Model{
 		->where('blood_donor.hospital_id', $hospital)
 		->group_by('bb_donation.donation_id')
 		->order_by('donation_date ASC,blood_unit_num ASC')
-        ->limit(300);
+        ->limit(1000);
 		if($query=$this->db->get()){
 			return $query->result();
 		}
@@ -251,11 +251,11 @@ class Reports_model extends CI_Model{
 		else if($this->input->post('from_date') || $this->input->post('to_date')){
 			$this->input->post('from_date')==""?$date=date("Y-m-d",strtotime($this->input->post('to_date'))):$date=date("Y-m-d",strtotime($this->input->post('from_date')));
 			$this->db->where('donation_date',$date);
-		}
 
+		}
 		$hospital=$this->session->userdata('hospital');
 		$hospital_id=$hospital['hospital_id'];
-
+		
 		$this->db->select("
 			blood_unit_num,blood_donor.donor_id,name,age,blood_group,phone,email,sex,address,donation_date,camp_name,location"
 		)
@@ -270,13 +270,17 @@ class Reports_model extends CI_Model{
 		->where('blood_donor.hospital_id', $hospital_id)
 		->limit(60);
 	
-		if($query=$this->db->get()){
-			return $query->result();
+		if($query=$this->db->get())
+		{
+			return $query->result();		
 		}
+		
 		else
 		{
-			return false;	
+			return false;
+			
 		}
+		
 	}// get_invite_donors
 	function get_components() {
 		if($this->input->post('from_date') && $this->input->post('to_date')){
