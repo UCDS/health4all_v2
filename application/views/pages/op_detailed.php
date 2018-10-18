@@ -172,7 +172,7 @@ $(document).ready(function(){$("#from_date").datepicker({
 		<td><?php echo $s->name;?></td>
 		<td><?php echo $age;?></td>
 		<td><?php echo $s->parent_spouse;?></td>
-		<td><?php echo $s->place;?></td>
+		<td><?php if(!!$s->address && !!$s->place) echo $s->address.", ".$s->place; else echo $s->address." ".$s->place;?></td>
 		<td><?php echo $s->phone;?></td>
 		<td><?php echo $s->department;?></td>
 		<td>

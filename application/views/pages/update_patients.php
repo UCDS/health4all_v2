@@ -664,7 +664,7 @@ pri.print();
                                     foreach($all_departments as $department){
                                         if($department->department_id==$patient->department_id){
                                             echo "<input type='text' id='department' class='form-control' value='$department->department' disabled/>";
-                                            echo "<input type='hidden' name='department' id='department' class='form-control' value='$department->department_id'/>";
+                                            echo "<input type='text' name='department' id='department' class='form-control sr-only' readonly value='$department->department_id'/>";
                                         }
                                     }
                                 }
@@ -739,7 +739,7 @@ pri.print();
                                     foreach($visit_names as $visit_name){
                                         if($visit_name->visit_name_id==$patient->visit_name_id){
                                             echo "<input type='text' id='visit_name' class='form-control' value='$visit_name->visit_name' disabled/>";
-                                            echo "<input type='hidden' name='visit_name_id' id='visit_name' class='form-control' value='$patient->visit_name_id'/>";
+                                            echo "<input type='text' name='visit_name_id' id='visit_name' class='form-control sr-only' value='$patient->visit_name_id'/>";
                                         }
                                     }
                                 }
@@ -1318,6 +1318,20 @@ pri.print();
 				</div>
 			</div>
 			<div class="row alt">
+				<div class="col-md-4 col-xs-6">
+					<label class="control-label">Blood Sugar</label>
+					<input type="text" name="blood_sugar"  style="width:50px" class="form-control blood_sugar" value="<?php if(!!$patient->blood_sugar) echo $patient->blood_sugar;?>" <?php if($f->edit==1 && empty($patient->blood_sugar)) echo ''; else echo ' readonly'; ?> /> mg/dL
+				</div>
+				<div class="col-md-4 col-xs-6">
+					<label class="control-label">Hb</label>
+					<input type="text" name="hb"  style="width:50px" class="form-control hb" value="<?php if(!!$patient->hb) echo $patient->hb;?>" <?php if($f->edit==1 && empty($patient->hb)) echo ''; else echo ' readonly'; ?> /> g/dL
+				</div>
+				<div class="col-md-4 col-xs-6">
+					<label class="control-label">Hb1Ac</label>
+					<input type="text" name="hb1ac"  style="width:50px" class="form-control hb1ac" value="<?php if(!!$patient->hb1ac) echo $patient->hb1ac;?>" <?php if($f->edit==1 && empty($patient->hb1ac)) echo ''; else echo ' readonly'; ?> />%
+				</div>
+			</div>
+			<div class="row alt">
 				<div class="col-md-12 col-xs-12">
 					<label class="control-label">
 						Symptoms
@@ -1455,6 +1469,15 @@ pri.print();
 						});
 					});
 				</script>
+			</div>
+
+			<div class="row alt">
+				<div class="col-md-12 col-xs-12">
+					<label class="control-label">
+						Signed Consultation? 
+						<input type="checkbox" <?php if($patient->signed_consultation) echo " checked ";?> class="form-control" name="signed_consultation" value = "1" />
+					</label>
+				</div>
 			</div>
 		</div>
 		<?php 
@@ -1719,8 +1742,7 @@ pri.print();
 						<th rowspan="3" class="text-center">Duration (in Days)</th>
 						<th rowspan="3" class="text-center">Frequency</th>
 						<th colspan="6" class="text-center">Timings</th>
-						<th rowspan="3" class="text-center">Quantity</th>
-						<th rowspan="3" class="text-center">Unit</th>
+						<th rowspan="3" class="text-center">Issued Quantity</th>
 						</tr>
 						<tr>
 							<th colspan="2" class="text-center">Morning</th>
@@ -1739,7 +1761,7 @@ pri.print();
 					<tbody>
 						<tr class="prescription">
 							<td>
-								<select name="drug_0" class="form-control" <?php if($f->edit==1) echo ''; else echo ' readonly'; ?> >
+								<select name="drug_0" style="width:150px;" class="form-control" >
 								<option value="">--Select--</option>
 								<?php 
 								foreach($drugs as $drug){
@@ -1752,46 +1774,36 @@ pri.print();
 								<input type="text" name="duration_0" placeholder="in Days" style="width:100px" class="form-control" />
 							</td>
 							<td>
-								<select name="frequency_0" class="form-control" <?php if($f->edit==1) echo ''; else echo ' readonly'; ?> >
-									<option value="">Select</option>
-									<option value="Daily" selected>Daily</option>
-									<option value="Alternate Days">Alternate Days</option>
+								<select name="frequency_0" class="form-control" >
+									<?php foreach($prescription_frequency as $freq){ ?>
+										<option value="<?php echo $freq->frequency;?>"><?php echo $freq->frequency;?></option>
+									<?php } ?>
 								</select>
 							</td>
 							<td>
-								<label><input type="checkbox" name="bb_0" value="1" <?php if($f->edit==1) echo ''; else echo ' readonly'; ?> /></label>
+								<label><input type="checkbox" name="bb_0" value="1"  /></label>
 							</td>
 							<td>
-								<label><input type="checkbox" name="ab_0" value="1" <?php if($f->edit==1) echo ''; else echo ' readonly'; ?> /></label>
+								<label><input type="checkbox" name="ab_0" value="1"  /></label>
 							</td>
 							<td>
-								<label><input type="checkbox" name="bl_0" value="1" <?php if($f->edit==1) echo ''; else echo ' readonly'; ?> /></label>
+								<label><input type="checkbox" name="bl_0" value="1" /></label>
 							</td>
 							<td>
-								<label><input type="checkbox" name="al_0" value="1" <?php if($f->edit==1) echo ''; else echo ' readonly'; ?> /></label>
+								<label><input type="checkbox" name="al_0" value="1" /></label>
 							</td>
 							<td>
-								<label><input type="checkbox" name="bd_0" value="1" <?php if($f->edit==1) echo ''; else echo ' readonly'; ?> /></label>
+								<label><input type="checkbox" name="bd_0" value="1" /></label>
 							</td>
 							<td>
-								<label><input type="checkbox" name="ad_0" value="1" <?php if($f->edit==1) echo ''; else echo ' readonly'; ?> /></label>
+								<label><input type="checkbox" name="ad_0" value="1" /></label>
 							</td>
 							<td>
-								<input type="text" name="quantity_0" style="width:100px" class="form-control" <?php if($f->edit==1) echo ''; else echo ' readonly'; ?> />
+								<input type="text" name="quantity_0" style="width:100px" class="form-control" />
+								<input type="text" name="prescription[]" class="sr-only" value="0"  />
 							</td>
 							<td>
-								<select name="lab_unit_0" class="form-control" <?php if($f->edit==1) echo ''; else echo ' readonly'; ?> >
-								<option value="">--Select--</option>
-								<?php 
-								foreach($lab_units as $unit){
-									echo "<option value='".$unit->lab_unit_id."'>".$unit->lab_unit."</option>";
-								}
-								?>
-								</select>
-								<input type="text" name="prescription[]" class="sr-only" value="0"  <?php if($f->edit==1) echo ''; else echo ' readonly'; ?> />
-							</td>
-							<td>
-								<button type="button" class="btn btn-primary btn-sm" id="prescription_add" <?php if($f->edit==1) echo ''; else echo ' readonly'; ?>>Add</button>
+								<button type="button" class="btn btn-primary btn-sm" id="prescription_add" >Add</button>
 							</td>
 						</tr>
 					</tbody>
@@ -1836,7 +1848,7 @@ pri.print();
 						<td><?php if($pres->afternoon == 2 || $pres->afternoon == 3) echo "<i class='fa fa-check'></i>";?></td>
 						<td><?php if($pres->evening == 1 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
 						<td><?php if($pres->evening == 2 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
-						<td><?php echo $pres->quantity;?> <?php echo $pres->lab_unit;?></td>
+						<td><?php echo $pres->quantity;?> </td>
 						<td>
 							<?php echo form_open('register/update_patients',array('class'=>'form-custom'));?>
 							<input type="text" class="sr-only" value="<?php echo $pres->prescription_id;?>" name="prescription_id" hidden />
@@ -2003,6 +2015,9 @@ pri.print();
 					<div class="row">
 					<div class="col-md-10">
 						<div class="form-group">
+
+						<label class="control-label">H4A ID</label>
+						<input type="text" name="search_patient_id" size="5" class="form-control" />
 						<label class="control-label">Year</label>
 						<select class="form-control" name="search_year">
 							<?php 
@@ -2066,9 +2081,9 @@ pri.print();
 							'</td>'+
 							'<td>'+
 								'<select name="frequency_'+$i+'" class="form-control">'+
-									'<option value="">Select</option>'+
-									'<option value="Daily" selected>Daily</option>'+
-									'<option value="Alternate Days">Alternate Days</option>'+
+								<?php foreach($prescription_frequency as $freq){ ?>
+									'<option value="<?php echo $freq->frequency;?>"><?php echo $freq->frequency;?></option>'+
+								<?php } ?>
 								'</select>'+
 							'</td>'+
 							'<td>'+
@@ -2092,13 +2107,7 @@ pri.print();
 							'<td>'+
 								'<input type="text" name="quantity_'+$i+'" style="width:100px" class="form-control" />'+
 							'</td>'+
-							'<td>'+
-								'<select name="lab_unit_'+$i+'" class="form-control">'+
-								'<option value="">--Select--</option>'+
-								'<?php foreach($lab_units as $unit){ echo '"<option value="'.$unit->lab_unit_id.'">'.$unit->lab_unit.'</option>'; }?>'+
-								'</select>'+
-							'<input type="text" name="prescription[]" class="sr-only" value="'+$i+'" /></td>'+
-							'<td>'+
+							'<td><input type="text" name="prescription[]" class="sr-only" value="'+$i+'" />'+
 								'<button type="button" class="btn btn-danger btn-sm" onclick="$(this).parent().parent().remove()">X</button>'+
 							'</td>'+
 						'</tr>';

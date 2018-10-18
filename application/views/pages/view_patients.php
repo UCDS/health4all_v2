@@ -620,6 +620,9 @@ pri.print();
 					<div class="row">
 					<div class="col-md-12 col-xs-12">
 						<div class="form-group">
+
+						<label class="control-label">H4A ID</label>
+						<input type="text" name="search_patient_id" size="5" class="form-control" />
 						<label class="control-label">Year</label>
 						<select class="form-control" name="search_year">
 							<?php 
@@ -671,4 +674,3 @@ pri.print();
 				);
 			});
 		</script>
-		 <div id="patient_barcode"> sdfgsdfg</div>

@@ -158,8 +158,9 @@ class Register_model extends CI_Model{
 			'state_code'=>$state_code,
 			'district_id'=>$district,
 			'identification_marks'=>$identification_marks,
-                        'insert_by_user_id'=>$user_id,
-                        'insert_datetime'=>date("Y-m-d H:i:s")
+
+			'insert_by_user_id'=>$user_id,
+			'insert_datetime'=>date("Y-m-d H:i:s")
 		);		
         	if($form_type != "IP"){
 			if($this->input->post('patient_id_manual')) $patient_id_manual=$this->input->post('patient_id_manual'); else $patient_id_manual="";
@@ -366,6 +367,9 @@ class Register_model extends CI_Model{
 		if($this->input->post('respiratory_rate')) $respiratory_rate=$this->input->post('respiratory_rate'); else $respiratory_rate="";
 		if($this->input->post('temperature')) $temperature=$this->input->post('temperature'); else $temperature="";
 		if($this->input->post('admit_weight')) $admit_weight=$this->input->post('admit_weight'); else $admit_weight="";
+		if($this->input->post('blood_sugar')) $blood_sugar=$this->input->post('blood_sugar'); else $blood_sugar="";
+		if($this->input->post('hb')) $hb=$this->input->post('hb'); else $hb="";
+		if($this->input->post('hb1ac')) $hb1ac=$this->input->post('hb1ac'); else $hb1ac="";
 		// if($this->input->post('discharge_weight')) $discharge_weight=$this->input->post('discharge_weight'); else $discharge_weight="";
 		if($this->input->post('phone')) $phone=$this->input->post('phone'); else $phone="";
 		if($this->input->post('alt_phone')) $alt_phone=$this->input->post('alt_phone'); else $alt_phone="";
@@ -402,6 +406,8 @@ class Register_model extends CI_Model{
 			if(!!$clinical_data)
 			$this->db->insert_batch('patient_clinical_notes',$clinical_data);
 		}
+		if($this->input->post('signed_consultation')) $signed_consultation=$this->input->post('signed_consultation'); else $signed_consultation=0;
+		
 		
 
 		
@@ -513,6 +519,9 @@ class Register_model extends CI_Model{
 			'respiratory_rate'=>$respiratory_rate,
 			'temperature'=>$temperature,
 			'admit_weight'=>$admit_weight,
+			'blood_sugar'=>$blood_sugar,
+			'hb'=>$hb,
+			'hb1ac'=>$hb1ac,
 			// 'discharge_weight'=>$discharge_weight,
 			// 'visit_type'=>$form_type,
 			// 'patient_id'=>$patient_id,
@@ -528,6 +537,7 @@ class Register_model extends CI_Model{
 			'rs'=>$rs,
 			'pa'=>$pa,
 			'cns'=>$cns,
+			'signed_consultation'=>$signed_consultation,
 			// 'admit_date'=>$date,
 			// 'admit_time'=>$time,
 			'mlc'=>$mlc_radio,
@@ -543,7 +553,8 @@ class Register_model extends CI_Model{
 			'decision'=>$decision,
 			'advise'=>$advise,
 			'icd_10'=>$icd_code,
-                        'ip_file_received' => $ip_file_received
+			 'ip_file_received' => $ip_file_received,
+			 'update_by_user_id' => $user_id
 		);
                 $visit_id = '';
 		if($this->input->post('visit_id')){
@@ -658,7 +669,6 @@ class Register_model extends CI_Model{
 			$bd=$this->input->post('bd_'.$pre);
 			$ad=$this->input->post('ad_'.$pre);
 			$quantity=$this->input->post('quantity_'.$pre);
-			$unit=$this->input->post('lab_unit_'.$pre);
 			$drug = $this->input->post('drug_'.$pre);
 				$morning=0;$afternoon=0;$evening=0;
 				if(!!$bb && !!$ab) $morning = 3;
@@ -679,7 +689,6 @@ class Register_model extends CI_Model{
 					'afternoon'=>$afternoon,
 					'evening'=>$evening,
 					'quantity'=>$quantity,
-					'unit_id'=>$unit
 				);
 				}
 			}
@@ -737,7 +746,7 @@ class Register_model extends CI_Model{
 		}
 		if($this->input->post('search_patient_name')){
 			$name=$this->input->post('search_patient_name');
-			$this->db->like("LOWER(CONCAT(first_name,' ',last_name))",strtolower($name),'after');
+			$this->db->like("LOWER(CONCAT(patient.first_name,' ',patient.last_name))",strtolower($name),'after');
 		}
 		if($this->input->post('search_visit_type')){
 			$this->db->where('visit_type',$this->input->post('search_visit_type'));
@@ -770,10 +779,11 @@ class Register_model extends CI_Model{
 		$this->db->where('patient_visit.hospital_id',$hospital['hospital_id']);
 			
 		//Build the query to retrieve the patient records based on the search query.
-		$this->db->select("patient.*,patient_visit.*,CONCAT(first_name,' ',last_name) name,
+		$this->db->select("patient.*,patient_visit.*,CONCAT(patient.first_name,' ',patient.last_name) name,
 		IF(father_name IS NULL OR father_name='',spouse_name,father_name) parent_spouse,patient.*,patient_visit.*,mlc.*,occupation.occupation,id_proof_type,
 		area_name,state.state_id,state.state,hospital,unit_name,unit.unit_id,code_title,area.area_id,district.district,department,patient.patient_id,patient_visit.visit_id, 
-                patient_procedure.procedure_duration, patient_procedure.procedure_note, patient_procedure.procedure_findings, visit_name.visit_name",false)
+				patient_procedure.procedure_duration, patient_procedure.procedure_note, patient_procedure.procedure_findings, visit_name.visit_name,
+				CONCAT(staff.first_name,' ',staff.last_name) doctor_name,designation",false)
 		->from('patient')
 		->join('patient_visit','patient.patient_id=patient_visit.patient_id')
                 ->join('visit_name','patient_visit.visit_name_id=visit_name.visit_name_id','left')
@@ -788,6 +798,8 @@ class Register_model extends CI_Model{
 		->join('id_proof_type','patient.id_proof_type_id=id_proof_type.id_proof_type_id','left')
 		->join('icd_code','patient_visit.icd_10=icd_code.icd_code','left')
 		->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
+		->join('user', 'patient_visit.update_by_user_id = user.user_id', 'left')
+		->join('staff','user.staff_id = staff.staff_id','left')
 		->order_by('name','ASC');
 		$query=$this->db->get();
 		//return the search results
@@ -846,8 +858,7 @@ class Register_model extends CI_Model{
 	}
 	
 	function get_prescription($visit_id){
-		$this->db->select('prescription.*,item_name,lab_unit')->from('prescription')
-		->join('lab_unit','prescription.unit_id = lab_unit.lab_unit_id')
+		$this->db->select('prescription.*,item_name')->from('prescription')
 		->join('item','prescription.item_id = item.item_id')
 		->where('visit_id',$visit_id)->where('status',1);
 		$query=$this->db->get();

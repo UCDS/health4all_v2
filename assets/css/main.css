@@ -223,7 +223,7 @@ padding:20px;
 	width:100%;
 	position:relative;
 }
-#table-prescription td{
+#table-prescription td, th{
 	border:1px solid black;
 	padding:3px;
 }

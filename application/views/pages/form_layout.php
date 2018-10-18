@@ -649,48 +649,6 @@
 						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
 						</div>
 					</div>
-					<div class="layout-div col-md-4 past_history">
-						<div class="form-group">
-						<label class="control-label">Past history</label>
-						<input type="text" name="" class="past_history" class="form-control" />
-						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
-						</div>
-					</div>
-					<div class="layout-div col-md-4 admit_weight">
-						<div class="form-group">
-						<label class="control-label">Admit Weight</label>
-						<input type="text" name="" class="admit_weight" class="form-control" />
-						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
-						</div>
-					</div>
-					<div class="layout-div col-md-4 pulse_rate">
-						<div class="form-group">
-						<label class="control-label">Pulse Rate</label>
-						<input type="text" name="" class="pulse_rate form-control" />
-						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
-						</div>
-					</div>
-					<div class="layout-div col-md-4 respiratory_rate">
-						<div class="form-group">
-						<label class="control-label">Respiratory Rate</label>
-						<input type="text" name="" class="respiratory_rate form-control" />
-						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
-						</div>
-					</div>
-					<div class="layout-div col-md-4 temperature">
-						<div class="form-group">
-						<label class="control-label">Temperature</label>
-						<input type="text" name="" class="temperature" class="form-control" />
-						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
-						</div>
-					</div>
-					<div class="layout-div col-md-4 blood_pressure">
-						<div class="form-group">
-						<label class="control-label">Blood Pressure</label>
-						<input type="text" name="" class="blood_pressure" class="form-control" />
-						<span class="star" title="Click to toggle mandatory">*<input type="checkbox" value="1" class="mandatory" hidden /></span>
-						</div>
-					</div>
 					<div class="layout-div col-md-4 outcome">
 						<div class="radio ">
 						<label class="control-label">

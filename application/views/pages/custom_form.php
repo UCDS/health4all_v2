@@ -283,11 +283,15 @@ pri.print();
 					case "gender" : ?>
 					<div class="<?php echo $class;?>">
 						<div class="radio">
-						<label class="control-label"><input type="radio" class="gender" value="M" name="gender" <?php if($patient)  if($patient->gender=="M") echo " checked ";?> <?php if($field->mandatory) echo "required"; ?> />Male</label>
-						<label class="control-label"><input type="radio" class="gender" value="F" name="gender" <?php if($patient)  if($patient->gender=="F") echo " checked ";?> <?php if($field->mandatory) echo "required"; ?> />Female</label>
-						<label class="control-label"><input type="radio" class="gender" value="O" name="gender" <?php if($patient)  if($patient->gender=="O") echo " checked ";?> <?php if($field->mandatory) echo "required"; ?> />Others</label>
-						<?php if($field->mandatory) { ?><span class="mandatory" >*</span><?php } ?>
+						<label class="control-label"><input type="radio" class="gender" value="M" name="gender" <?php if($patient)  if($patient->gender=="M") echo " checked ";?> <?php if($field->mandatory) echo "required"; ?> /> Male</label>
 						</div>
+						<div class="radio">
+						<label class="control-label"><input type="radio" class="gender" value="F" name="gender" <?php if($patient)  if($patient->gender=="F") echo " checked ";?> <?php if($field->mandatory) echo "required"; ?> /> Female</label>
+						</div>
+						<div class="radio">
+						<label class="control-label"><input type="radio" class="gender" value="O" name="gender" <?php if($patient)  if($patient->gender=="O") echo " checked ";?> <?php if($field->mandatory) echo "required"; ?> /> Others</label>
+						</div>
+						<?php if($field->mandatory) { ?><span class="mandatory" >*</span><?php } ?>
 					</div>
 				<?php 
 					break;					

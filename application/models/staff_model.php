@@ -549,5 +549,12 @@ class Staff_model extends CI_Model{
 		$query=$this->db->get();
 		return $query->result();
 	}
+	function get_prescription_frequency(){
+
+		$this->db->select("frequency")
+			->from("prescription_frequency");
+		$query=$this->db->get();
+		return $query->result();
+	}
 }
 ?>
