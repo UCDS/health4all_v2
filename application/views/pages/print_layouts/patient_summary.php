@@ -1,9 +1,35 @@
-		<link rel="stylesheet" href="<?php echo base_url();?>assets/css/main.css" media="print" >
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/font-awesome.min.css" media="print">
+		<script type="text/javascript" src="<?php echo base_url();?>assets/js/qrcode.min.js"></script>  
 		<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-barcode.min.js"></script>
 		
 		<?php $patient=$patients[0];?>
+		<style>
+			@media print{
+			table{
+				font-family: "Trebuchet MS","Sans Serif", Serif;
 
+			}
+			tbody{
+				border:1px solid #ccc;
+			}
+			td{
+				padding:3px;
+			}
+			table {
+				border-collapse:collapse;
+				border-spacing:0;
+			}
+			#table-prescription{
+				width:100%;
+				position:relative;
+			}
+			#table-prescription td, th{
+				border:1px solid black;
+				padding:3px;
+			}
+
+			}
+		</style>
 		<script type="text/javascript">
 			$(function(){
 
@@ -17,73 +43,161 @@
 				);
 			});
 		</script>
-		<table style="width:98%;padding:5px">
+		<table style="width:98%;padding:5px;">
+				<tbody>
 				<tr>
 				<td colspan="3">
-				<img style="float:right" style="margin-top:-20px" src="<?php echo base_url();?>assets/images/ap-logo.png" width="60px" />
-				<img style="float:left" src="<?php echo base_url();?>assets/images/<?php $hospital=$this->session->userdata('hospital');echo $hospital['logo'];?>" width="60px" />
+				<span style="position:absolute;" id="patient_barcode"></span>
+				<div style="float:right; margin-right:10%;">
+					<div id="qr_code" style="position:absolute;padding-top:2px;"></div>
+					<div style="position:absolute;top:75px;font-size:10px;"><b>ID:</b> <?php echo $patient->patient_id;?></div>
+
+					<?php
+						if($patient->gender == "M"){
+							$relation = "S/O";
+						} 
+						else $relation = "D/O";
+						$qr_text = "i:".$patient->patient_id." n:".$patient->name." g:".$patient->gender." a:".$patient->age_years." r:".$relation." s:".$patient->parent_spouse." l:".$patient->place." p:".$patient->phone;
+					?>
+					<script type="text/javascript">
+						document.getElementById("qr_code").innerHTML="";
+						var qrcode = new QRCode(document.getElementById("qr_code"), {
+							width : 55,
+							height : 55
+						});
+						qrcode.makeCode("<?php echo $qr_text;?>");
+					</script>
+				</div>
+				<div>
+					<div style="position:absolute;" id="barcode"></div>
+				</div>
+				<?php $hospital=$this->session->userdata('hospital');?>
 				<div style="float:middle;text-align:center">
-				<font size="4"><?php echo $hospital['hospital'];?></font>
-					<?php echo $hospital['description'];?> 
+				<font size="4"><?php echo $hospital['hospital'];?></font><br />
+					<?php if(!!$hospital['description']) echo $hospital['description']."<br />";?>
 					@ 
-					<?php echo $hospital['district'];?>
-					<br />
-					<br />
-				<span style="border:1px solid #ccc;padding:5px;margin:5px;"><u><b>
-					<?php if($patient->visit_type == "OP") echo "CONSULTATION"; else echo "DISCHARGE";?> SUMMARY</b></u></span>
+					<?php echo $hospital['place']; ?>, 
+					<?php echo $hospital['district']; ?>
 				<br />
 				<br />
+				<span ><b>
+					<?php if($patient->visit_type == "OP") echo "CONSULTATION"; else echo "DISCHARGE";?> SUMMARY</b></span>
+				<br />
+				<?php 
+					if($patient->visit_type == "OP") 
+						echo "Consultation"; 
+					else 
+						echo "Admit";?> Date: <?php echo date("d-M-Y",strtotime($patient->admit_date)); echo " ".date("g:iA",strtotime($patient->admit_time)); 
+					if($patient->visit_type != "OP"){ 
+						echo ", ";
+						if(!!$patient->outcome) echo $patient->outcome; else echo "Discharge"?> 
+							Date: 
+							<?php 
+							if($patient->outcome_date != 0) echo date("d-M-Y",strtotime($patient->outcome_date)); 
+							if($patient->outcome_time != 0) echo " ".date("g:iA",strtotime($patient->outcome_time)); 
+					}
+					?>
 				</div>
 				</td>
 				</tr>
-				<tbody height="10%" style="border:1px solid black;">
+				</tbody>
+				<tbody height="10%">
 				<tr width="95%">
-					<td>
-						<span>Patient ID: <b><?php echo $patient->patient_id;?></b></span> <span style="position:relative;float:right" id="patient_barcode"></span>
-					</td>
-				</tr>
-				<tr width="95%">
-						<td style="padding:5px;">Name: <?php echo $patient->name; ?></td>
-						<td>Age/Sex: <?php 
+						<td style="padding-top:20px"><b>Name: </b><?php echo $patient->name; ?></td>
+						<td style="padding-top:20px"><b>Age/Sex: </b><?php 
 							if($patient->age_years!=0){ echo $patient->age_years." Yrs "; } 
 							if($patient->age_months!=0){ echo $patient->age_months." Mths "; }
 							if($patient->age_days!=0){ echo $patient->age_days." Days "; }
 							if($patient->age_years==0 && $patient->age_months == 0 && $patient->age_days==0) echo "0 Days";
 							echo "/".$patient->gender; ?></td>
-						<td> <?php if($patient->visit_type == "OP") echo "Consultation"; else echo "Admit";?> Date:<?php echo date("d-M-Y",strtotime($patient->admit_date)); 
-						echo date("g:iA",strtotime($patient->admit_time)); ?></td>
-				</tr>
-				<tr width="95%">
-						<td  style="padding:5px;">Father / Spouse Name :  <?php echo $patient->parent_spouse; ?></td>
-						<td>Address: <?php echo $patient->place; ?></td>
-						<td>Phone : <?php echo $patient->phone; ?></td>
-				</tr>
-				<tr width="95%">
-						<td>Department : <?php echo $patient->department; ?> </td>
-						<td  style="padding:5px;"><?php echo $patient->visit_type;?> number : <?php echo $patient->hosp_file_no; ?></td>
+
 						<td>
-						<?php if($patient->visit_type != "OP"){ 
-							if(!!$patient->outcome) echo $patient->outcome; else echo "Discharge"?> 
-							Date: 
-							<?php 
-							if($patient->outcome_date != 0) echo date("d-M-Y",strtotime($patient->outcome_date)); 
-							if($patient->outcome_time != 0) echo date("g:iA",strtotime($patient->outcome_time)); 
-						}
-						?></td>
+							
+						</td> 
+				</tr>
+				<tr width="95%">
+						<td><b>Father/Spouse: </b> <?php echo $patient->parent_spouse; ?></td>
+						<td><b>Address:</b> <?php echo $patient->address." ".$patient->place; ?></td>
+						<td></td>
+				</tr>
+				<tr width="95%">
+						<td><b><?php echo $patient->visit_type;?> number : </b><?php echo $patient->hosp_file_no; ?></td>
+						<td><b>Department : </b><?php echo $patient->department; ?> </td>
+						<td><b>Phone : </b><?php echo $patient->phone; ?></td>
 				</tr>
 				</tbody>
-				<?php if(!!$patient->clinical_findings) { ?>
-				<tr class="print-element" width="95%" height="80px">
+				<tbody>
+				<?php if(!!$patient->admit_weight || !!$patient->sbp || !!$patient->dbp || !!$patient->pulse_rate){ ?>
+				<tr class="print-element">
+					<td style="padding-top:20px">
+					<b>Weight: </b><?php  if(!!$patient->admit_weight) echo $patient->admit_weight." kgs";?> 
+					</td>
+					<td style="padding-top:20px">
+					<b>BP: </b><?php  if(!!$patient->sbp && !!$patient->dbp) echo $patient->sbp."/".$patient->dbp;?> 
+					</td>
+					<td style="padding-top:20px">
+					<b>Pulse Rate: </b><?php if(!!$patient->pulse_rate) echo $patient->pulse_rate;?>
+					</td>
+				</tr>
+				<?php } ?>
+				<?php if(!!$patient->temperature || !!$patient->respiratory_rate){ ?>
+				<tr class="print-element">
+					<td>
+					<b>Temperature: </b><?php if(!!$patient->temperature) echo  $patient->temperature." F";?> 
+					</td>
+					<td>
+					<b>Respiratory Rate: </b><?php if(!!$patient->respiratory_rate) echo  $patient->respiratory_rate;?> 
+					</td>
+					<td></td>
+				</tr>
+				<?php } ?>
+				<?php if(!!$patient->blood_sugar || !!$patient->hb || !!$patient->hb1ac){ ?>
+				<tr class="print-element">
+					<td>
+					<b>Blood Sugar:</b> <?php if(!!$patient->blood_sugar) echo $patient->blood_sugar." mg/dL";?> 
+					</td>
+					<td>
+					<b>Hb:</b> <?php  if(!!$patient->hb) echo $patient->hb." g/dL";?>
+					</td>
+					<td>
+					<b>Hb1Ac: </b><?php  if(!!$patient->hb1ac) echo $patient->hb1ac."%";?> 
+					</td>
+				</tr>
+				<?php } ?>
+				<?php if(!!$patient->presenting_complaints) { ?>
+				<tr class="print-element">
+					<td  style="padding-top:20px" colspan="3">
+					<b>Symptoms: </b><?php echo $patient->presenting_complaints;?> 
+					</td>
+				</tr>
+				<?php } ?>
+				<?php if(!!$patient->past_history) { ?>
+				<tr class="print-element">
 					<td colspan="3">
+					<b>Past History: </b><?php echo $patient->past_history;?> 
+					</td>
+				</tr>
+				<?php } ?>
+				<?php if(!!$patient->family_history) { ?>
+				<tr class="print-element">
+					<td colspan="3">
+					<b>Family History: </b><?php echo $patient->family_history;?> 
+					</td>
+				</tr>
+				<?php } ?>
+				</tbody>
+				<?php if(!!$patient->clinical_findings) { ?>
+				<tr class="print-element" width="95%">
+					<td colspan="3"  style="padding-top:20px">
 					<b>Clinical Findings</b>: <?php echo $patient->clinical_findings;?>
 					</td>
 				</tr>
 				<?php } ?>
 				<?php if(isset($clinical_notes) &&  !!$clinical_notes) { ?>
-				<tr class="print-element" width="95%" height="80px">				
+				<tr class="print-element" width="95%" >				
 					<td colspan="3"><b><u>Cinical Notes</u></b></td>
 				</tr>
-				<tr class="print-element" width="95%" height="80px">				
+				<tr class="print-element" width="95%" >				
 					<td colspan="3">
 							<table border=1 cellpadding="5" style="border-collapse:collapse;width:100%;">
 							<thead>
@@ -106,6 +220,35 @@
 							</tbody>
 							</table>
 							<br />
+					</td>
+				</tr>
+				<?php } ?>
+
+				<?php if(!!$patient->cvs) { ?>
+				<tr class="print-element">
+					<td colspan="3">
+					<b>CVS: </b><?php echo $patient->cvs;?> 
+					</td>
+				</tr>
+				<?php } ?>
+				<?php if(!!$patient->rs) { ?>
+				<tr class="print-element">
+					<td colspan="3">
+					<b>RS: </b><?php echo $patient->rs;?> 
+					</td>
+				</tr>
+				<?php } ?>
+				<?php if(!!$patient->pa) { ?>
+				<tr class="print-element">
+					<td colspan="3">
+					<b>PA:</b> <?php echo $patient->pa;?> 
+					</td>
+				</tr>
+				<?php } ?>
+				<?php if(!!$patient->cns) { ?>
+				<tr class="print-element">
+					<td colspan="3">
+					<b>CNS: </b><?php echo $patient->cns;?> 
 					</td>
 				</tr>
 				<?php } ?>
@@ -138,7 +281,7 @@
 								<?php
 								foreach($text_result_tests as $order) { 
 									if($order->order_id == $ord) { ?>
-									<tr class="print-element" width="95%" height="40px">
+									<tr class="print-element" width="95%" >
 										<td colspan="3">
 											<span style="float:right"><?php echo $order->order_date_time;?></span>
 											<b>Test: </b> <?php echo $order->test_name;?><br />
@@ -152,7 +295,7 @@
 				<?php } 
 				if(count($tests)>0){?>
 				
-				<tr class="print-element" width="95%" height="40px">
+				<tr class="print-element" width="95%" >
 					<td colspan="3">
 					<br>
 						<table id="table-prescription">
@@ -214,23 +357,15 @@
 				<?php }
 				} ?>
 				<?php if(!!$patient->final_diagnosis) { ?>
-				<tr class="print-element" width="95%" height="40px">
+				<tr class="print-element" width="95%" >
 					<td colspan="3">
 					<b>Final Diagnosis</b>: <?php echo $patient->final_diagnosis;?>
 					</td>
 				</tr>
 				<?php } ?>
-				<?php if(!!$patient->advise) { ?>
-				<tr class="print-element" width="95%" height="40px">
-					<td colspan="3">
-					<b>Advise</b>: <?php echo $patient->advise;?>
-					</td>
-				</tr>
-				<?php } ?>
 				<?php if(isset($prescription) && !!$prescription){ ?>
 				<tr class="print-element" width="95%">
-					<td class="print-text" colspan="3">
-					<hr>
+					<td  style="padding-top:20px" class="print-text" colspan="3">
 						<b><u>Medicines Prescribed: </u></b>
 					</td>
 				</tr>
@@ -242,14 +377,14 @@
 						<tr>
 							<th rowspan="2" width="30px">S.no</th>
 							<th rowspan="2" width="20%;">
-							<img src="<?php echo base_url();?>assets/images/medicines.jpg" width="30px" alt="" />
+							<img src="<?php echo base_url();?>assets/images/medicines.jpg" width="20px" alt="" />
 							Medicine
-							<img src="<?php echo base_url();?>assets/images/syrup.jpg" width="30px" alt="" /></th>
-							<th rowspan="2" width="50px">Strength/ Quantity</th>
+							<img src="<?php echo base_url();?>assets/images/syrup.jpg" width="20px" alt="" /></th>
 							<th rowspan="2" width="50px">Frequency</th>
-							<th rowspan="2" width="50px"><img src="<?php echo base_url();?>assets/images/calendar.jpg" width="30px" alt="Days" /><br />Days</th>
-							<th colspan="6" align="center" width="300px"><img src="<?php echo base_url();?>assets/images/timings.jpg" width="50px" height="40px" alt="Timings" />
-							<span style="top:-10px;position:relative;">Timings</span></th>
+							<th rowspan="2" width="50px"><img src="<?php echo base_url();?>assets/images/calendar.jpg" width="20px" alt="Days" /><br />Days</th>
+							<th colspan="6" align="center" width="300px"><img src="<?php echo base_url();?>assets/images/timings.jpg" width="20px"  alt="Timings" />
+							<span style="position:relative;">Timings</span></th>
+							<th rowspan="2" width="50px">Issued Quantity</th>
 						</tr>
 						<tr align="center">
 							<th colspan="2" width="30px"><img src="<?php echo base_url();?>assets/images/morning.jpg" width="30px" height="30px" />
@@ -271,17 +406,17 @@
 					$i=1;
 					foreach($prescription as $pres){ ?>
 					<tr>
-						<td><?php echo $i++;?></td>
+						<td width="30px"  style="padding-left:15px"><?php echo $i++;?></td>
 						<td><?php echo $pres->item_name;?></td>
-						<td><?php echo $pres->quantity;?> <?php echo $pres->lab_unit;?></td>
 						<td><?php echo $pres->frequency;?></td>
-						<td><?php echo $pres->duration;?></td>
-						<td><?php if($pres->morning == 1 || $pres->morning == 3) echo "<i class='fa fa-check'></i>";?></td>
-						<td><?php if($pres->morning == 2 || $pres->morning == 3) echo " <i class='fa fa-check'></i>";?></td>
-						<td><?php if($pres->afternoon == 1 || $pres->afternoon == 3) echo "<i class='fa fa-check'></i>";?></td>
-						<td><?php if($pres->afternoon == 2 || $pres->afternoon == 3) echo "<i class='fa fa-check'></i>";?></td>
-						<td><?php if($pres->evening == 1 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
-						<td><?php if($pres->evening == 2 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td width="40px" style="padding-left:20px"><?php echo $pres->duration;?></td>
+						<td width="30px" style="padding-left:15px"><?php if($pres->morning == 1 || $pres->morning == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td width="30px" style="padding-left:15px"><?php if($pres->morning == 2 || $pres->morning == 3) echo " <i class='fa fa-check'></i>";?></td>
+						<td width="30px" style="padding-left:15px"><?php if($pres->afternoon == 1 || $pres->afternoon == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td width="30px" style="padding-left:15px"><?php if($pres->afternoon == 2 || $pres->afternoon == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td width="30px" style="padding-left:15px"><?php if($pres->evening == 1 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td width="30px" style="padding-left:15px"><?php if($pres->evening == 2 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
+						<td><?php if($pres->quantity > 0) echo $pres->quantity;?></td>
 					</tr>
 					<?php } ?>
 					</tbody>
@@ -289,9 +424,23 @@
 				</td>
 				</tr>
 				<?php } ?>
-				<tr class="print-element" width="95%" height="40px">
+
+				<?php if(!!$patient->advise) { ?>
+				<tr class="print-element" width="95%" >
+					<td  style="padding-top:20px" colspan="3">
+					<b>Advise</b>: <?php echo $patient->advise;?>
+					</td>
+				</tr>
+				<?php } ?>
+				<tr class="print-element" width="95%" >
 					<td colspan="3" style="text-align:right">
-						<b>Doctor</b>
+					<b><?php if($patient->signed_consultation){
+							echo $patient->doctor_name."<br />".$patient->designation;
+						}
+						else{ ?>
+						Doctor
+						<?php } ?>
+						</b>
 					</td>
 				</tr>				
 		</table>

@@ -244,6 +244,7 @@ class Register extends CI_Controller {
 				if(count($this->data['patients'])==1){
 					$this->load->model('diagnostics_model');
 					$visit_id = $this->data['patients'][0]->visit_id;
+					$this->data['prescription_frequency'] = $this->staff_model->get_prescription_frequency();
 					$this->data['prescription']=$this->register_model->get_prescription($visit_id);
 					$this->data['tests']=$this->diagnostics_model->get_all_tests($visit_id);
 					$this->data['clinical_notes']=$this->register_model->get_clinical_notes($visit_id);
@@ -256,6 +257,7 @@ class Register extends CI_Controller {
 					$this->load->model('diagnostics_model');
 					$visit_id = $this->data['patients'][0]->visit_id;
                     $this->data['transfers'] = $this->patient_model->get_transfers_info($visit_id);
+					$this->data['prescription_frequency'] = $this->staff_model->get_prescription_frequency();
 					$this->data['transport'] = $this->staff_model->get_transport_log();
 					$this->data['prescription']=$this->register_model->get_prescription($visit_id);
 					$this->data['tests']=$this->diagnostics_model->get_all_tests($visit_id);

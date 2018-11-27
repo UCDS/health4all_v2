@@ -72,7 +72,7 @@ class Reports_model extends CI_Model{
 		SUM(CASE WHEN gender = 'F' AND age_years >= 60 THEN 1 ELSE 0 END) 'op_f60plus',
 		  SUM(CASE WHEN gender = 'M' AND age_years > 60 THEN 1 ELSE 0 END) 'op_m60plus'");
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
-		 ->join('department','patient_visit.department_id=department.department_id')
+		 ->join('department','patient_visit.department_id=department.department_id','left')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
 		 ->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
@@ -154,7 +154,7 @@ class Reports_model extends CI_Model{
 		SUM(CASE WHEN gender = 'F' AND age_years >= 60 THEN 1 ELSE 0 END) 'ip_f60plus',
 		  SUM(CASE WHEN gender = 'M' AND age_years >= 60 THEN 1 ELSE 0 END) 'ip_m60plus'");
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
-		 ->join('department','patient_visit.department_id=department.department_id')
+		 ->join('department','patient_visit.department_id=department.department_id','left')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
 		 ->join('visit_name','patient_visit.visit_name_id=visit_name.visit_name_id','left')
@@ -234,7 +234,7 @@ class Reports_model extends CI_Model{
         SUM(CASE WHEN outcome = 'Death' THEN 1 ELSE 0 END) 'total_death',
         SUM(CASE WHEN outcome!='Discharge' AND outcome!='LAMA' AND outcome!='Absconded' AND outcome!= 'Death' THEN 1 ELSE 0 END) 'total_unupdated'");
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
-		 ->join('department','patient_visit.department_id=department.department_id')
+		 ->join('department','patient_visit.department_id=department.department_id','left')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
 		 ->join('visit_name','patient_visit.visit_name_id=visit_name.visit_name_id','left')
@@ -390,7 +390,7 @@ class Reports_model extends CI_Model{
 		 $this->db->from('patient_visit')
 		 ->join('patient','patient_visit.patient_id=patient.patient_id')
 		 ->join('mlc','mlc.visit_id=patient_visit.visit_id','left')
-		 ->join('department','patient_visit.department_id=department.department_id')
+		 ->join('department','patient_visit.department_id=department.department_id','left')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
 		 ->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
@@ -489,7 +489,7 @@ class Reports_model extends CI_Model{
 		age_years,age_months,age_days,patient.place,phone,address,admit_date,admit_time, department,unit_name,area_name,mlc_number,mlc_number_manual,
 		outcome,outcome_date,outcome_time",false);
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
-		 ->join('department','patient_visit.department_id=department.department_id')
+		 ->join('department','patient_visit.department_id=department.department_id','left')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
 		 ->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
@@ -579,7 +579,7 @@ class Reports_model extends CI_Model{
 		age_years,age_months,age_days,patient.place,phone,address,admit_date,admit_time, department,unit_name,area_name,mlc_number,icd_10,outcome,final_diagnosis,
 		outcome_date,outcome_time",false);
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
-		 ->join('department','patient_visit.department_id=department.department_id')
+		 ->join('department','patient_visit.department_id=department.department_id','left')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
 		 ->join('mlc','patient_visit.visit_id=mlc.visit_id','left')
@@ -671,7 +671,7 @@ class Reports_model extends CI_Model{
 		->join('staff','test_order.doctor_id=staff.staff_id','left')
 		->join('patient_visit','test_order.visit_id=patient_visit.visit_id')
 		->join('patient','patient_visit.patient_id=patient.patient_id')
-		->join('department','patient_visit.department_id=department.department_id')
+		->join('department','patient_visit.department_id=department.department_id','left')
 		->join('unit','patient_visit.unit=unit.unit_id','left')
 		->join('area','patient_visit.area=area.area_id','left')
 		->join('specimen_type','test_sample.specimen_type_id=specimen_type.specimen_type_id','left')
@@ -936,7 +936,7 @@ class Reports_model extends CI_Model{
 		SUM(CASE WHEN gender = 'M'  THEN 1 ELSE 0 END) 'male'
 		");
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
-		 ->join('department','patient_visit.department_id=department.department_id')
+		 ->join('department','patient_visit.department_id=department.department_id','left')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
 		 ->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
@@ -1136,7 +1136,7 @@ class Reports_model extends CI_Model{
         SUM(CASE WHEN gender = 'M' AND outcome!='Discharge' AND outcome!='LAMA' AND outcome!='Absconded' AND outcome!= 'Death' THEN 1 ELSE 0 END) 'male_unupdated',
         SUM(CASE WHEN outcome!='Discharge' AND outcome!='LAMA' AND outcome!='Absconded' AND outcome!= 'Death' THEN 1 ELSE 0 END) 'total_unupdated'");
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
-		 ->join('department','patient_visit.department_id=department.department_id')
+		 ->join('department','patient_visit.department_id=department.department_id','left')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
 		 ->join('area','patient_visit.area=area.area_id','left')
 		 ->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')

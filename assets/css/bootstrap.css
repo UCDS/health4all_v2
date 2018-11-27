@@ -157,6 +157,15 @@ input[type="radio"] {
   box-sizing: border-box;
   padding: 0;
 }
+.checkbox-big{
+  -ms-transform: scale(2);
+  -moz-transform: scale(2);
+  -webkit-transform: scale(2);
+  -o-transform: scale(2);
+  padding: 20px;
+  margin: 10px !important;
+  height:auto !important;
+}
 input[type="search"] {
   -webkit-appearance: textfield;
   -moz-box-sizing: content-box;
