@@ -74,7 +74,7 @@
 				<?php $hospital=$this->session->userdata('hospital');?>
 				<div style="float:middle;text-align:center">
 				<font size="4"><?php echo $hospital['hospital'];?></font><br />
-					<?php echo $hospital['description'];?> 
+					<?php if(!!$hospital['description']) echo $hospital['description']."<br />";?>
 					@ 
 					<?php echo $hospital['place']; ?>, 
 					<?php echo $hospital['district']; ?>
@@ -377,13 +377,13 @@
 						<tr>
 							<th rowspan="2" width="30px">S.no</th>
 							<th rowspan="2" width="20%;">
-							<img src="<?php echo base_url();?>assets/images/medicines.jpg" width="30px" alt="" />
+							<img src="<?php echo base_url();?>assets/images/medicines.jpg" width="20px" alt="" />
 							Medicine
-							<img src="<?php echo base_url();?>assets/images/syrup.jpg" width="30px" alt="" /></th>
+							<img src="<?php echo base_url();?>assets/images/syrup.jpg" width="20px" alt="" /></th>
 							<th rowspan="2" width="50px">Frequency</th>
-							<th rowspan="2" width="50px"><img src="<?php echo base_url();?>assets/images/calendar.jpg" width="30px" alt="Days" /><br />Days</th>
-							<th colspan="6" align="center" width="300px"><img src="<?php echo base_url();?>assets/images/timings.jpg" width="50px"  alt="Timings" />
-							<span style="top:-10px;position:relative;">Timings</span></th>
+							<th rowspan="2" width="50px"><img src="<?php echo base_url();?>assets/images/calendar.jpg" width="20px" alt="Days" /><br />Days</th>
+							<th colspan="6" align="center" width="300px"><img src="<?php echo base_url();?>assets/images/timings.jpg" width="20px"  alt="Timings" />
+							<span style="position:relative;">Timings</span></th>
 							<th rowspan="2" width="50px">Issued Quantity</th>
 						</tr>
 						<tr align="center">
