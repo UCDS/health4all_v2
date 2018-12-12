@@ -1,4 +1,11 @@
+<?php
+	// Legacy code work around
+	$CI =& get_instance();
+	$CI->load->model('dashboard_model');
+	$hosptial_ownership_np = $CI->dashboard_model->get_organizations_by_type(2, 1, 'non-profit');
+?>
 <?php $thispage="h4a"; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +20,7 @@
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.min.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.chained.min.js"></script>
+	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
 	<script>
 	$(function () {
 	  $('[data-toggle="popover"]').popover({trigger:'hover',html:true});
@@ -395,12 +403,15 @@
                   <li><a href="<?php echo base_url()."dashboard/bloodbanks";?>">Blood Banks</a></li>
                   <li><a href="<?= base_url()."dashboard/diagnostics_dashboard_1";?>">Diagnostics - 1</a></li>
 				  <li><a href="<?= base_url()."dashboard/diagnostics_dashboard_2";?>">Diagnostics - 2</a></li>
-				  <li><a href="<?= base_url()."dashboard/view/npo";?>">NPOs</a></li>
+				  <li><a href="<?= base_url()."dashboard/org_type/non-profit";?>">NPOs</a></li>
+				  <?php foreach($hosptial_ownership_np as $ownership){ ?>
+					  <li><a href="<?= base_url()."dashboard/org/".$ownership->query_string; ?>"><?php echo $ownership->type2; ?></a></li>
+				 <?php } ?>				 
                 </ul>
 			</li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </div>
-
+	
 	<div class="container">

@@ -1,7 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Dashboard extends CI_Controller {
-
 	function __construct(){
 		parent::__construct();
 		$this->load->model('staff_model');
@@ -14,7 +13,9 @@ class Dashboard extends CI_Controller {
 		}
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
-		$this->load->view('pages/dashboard_refresh');
+		$this->load->model('dashboard_model');
+		$this->data['hosptial_ownership_np'] = $this->dashboard_model->get_organizations_by_type('', 'non-profit');
+		//$this->load->view('pages/dashboard_refresh');
 	}
 
 	public function view($organization="")
@@ -41,7 +42,6 @@ class Dashboard extends CI_Controller {
 	{
 			$this->load->helper('form');
 			$this->data['state']=$state;
-
 			$this->data['result']=$this->reports_model->dashboard("","state",$state);
 			$this->data['title']=$this->data['result'][0];
 			$this->data['report']=$this->data['result'][1];
@@ -75,6 +75,7 @@ public function helpline(){
 	$this->data['call_category']=$this->helpline_model->get_call_category();
 	$this->data['all_hospitals']=$this->staff_model->get_hospital();
 	$this->data['hospital_districts']=$this->helpline_model->get_hospital_district();
+	$this->data['helpline']=$this->helpline_model->get_helpline();
 	$this->load->view('templates/header',$this->data);
 	$this->load->view('pages/helpline/helpline_dashboard',$this->data);
 	$this->load->view('templates/footer');
@@ -169,13 +170,12 @@ public function helpline_voicemail(){
 		$this->load->view('pages/bloodbank/bloodbank_dashboard',$this->data);
 		$this->load->view('templates/footer');
 	}
-	public function hospital($organization=""){
+	public function hospital($organization=""){		//$organization==$organization_type dashboard/hospital/npo
 		$this->load->model('reports_model');
 		$hospitalstarts=$this->reports_model->dashboard($organization,'hospital');
 		$this->output
         ->set_content_type('application/json')
         ->set_output(json_encode($hospitalstarts));
-
 	}
 	public function department($organization=""){
 		$this->load->model('reports_model');
@@ -193,5 +193,41 @@ public function helpline_voicemail(){
         ->set_output(json_encode($diststarts));
 
 	}
+	public function org($organization_name=FALSE) {
+		$organization_name = $this->uri->segment(3);
+		$this->data['title']="Summary By Organization";
+		if(!$organization_name)
+			$organization_name = $this->input->get_post('organization_name') ? $this->input->get_post('organization_name') : FALSE;
+		if(!$organization_name)
+			show_404();
+		
+		//$this->load->model('dashboard_model');
+		$this->data['op_summary'] = $this->dashboard_model->get_hos_summary_by_type_by_visit('OP', false, false, $organization_name, false, false, false, false);
+		$this->data['ip_summary'] = $this->dashboard_model->get_hos_summary_by_type_by_visit('IP', false, false, $organization_name, false, false, false, false);
+		$this->data['distinct_patient_summary'] = $this->dashboard_model->get_hos_summary_by_type_by_patient('OP', false, false, $organization_name, false, false, false, false);
+		$this->data['organization_name'] = $organization_name;
+		$this->load->helper('form');
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('pages/organization_wise_dashboard',$this->data);
+		$this->load->view('templates/footer');
+	}
 
+	public function org_type($organization_type=FALSE) {
+		$organization_type = $this->uri->segment(3);
+		$this->data['title']="Summary By Organization";
+		if(!$organization_type)
+			$organization_type = $this->input->get_post('organization_type') ? $this->input->get_post('organization_type') : FALSE;
+		if(!$organization_type)
+			show_404();
+		
+		//$this->load->model('dashboard_model');
+		$this->data['op_summary'] = $this->dashboard_model->get_hos_summary_by_type_by_visit('OP', 'type2', $organization_type, false, false, false, false, false);
+		$this->data['ip_summary'] = $this->dashboard_model->get_hos_summary_by_type_by_visit('IP', 'type2', $organization_type, false, false, false, false, false, false);
+		$this->data['distinct_patient_summary'] = $this->dashboard_model->get_hos_summary_by_type_by_patient('OP', 'type2', $organization_type, false, false, false, false, false, false);
+		$this->data['organization_type'] = $organization_type;
+		$this->load->helper('form');
+		$this->load->view('templates/header',$this->data);
+		$this->load->view('pages/organization_type_dashboard',$this->data);
+		$this->load->view('templates/footer');
+	}
 }

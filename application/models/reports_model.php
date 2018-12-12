@@ -1454,7 +1454,7 @@ class Reports_model extends CI_Model{
 	function dashboard($organization="",$type="",$state=""){
 
 		if($type == "state" && $state != "") {
-			$this->db->select('organization, short_name, type6, state')->from('dashboards')->where('LOWER(state_alias)',strtolower($state));
+			$this->db->select('organization, short_name, type6, state')->from('dashboards')->where('LOWER(state_alias)', strtolower($state));
 			$query = $this->db->get();
 			$dashboard = $query->result();
 		}
@@ -1466,10 +1466,10 @@ class Reports_model extends CI_Model{
 
 		if(!!$dashboard[0]->state)
 				$this->db->where('hospital.state',$dashboard[0]->state);
-		for($i=1;$i<7;$i++){
-			if(isset($dashboard[0]->{"type".$i}))
-				$this->db->where("hospital.type$i",$dashboard[0]->{"type".$i});
-		}
+			for($i=1;$i<7;$i++){
+				if(isset($dashboard[0]->{"type".$i}))
+					$this->db->where("hospital.type$i",$dashboard[0]->{"type".$i});
+			}
 		}
 
 		/** query to select patient count by OP, IP and Repeat OP*/
@@ -1485,7 +1485,6 @@ class Reports_model extends CI_Model{
 		}
 
 		if($this->input->post('from_date') || $this->input->post('to_date')){
-
 			if($this->input->post('from_date')){
 				$date = date("Y-m-d",strtotime($this->input->post('from_date')));
 				$this->db->where('pv.admit_date >=',$date);
@@ -1512,13 +1511,12 @@ class Reports_model extends CI_Model{
 			$this->db->where("pv.admit_time BETWEEN '$from_time' AND '$to_time'");
 		}
 
-
 		if($this->input->post('hospitaltype')){
 			$this->db->where('hospital.type4',$this->input->post('hospitaltype') == "Others" ? "" : $this->input->post('hospitaltype'));
 		}
 
 		if($type == ""){
-			$this->db->select('hospital.type4, count(DISTINCT hospital.hospital_id) hospital_count');
+			$this->db->select('hospital.type2, hospital.type4, count(DISTINCT hospital.hospital_id) hospital_count');
 			$this->db->group_by('hospital.type4');
 		}
 		if($type == "district"){
@@ -1537,15 +1535,11 @@ class Reports_model extends CI_Model{
 			->group_by('hospital.hospital_id');
 		}
 		if($type == "state"){
-
 			$typearray = array();
 			for($i=0;$i<sizeof($dashboard);$i++){
-
 				if(isset($dashboard[$i]->type6)){
-
 					array_push($typearray,$dashboard[$i]->type6);
 				}
-
 			}
 			if(sizeof($typearray) > 0){
 				$this->db->where_in("hospital.type6", $typearray);

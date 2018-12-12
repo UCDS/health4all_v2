@@ -78,7 +78,16 @@ $(function(){
 			else $date = date("d-M-Y");
 			echo form_open('helpline/update_call',array('role'=>'form','class'=>'form-custom'));
 	?>
-		<h4>Calls on <input type="text" class="date" value="<?php echo $date;?>" name="date" /> <input type="submit" value="Go" name="change_date" class="btn btn-primary btn-sm" /></form></h4>
+		<h4>Calls on <input type="text" class="date" value="<?php echo $date;?>" name="date" /> 
+		<select name="helpline_id" style="width:300px" class="form-control">
+			<option value="">Helpline</option>
+			<?php foreach($helpline as $line){ ?>
+				<option value="<?php echo $line->helpline_id;?>"
+				<?php if($this->input->post('helpline_id') == $line->helpline_id) echo " selected "; ?>
+				><?php echo $line->helpline.' - '.$line->note;?></option>
+			<?php } ?>
+		</select>
+		<input type="submit" value="Go" name="change_date" class="btn btn-primary btn-sm" /></form></h4>
 	</form>
 
 

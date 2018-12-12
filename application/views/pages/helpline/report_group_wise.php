@@ -82,11 +82,17 @@ $(function(){
 			else $to_date = date("d-M-Y");
 			echo form_open('helpline/report_groupwise',array('role'=>'form','class'=>'form-custom'));
 	?>
-			<h3>Helpline Calls Group Wise Report</h3>
-			<hr>
-			<h4>Calls during
+			<h4>Calls Group during
 				<input type="text" class="date form-control" value="<?php echo $from_date;?>" name="from_date" /> to 
 				<input type="text" class="date form-control" value="<?php echo $to_date;?>" name="to_date" />
+				<select name="helpline_id" style="width:300px" class="form-control">
+					<option value="">Helpline</option>
+					<?php foreach($helpline as $line){ ?>
+						<option value="<?php echo $line->helpline_id;?>"
+						<?php if($this->input->post('helpline_id') == $line->helpline_id) echo " selected "; ?>
+						><?php echo $line->helpline.' - '.$line->note;?></option>
+					<?php } ?>
+				</select>
 			<input type="submit" value="Go" name="submit" class="btn btn-primary btn-sm" /></form></h4>
 	<?php
 		if(!!$calls){
