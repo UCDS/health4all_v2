@@ -1,5 +1,8 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" type="text/css" href="<?php echo base_url();?>assets/css/main.css" media="print" >
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/patient_field_validations.js"></script>
+<link rel="stylesheet"  type="text/css" href="<?php echo base_url();?>assets/css/patient_field_validations.css">
 <style>
 .mandatory{
 	color:red;
@@ -72,10 +75,12 @@ function getAge(dateString) {
 	if (d < 0) {
         m--;
         d += DaysInMonth(age, m);
-    	}
+		}
+		/*
    document.getElementsByName("age_years")[0].value=age;
    document.getElementsByName("age_months")[0].value=m;
    document.getElementsByName("age_days")[0].value=d;
+   */
 }
 <!-- Scripts for printing output table -->
 function printDiv(i)
@@ -175,7 +180,7 @@ pri.print();
 		?>
 		<?php echo validation_errors(); ?>
 		<?php if($form_type=="OP" || count($patient)>0){ ?>
-		<?php echo form_open("register/custom_form/$form_id",array('role'=>'form','class'=>'form-custom')); ?>
+		<?php echo form_open("register/custom_form/$form_id",array('id'=>'update_patients','role'=>'form','class'=>'form-custom')); ?>
 		<input type="text" class="sr-only" value="<?php echo $form_type;?>" name="form_type" />
 		<div class="row">
 		<div class="panel panel-default">
@@ -212,7 +217,7 @@ pri.print();
 					if($update) $date = date("d-M-Y",strtotime($patient->admit_date));
 					else $date=date("d-M-Y");
 				?>
-				<input type="text" name="date" class="form-control date" style="width:150px"  value="<?php echo $date;?>" required />
+				<input type="text" name="date" class="date_custom form-control date" style="width:150px"  value="<?php echo $date;?>" required />
 				</div>
 				<div class="form-group">
 				<label class="control-label">Time</label>
@@ -261,9 +266,9 @@ pri.print();
 					<div class="<?php echo $class;?> sr-only">
 						<div class="form-group">
 						<label class="control-label">Age<?php if($field->mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-						<input type="text" name="age_years" class="form-control" size="1"  value="<?php if($patient)  echo $patient->age_years;?>" <?php if($field->mandatory) echo "required"; ?> />Y
-						<input type="text" name="age_months" class="form-control" size="1" value="<?php if($patient)  echo $patient->age_months;?>" <?php if($field->mandatory) echo "required"; ?> />M
-						<input type="text" name="age_days" class="form-control" size="1"  value="<?php if($patient)  echo $patient->age_days;?>" <?php if($field->mandatory) echo "required"; ?> />D
+						<input type="text" id="age_years" name="age_years" class="form-control" size="1"  value="<?php if($patient)  echo $patient->age_years; else echo '0' ?>" <?php if($field->mandatory) echo "required"; ?> />Y
+						<input type="text" id="age_months" name="age_months" class="form-control" size="1" value="<?php if($patient)  echo $patient->age_months; else echo '0' ?>" <?php if($field->mandatory) echo "required"; ?> />M
+						<input type="text" id="age_days" name="age_days" class="form-control" size="1"  value="<?php if($patient)  echo $patient->age_days; else echo '0' ?>" <?php if($field->mandatory) echo "required"; ?> />D
 						</div>
 					</div>
 				<?php 

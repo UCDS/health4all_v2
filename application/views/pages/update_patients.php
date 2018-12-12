@@ -6,9 +6,12 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.timeentry.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/moment.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/bootstrap-datetimepicker.js"></script>
-<link rel="stylesheet"  type="text/css" href="<?php echo base_url();?>assets/css/bootstrap_datetimepicker.css"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/patient_field_validations.js"></script>
+<link rel="stylesheet"  type="text/css" href="<?php echo base_url();?>assets/css/bootstrap_datetimepicker.css">
+<link rel="stylesheet"  type="text/css" href="<?php echo base_url();?>assets/css/patient_field_validations.css">
 <style>
-    .obstetric_history_table { 
+    .obstetric_history_table {  
         border-collapse: collapse; 
     }
     .obstetric_history_table tr{
@@ -232,7 +235,7 @@ pri.print();
 	<?php if(isset($msg)) { ?>
 		<div class="alert alert-info"><?php echo $msg;?></div>
 	<?php } ?>
-	<?php echo form_open('register/update_patients',array('class'=>'form-custom','role'=>'form')); ?>
+	<?php echo form_open('register/update_patients',array('class'=>'form-custom','role'=>'form', 'id'=>'update_patients')); ?>
 	<div class="panel panel-default">
 	<div class="panel-body">
 	  <!-- Nav tabs -->
@@ -396,9 +399,9 @@ pri.print();
 			</div>			
 			<div class="col-md-6 col-xs-12">
 				<label class="control-label">Age</label>
-				<input type="text" name="age_years" class="form-control" size="1"  value="<?php if($patient)  echo $patient->age_years;?>" <?php if($f->edit==1 && empty($patient->age_years)) echo ''; else echo ' readonly'; ?>/>Y
-				<input type="text" name="age_months" class="form-control" size="1" value="<?php if($patient)  echo $patient->age_months;?>" <?php if($f->edit==1 && empty($patient->age_moths)) echo ''; else echo ' readonly'; ?>/>M
-				<input type="text" name="age_days" class="form-control" size="1"  value="<?php if($patient)  echo $patient->age_days;?>" <?php if($f->edit==1 && empty($patient->age_days)) echo ''; else echo ' readonly'; ?>/>D
+				<input type="text" name="age_years" class="form-control" maxlength="3" size="3"  value="<?php if($patient)  echo $patient->age_years;?>" <?php if($f->edit==1 && empty($patient->age_years)) echo ''; else echo ' readonly'; ?>/>Y
+				<input type="text" name="age_months" class="form-control" maxlength="2" size="2" value="<?php if($patient)  echo $patient->age_months;?>" <?php if($f->edit==1 && empty($patient->age_moths)) echo ''; else echo ' readonly'; ?>/>M
+				<input type="text" name="age_days" class="form-control" maxlength="2" size="2"  value="<?php if($patient)  echo $patient->age_days;?>" <?php if($f->edit==1 && empty($patient->age_days)) echo ''; else echo ' readonly'; ?>/>D
 			</div>			
 			</div>
                     <div class ="row alt">
@@ -748,7 +751,7 @@ pri.print();
                             <div class="col-md-4 col-xs-6">
                                 <label class="control-label">Doctor</label>
                                 <?php if($f->edit==1 && empty($patient->doctor_id)){ ?>
-                                <select name="doctor_id" id="doctor_id" class="form-control doctor">
+                      <!--          <select name="doctor_id" id="doctor_id" class="form-control doctor">
                                     <option value="">--Select--</option>
                                     <?php 
                                     foreach($doctors as $doctor){
@@ -757,7 +760,7 @@ pri.print();
 					echo ">".$doctor->first_name." ".$doctor->last_name."</option>";
                                     }
                                     ?>
-                                </select>
+                                </select> -->
                                 <?php 
                                 }else{
                                     foreach($doctors as $doctor){
@@ -793,7 +796,7 @@ pri.print();
                                      <div class="col-md-4 col-xs-6">
                                          <label class="control-label">Arrival Mode</label>
                                          <?php if($f->edit==1 && empty($patient->arrival_mode)){?>
-                                         <select name="arrival_mode" id="arrival_mode" class="form-control arrival_mode">
+                                  <!--       <select name="arrival_mode" id="arrival_mode" class="form-control arrival_mode">
                                             <option value="">--Select--</option>
                                             <?php 
                                             foreach($arrival_modes as $arrival_mode){
@@ -802,7 +805,7 @@ pri.print();
                                                 echo ">".$arrival_mode->arrival_mode."</option>";
                                             }
                                             ?>
-                                        </select>
+                                        </select> -->
                                          <?php 
                                             }else{
                                                 foreach($arrival_modes as $arrival_mode){
@@ -1309,8 +1312,8 @@ pri.print();
 				
 				<div class="col-md-4 col-xs-6">
 					<label class="control-label">Blood Pressure</label>
-					<input type="text" name="sbp" style="width:50px" class="form-control blood_pressure" value="<?php if(!!$patient->sbp) echo $patient->sbp;?>" <?php if($f->edit==1 && empty($patient->sbp)) echo ''; else echo ' readonly'; ?> />/
-					<input type="text" name="dbp"  style="width:50px" class="form-control blood_pressure" value="<?php if(!!$patient->dbp) echo $patient->dbp;?>" <?php if($f->edit==1 && empty($patient->dbp)) echo ''; else echo ' readonly'; ?> />
+					<input maxlength="3" size="3" type="text" name="sbp" style="width:50px" class="form-control blood_pressure" value="<?php if(!!$patient->sbp) echo $patient->sbp;?>" <?php if($f->edit==1 && empty($patient->sbp)) echo ''; else echo ' readonly'; ?> />/
+					<input maxlength="3" size="3" type="text" name="dbp"  style="width:50px" class="form-control blood_pressure" value="<?php if(!!$patient->dbp) echo $patient->dbp;?>" <?php if($f->edit==1 && empty($patient->dbp)) echo ''; else echo ' readonly'; ?> />
 				</div>
 				<div class="col-md-4 col-xs-6">
 					<label class="control-label">Respiratory Rate</label>
@@ -1320,15 +1323,15 @@ pri.print();
 			<div class="row alt">
 				<div class="col-md-4 col-xs-6">
 					<label class="control-label">Blood Sugar</label>
-					<input type="text" name="blood_sugar"  style="width:50px" class="form-control blood_sugar" value="<?php if(!!$patient->blood_sugar) echo $patient->blood_sugar;?>" <?php if($f->edit==1 && empty($patient->blood_sugar)) echo ''; else echo ' readonly'; ?> /> mg/dL
+					<input maxlength="3" size="3" type="text" name="blood_sugar"  style="width:50px" class="form-control blood_sugar" value="<?php if(!!$patient->blood_sugar) echo $patient->blood_sugar;?>" <?php if($f->edit==1 && empty($patient->blood_sugar)) echo ''; else echo ' readonly'; ?> /> mg/dL
 				</div>
 				<div class="col-md-4 col-xs-6">
 					<label class="control-label">Hb</label>
-					<input type="text" name="hb"  style="width:50px" class="form-control hb" value="<?php if(!!$patient->hb) echo $patient->hb;?>" <?php if($f->edit==1 && empty($patient->hb)) echo ''; else echo ' readonly'; ?> /> g/dL
+					<input maxlength="4" size="4" type="text" name="hb"  style="width:50px" class="form-control hb" value="<?php if(!!$patient->hb) echo $patient->hb;?>" <?php if($f->edit==1 && empty($patient->hb)) echo ''; else echo ' readonly'; ?> /> g/dL
 				</div>
 				<div class="col-md-4 col-xs-6">
 					<label class="control-label">Hb1Ac</label>
-					<input type="text" name="hb1ac"  style="width:50px" class="form-control hb1ac" value="<?php if(!!$patient->hb1ac) echo $patient->hb1ac;?>" <?php if($f->edit==1 && empty($patient->hb1ac)) echo ''; else echo ' readonly'; ?> />%
+					<input maxlength="3" size="3" type="text" name="hb1ac"  style="width:50px" class="form-control hb1ac" value="<?php if(!!$patient->hb1ac) echo $patient->hb1ac;?>" <?php if($f->edit==1 && empty($patient->hb1ac)) echo ''; else echo ' readonly'; ?> />%
 				</div>
 			</div>
 			<div class="row alt">
