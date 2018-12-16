@@ -119,6 +119,14 @@ class Dashboard_model extends CI_Model{
         return $visit_summary;
     }
 
+    function get_distinct_states() {
+        $this->db->select('DISTINCT(state)')
+            ->from('hospital');
+        
+        $query = $this->db->get();
+        $distinct_states = $query->result();
+        return $distinct_states;
+    }
     // state -> district
     // state -> hospital_type
     // hospital_type -> district
