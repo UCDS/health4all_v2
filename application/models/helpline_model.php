@@ -613,10 +613,13 @@ class Helpline_model extends CI_Model{
 			$this->db->select("DATE_FORMAT(helpline_call.start_time ,\"%d-%b-%Y\") as date",false);
 			$this->db->group_by('date','desc');
 		}
-
+		if($this->input->post('helpline_id')){
+			$this->db->where('helpline.helpline_id',$this->input->post('helpline_id'));
+		}
 
 		$this->db->select("count(call_id) calls ")
 		->from('helpline_call')
+		->join('helpline', 'helpline_call.to_number=helpline.helpline','left')	//20 Dec 18 -> gokulakrishna@yousee.in
 		->join('helpline_caller_type','helpline_call.caller_type_id = helpline_caller_type.caller_type_id','left')
 		->join('helpline_call_category','helpline_call.call_category_id = helpline_call_category.call_category_id','left')
 		->join('helpline_receiver','helpline_call.dial_whom_number = helpline_receiver.phone','left')

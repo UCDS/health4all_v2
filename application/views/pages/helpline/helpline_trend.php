@@ -136,10 +136,18 @@
 			if($this->input->post('to_date')) $to_date = date("d-M-Y",strtotime($this->input->post('to_date'))); else $to_date = date("d-M-Y");
 			?>
 			<div class="row" >
-			<span style="font-size:24px;font-weight:bold">Call Trends -<span class="flaticon-telephone-line-24-hours-service"></span> Hospital Helpline <small>040 - 39 56 53 39</small></span>
+			
 
         	<?php echo form_open('dashboard/helpline_trend/',array('role'=>'form','class'=>'form-custom')); ?>
 			<div style="position:relative;display:inline;">
+            <span style="font-size:24px;font-weight:bold"><span class="flaticon-telephone-line-24-hours-service"></span> Helpline <select name="helpline_id" style="width:300px" class="form-control">
+				<option value="">Helpline</option>
+				<?php foreach($helpline as $line){ ?>
+					<option value="<?php echo $line->helpline_id;?>"
+					<?php if($this->input->post('helpline_id') == $line->helpline_id) echo " selected "; ?>
+					><?php echo $line->helpline.' - '.$line->note;?></option>
+				<?php } ?>
+			</select></span><br>
 			<input type="text" class="date form-control" name="from_date" class="form-control" value="<?php echo $from_date;?>" />
 			</div>
 			<div  style="position:relative;display:inline;">

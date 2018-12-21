@@ -155,6 +155,7 @@ public function helpline_voicemail(){
 		$this->data['all_hospitals']=$this->staff_model->get_hospital();
 		$this->data['hospital_districts']=$this->helpline_model->get_hospital_district();
 		$this->data['report']=$this->helpline_model->helpline_trend();
+		$this->data['helpline']=$this->helpline_model->get_helpline();
 		//var_dump($this->data['report']);
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('pages/helpline/helpline_trend',$this->data);

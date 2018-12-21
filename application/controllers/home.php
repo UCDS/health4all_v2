@@ -145,7 +145,28 @@ class Home extends CI_Controller {
 		
 		else{
 			if(!$this->session->userdata('logged_in')){
-			
+				$captcha_word = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 5);
+				$user_session_data = array(
+					'captcha_word' => $captcha_word
+				);
+				
+				$this->load->helper('captcha');
+				$captcha_config = array(   
+					'word'          => $captcha_word,
+					'img_path'	=> './assets/captcha/',
+					'font_path' => './assets/fonts/extraBoldItalic.ttf',
+					'img_url'	=> base_url().'assets/captcha/',                
+					'img_width'	=> '150',
+					'img_height'    => 30,
+					'expiration'    => 300
+				);
+				
+				$cap_link = create_captcha($captcha_config);
+				$this->data['image'] = $cap_link['image'];
+				$user_captcha = $this->input->post('captcha');
+				$session_captcha = $this->session->userdata('captcha_word');
+				
+
 				$this->data['title']="Login";
 
 				$this->load->view('templates/header',$this->data);
@@ -154,7 +175,8 @@ class Home extends CI_Controller {
 				
 				$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean');
 				$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean|callback_check_database');
-				if ($this->form_validation->run() === FALSE)
+				echo "Right block";
+				if ((strcmp(strtoupper($user_captcha),strtoupper($session_captcha)) == 0) || $this->form_validation->run() === FALSE)
 				{
 					$this->load->view('pages/login');
 				}
@@ -174,8 +196,7 @@ class Home extends CI_Controller {
 				redirect('home','refresh');
 			}
 		}
-		$this->load->view('templates/footer');
-		
+		$this->load->view('templates/footer');		
 	}
 
 	
