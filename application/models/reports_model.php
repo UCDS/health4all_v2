@@ -55,7 +55,8 @@ class Reports_model extends CI_Model{
 		else{
 			$this->db->select('"0" as area',false);
 		}
-		$this->db->select("          department 'department',
+		//moved 30 to 60 interval --> 22 Dec 18 -->gokulakrishna@yousee.in
+		$this->db->select("department 'department',
           SUM(CASE WHEN 1  THEN 1 ELSE 0 END) 'op',
 		SUM(CASE WHEN gender = 'F'  THEN 1 ELSE 0 END) 'op_female',
 		SUM(CASE WHEN gender = 'M'  THEN 1 ELSE 0 END) 'op_male',
@@ -63,14 +64,14 @@ class Reports_model extends CI_Model{
 		  SUM(CASE WHEN gender = 'F' AND age_years <= 14 THEN 1 ELSE 0 END) 'op_fchild',
 		  SUM(CASE WHEN gender = 'M' AND age_years <= 14 THEN 1 ELSE 0 END) 'op_mchild',
 		  SUM(CASE WHEN age_years > 14 AND age_years <= 30 THEN 1 ELSE 0 END) 'op_14to30',
-		  SUM(CASE WHEN gender = 'F' AND age_years > 14 AND age_years <= 30 THEN 1 ELSE 0 END) 'op_f14to30',
-		  SUM(CASE WHEN gender = 'M' AND age_years > 14 AND age_years <= 30 THEN 1 ELSE 0 END) 'op_m14to30',
-		  SUM(CASE WHEN age_years > 30 AND age_years < 60 THEN 1 ELSE 0 END) 'op_30to60',
-		SUM(CASE WHEN gender = 'F' AND age_years > 30 AND age_years < 60 THEN 1 ELSE 0 END) 'op_f30to60',
-		  SUM(CASE WHEN gender = 'M' AND age_years > 30 AND age_years < 60 THEN 1 ELSE 0 END) 'op_m30to60',
+		  SUM(CASE WHEN gender = 'F' AND age_years > 14 AND age_years < 30 THEN 1 ELSE 0 END) 'op_f14to30',	
+		  SUM(CASE WHEN gender = 'M' AND age_years > 14 AND age_years < 30 THEN 1 ELSE 0 END) 'op_m14to30',
+		  SUM(CASE WHEN age_years >= 30 AND age_years < 60 THEN 1 ELSE 0 END) 'op_30to60',
+		SUM(CASE WHEN gender = 'F' AND age_years >= 30 AND age_years < 60 THEN 1 ELSE 0 END) 'op_f30to60',
+		  SUM(CASE WHEN gender = 'M' AND age_years >= 30 AND age_years < 60 THEN 1 ELSE 0 END) 'op_m30to60',
 		SUM(CASE WHEN age_years >= 60 THEN 1 ELSE 0 END) 'op_60plus',
 		SUM(CASE WHEN gender = 'F' AND age_years >= 60 THEN 1 ELSE 0 END) 'op_f60plus',
-		  SUM(CASE WHEN gender = 'M' AND age_years > 60 THEN 1 ELSE 0 END) 'op_m60plus'");
+		  SUM(CASE WHEN gender = 'M' AND age_years >= 60 THEN 1 ELSE 0 END) 'op_m60plus'");
 		 $this->db->from('patient_visit')->join('patient','patient_visit.patient_id=patient.patient_id')
 		 ->join('department','patient_visit.department_id=department.department_id','left')
 		 ->join('unit','patient_visit.unit=unit.unit_id','left')
@@ -137,6 +138,7 @@ class Reports_model extends CI_Model{
 		else{
 			$this->db->select('"0" as area',false);
 		}
+		//moved 30 to 60 interval --> 22 Dec 18 -->gokulakrishna@yousee.in
 		$this->db->select("department.department_id,patient_visit.visit_name_id, department 'department',
           SUM(CASE WHEN 1  THEN 1 ELSE 0 END) 'ip',
 		SUM(CASE WHEN gender = 'F'  THEN 1 ELSE 0 END) 'ip_female',
@@ -145,11 +147,11 @@ class Reports_model extends CI_Model{
 		  SUM(CASE WHEN gender = 'F' AND age_years <= 14 THEN 1 ELSE 0 END) 'ip_fchild',
 		  SUM(CASE WHEN gender = 'M' AND age_years <= 14 THEN 1 ELSE 0 END) 'ip_mchild',
 		  SUM(CASE WHEN age_years > 14 AND age_years <= 30 THEN 1 ELSE 0 END) 'ip_14to30',
-		  SUM(CASE WHEN gender = 'F' AND age_years > 14 AND age_years <= 30 THEN 1 ELSE 0 END) 'ip_f14to30',
-		  SUM(CASE WHEN gender = 'M' AND age_years > 14 AND age_years <= 30 THEN 1 ELSE 0 END) 'ip_m14to30',
+		  SUM(CASE WHEN gender = 'F' AND age_years > 14 AND age_years < 30 THEN 1 ELSE 0 END) 'ip_f14to30',
+		  SUM(CASE WHEN gender = 'M' AND age_years > 14 AND age_years < 30 THEN 1 ELSE 0 END) 'ip_m14to30',
 		  SUM(CASE WHEN age_years > 30 AND age_years < 60 THEN 1 ELSE 0 END) 'ip_30to60',
-		SUM(CASE WHEN gender = 'F' AND age_years > 30 AND age_years < 60 THEN 1 ELSE 0 END) 'ip_f30to60',
-		  SUM(CASE WHEN gender = 'M' AND age_years > 30 AND age_years < 60 THEN 1 ELSE 0 END) 'ip_m30to60',
+		SUM(CASE WHEN gender = 'F' AND age_years >= 30 AND age_years < 60 THEN 1 ELSE 0 END) 'ip_f30to60',
+		  SUM(CASE WHEN gender = 'M' AND age_years >= 30 AND age_years < 60 THEN 1 ELSE 0 END) 'ip_m30to60',
 		SUM(CASE WHEN age_years >= 60 THEN 1 ELSE 0 END) 'ip_60plus',
 		SUM(CASE WHEN gender = 'F' AND age_years >= 60 THEN 1 ELSE 0 END) 'ip_f60plus',
 		  SUM(CASE WHEN gender = 'M' AND age_years >= 60 THEN 1 ELSE 0 END) 'ip_m60plus'");
@@ -384,7 +386,7 @@ class Reports_model extends CI_Model{
 			$this->db->select('"0" as area',false);
 		}
 
-		$this->db->select("hosp_file_no,patient_visit.visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,
+		$this->db->select("patient.patient_id, patient.address, hosp_file_no,patient_visit.visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,
 		gender,IF(gender='F' AND (father_name IS NULL OR father_name = ''),spouse_name,father_name) parent_spouse,unit_name,area_name,
 		age_years,age_months,age_days,patient.place,phone,department,unit_name,area_name, admit_date, admit_time, mlc_number, mlc_number_manual",false);
 		 $this->db->from('patient_visit')
@@ -484,7 +486,7 @@ class Reports_model extends CI_Model{
 			$this->db->where("($date_type BETWEEN '$from_date' AND '$to_date')");
 		}
 
-		$this->db->select("hosp_file_no,patient_visit.visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,
+		$this->db->select("patient.patient_id, hosp_file_no,patient_visit.visit_id,CONCAT(IF(first_name=NULL,'',first_name),' ',IF(last_name=NULL,'',last_name)) name,
 		gender,IF(gender='F' AND father_name ='',spouse_name,father_name) parent_spouse,
 		age_years,age_months,age_days,patient.place,phone,address,admit_date,admit_time, department,unit_name,area_name,mlc_number,mlc_number_manual,
 		outcome,outcome_date,outcome_time",false);

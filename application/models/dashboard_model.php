@@ -42,7 +42,10 @@ class Dashboard_model extends CI_Model{
         }else if($type6){
             $this->db->where('LOWER(REPLACE(hospital.type6, " ", "_"))', strtolower($type6));
         }
-
+        if($this->input->get_post('state_key')){
+            $state_key = $this->input->get_post('state_key');
+            $this->db->where('LOWER(REPLACE(hospital.state, " ", "_"))=', $state_key);
+        }
         if($group_by){
             $this->db->group_by("hospital.$group_by");
         } else {
@@ -95,7 +98,10 @@ class Dashboard_model extends CI_Model{
         } else {
             $this->db->group_by('patient_visit.hospital_id');
         }
-
+        if($this->input->get_post('state_key')){
+            $state_key = $this->input->get_post('state_key');
+            $this->db->where('LOWER(REPLACE(hospital.state, " ", "_"))=', $state_key);
+        }
         if($this->input->get_post('from_date') && $this->input->get_post('to_date')){
             if($this->input->get_post('from_date')){
                 $from_date = date("Y-m-d",strtotime($this->input->get_post('from_date')));
@@ -119,6 +125,15 @@ class Dashboard_model extends CI_Model{
         return $visit_summary;
     }
 
+    function get_distinct_states() {
+        $this->db->select('DISTINCT(state), LOWER(REPLACE(state, " ", "_")) as state_key',false)
+            ->from('hospital')
+            ->where('state != ""');
+        
+        $query = $this->db->get();
+        $distinct_states = $query->result();
+        return $distinct_states;
+    }
     // state -> district
     // state -> hospital_type
     // hospital_type -> district

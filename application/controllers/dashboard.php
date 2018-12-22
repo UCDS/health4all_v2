@@ -155,6 +155,7 @@ public function helpline_voicemail(){
 		$this->data['all_hospitals']=$this->staff_model->get_hospital();
 		$this->data['hospital_districts']=$this->helpline_model->get_hospital_district();
 		$this->data['report']=$this->helpline_model->helpline_trend();
+		$this->data['helpline']=$this->helpline_model->get_helpline();
 		//var_dump($this->data['report']);
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('pages/helpline/helpline_trend',$this->data);
@@ -206,6 +207,7 @@ public function helpline_voicemail(){
 		$this->data['ip_summary'] = $this->dashboard_model->get_hos_summary_by_type_by_visit('IP', false, false, $organization_name, false, false, false, false);
 		$this->data['distinct_patient_summary'] = $this->dashboard_model->get_hos_summary_by_type_by_patient('OP', false, false, $organization_name, false, false, false, false);
 		$this->data['organization_name'] = $organization_name;
+		$this->data['dist_states'] = $this->dashboard_model->get_distinct_states();
 		$this->load->helper('form');
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('pages/organization_wise_dashboard',$this->data);

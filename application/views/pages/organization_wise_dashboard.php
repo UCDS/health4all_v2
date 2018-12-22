@@ -100,6 +100,17 @@
     To Date : <input class="form-control" type="date" value="<?php echo date("Y-m-d",strtotime($to_date)); ?>" name="to_date" id="to_date" size="15" />
     &emsp;
     <input class="hidden" type="text" name="organization_name" value="<?php echo $organization_name;?>" />
+    <select name="state_key" id="state_key" class="form-control" >
+        <option value="">States</option>
+        <?php 
+        foreach($dist_states as $state){
+            echo "<option value='".$state->state_key."' class=''";
+            if($this->input->get_post('state_key') && $this->input->get_post('state_key') == $state->state_key) 
+                echo " selected ";
+            echo ">".$state->state."</option>";
+        }
+        ?>
+    </select>
     <input class="btn btn-sm btn-primary" type="submit" value="Submit" />
     
 <?php 
@@ -108,17 +119,22 @@
 </div>
 <br />
 <!--table is displayed only when there is atleast one registration is done-->
-<?php foreach($state_wide_op_summary as $key=>$op_summary) { ?>
+<?php 
+$grand_new_op=0;
+$grand_repeat_op=0;
+$grand_op_total=0;
+$grand_ip=0;
+
+foreach($state_wide_op_summary as $key=>$op_summary) { ?>
 <table class="table table-bordered table-striped" id="table-sort_<?php echo str_replace(" ", "_", $key); ?>" >
     <thead>
         <tr class="success">
-            <th style="text-align:center">#</th>
-            <th style="text-align:center">State</th>
-            <th style="text-align:center">Location</th>
-            <th style="text-align:center">OP New</th>
-            <th style="text-align:center">OP Repeat</th>
-            <th style="text-align:center">OP Total</th>
-            <th style="text-align:center">IP Visits</th>
+            <th style="text-align:center" width="2%">#</th>
+            <th style="text-align:center" width="58%"><?php echo $key; ?></th>
+            <th style="text-align:center" width="10%">OP New</th>
+            <th style="text-align:center" width="10%">OP Repeat</th>
+            <th style="text-align:center" width="10%">OP Total</th>
+            <th style="text-align:center" width="10%">IP Visits</th>
         </tr>
     </thead>
     <tbody>
@@ -127,7 +143,6 @@
         <tr>
             <!--data is retrieved from database to the html table-->
             <td class="text-right"><?php echo $sno; ?></td>
-            <td class="text-right"><?php if($sno == 1) echo $op->state; ?></td>
             <td class="text-left"><?php echo $op->hospital; ?></td>
             <td class="text-right"><?php echo number_format($op->new_visits); ?></td>
             <td class="text-right"><?php echo number_format($op->rept_summary); ?></td>
@@ -140,10 +155,13 @@
         $repeat_total += $op->rept_summary;
         $op_total += $op->patient_visits;
         $ip_total += $op->ip_summary;
+        $grand_new_op += $op->new_visits;
+        $grand_repeat_op += $op->rept_summary;
+        $grand_op_total += $op->patient_visits;
+        $grand_ip += $op->ip_summary;
     } ?>
         <tfoot>
             <th class="text-right">Total</th>
-            <th class="text-right" ><?php ?></th>
             <th class="text-right" ><?php ?></th>
             <th class="text-right" ><?php echo number_format($new_total);?></th>
             <th class="text-right" ><?php echo number_format($repeat_total); ?></th>
@@ -153,7 +171,27 @@
 	</tbody>
 </table>
 <?php } ?>
-
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr class="success">
+            <th style="text-align:center" width="60%">#</th>
+            <th style="text-align:center" width="10%">OP New</th>
+            <th style="text-align:center" width="10%">OP Repeat</th>
+            <th style="text-align:center" width="10%">OP Total</th>
+            <th style="text-align:center" width="10%">IP Visits</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <!--data is retrieved from database to the html table-->
+            <td class="text-right">Grand Total</td>
+            <th class="text-right" ><?php echo number_format($grand_new_op);?></th>
+            <th class="text-right" ><?php echo number_format($grand_repeat_op); ?></th>
+            <th class="text-right" ><?php echo number_format($grand_op_total); ?></th>
+            <th class="text-right" ><?php echo number_format($grand_ip); ?></th>
+        </tr>
+    </tbody>
+</table>
 <script type="text/javascript">
     $(function() {
         <?php foreach($states as $state){ ?>
