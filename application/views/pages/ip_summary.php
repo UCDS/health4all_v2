@@ -133,9 +133,9 @@ $(function(){
 	<tr>
 		<td style="text-align:center" rowspan="2">Department</th>
 		<td style="text-align:center" colspan="3"><=14 Years</th>
-		<td style="text-align:center" colspan="3">14 to 30 Years</th>
-		<td style="text-align:center" colspan="3">30 to <60 Years</th>
-		<td style="text-align:center" colspan="3">>=60 Years</th>
+		<td style="text-align:center" colspan="3">14 to  < 30 Years</th>
+		<td style="text-align:center" colspan="3">30 to < 60 Years</th>
+		<td style="text-align:center" colspan="3"> >=60 Years </th>
 		<td style="text-align:center" rowspan="1" colspan="3">Total IP Admits</th>
 	</tr>
 	<tr>

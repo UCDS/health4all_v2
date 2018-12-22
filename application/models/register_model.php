@@ -594,10 +594,10 @@ class Register_model extends CI_Model{
 						'area_id'=>$transfer_area_id,
 						'transfer_date'=>$transfer_date,
 						'transfer_time'=>$transfer_time,
-						'from_department_id'=>$from_department,
-						'from_area_id'=>$from_area,
+						'department_id'=>$from_department,
+						'area_id'=>$from_area,
 						'user_id'=>$user_id,
-						'time_in_previous_area'=>$duration
+						'transfer_time'=>$duration
 					);
 					$this->db->insert('internal_transfer',$transfer_info);
 				}

@@ -162,9 +162,9 @@ $(function(){
 	  <tr>
 		<th style="text-align:center" rowspan="2">Department</th>
 		<th style="text-align:center" colspan="3"><=14 Years</th>
-		<th style="text-align:center" colspan="3">14 to 30 Years</th>
-		<th style="text-align:center" colspan="3">30 to <60 Years</th>
-		<th style="text-align:center" colspan="3">>=60 Years</th>
+		<th style="text-align:center" colspan="3">14 to < 30 Years</th>
+		<th style="text-align:center" colspan="3">30 to < 60 Years</th>
+		<th style="text-align:center" colspan="3"> >= 60 Years</th>
 		<th style="text-align:center" rowspan="1" colspan="3">Total OP Visits</th>
 	</tr>
 	<tr>

@@ -1473,15 +1473,6 @@ pri.print();
 					});
 				</script>
 			</div>
-
-			<div class="row alt">
-				<div class="col-md-12 col-xs-12">
-					<label class="control-label">
-						Signed Consultation? 
-						<input type="checkbox" <?php if($patient->signed_consultation) echo " checked ";?> class="form-control checkbox-big" name="signed_consultation" value = "1" />
-					</label>
-				</div>
-			</div>
 		</div>
 		<?php 
 				break;
@@ -1992,12 +1983,17 @@ pri.print();
 		}} ?>
 	  </div>
 
-			<div class="col-md-12 text-center">
-				<input type="text" name="visit_id" class="sr-only" value="<?php echo $patient->visit_id;?>" hidden readonly />
-				<input type="text" name="patient_id" class="sr-only" value="<?php echo $patient->patient_id;?>" hidden readonly />
-				<button class="btn btn-md btn-primary" value="Update" name="update_patient">Update</button>
-				<button class="btn btn-md btn-warning" value="Print" type="button" onclick="printDiv('print-div')">Print Summary</button>
-			</div>
+	<div class="col-md-12 text-center">
+			<label class="control-label">
+				Signed Consultation? 
+				<input type="checkbox" <?php if($patient->signed_consultation) echo " checked ";?> class="form-control checkbox-big" name="signed_consultation" value = "1" />
+			</label>
+			&emsp;
+		<input type="text" name="visit_id" class="sr-only" value="<?php echo $patient->visit_id;?>" hidden readonly />
+		<input type="text" name="patient_id" class="sr-only" value="<?php echo $patient->patient_id;?>" hidden readonly />
+		<button class="btn btn-md btn-primary" value="Update" name="update_patient">Update</button>&emsp;
+		<button class="btn btn-md btn-warning" value="Print" type="button" onclick="printDiv('print-div')">Print Summary</button>
+	</div>
 	</div>
 	</div>
 	</form>		
