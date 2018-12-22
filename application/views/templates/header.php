@@ -274,6 +274,7 @@
 						  <li><a href="<?php echo base_url()."op_ip_report/op_ip_summary_report";?>">District Wise IP/OP Summary</a></li>
 						  <li><a href="<?php echo base_url()."patient/casesheet_mrd_status";?>">MRD Report</a></li>
 						  <li><a href="<?php echo base_url()."staff_report/get_patient_records";?>">Staff Activity OP/IP</a></li>
+						  <li><a href="<?php echo base_url()."staff_report/get_doctor_activity";?>">Doctor Activity OP/IP</a></li>
 						  <li><a href="<?php echo base_url()."staff_report/get_lab_records";?>">Diagnostics Staff Activity</a></li>
 						  <li><a href="<?php echo base_url()."reports/ip_op_trends";?>">IP/OP Trends</a></li>
 						  <li><a href="<?php echo base_url()."reports/icd_summary";?>">ICD Code Summary</a></li>

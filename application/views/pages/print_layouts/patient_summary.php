@@ -224,31 +224,28 @@
 				</tr>
 				<?php } ?>
 
-				<?php if(!!$patient->cvs) { ?>
+				<?php if(!!$patient->cvs || !!$patient->rs || !!$patient->pa || !!$patient->cns) { ?>
 				<tr class="print-element">
 					<td colspan="3">
-					<b>CVS: </b><?php echo $patient->cvs;?> 
-					</td>
-				</tr>
-				<?php } ?>
-				<?php if(!!$patient->rs) { ?>
-				<tr class="print-element">
-					<td colspan="3">
-					<b>RS: </b><?php echo $patient->rs;?> 
-					</td>
-				</tr>
-				<?php } ?>
-				<?php if(!!$patient->pa) { ?>
-				<tr class="print-element">
-					<td colspan="3">
-					<b>PA:</b> <?php echo $patient->pa;?> 
-					</td>
-				</tr>
-				<?php } ?>
-				<?php if(!!$patient->cns) { ?>
-				<tr class="print-element">
-					<td colspan="3">
-					<b>CNS: </b><?php echo $patient->cns;?> 
+					<table class="table borderless" style="border:none">
+					<tr>
+					<?php if(!!$patient->cvs) { ?>
+						<td>
+							<b>CVS: </b><?php echo $patient->cvs;?> 
+						</td>
+					<?php } ?>
+					<?php if(!!$patient->rs) { ?>
+						<td colspan="3">
+						<b>RS: </b><?php echo $patient->rs;?> 
+						</td>
+					<?php } ?>
+					<?php if(!!$patient->pa) { ?>
+						<td colspan="3">
+						<b>PA:</b> <?php echo $patient->pa;?> 
+						</td>
+					<?php } ?>
+					</tr>
+					</table>
 					</td>
 				</tr>
 				<?php } ?>
@@ -434,7 +431,9 @@
 				<?php } ?>
 				<tr class="print-element" width="95%" >
 					<td colspan="3" style="text-align:right">
-					<b><?php if($patient->signed_consultation){
+					<br />
+					<br />
+					<b><?php if(!!$patient->signed_consultation){
 							echo $patient->doctor_name."<br />".$patient->designation;
 						}
 						else{ ?>

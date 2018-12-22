@@ -406,7 +406,7 @@ class Register_model extends CI_Model{
 			if(!!$clinical_data)
 			$this->db->insert_batch('patient_clinical_notes',$clinical_data);
 		}
-		if($this->input->post('signed_consultation')) $signed_consultation=$this->input->post('signed_consultation'); else $signed_consultation=0;
+		if($this->input->post('signed_consultation')) $signed_consultation=$user_id; else $signed_consultation=0;
 		
 		
 
@@ -554,7 +554,8 @@ class Register_model extends CI_Model{
 			'advise'=>$advise,
 			'icd_10'=>$icd_code,
 			 'ip_file_received' => $ip_file_received,
-			 'update_by_user_id' => $user_id
+			 'update_by_user_id' => $user_id,
+			 'update_datetime' => date("Y-m-d H:i:s")
 		);
                 $visit_id = '';
 		if($this->input->post('visit_id')){
@@ -798,7 +799,7 @@ class Register_model extends CI_Model{
 		->join('id_proof_type','patient.id_proof_type_id=id_proof_type.id_proof_type_id','left')
 		->join('icd_code','patient_visit.icd_10=icd_code.icd_code','left')
 		->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
-		->join('user', 'patient_visit.update_by_user_id = user.user_id', 'left')
+		->join('user', 'patient_visit.signed_consultation = user.user_id', 'left')
 		->join('staff','user.staff_id = staff.staff_id','left')
 		->order_by('name','ASC');
 		$query=$this->db->get();

@@ -10,7 +10,7 @@ class Masters_model extends CI_Model{
 		}
 		
 		else if($type=="hospital"){
-			$this->db->select("hospital_id,hospital")->from("hospital");
+			$this->db->select("hospital_id,hospital")->from("hospital")->order_by('hospital');
 		}
 		else if($type=="department"){
 		 $this->db->where('hospital_id',$hospital['hospital_id']);
