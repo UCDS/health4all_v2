@@ -1986,7 +1986,13 @@ pri.print();
 	<div class="col-md-12 text-center">
 			<label class="control-label">
 				Signed Consultation? 
-				<input type="checkbox" <?php if($patient->signed_consultation) echo " checked ";?> class="form-control checkbox-big" name="signed_consultation" value = "1" />
+				<?php if($patient->signed_consultation) { ?>
+					<span class="fa fa-check"></span>
+					<input type="checkbox" class="sr-only" name="signed_consultation" value="1" readonly checked />
+				<?php }
+				else{ ?>
+ 				<input type="checkbox"  class="form-control checkbox-big" name="signed_consultation" value = "1" />
+				<?php } ?>
 			</label>
 			&emsp;
 		<input type="text" name="visit_id" class="sr-only" value="<?php echo $patient->visit_id;?>" hidden readonly />

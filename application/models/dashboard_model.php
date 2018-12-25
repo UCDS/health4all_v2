@@ -30,21 +30,22 @@ class Dashboard_model extends CI_Model{
             ->from('hospital')
             ->join('patient_visit', 'hospital.hospital_id=patient_visit.hospital_id', 'left');
         if($type1){
-            $this->db->where('LOWER(REPLACE(hospital.type1, " ", "_"))=', strtolower($type1));
+
+            $this->db->where('LOWER(hospital.type1)', strtolower(str_replace("_", " ",$type1)));
         }else if($type2){
-            $this->db->where('LOWER(REPLACE(hospital.type2, " ", "_"))=', strtolower($type2));
+            $this->db->where('LOWER(hospital.type2)', strtolower(str_replace("_", " ",$type2)));
         }else if($type3){
-            $this->db->where('LOWER(REPLACE(hospital.type3, " ", "_"))', strtolower($type3));
+            $this->db->where('LOWER(hospital.type3)', strtolower(str_replace("_", " ",$type3)));
         }else if($type4){
-            $this->db->where('LOWER(REPLACE(hospital.type4, " ", "_"))', strtolower($type4));
+            $this->db->where('LOWER(hospital.type4)', strtolower(str_replace("_", " ",$type4)));
         }else if($type5){
-            $this->db->where('LOWER(REPLACE(hospital.type5, " ", "_"))', strtolower($type5));
+            $this->db->where('LOWER(hospital.type5)', strtolower(str_replace("_", " ",$type5)));
         }else if($type6){
-            $this->db->where('LOWER(REPLACE(hospital.type6, " ", "_"))', strtolower($type6));
+            $this->db->where('LOWER(hospital.type6)', strtolower(str_replace("_", " ",$type6)));
         }
         if($this->input->get_post('state_key')){
             $state_key = $this->input->get_post('state_key');
-            $this->db->where('LOWER(REPLACE(hospital.state, " ", "_"))=', $state_key);
+            $this->db->where('LOWER(hospital.state)', strtolower(str_replace("_", " ",$state_key)));
         }
         if($group_by){
             $this->db->group_by("hospital.$group_by");
@@ -80,19 +81,20 @@ class Dashboard_model extends CI_Model{
             ->from('hospital')
             ->join('patient_visit', 'hospital.hospital_id=patient_visit.hospital_id', 'left')
             ->order_by('distinct_patient_visits');
-        if($type1){
-            $this->db->where('LOWER(REPLACE(hospital.type1, " ", "_"))=', strtolower($type1));
-        }else if($type2){
-            $this->db->where('LOWER(REPLACE(hospital.type2, " ", "_"))=', strtolower($type2));
-        }else if($type3){
-            $this->db->where('LOWER(REPLACE(hospital.type3, " ", "_"))', strtolower($type3));
-        }else if($type4){
-            $this->db->where('LOWER(REPLACE(hospital.type4, " ", "_"))', strtolower($type4));
-        }else if($type5){
-            $this->db->where('LOWER(REPLACE(hospital.type5, " ", "_"))', strtolower($type5));
-        }else if($type6){
-            $this->db->where('LOWER(REPLACE(hospital.type6, " ", "_"))', strtolower($type6));
-        }
+            if($type1){
+    
+                $this->db->where('LOWER(hospital.type1)', strtolower(str_replace("_", " ",$type1)));
+            }else if($type2){
+                $this->db->where('LOWER(hospital.type2)', strtolower(str_replace("_", " ",$type2)));
+            }else if($type3){
+                $this->db->where('LOWER(hospital.type3)', strtolower(str_replace("_", " ",$type3)));
+            }else if($type4){
+                $this->db->where('LOWER(hospital.type4)', strtolower(str_replace("_", " ",$type4)));
+            }else if($type5){
+                $this->db->where('LOWER(hospital.type5)', strtolower(str_replace("_", " ",$type5)));
+            }else if($type6){
+                $this->db->where('LOWER(hospital.type6)', strtolower(str_replace("_", " ",$type6)));
+            }
         if($group_by){
             $this->db->group_by("hospital.$group_by");
         } else {
@@ -120,8 +122,8 @@ class Dashboard_model extends CI_Model{
                 ->where('patient_visit.visit_type', $visit_type);
         }           
         $query = $this->db->get();
-        
         $visit_summary = $query->result();
+
         return $visit_summary;
     }
 
