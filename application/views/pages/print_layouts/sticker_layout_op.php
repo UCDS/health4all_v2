@@ -41,14 +41,15 @@ $hospital=$this->session->userdata('hospital'); ?>
 			</tr>
 			<tr >
 				<td colspan="3"> 
-                     <span style='font-size:12px;'>OP Number: </span><span style='font-size:10px;font-weight:bold;'> <?php echo $registered->hosp_file_no; ?></span>
+                     <span style='font-size:12px;'>OP Number: </span><span style='font-size:10px;font-weight:bold;'> <?php echo $registered->hosp_file_no; ?>, &nbsp</span>
+					 <span style='font-size:12px;'>Dept: </span><span style='font-size:10px;font-weight:bold;'> <?php echo $registered->department;?></span>
 				</td>
 			</tr>
 			<tr>
-			<td colspan="3">
-				<span style='font-size:10px;'>Patient Name: </span>
-				<span style='font-size:10px;font-weight:bold'> <?php echo ' '.$registered->name;?></span>
-			</td>
+				<td colspan="3">
+					<span style='font-size:10px;'>Patient Name: </span>
+					<span style='font-size:10px;font-weight:bold'> <?php echo ' '.$registered->name;?></span>
+				</td>
 			</tr>
             <tr>
 				<td colspan="3">

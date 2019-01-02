@@ -14,12 +14,14 @@ $(document).ready(function(){
                 // tab of the developer tools
                 alert("Success");
                 $('#ajax_notification').text("ajax post done");
+                draw_table();
                 console.log(result);
             },
             error: function(xhr, resp, text) {
                 console.log(xhr, resp, text);
                 $('#ajax_notification').text("ajax post done");
-                alert('Hi');
+                alert('Fail');
+                draw_table();
             }
         });
         event.preventDefault();
