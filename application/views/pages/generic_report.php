@@ -7,6 +7,7 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-ui.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/custom/js_functions.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/custom/jquery_form_post.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/custom/common_on_load_functions.js"></script>
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery-ui.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery.ptTimeSelect.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
@@ -15,14 +16,10 @@
 <script type="text/javascript">
 $(document).ready(
     function(){
-        $("#from_date").datepicker({
+        $("#from_date,#to_date").Zebra_DatePicker({
             dateFormat:"dd-M-yy",
             changeYear:1,
-            changeMonth:1,
-            onSelect:function(sdt){
-                $("#to_date").datepicker({dateFormat:"dd-M-yy",changeYear:1,changeMonth:1});
-                $("#to_date").datepicker("option","minDate",sdt);
-            }
+            changeMonth:1
         });
         var options = {
             widthFixed : true,

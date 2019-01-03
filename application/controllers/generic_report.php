@@ -38,18 +38,27 @@ class Generic_report extends CI_Controller {
             return;
         }
         $post_data = $this->security->xss_clean($_POST);
-    //    echo $post_data['sbp'];
-    //    echo implode(' ', $post_data);
+        
         $this->load->model('gen_rep_model');
         $result = array();
-        if(array_key_exists('data_sources', $post_data)) {
-            $data_sources = explode(',', $post_data['data_sources']);
-                       
-            foreach($data_sources as $source) {
-                $result[$source] = $this->gen_rep_model->simple_join($source, $post_data);
+        if(array_key_exists('routes', $post_data)) {
+            $routes = explode(',', $post_data['routes']);          
+            foreach($routes as $route) {
+                $result[$route] = $this->gen_rep_model->simple_join($route, $post_data);
             }
         };
-        
+        //column_headers
+        if(array_key_exists('column_headers', $post_data)) {
+            $result['column_headers'] = $post_data['column_headers'];
+        }
+        //table_id
+        if(array_key_exists('table_id', $post_data)) {
+            $result['table_id'] = $post_data['table_id'];
+        }
+        //row_headers
+        if(array_key_exists('row_headers', $post_data)) {
+            $result['row_headers'] = $post_data['row_headers'];
+        }
         echo json_encode($result);
     }
 }

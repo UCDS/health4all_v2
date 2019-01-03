@@ -117,16 +117,17 @@ class Gen_rep_Model extends CI_Model {
             }
         }
         // Default where condition // Date
+        // Set to today and submit by default
         if(array_key_exists('from_date', $post_data) && array_key_exists('to_date', $post_data)){
             if($post_data['from_date']){
                 $from_date = date("Y-m-d",strtotime($post_data['from_date']));
                 $to_date = date("Y-m-d",strtotime($post_data['to_date']));
-                $this->db->where('(patient_visit.admit_date BETWEEN "'.$from_date.'" AND "'.$to_date.'")');
+                $this->db->where('('.$from.'.admit_date BETWEEN "'.$from_date.'" AND "'.$to_date.'")');
             }
         }
         else {
             $date = date("Y-m-d");
-            $this->db->where('(patient_visit.admit_date BETWEEN "'.$date.'" AND "'.$date.'")');
+            $this->db->where('('.$from.'.admit_date BETWEEN "'.$date.'" AND "'.$date.'")');
         }
 
         // Where conditions{string}{(operator_value-table_name.column_name)}
@@ -155,8 +156,7 @@ class Gen_rep_Model extends CI_Model {
         }
         // Execute query
         $query = $this->db->get();
-        echo $this->db->last_query();
-        $result = array();
+    //    echo $this->db->last_query();
         $result = $query->result();
         
         return $result;

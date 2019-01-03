@@ -1,30 +1,16 @@
 <script type="text/javascript">
-var table = {       // Row header, value, column header
-    table_id: 'report_table',
-    condition_met: {
-        sbp: 'SBP >=',
-        dbp: 'DBP >=',
-        rbs: 'RBS >=',
-        hb: 'HB <=',
-        hba1c: 'HBA1C >=' 
-    },
-    condition_not_met: {
-        nsbp: 'SBP >=',
-        ndbp: 'DBP >=',
-        nrbs: 'RBS >=',
-        nhb: 'HB <=',
-        nhba1c: 'HBA1C >=' 
+    var draw_table = function(data) {
+        draw_table_independent_rows_columns('report_table', data);
     }
-};
 </script>
-<form class="form-inline" id="form" action="<?php echo base_url().'generic_report/json_data'; ?>" method="post">
+<form class="form-inline" id="primary_filter" action="<?php echo base_url().'/generic_resport/json_data';?>" method="post">
     <div class="form-group">
         <label for="from_date">From Date: </label>
-        <input class="form-control" type="date" value='' name="from_date" id="" size="15" />
+        <input class="form-control" type="date" value='' name="from_date" id="from_date" size="15" />
     </div>
     <div class="form-group">
-        <label for="from_date">To Date: </label>
-        <input class="form-control" type="date" value="" name="to_date" id="" size="15" />
+        <label for="to_date">To Date: </label>
+        <input class="form-control" type="date" value='' name="to_date" id="to_date" size="15" />
     </div>
     <div class="form-group">
         <label for="sbp">SBP: </label>
@@ -45,7 +31,11 @@ var table = {       // Row header, value, column header
     <div class="form-group">
         <label for="dbp">HBA1C: </label>
         <input maxlength="4" size="4" type="text" name="hba1c" class="form-control" id="hba1c" placeholder="HBA1C >=">
-        <input type="hidden" name="data_sources" class="form-control" id="data_sources" value="condition_met-sbp,dbp,rbs;condition_not_met-nsbp,ndbp,nrbs"><!-- hb,hba1c-->
+        <input type="hidden" name="routes" id="routes" 
+        value="sbp,dbp"><!-- rbs,hb,hba1c,nsbp,ndbp,nrbs-->
+        <input type="hidden" name="column_headers" id="column_headers" value="SBP >=:sbp,DBP >=:dbp,RBS >=:rbs,HB <=:hb,HBA1C >=:hba1c">
+        <input type="hidden" name="row_headers" id="row_headers" value="Condition met:sbp,dbp,rbs,hb,hba1c;Condition not met:">
+        <input type="hidden" name="table_id" id="table_id" value="report_table">
     </div>
     <div class="form-group">
         <br>
@@ -53,14 +43,16 @@ var table = {       // Row header, value, column header
     </div>
 </form>
 
-<table class="table table-striped" id="report_table">
+<table class="table table-striped" id="report_table" class="hidden">
     <thead>
-        
+        <tr>
+            <th>#</th>
+        </tr>
     </thead>
-    <tbody>
-        
+    <tbody><!-- tr td -->
+    
     </tbody>
-    <tfoot>
+    <tfoot><!-- tr td -->
         
     </tfoot>
 </table>
