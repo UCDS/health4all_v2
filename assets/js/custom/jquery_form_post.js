@@ -14,6 +14,7 @@ $(document).ready(function(){
                 // tab of the developer tools
                 $('#ajax_notification').text("Got Result");
                 draw_table(result);
+                build_table(result);
             },
             error: function(xhr, resp, text) {
                 console.log(xhr, resp, text);

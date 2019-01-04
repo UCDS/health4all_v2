@@ -33,8 +33,8 @@
         <input maxlength="4" size="4" type="text" name="hba1c" class="form-control" id="hba1c" placeholder="HBA1C >=">
         <input type="hidden" name="routes" id="routes" 
         value="sbp,dbp"><!-- rbs,hb,hba1c,nsbp,ndbp,nrbs-->
-        <input type="hidden" name="column_headers" id="column_headers" value="SBP >=:sbp,DBP >=:dbp,RBS >=:rbs,HB <=:hb,HBA1C >=:hba1c">
-        <input type="hidden" name="row_headers" id="row_headers" value="Condition met:sbp,dbp,rbs,hb,hba1c;Condition not met:">
+        <input type="hidden" name="column_headers" id="column_headers" value="SBP >=:sbp,nsbp;DBP >=:dbp,ndbp;RBS >=:rbs,nrbs;HB <=:hb,nhb;HBA1C >=:hba1c,nhba1c">
+        <input type="hidden" name="row_routes" id="row_routes" value="Condition met:sbp,dbp,rbs,hb,hba1c;Condition not met:nsbp,ndbp,nrbs,nhb,nhba1c">
         <input type="hidden" name="table_id" id="table_id" value="report_table">
     </div>
     <div class="form-group">
