@@ -41,24 +41,12 @@ class Generic_report extends CI_Controller {
         
         $this->load->model('gen_rep_model');
         $result = array();
-        if(array_key_exists('routes', $post_data)) {
-            $routes = explode(',', $post_data['routes']);          
-            foreach($routes as $route) {
-                $result[$route] = $this->gen_rep_model->simple_join($route, $post_data);
+        if(array_key_exists('query_strings', $post_data)) {
+            $query_strings = explode(',', $post_data['query_strings']);
+            foreach($query_strings as $query_string) {
+                $result[$query_string] = $this->gen_rep_model->simple_join($query_string, $post_data);
             }
         };
-        //column_headers
-        if(array_key_exists('column_headers', $post_data)) {
-            $result['column_headers'] = $post_data['column_headers'];
-        }
-        //table_id
-        if(array_key_exists('table_id', $post_data)) {
-            $result['table_id'] = $post_data['table_id'];
-        }
-        //row_headers
-        if(array_key_exists('row_headers', $post_data)) {
-            $result['row_headers'] = $post_data['row_headers'];
-        }
         echo json_encode($result);
     }
 }

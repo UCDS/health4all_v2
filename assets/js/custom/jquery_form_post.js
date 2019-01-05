@@ -13,7 +13,6 @@ $(document).ready(function(){
                 // you can see the result from the console
                 // tab of the developer tools
                 $('#ajax_notification').text("Got Result");
-                draw_table(result);
                 build_table(result);
             },
             error: function(xhr, resp, text) {

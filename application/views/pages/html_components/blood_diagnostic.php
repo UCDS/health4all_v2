@@ -1,7 +1,5 @@
 <script type="text/javascript">
-    var draw_table = function(data) {
-        draw_table_independent_rows_columns('report_table', data);
-    }
+    
 </script>
 <form class="form-inline" id="primary_filter" action="<?php echo base_url().'/generic_resport/json_data';?>" method="post">
     <div class="form-group">
@@ -31,18 +29,22 @@
     <div class="form-group">
         <label for="dbp">HBA1C: </label>
         <input maxlength="4" size="4" type="text" name="hba1c" class="form-control" id="hba1c" placeholder="HBA1C >=">
-        <input type="hidden" name="routes" id="routes" 
+        <input type="hidden" name="query_strings" id="query_strings" 
         value="sbp,dbp"><!-- rbs,hb,hba1c,nsbp,ndbp,nrbs-->
-        <input type="hidden" name="column_headers" id="column_headers" value="SBP >=:sbp,nsbp;DBP >=:dbp,ndbp;RBS >=:rbs,nrbs;HB <=:hb,nhb;HBA1C >=:hba1c,nhba1c">
-        <input type="hidden" name="row_routes" id="row_routes" value="Condition met:sbp,dbp,rbs,hb,hba1c;Condition not met:nsbp,ndbp,nrbs,nhb,nhba1c">
-        <input type="hidden" name="table_id" id="table_id" value="report_table">
     </div>
     <div class="form-group">
         <br>
         <button type="submit" id="submit" class="btn btn-default">Submit</button>
     </div>
 </form>
-
+<!--<input type="hidden" name="column_query_strings" id="column_query_strings" value="SBP >=:sbp,nsbp;DBP >=:dbp,ndbp;RBS >=:rbs,nrbs;HB <=:hb,nhb;HBA1C >=:hba1c,nhba1c">-->
+<p hidden id="column_query_strings">1#SBP >=:sbp~nsbp;2#DBP >=:dbp~ndbp;3#RBS >=:rbs~nrbs;4#HB <=:hb~nhb;5#HBA1C >=:hba1c~nhba1c</p>
+<p hidden id="row_query_strings" >1#Condition met;2#Condition not met</p>
+<p hidden id="table_id">report_table</p>
+<p hidden id="display_route_header">true</p>
+<p hidden id="display_query_header">false</p>
+<p hidden id="display_column_name">false</p>
+<p hidden id="combine_columns">true</p>
 <table class="table table-striped" id="report_table" class="hidden">
     <thead>
         <tr>

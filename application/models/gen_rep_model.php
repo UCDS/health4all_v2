@@ -1,7 +1,7 @@
 <?php
 class Gen_rep_Model extends CI_Model {
-    private $routes = array(    //'sbp,dbp,rbs,hb,hba1c'
-        'route_name'=>array(
+    private $queries = array(    //'sbp,dbp,rbs,hb,hba1c'
+        'query_name'=>array(
             'filters'=>array(   // set or false
 
             ),
@@ -81,18 +81,18 @@ class Gen_rep_Model extends CI_Model {
         parent::__construct();
     }
 
-    function simple_join($route, $post_data) {
+    function simple_join($query, $post_data) {
         // Failure condition
-        if(!array_key_exists($route, $this->routes))
+        if(!array_key_exists($query, $this->queries))
             return false;
-        // Route extraction
-        $select = $this->routes[$route]['select'] ? $this->routes[$route]['select'] : array();
-        $from = $this->routes[$route]['from'] ? $this->routes[$route]['from'] : array();
-        $filters = $this->routes[$route]['filters'] ? $this->routes[$route]['filters'] : array();
-        $where = $this->routes[$route]['where'] ? $this->routes[$route]['where'] : array();
-        $join_sequence = $this->routes[$route]['join_sequence'] ? $this->routes[$route]['join_sequence'] : array();
-        $group_by = $this->routes[$route]['group_by'] ? $this->routes[$route]['group_by'] : array();
-        $having = $this->routes[$route]['having'] ? $this->routes[$route]['having'] : array();
+        // query extraction
+        $select = $this->queries[$query]['select'] ? $this->queries[$query]['select'] : array();
+        $from = $this->queries[$query]['from'] ? $this->queries[$query]['from'] : array();
+        $filters = $this->queries[$query]['filters'] ? $this->queries[$query]['filters'] : array();
+        $where = $this->queries[$query]['where'] ? $this->queries[$query]['where'] : array();
+        $join_sequence = $this->queries[$query]['join_sequence'] ? $this->queries[$query]['join_sequence'] : array();
+        $group_by = $this->queries[$query]['group_by'] ? $this->queries[$query]['group_by'] : array();
+        $having = $this->queries[$query]['having'] ? $this->queries[$query]['having'] : array();
         
         $this->db->select($select);
         $this->db->from($from);
@@ -157,8 +157,9 @@ class Gen_rep_Model extends CI_Model {
         // Execute query
         $query = $this->db->get();
     //    echo $this->db->last_query();
+    
         $result = $query->result();
-        
+
         return $result;
     }
 }
