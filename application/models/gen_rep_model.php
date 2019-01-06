@@ -42,36 +42,125 @@ class Gen_rep_Model extends CI_Model {
         ),
         'rbs'=>array(
             'filters'=>array(           // set or false test.test_result >= post
-                '>='=>array('rbs-test_result.test_result')
+                '>='=>array('rbs-test.test_result')
             ),
             'select'=>'COUNT(*) as rbs',
             'from'=>'patient_visit',
             'where'=>array(
-                '='=>array('LIKE(rbs)-test_master.text_name')
+                ''=>array("test_master.test_name LIKE 'rbs'")
             ),             // test_master.test_name = rbs, 
             'join_sequence'=>array(
-                'patient_visit.visit_id=test_order.visit_id',
-                'test_order.order_id=test.order_id',
-                'test.test_master_id=test_master.test_master_id'
+                'test_order.visit_id=patient_visit.visit_id',
+                'test.order_id=test_order.order_id',
+                'test_master.test_master_id=test.test_master_id'
             ),     // patient_visit -> test -> test_master
             'group_by'=>false,
             'having'=>false
         ),
         'hb'=>array(
-            'filters'=>array(   // set or false
-
+            'filters'=>array(           // set or false test.test_result >= post
+                '>='=>array('hb-test.test_result')
             ),
+            'select'=>'COUNT(*) as hb',
+            'from'=>'patient_visit',
+            'where'=>array(
+                ''=>array("test_master.test_name LIKE 'hb'")
+            ),             // test_master.test_name = rbs, 
+            'join_sequence'=>array(
+                'test_order.visit_id=patient_visit.visit_id',
+                'test.order_id=test_order.order_id',
+                'test_master.test_master_id=test.test_master_id'
+            ),     // patient_visit -> test -> test_master
+            'group_by'=>false,
+            'having'=>false
+        ),
+        'hba1c'=>array(
+            'filters'=>array(           // set or false test.test_result >= post
+                '>='=>array('hba1c-test.test_result')
+            ),
+            'select'=>'COUNT(*) as hb',
+            'from'=>'patient_visit',
+            'where'=>array(
+                ''=>array("test_master.test_name LIKE 'hba1c'")
+            ),             // test_master.test_name = rbs, 
+            'join_sequence'=>array(
+                'test_order.visit_id=patient_visit.visit_id',
+                'test.order_id=test_order.order_id',
+                'test_master.test_master_id=test.test_master_id'
+            ),     // patient_visit -> test -> test_master
+            'group_by'=>false,
+            'having'=>false
+        ),
+        'nsbp'=>array(
+            'filters'=>array(   // set or false
+                '<'=>array('sbp-patient_visit.sbp')
+            ),
+            'select'=>'COUNT(*) as sbp',
+            'from'=>'patient_visit',
             'where'=>false,
             'join_sequence'=>false,
             'group_by'=>false,
             'having'=>false
         ),
-        'hba1c'=>array(
+        'ndbp'=>array(
             'filters'=>array(   // set or false
-
+                '<'=>array('dbp-patient_visit.dbp')
             ),
+            'select'=>'COUNT(*) as dbp',
+            'from'=>'patient_visit',
             'where'=>false,
             'join_sequence'=>false,
+            'group_by'=>false,
+            'having'=>false
+        ),
+        'nrbs'=>array(
+            'filters'=>array(           // set or false test.test_result >= post
+                '<'=>array('rbs-test.test_result')
+            ),
+            'select'=>'COUNT(*) as rbs',
+            'from'=>'patient_visit',
+            'where'=>array(
+                ''=>array("test_master.test_name LIKE 'rbs'")
+            ),             // test_master.test_name = rbs, 
+            'join_sequence'=>array(
+                'test_order.visit_id=patient_visit.visit_id',
+                'test.order_id=test_order.order_id',
+                'test_master.test_master_id=test.test_master_id'
+            ),     // patient_visit -> test -> test_master
+            'group_by'=>false,
+            'having'=>false
+        ),
+        'nhb'=>array(
+            'filters'=>array(           // set or false test.test_result >= post
+                '<'=>array('hb-test.test_result')
+            ),
+            'select'=>'COUNT(*) as hb',
+            'from'=>'patient_visit',
+            'where'=>array(
+                ''=>array("test_master.test_name LIKE 'hb'")
+            ),             // test_master.test_name = rbs, 
+            'join_sequence'=>array(
+                'test_order.visit_id=patient_visit.visit_id',
+                'test.order_id=test_order.order_id',
+                'test_master.test_master_id=test.test_master_id'
+            ),     // patient_visit -> test -> test_master
+            'group_by'=>false,
+            'having'=>false
+        ),
+        'nhba1c'=>array(
+            'filters'=>array(           // set or false test.test_result >= post
+                '<'=>array('hba1c-test.test_result')
+            ),
+            'select'=>'COUNT(*) as hb',
+            'from'=>'patient_visit',
+            'where'=>array(
+                ''=>array("test_master.test_name LIKE 'hba1c'")
+            ),             // test_master.test_name = rbs, 
+            'join_sequence'=>array(
+                'test_order.visit_id=patient_visit.visit_id',
+                'test.order_id=test_order.order_id',
+                'test_master.test_master_id=test.test_master_id'
+            ),     // patient_visit -> test -> test_master
             'group_by'=>false,
             'having'=>false
         ),
@@ -134,7 +223,12 @@ class Gen_rep_Model extends CI_Model {
         foreach($where as $op => $columns) {
             foreach($columns as $column){
                 $temp = explode('-', $column);
-                $this->db->where("$temp[1] ".$op, "$temp[0]");
+                if($op != ''){
+                    $this->db->where("$temp[1] ".$op, "$temp[0]");
+                }else {
+                    $this->db->where("$column");
+                }
+                
             }
         }
         // Join conditions{join_from_table_name.column_name, join_to_table_name.column_name}
@@ -142,7 +236,7 @@ class Gen_rep_Model extends CI_Model {
             $tables = explode('=', $join);
             $temp = explode('.', $tables[0]);
             $table_one = $temp[0];
-            $this->db->join("$table_one[0]", "$join[1]=$join[2]", 'left');
+            $this->db->join("$table_one", "$join", 'left');
         }
         // Group by conditions{table_name.column_name, table_name.column_name}{string}
         foreach($group_by as $group) {
@@ -156,7 +250,7 @@ class Gen_rep_Model extends CI_Model {
         }
         // Execute query
         $query = $this->db->get();
-    //    echo $this->db->last_query();
+//        echo $this->db->last_query().'<br>';
     
         $result = $query->result();
 

@@ -30,7 +30,7 @@
         <label for="dbp">HBA1C: </label>
         <input maxlength="4" size="4" type="text" name="hba1c" class="form-control" id="hba1c" placeholder="HBA1C >=">
         <input type="hidden" name="query_strings" id="query_strings" 
-        value="sbp,dbp"><!-- rbs,hb,hba1c,nsbp,ndbp,nrbs-->
+        value="sbp,dbp,rbs,hb,hba1c,nsbp,ndbp,nrbs,nhb,nhba1c"><!-- rbs,hb,hba1c,nsbp,ndbp,nrbs-->
     </div>
     <div class="form-group">
         <br>
