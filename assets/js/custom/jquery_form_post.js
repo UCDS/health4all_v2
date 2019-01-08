@@ -4,20 +4,29 @@ $(document).ready(function(){
         // send ajax
         console.log('Submit clicked');
         $('#ajax_notification').text("Query submitted please wait...");
+        let query_strings = localStorage.getItem('query_strings');
+        $('<input />').attr('type', 'hidden')
+            .attr('name', "query_strings")
+            .attr('id', 'query_strings_field')
+            .attr('value', query_strings)
+            .appendTo('#primary_filter');
         $.ajax({
-            url: '/health4all_v2/generic_report/json_data',     // url where to submit the request
+            url: '/health4all_v2/generic_report/json_data',     // url where to submit the request Local URL
+                                                                // url: '/generic_report/json_data',     // url where to submit the request
             type : "POST",                                      // type of action POST || GET
             dataType : 'json',                                  // data type
-            data : $("#primary_filter").serialize(),                      // post data || get data
+            data : $("#primary_filter").serialize(),            // post data || get data
             success : function(result) {
                 // you can see the result from the console
                 // tab of the developer tools
                 $('#ajax_notification').text("Got Result");
                 build_table(result);
+                $('#query_strings_field').remove();
             },
             error: function(xhr, resp, text) {
                 console.log(xhr, resp, text);
                 $('#ajax_notification').text("Something went wrong");
+                $('#query_strings_field').remove();
             }
         });
         event.preventDefault();

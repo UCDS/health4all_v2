@@ -305,6 +305,10 @@
 				<?php
 					}
 				?>
+				<?php
+					if($f->user_function=="Masters - Application"){ ?>
+                  		<li><a href="<?php echo base_url()."generic_report/gen_rep";?>"><i class="fa fa-gear"></i> Generic Blood Report</a></li>
+					<?php }?>
 			<?php	}	?>
 			<li class="divider"></li>
 			<?php foreach($functions as $f){

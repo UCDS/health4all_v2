@@ -26,6 +26,7 @@ class Generic_report extends CI_Controller {
     function gen_rep() {
         if(!$this->logged_in)
             show_404();
+
         $this->load->view('templates/header',$this->data);
         $this->load->view("pages/generic_report",$this->data);
         $this->load->view("pages/html_components/blood_diagnostic",$this->data);
