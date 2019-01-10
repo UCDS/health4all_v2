@@ -2,6 +2,8 @@
 
 class Generic_report extends CI_Controller {
     private $logged_in = false;
+    private $functions = array();
+    private $authorised = false;
 	function __construct(){
 		parent::__construct();
 		if($this->session->userdata('logged_in')){
@@ -15,6 +17,7 @@ class Generic_report extends CI_Controller {
             $user_id=$userdata['user_id'];
             $this->data['title']='Report';
             $this->data['hospitals']=$this->staff_model->user_hospital($user_id);
+            $this->functions = $this->staff_model->user_function($user_id);
             $this->data['functions']=$this->staff_model->user_function($user_id);
             $this->data['departments']=$this->staff_model->user_department($user_id);
             $this->data['op_forms']=$this->staff_model->get_forms("OP");
@@ -37,7 +40,15 @@ class Generic_report extends CI_Controller {
         if(!$this->logged_in){
             echo json_encode('false');
             return;
+        }        
+        foreach($this->functions as $function){
+            if($function->user_function == 'Outcome Summary') {
+                $authorised = true;
+            }
         }
+        if(!$authorised)
+            return json_encode(false);
+        
         $post_data = $this->security->xss_clean($_POST);
         
         $this->load->model('gen_rep_model');

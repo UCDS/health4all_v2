@@ -141,15 +141,10 @@ class Home extends CI_Controller {
 				$this->load->view('templates/header',$this->data);
 				$this->load->view('pages/user_home',$this->data);
 			}
-		}
-		
+		}		
 		else{
 			if(!$this->session->userdata('logged_in')){
-				$captcha_word = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 5);
-				$user_session_data = array(
-					'captcha_word' => $captcha_word
-				);
-				
+				$captcha_word = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 5);			
 				$this->load->helper('captcha');
 				$captcha_config = array(   
 					'word'          => $captcha_word,
@@ -159,24 +154,19 @@ class Home extends CI_Controller {
 					'img_width'	=> '150',
 					'img_height'    => 30,
 					'expiration'    => 300
-				);
-				
+				);				
 				$cap_link = create_captcha($captcha_config);
 				$this->data['image'] = $cap_link['image'];
-				$user_captcha = $this->input->post('captcha');
-				$session_captcha = $this->session->userdata('captcha_word');
-				
+				$this->session->set_userdata(strtoupper($captcha_word), true);
 
 				$this->data['title']="Login";
-
 				$this->load->view('templates/header',$this->data);
 				$this->load->helper('form');
-				$this->load->library('form_validation');
-				
+				$this->load->library('form_validation');				
 				$this->form_validation->set_rules('username', 'Username', 'trim|required|xss_clean');
+				$this->form_validation->set_rules('captcha_text', 'Captcha', 'trim|required|xss_clean');
 				$this->form_validation->set_rules('password', 'Password', 'trim|required|xss_clean|callback_check_database');
-				echo "Right block";
-				if ((strcmp(strtoupper($user_captcha),strtoupper($session_captcha)) == 0) || $this->form_validation->run() === FALSE)
+				if ($this->form_validation->run() === FALSE)
 				{
 					$this->load->view('pages/login');
 				}
@@ -205,7 +195,13 @@ class Home extends CI_Controller {
 		$this->load->model('staff_model');
 	   //Field validation succeeded.  Validate against database
 	   $username = $this->input->post('username');
-	 
+	   $captcha_text = $this->input->post('captcha_text');
+	   
+	   if(!strtoupper($this->session->userdata(strtoupper($captcha_text)))){
+		   $this->session->unset_userdata(strtoupper($captcha_text));
+			$this->form_validation->set_message('check_database','Invalid Username or Password or Captcha');
+			return false;
+	   }
 	   //query the database
 	   $result = $this->staff_model->login($username, $password);
 	   if($result)
@@ -223,7 +219,7 @@ class Home extends CI_Controller {
 	   }
 	   else
 	   {
-	     $this->form_validation->set_message('check_database','Invalid username or password');
+	     $this->form_validation->set_message('check_database','Invalid Username or Password or Captcha');
 	     return false;
 	   }
 	 }

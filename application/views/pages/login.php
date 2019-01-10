@@ -18,7 +18,7 @@
           </div>
           <div class="col-md-6 col-xs-6">
             <label class="control-label"><h5>Enter image text:</h5></label>
-            <input type="text" name="captcha" class="form-control" placeholder="Captcha Text" required>
+            <input type="text" name="captcha_text" class="form-control" placeholder="Captcha Text" required>
           </div>
         </div>
         <br>

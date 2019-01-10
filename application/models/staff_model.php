@@ -30,6 +30,7 @@ class Staff_model extends CI_Model{
 		->where('user_function_link.user_id',$user_id)
                 ->where('user_function_link.active','1');
 		$query=$this->db->get();
+		
 		return $query->result();
 	}
 	
