@@ -70,20 +70,20 @@ class Register_model extends CI_Model{
 		if(($this->input->post('mlc')=='1' || $this->input->post('mlc')=='0')) $mlc= $this->input->post('mlc'); else $mlc=-1;
 		//check if it is an mlc case
 		if($this->input->post('mlc')==1){
-                    //if a manual mlc number has been entered, use it and ignore the auto counter		
-                    $mlc_number_manual=$this->input->post('mlc_number_manual');
-                    $this->db->select('count')->from('counter')->where('counter_name','MLC')->where('hospital_id',$hospital['hospital_id']);
-                    $query = $this->db->get();
-                    $result = $query->row();
-                    $mlc_number = ++$result->count;
-                    $this->db->where('counter_name','MLC')->where('hospital_id',$hospital['hospital_id']);
-                    $this->db->update('counter',array('count'=>$mlc_number));
+			//if a manual mlc number has been entered, use it and ignore the auto counter		
+			$mlc_number_manual=$this->input->post('mlc_number_manual');
+			$this->db->select('count')->from('counter')->where('counter_name','MLC')->where('hospital_id',$hospital['hospital_id']);
+			$query = $this->db->get();
+			$result = $query->row();
+			$mlc_number = ++$result->count;
+			$this->db->where('counter_name','MLC')->where('hospital_id',$hospital['hospital_id']);
+			$this->db->update('counter',array('count'=>$mlc_number));
 
-                    $ps_name=$this->input->post('ps_name');
-                    $pc_number=$this->input->post('pc_number');
-                    $brought_by=$this->input->post('brought_by');
-                    $police_intimation=$this->input->post('police_intimation');
-                    $declaration_required=$this->input->post('declaration_required');
+			$ps_name=$this->input->post('ps_name');
+			$pc_number=$this->input->post('pc_number');
+			$brought_by=$this->input->post('brought_by');
+			$police_intimation=$this->input->post('police_intimation');
+			$declaration_required=$this->input->post('declaration_required');
 		}
 		else {
                     $mlc_number = "";

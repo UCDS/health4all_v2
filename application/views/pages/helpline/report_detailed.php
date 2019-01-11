@@ -63,13 +63,14 @@ $(function(){
 			$("#table-sort").tablesorter(options);
   });
 </script>
-
+<!--
 <div class="row">
-	<?php if(!!$msg) { ?>
+	<?php // if(!!$msg) { ?>
 		<div class="alert alert-info">
-			<?php echo $msg; ?>
+			<?php // echo $msg; ?>
 		</div>
-	<?php } ?>
+	<?php // } ?>
+	-->
 
 	<?php
 			if($this->input->post('from_date')){
@@ -149,7 +150,7 @@ $(function(){
 							<?php echo $call->to_number;?>
 							</small>
 						</td>
-						<td><small><?php echo $call->dial_whom_number;?>
+						<td><small><?php echo $call->dial_whom_number;?>&nbsp;-&nbsp;<?php echo $call->short_name; ?>
 							<audio controls preload="none">
 								<source src="<?php echo $call->recording_url;?>" type="audio/mpeg">
 								Your browser does not support the audio element.
