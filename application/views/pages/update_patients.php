@@ -353,7 +353,7 @@ pri.print();
                 </div>
 		<iframe id="ifmcontentstoprint" style="height: 0px; width: 0px; position: absolute;display:none"></iframe>
 		<div class="sr-only" id="print-div" style="width:100%;height:100%;"> 
-		<?php $this->load->view('pages/print_layouts/patient_summary');?>
+			<?php $this->load->view('pages/print_layouts/patient_summary');?>
 		</div>
                 <div class="col-md-8">
 			<div class="row alt">
@@ -1330,7 +1330,7 @@ pri.print();
 					<input maxlength="4" size="4" type="text" name="hb"  style="width:50px" class="form-control hb" value="<?php if(!!$patient->hb) echo $patient->hb;?>" <?php if($f->edit==1 && empty($patient->hb)) echo ''; else echo ' readonly'; ?> /> g/dL
 				</div>
 				<div class="col-md-4 col-xs-6">
-					<label class="control-label">Hb1Ac</label>
+					<label class="control-label">HbA1c</label>
 					<input maxlength="3" size="3" type="text" name="hb1ac"  style="width:50px" class="form-control hb1ac" value="<?php if(!!$patient->hb1ac) echo $patient->hb1ac;?>" <?php if($f->edit==1 && empty($patient->hb1ac)) echo ''; else echo ' readonly'; ?> />%
 				</div>
 			</div>
@@ -1999,6 +1999,10 @@ pri.print();
 		<input type="text" name="patient_id" class="sr-only" value="<?php echo $patient->patient_id;?>" hidden readonly />
 		<button class="btn btn-md btn-primary" value="Update" name="update_patient">Update</button>&emsp;
 		<button class="btn btn-md btn-warning" value="Print" type="button" onclick="printDiv('print-div')">Print Summary</button>
+		<?php 
+			$visits = sizeof($patient_visits);
+		?>
+		<button class="btn btn-md btn-warning" value="Print" type="button" onclick="printDiv('print-div-all')">(<?php echo $visits; ?>)-Print Summary All Visits</button>
 	</div>
 	</div>
 	</div>
@@ -2153,3 +2157,6 @@ pri.print();
 	});
 </script>
 	
+<div class="sr-only" id="print-div-all" style="width:100%;height:100%;"> 
+			<?php $this->load->view('pages/print_layouts/patient_summary_all_visits');?>
+</div>

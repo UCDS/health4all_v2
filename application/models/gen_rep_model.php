@@ -213,12 +213,24 @@ class Gen_rep_Model extends CI_Model {
             'having'=>false,
             'limit'=>1000
         ),
-        'vitals_detailed'=>array(
+        'get_patient'=>array(
             'filters'=>array(   // set or false
-                '>='=>array('sbp-patient_visit.sbp','dbp-patient_visit.dbp','rbs-patient_visit.blood_sugar','hba1c-patient_visit.hb1ac'),
-                '<='=>array('hb-patient_visit.hb')
+                '='=>array('patient.patient_id')
             ),
-            'select'=>"patient.patient_id, patient_visit.hosp_file_no as OP_IP_Number, DATE_FORMAT(patient_visit.admit_date, '%M %d %Y') as date, patient_visit.admit_time as time, patient.gender, CONCAT(patient.first_name,' ', patient.last_name) as name, patient.age_years, CONCAT(patient.father_name,' ', patient.mother_name, ' ', patient.spouse_name) as relative, patient.place, CONCAT(patient.phone, ' ', patient.alt_phone) as phone, department.department, CONCAT(unit.unit_name, '-', area.area_name) as Unit,  GROUP_CONCAT(patient_visit.sbp SEPARATOR ', ') as SBP,GROUP_CONCAT(patient_visit.dbp SEPARATOR ', ') as DBP,GROUP_CONCAT(patient_visit.blood_sugar SEPARATOR ', ') as blood_sugar, GROUP_CONCAT(patient_visit.hb SEPARATOR ', ') as HB,GROUP_CONCAT(patient_visit.hb1ac SEPARATOR ', ') as HB1AC",
+            'select'=>"patient.*",
+            'from'=>'patient',
+            'where'=>false,
+            'join_sequence'=>false,
+            'group_by'=>false,
+            'having'=>false,
+            'limit'=>5000,
+            'apply_date'=>false
+        ),
+        'patient_visits_all'=>array(
+            'filters'=>array(   // set or false
+                '='=>array('patient.patient_id')
+            ),
+            'select'=>"patient.patient_id, patient.gender, CONCAT(patient.first_name,' ', patient.last_name) as name, CONCAT(patient.phone,' ', patient.alt_phone) as phone, patient.age_years, patient.age_months, patient.age_days, CONCAT(patient.father_name,' ', patient.mother_name, ' ', patient.spouse_name) as parent_spouse, CONCAT(patient.father_name,' ', patient.mother_name, ' ', patient.spouse_name) as relative, patient.place, patient.address, patient_visit.hosp_file_no, patient_visit.admit_date, patient_visit.visit_type, patient_visit.admit_time, patient_visit.outcome_date, patient_visit.outcome_time, patient_visit.outcome, patient_visit.admit_weight, patient_visit.pulse_rate, patient_visit.temperature, patient_visit.respiratory_rate, patient_visit.presenting_complaints, patient_visit.past_history, patient_visit.family_history, patient_visit.clinical_findings, patient_visit.cvs, patient_visit.rs, patient_visit.pa, patient_visit.cns, patient_visit.final_diagnosis, patient_visit.advise, patient_visit.visit_id, CONCAT(staff.first_name, staff.last_name) as doctor_name, staff.designation, department.department, CONCAT(unit.unit_name, area.area_name) as unit_name, patient_visit.sbp, patient_visit.dbp, patient_visit.blood_sugar, patient_visit.hb, patient_visit.hb1ac, patient_visit.visit_id, patient_visit.signed_consultation",
             'from'=>'patient',
             'where'=>false,
             'join_sequence'=>array(
@@ -226,10 +238,65 @@ class Gen_rep_Model extends CI_Model {
                 'department.department_id=patient_visit.department_id',
                 'unit.unit_id=patient_visit.unit',
                 'area.area_id=patient_visit.area',
+                'staff.staff_id = patient_visit.patient_id'
             ),     // patient_visit -> test -> test_master
-            'group_by'=>array('patient_id'),
+            'group_by'=>false,
             'having'=>false,
-            'limit'=>5000
+            'limit'=>5000,
+            'apply_date'=>false
+        ),
+        'clinical_notes'=>array(
+            'filters'=>array(   // set or false
+                '='=>array('patient.patient_id')
+            ),
+            'select'=>"patient_clinical_notes.note_time, patient_clinical_notes.clinical_note, patient_clinical_notes.visit_id",
+            'from'=>'patient',
+            'where'=>false,
+            'join_sequence'=>array(
+                'patient_visit.patient_id=patient.patient_id',
+                'patient_clinical_notes.visit_id=patient_visit.visit_id'
+            ),     // patient_visit -> test -> test_master
+            'group_by'=>false,
+            'having'=>false,
+            'limit'=>5000,
+            'apply_date'=>false
+        ),
+        'tests_ordered'=>array(
+            'filters'=>array(   // set or false
+                '='=>array('patient.patient_id')
+            ),
+            'select'=>"test_order.order_id, test_order.order_date_time, test_order.visit_id, test.test_result as numeric_result, test.test_result_binary as binary_result, test.test_result_text  as text_result, test.test_status, test_master.test_name, specimen_type.specimen_type,test_order.visit_id",
+            'from'=>'patient',
+            'where'=>false,
+            'join_sequence'=>array(
+                'patient_visit.patient_id=patient.patient_id',
+                'test_order.visit_id=patient_visit.visit_id',
+                'test.order_id = test_order.order_id',
+                'test_master.test_master_id = test.test_master_id',
+                'test_sample.order_id = test_order.order_id',
+                'specimen_type.specimen_type_id = test_sample.specimen_type_id'
+            ),     // patient_visit -> test -> test_master
+            'group_by'=>false,
+            'having'=>false,
+            'limit'=>5000,
+            'apply_date'=>false
+        ),
+        'prescriptions'=>array(
+            'filters'=>array(   // set or false
+                '='=>array('patient.patient_id')
+            ),
+            'select'=>"prescription.frequency, prescription.duration, prescription.morning, prescription.afternoon, prescription.evening, prescription.quantity, item.item_name, prescription.visit_id",
+            'from'=>'patient',
+            'where'=>false,
+            'join_sequence'=>array(
+                'patient_visit.patient_id=patient.patient_id',
+                'prescription.visit_id=patient_visit.visit_id',
+                'item.item_id=prescription.item_id'
+            ),     // patient_visit -> test -> test_master
+            'group_by'=>false,
+            'having'=>false,
+            'limit'=>5000,
+            'apply_date'=>false
         ),
         'Condition_met_detail'=>array(
             'filters'=>array(           // set or false test.test_result >= post
@@ -248,6 +315,40 @@ class Gen_rep_Model extends CI_Model {
             'group_by'=>array('patient_id'),
             'having'=>false,
             'limit'=>1000
+        ),
+        'vitals_detailed'=>array(
+            'filters'=>array(   // set or false
+                '>='=>array('sbp-patient_visit.sbp','dbp-patient_visit.dbp','rbs-patient_visit.blood_sugar','hba1c-patient_visit.hb1ac'),
+                '<='=>array('hb-patient_visit.hb')
+            ),
+            'select'=>"patient.patient_id, patient_visit.hosp_file_no as OP_IP_Number, DATE_FORMAT(patient_visit.admit_date, '%d %M %Y') as date, patient_visit.admit_time as time, patient.gender, CONCAT(patient.first_name,' ', patient.last_name) as name, patient.age_years, CONCAT(patient.father_name,' ', patient.mother_name, ' ', patient.spouse_name) as relative, patient.place, CONCAT(patient.phone, ' ', patient.alt_phone) as phone, department.department, CONCAT(unit.unit_name, '-', area.area_name) as Unit,  GROUP_CONCAT(patient_visit.sbp SEPARATOR ', ') as SBP,GROUP_CONCAT(patient_visit.dbp SEPARATOR ', ') as DBP,GROUP_CONCAT(patient_visit.blood_sugar SEPARATOR ', ') as blood_sugar, GROUP_CONCAT(patient_visit.hb SEPARATOR ', ') as HB,GROUP_CONCAT(patient_visit.hb1ac SEPARATOR ', ') as HB1AC",
+            'from'=>'patient',
+            'where'=>false,
+            'join_sequence'=>array(
+                'patient_visit.patient_id=patient.patient_id',
+                'department.department_id=patient_visit.department_id',
+                'unit.unit_id=patient_visit.unit',
+                'area.area_id=patient_visit.area',
+            ),     // patient_visit -> test -> test_master
+            'group_by'=>array('patient_id'),
+            'having'=>false,
+            'limit'=>5000,
+            'apply_date'=>false
+        ),
+        'patient_id'=>array(
+            'filters'=>array(   // set or false
+                '='=>array('patient_visit.visit_id')
+            ),
+            'select'=>"patient.patient_id",
+            'from'=>'patient_visit',
+            'where'=>false,
+            'join_sequence'=>array(
+                'patient.patient_id=patient_visit.patient_id'
+            ),
+            'group_by'=>false,
+            'having'=>false,
+            'limit'=>1,
+            'apply_date'=>false
         )
     );
     
@@ -255,12 +356,13 @@ class Gen_rep_Model extends CI_Model {
         parent::__construct();
     }
 
-    function simple_join($query, $post_data) {
+    function simple_join($query, $post_data=false) {
         // Failure condition
         if(!array_key_exists($query, $this->queries))
             return false;
-        // query extraction
-
+        if(!$post_data){
+            $post_data = $this->security->xss_clean($_POST);
+        }
         // Filters{operator=>array(input_key-table_name.column_name)}
         $filters = $this->queries[$query]['filters'] ? $this->queries[$query]['filters'] : array();
         foreach($filters as $op => $filters) {
@@ -299,6 +401,7 @@ class Gen_rep_Model extends CI_Model {
             }
         }
 
+        // query extraction
         $select = $this->queries[$query]['select'] ? $this->queries[$query]['select'] : array();
         $from = $this->queries[$query]['from'] ? $this->queries[$query]['from'] : array();
         $where = $this->queries[$query]['where'] ? $this->queries[$query]['where'] : array();
@@ -306,19 +409,20 @@ class Gen_rep_Model extends CI_Model {
         $group_by = $this->queries[$query]['group_by'] ? $this->queries[$query]['group_by'] : array();
         $having = $this->queries[$query]['having'] ? $this->queries[$query]['having'] : array();
         $limit = array_key_exists('limit', $this->queries[$query]) ? $this->queries[$query]['limit'] : 1000;
+        $apply_date = array_key_exists('apply_date', $this->queries[$query]) ? $this->queries[$query]['apply_date'] : true;
         $this->db->select($select, false);
         $this->db->from($from);
         
         // Default where condition // Date
         // Set to today and submit by default
-        if(array_key_exists('from_date', $post_data) && array_key_exists('to_date', $post_data)){
+        if($apply_date && array_key_exists('from_date', $post_data) && array_key_exists('to_date', $post_data)){
             if($post_data['from_date']){
                 $from_date = date("Y-m-d",strtotime($post_data['from_date']));
                 $to_date = date("Y-m-d",strtotime($post_data['to_date']));
                 $this->db->where('(patient_visit.admit_date BETWEEN "'.$from_date.'" AND "'.$to_date.'")');
             }
         }
-        else {
+        else if($apply_date){
             $date = date("Y-m-d");
             $this->db->where('(patient_visit.admit_date BETWEEN "'.$date.'" AND "'.$date.'")');
         }
@@ -360,9 +464,8 @@ class Gen_rep_Model extends CI_Model {
         // Execute query
         $this->db->limit($limit);
         $query = $this->db->get();
-        
-        $result = $query->result();
-
+    //    echo $this->db->last_query();
+        $result = $query->result();    
         return $result;
     }
 }

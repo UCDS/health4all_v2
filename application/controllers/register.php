@@ -10,9 +10,11 @@ class Register extends CI_Controller {
 		$this->load->model('masters_model');
                 $this->load->model('patient_model');
          //       $this->load->model('hospital_model');
-                $this->load->model('counter_model');
+				$this->load->model('counter_model');
+		$this->load->model('gen_rep_model');
 		if($this->session->userdata('logged_in')){
 		$userdata=$this->session->userdata('logged_in');
+
 		$user_id=$userdata['user_id'];
 		$this->data['hospitals']=$this->staff_model->user_hospital($user_id);
 		$this->data['functions']=$this->staff_model->user_function($user_id);
@@ -219,6 +221,18 @@ class Register extends CI_Controller {
 		$this->data['drugs'] = $this->masters_model->get_data("drugs");
 		$this->data['procedures'] = $this->masters_model->get_data("procedure");
 		$this->data['defaults'] = $this->staff_model->get_transport_defaults();
+		$this->data['prescription_frequency'] = $this->staff_model->get_prescription_frequency();
+		
+		if($this->input->post('selected_patient')){
+			$data_array = array('visit_id'=>$this->input->post('selected_patient'));
+			$data_array = $this->gen_rep_model->simple_join('patient_id', $data_array);
+			$data_array = array('patient_id'=>$data_array[0]->patient_id);
+			$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', $data_array);
+			$this->data['clinical_notes'] = $this->gen_rep_model->simple_join('clinical_notes', $data_array);
+			$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', $data_array);
+			$this->data['prescriptions'] = $this->gen_rep_model->simple_join('prescriptions', $data_array);
+		}
+		
               //  $this->data['hospitals'] = $this->hospital_model->get_hospitals();
               //  $this->data['arrival_modes'] = $this->patient_model->get_arrival_modes();
         $this->data['visit_names'] = $this->staff_model->get_visit_name();
@@ -228,8 +242,7 @@ class Register extends CI_Controller {
 		{
 			$this->load->view('pages/update_patients',$this->data);
 		}
-		else{
-		
+		else{		
 			$this->data['transporters'] = $this->staff_model->get_staff("Transport");
 			if($this->input->post('update_patient')){
 				$update = $this->register_model->update();
@@ -241,6 +254,10 @@ class Register extends CI_Controller {
 				$this->data['transport'] = $this->staff_model->get_transport_log();
 				$this->data['patients']=$this->register_model->search();
 				$this->data['msg'] = "Patient information has been updated successfully";
+				$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', false);
+				$this->data['clinical_notes'] = $this->gen_rep_model->simple_join('clinical_notes', false);
+				$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', false);
+				$this->data['prescriptions'] = $this->gen_rep_model->simple_join('prescriptions', false);
 				if(count($this->data['patients'])==1){
 					$this->load->model('diagnostics_model');
 					$visit_id = $this->data['patients'][0]->visit_id;
