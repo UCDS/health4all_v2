@@ -34,7 +34,8 @@
 			$(function(){
 
 				var settings = {
-				barHeight: 20
+				barHeight: 20,
+				fontSize: 20
 				};
 				$("#patient_barcode").barcode(
 					"<?php echo $patient->patient_id;?>",

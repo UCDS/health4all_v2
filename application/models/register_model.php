@@ -449,8 +449,10 @@ class Register_model extends CI_Model{
 			$this->db->update('patient', $patient_data);
 		}
 		// MLC Details
-		$mlc_insert = $this->db->insert_string('mlc', $mlc_data).' ON DUPLICATE KEY UPDATE '.$mlc_str;
-		$this->db->query($mlc_insert);
+		if($mlc_str != ''){
+			$mlc_insert = $this->db->insert_string('mlc', $mlc_data).' ON DUPLICATE KEY UPDATE '.$mlc_str;
+			$this->db->query($mlc_insert);
+		}
 		$this->db->where('visit_id',$visit_id);
 		$this->db->update('patient_visit', $visit_data);
 		// Clinical Data

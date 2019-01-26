@@ -878,8 +878,8 @@ pri.print();
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Blood Pressure<?php if($field->mandatory) { ?><span class="mandatory" >*</span><?php } ?></label>
-						<input type="text" name="sbp" style="width:50px" class="form-control blood_pressure" value="<?php if($update) echo $patient->sbp;?>"  <?php if($field->mandatory) echo "required"; ?> />/
-	                    <input type="text" name="dbp"  style="width:50px" class="form-control blood_pressure" value="<?php if($update) echo $patient->dbp;?>"  <?php if($field->mandatory) echo "required"; ?> />
+						<input maxlength="3" size="3" type="text" name="sbp" style="width:50px" class="form-control blood_pressure" value="<?php if($update) echo $patient->sbp;?>"  <?php if($field->mandatory) echo "required"; ?> />/
+	                    <input maxlength="3" size="3" type="text" name="dbp"  style="width:50px" class="form-control blood_pressure" value="<?php if($update) echo $patient->dbp;?>"  <?php if($field->mandatory) echo "required"; ?> />
 						</div>
 					</div>
 					<?php 
@@ -1094,12 +1094,13 @@ pri.print();
 						<input type="text" name="search_patient_id" class="form-control" />
 						</div>
 					</div>
-					<div class="<?php echo $class;?>">
+					<!--
+					<div class="<?php // echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Patient Name</label>
 						<input type="text" name="search_patient_name" class="form-control" />
 						</div>
-					</div>
+					</div> -->
 					<div class="<?php echo $class;?>">
 						<div class="form-group">
 						<label class="control-label">Phone Number</label>

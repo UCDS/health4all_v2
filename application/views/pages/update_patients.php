@@ -210,6 +210,7 @@ pri.print();
 		<td>
 			<?php echo form_open('register/update_patients',array('role'=>'form','id'=>'select_patient_'.$p->visit_id));?>
 			<input type="text" class="sr-only" hidden value="<?php echo $p->visit_id;?>" form="select_patient_<?php echo $p->visit_id;?>" name="selected_patient" />
+			<input type="text" class="sr-only" hidden value="<?php echo $p->patient_id;?>" name="patient_id" />
 			</form>
 			<?php echo $i++;?>
 		</td>
@@ -2014,6 +2015,45 @@ pri.print();
 	?>
 	</div>
 	<br/>
+	
+	<?php if(!!isset($previous_visits)){ ?>
+	<div class="container">
+	<table class="table table-bordered table-striped">
+		<thead>
+		<th>Date</th>
+		<th>Hospital</th>
+		<th>Type</th>
+		<th>Number</th>
+		<th>Department</th>
+		<th>Unit/Area</th>
+		<th>Outcome</th>
+		<th>Outcome Date</th>
+		</thead>
+		<tbody>
+		<?php foreach($previous_visits as $visit){ ?>
+			<tr onclick="$('#select_visit_<?php echo $visit->visit_id;?>').submit()" style="cursor:pointer">
+				<td>
+					<?php echo form_open('register/view_patients',array('role'=>'form','id'=>'select_visit_'.$visit->visit_id));?>
+					<input type="text" class="sr-only" hidden value="<?php echo $visit->visit_id;?>" name="selected_patient" />
+					</form>
+				<?php 
+				if($visit->visit_id == $patient->visit_id) echo "<i class='fa fa-eye'></i> ";?>
+				<?php echo date("d-M-Y",strtotime($visit->admit_date));?>
+				</td>
+				<td><?php echo $visit->hospital;?></td>
+				<td><?php echo $visit->visit_type;?></td>
+				<td><?php echo $visit->hosp_file_no;?></td>
+				<td><?php echo $visit->department;?></td>
+				<td><?php echo $visit->unit_name."/".$visit->area_name;?></td>
+				<td><?php echo $visit->outcome;?></td>
+				<td><?php if($visit->outcome_date!=0) echo date("d-M-Y",strtotime($visit->outcome_date));?></td>
+			</tr>
+		<?php } ?>
+		</tbody>
+	</table>
+	</div>
+<?php } ?>
+<br>
 <div class="col-md-12">
 		<div class="panel panel-default">
 		<div class="panel-heading">
@@ -2049,10 +2089,10 @@ pri.print();
 						<label class="control-label">IP/OP Number</label>
 						<input type="text" name="search_patient_number" size="5" class="form-control" />
 						</div>
-						<div class="form-group">
+					<!--	<div class="form-group">
 						<label class="control-label">Patient Name</label>
 						<input type="text" name="search_patient_name" class="form-control" />
-						</div>
+						</div> -->
 						<div class="form-group">
 						<label class="control-label">Phone Number</label>
 						<input type="text" name="search_phone" class="form-control" />
