@@ -165,6 +165,7 @@ pri.print();
                                             <button type="button" class="btn btn-warning" onclick="$('#select_patient_<?php echo $registered->visit_id1;?>').submit()" autofocus>Update Patient Info</button>
                                             <?php echo form_open('register/update_patients',array('role'=>'form','id'=>'select_patient_'.$registered->visit_id1));?>
                                             <input type="text" class="sr-only" hidden value="<?php echo $registered->visit_id1;?>" form="select_patient_<?php echo $registered->visit_id1;?>" name="selected_patient" />
+											<input type="text" class="sr-only" hidden value="<?php echo $registered->patient_id;?>" name="patient_id" />
                                 </form>
                                 <?php break; }}?>                                
 				</div>
