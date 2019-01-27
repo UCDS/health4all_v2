@@ -751,6 +751,7 @@ pri.print();
                             </div>
                             <div class="col-md-4 col-xs-6">
                                 <label class="control-label">Doctor</label>
+								
                                 <?php if($f->edit==1 && empty($patient->doctor_id)){ ?>
                       <!--          <select name="doctor_id" id="doctor_id" class="form-control doctor">
                                     <option value="">--Select--</option>

@@ -2,7 +2,7 @@
 class Register_model extends CI_Model{
 	private $patient_visit = array(
 		'hospital_id','admit_id','visit_type','visit_name_id','patient_id','hosp_file_no',
-		'admit_date','admit_time','department_id','unit','area','doctor_id','nurse','insurance_case',
+		'admit_date','admit_time','department_id','unit','area','nurse','insurance_case',
 		'insurance_id','insurance_no','presenting_complaints','past_history','family_history','admit_weight',
 		'pulse_rate','respiratory_rate','temperature','sbp','dbp','blood_sugar','hb','hb1ac',
 		'clinical_findings','cvs','rs','pa','cns','cxr','provisional_diagnosis','signed_consultation',
@@ -357,11 +357,24 @@ class Register_model extends CI_Model{
 				$visit_data[$column] = $this->input->post($column);
 			}
 		}
+		if(array_key_exists('signed_consultation', $visit_data) && $visit_data['signed_consultation']==1){
+			$staff_id = $this->session->userdata('logged_in')['user_id'];//all_userdata();
+			$this->db->select('user.staff_id')
+				->from('user')
+				->where('user.user_id', $staff_id);
+				$query = $this->db->get();
+				$result = $query->row();
+				if(!!$result) {
+					$visit_data['doctor_id'] = $result->staff_id;
+				}
+		}
+		
 		foreach($this->patient as $column){
 			if($this->input->post($column)){
 				$patient_data[$column] = $this->input->post($column);
 			}
 		}
+		
 		$mlc_duplicate = '';
 		foreach($this->mlc as $column){
 			if($this->input->post($column)){
@@ -953,7 +966,7 @@ class Register_model extends CI_Model{
 		->join('icd_code','patient_visit.icd_10=icd_code.icd_code','left')
 		->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
 		->join('user', 'patient_visit.signed_consultation = user.user_id', 'left')
-		->join('staff','user.staff_id = staff.staff_id','left')
+		->join('staff','patient_visit.doctor_id = staff.staff_id','left')
 		->order_by('name','ASC');
 		$query=$this->db->get();
 		//return the search results

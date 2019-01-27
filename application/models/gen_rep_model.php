@@ -238,7 +238,7 @@ class Gen_rep_Model extends CI_Model {
                 'department.department_id=patient_visit.department_id',
                 'unit.unit_id=patient_visit.unit',
                 'area.area_id=patient_visit.area',
-                'staff.staff_id = patient_visit.patient_id'
+                'staff.staff_id = patient_visit.doctor_id'
             ),     // patient_visit -> test -> test_master
             'group_by'=>false,
             'having'=>false,
