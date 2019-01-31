@@ -238,7 +238,7 @@ class Gen_rep_Model extends CI_Model {
                 'department.department_id=patient_visit.department_id',
                 'unit.unit_id=patient_visit.unit',
                 'area.area_id=patient_visit.area',
-                'staff.staff_id = patient_visit.doctor_id'
+                'staff.staff_id = patient_visit.signed_consultation'
             ),     // patient_visit -> test -> test_master
             'group_by'=>false,
             'having'=>false,
@@ -386,13 +386,14 @@ class Gen_rep_Model extends CI_Model {
                     $input = $temp[1];
                     $column = $filter;
                 }
-        
+            
                 if(array_key_exists($input, $post_data)) { //EMPTY IS TEMPORARY FIX ONLY
                     $value = $post_data[$input];
         
                     if($value != ''){
                         $value = $post_data[$input];
                         $this->db->where("$column ".$op, "$value");
+                        
                 //        $this->db->where("$column IS NOT NULL AND $column != '' AND $column!=0");
                     } else if($mandatory){
                       //  return array(0);
@@ -467,6 +468,7 @@ class Gen_rep_Model extends CI_Model {
         // Execute query
         $this->db->limit($limit);
         $query = $this->db->get();
+    //    echo $this->db->last_query();
         $result = $query->result();    
         return $result;
     }

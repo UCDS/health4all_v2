@@ -212,6 +212,7 @@ class Register extends CI_Controller {
 		}
 		if($access==1){
 		$this->data['title']="Update Patients";
+		$this->data['signed_consultation'] = $this->input->post('signed_consultation');
 		$this->load->view('templates/header',$this->data);
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -276,6 +277,11 @@ class Register extends CI_Controller {
 				if(count($this->data['patients'])==1){
 					$this->load->model('diagnostics_model');
 					$visit_id = $this->data['patients'][0]->visit_id;
+					$data_array = array('patient_id' => $this->data['patients'][0]->patient_id);					
+					$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', $data_array);
+					$this->data['clinical_notes'] = $this->gen_rep_model->simple_join('clinical_notes', $data_array);
+					$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', $data_array);
+					$this->data['prescriptions'] = $this->gen_rep_model->simple_join('prescriptions', $data_array);
                     $this->data['transfers'] = $this->patient_model->get_transfers_info($visit_id);
 					$this->data['prescription_frequency'] = $this->staff_model->get_prescription_frequency();
 					$this->data['transport'] = $this->staff_model->get_transport_log();

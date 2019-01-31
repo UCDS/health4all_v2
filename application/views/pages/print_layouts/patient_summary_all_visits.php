@@ -29,7 +29,9 @@
 		border:1px solid black;
 		padding:3px;
 	}
-
+	#doctor_name {
+		padding: 0px,15px;
+	}
 	}
 </style>
 <script type="text/javascript">
@@ -441,17 +443,23 @@
 		</tr>
 		<?php } ?>
 		<tr class="print-element" width="95%" >
+		<?php if(!!$patient_visit->doctor_name){ ?>
 			<td colspan="3" style="text-align:right">
 			<br />
 			<br />
-			<b><?php if(!!$patient_visit->signed_consultation){
-					echo $patient_visit->doctor_name."<br />".$patient_visit->designation;
-				}
-				else{ ?>
-				Doctor
-				<?php } ?>
+			<b>
+				<?php echo $patient_visit->doctor_name."<br />".$patient_visit->designation; ?>
 				</b>
 			</td>
+			<?php } else { ?>
+			<td colspan="3" style="text-align:center">
+			<br />
+			<br />
+			<b>
+			Doctor:	
+			</b>
+			</td>
+<?php } ?>
 		</tr>				
 </table>
 <p style="page-break-before: always">

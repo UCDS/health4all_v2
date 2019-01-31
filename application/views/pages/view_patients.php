@@ -118,6 +118,7 @@ pri.print();
 		<td>
 			<?php echo form_open('register/view_patients',array('role'=>'form','id'=>'select_patient_'.$p->visit_id));?>
 			<input type="text" class="sr-only" hidden value="<?php echo $p->visit_id;?>" name="selected_patient" />
+			<input type="text" class="sr-only" hidden value="<?php echo $p->patient_id;?>" name="patient_id" />
 			</form>
 			<?php echo $i++;?>
 		</td>

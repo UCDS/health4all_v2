@@ -1,7 +1,6 @@
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/font-awesome.min.css" media="print">
 		<script type="text/javascript" src="<?php echo base_url();?>assets/js/qrcode.min.js"></script>  
 		<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-barcode.min.js"></script>
-		
 		<?php $patient=$patients[0];?>
 		<style>
 			@media print{
@@ -431,16 +430,22 @@
 				</tr>
 				<?php } ?>
 				<tr class="print-element" width="95%" >
-					<td colspan="3" style="text-align:right">
-					<br />
-					<br />
-					<b><?php if(!!$patient->signed_consultation){
-							echo $patient->doctor_name."<br />".$patient->designation;
-						}
-						else{ ?>
-						Doctor
-						<?php } ?>
-						</b>
-					</td>
+				<?php if(!!$patient->doctor_name){ ?>
+			<td colspan="3" style="text-align:right">
+			<br />
+			<br />
+				<b>
+				<?php echo $patient->doctor_name."<br />".$patient->designation; ?>
+				</b>
+			</td>
+			<?php } else { ?>
+			<td colspan="3" style="text-align:center">
+			<br />
+			<br />
+			<b>
+			Doctor:	
+			</b>
+			</td>
+<?php } ?>
 				</tr>				
 		</table>

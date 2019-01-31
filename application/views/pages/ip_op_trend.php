@@ -100,7 +100,8 @@ function fnExcelReport() {
 		<?php echo form_open("reports/ip_op_trends",array('role'=>'form','class'=>'form-custom')); ?>
                 <b>Visit Type:  </b>
 				<label><input type ="radio" name="visit_type" class ="form-control" value="IP" <?php if($this->input->post('visit_type') == "IP") echo " checked ";?> > IP</label>
-                <label><input type="radio" name="visit_type" class ="form-control" value="OP" <?php if($this->input->post('visit_type') != "IP") echo " checked "; ?> > OP </label>&#09;&#09;
+                <label><input type="radio" name="visit_type" class ="form-control" value="OP" <?php if($this->input->post('visit_type') != "IP") echo " checked "; ?> > OP </label>
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                 <b>Trend:  </b>
 				<label><input type ="radio" name="trend_type" class ="form-control" value="Day" checked > Daily</label>
                 <label><input type="radio" name="trend_type" class ="form-control" value="Month" <?php if($this->input->post('trend_type') == "Month") echo " checked "; ?> > Monthly </label>

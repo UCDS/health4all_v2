@@ -1985,18 +1985,21 @@ pri.print();
 		}} ?>
 	  </div>
 
-	<div class="col-md-12 text-center">
+	<div class="col-md-4 text-right">
 			<label class="control-label">
 				Signed Consultation? 
-				<?php if($patient->signed_consultation) { ?>
+				<?php if(!empty($patient->signed_consultation) && $patient->signed_consultation > 0) { ?>
 					<span class="fa fa-check"></span>
 					<input type="checkbox" class="sr-only" name="signed_consultation" value="1" readonly checked />
 				<?php }
 				else{ ?>
  				<input type="checkbox"  class="form-control checkbox-big" name="signed_consultation" value = "1" />
 				<?php } ?>
-			</label>
+			</label><br>
+			<b><?php echo $patient->doctor_name; ?></b>
 			&emsp;
+		</div>
+		<div class="col-md-8">
 		<input type="text" name="visit_id" class="sr-only" value="<?php echo $patient->visit_id;?>" hidden readonly />
 		<input type="text" name="patient_id" class="sr-only" value="<?php echo $patient->patient_id;?>" hidden readonly />
 		<button class="btn btn-md btn-primary" value="Update" name="update_patient">Update</button>&emsp;
@@ -2036,6 +2039,7 @@ pri.print();
 				<td>
 					<?php echo form_open('register/view_patients',array('role'=>'form','id'=>'select_visit_'.$visit->visit_id));?>
 					<input type="text" class="sr-only" hidden value="<?php echo $visit->visit_id;?>" name="selected_patient" />
+					<input type="text" class="sr-only" hidden value="<?php echo $visit->patient_id;?>" name="patient_id" />
 					</form>
 				<?php 
 				if($visit->visit_id == $patient->visit_id) echo "<i class='fa fa-eye'></i> ";?>
