@@ -357,13 +357,14 @@ class Gen_rep_Model extends CI_Model {
         parent::__construct();
     }
 
-    function simple_join($query, $post_data=false) {
+    function simple_join($query, $post_data=false, $params=false) {
         // Failure condition
         if(!array_key_exists($query, $this->queries))
             return false;
         if(!$post_data){
             $post_data = $this->security->xss_clean($_POST);
         }
+        
         //var_dump($post_data);
         // Filters{operator=>array(input_key-table_name.column_name)}
         $filters = $this->queries[$query]['filters'] ? $this->queries[$query]['filters'] : array();
@@ -386,7 +387,7 @@ class Gen_rep_Model extends CI_Model {
                     $input = $temp[1];
                     $column = $filter;
                 }
-            
+                
                 if(array_key_exists($input, $post_data)) { //EMPTY IS TEMPORARY FIX ONLY
                     $value = $post_data[$input];
         
@@ -417,6 +418,13 @@ class Gen_rep_Model extends CI_Model {
         $this->db->select($select, false);
         $this->db->from($from);
         
+        // Additional params
+        if($params){
+            foreach($params as $key=>$param){
+                $this->db->where($key, $param);
+            }            
+        }
+
         // Default where condition // Date
         // Set to today and submit by default
         if($apply_date && array_key_exists('from_date', $post_data) && array_key_exists('to_date', $post_data)){

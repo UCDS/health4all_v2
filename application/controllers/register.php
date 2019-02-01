@@ -184,10 +184,11 @@ class Register extends CI_Controller {
 				$this->data['previous_visits']=$this->register_model->get_visits($patient_id);
 				$this->data['tests']=$this->diagnostics_model->get_all_tests($visit_id);
 			//	$this->data['clinical_notes']=$this->register_model->get_clinical_notes($visit_id);
-				$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', false);
-				$this->data['clinical_notes'] = $this->gen_rep_model->simple_join('clinical_notes', false);
-				$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', false);
-				$this->data['prescriptions'] = $this->gen_rep_model->simple_join('prescriptions', false);			
+				$params = array("patient_visit.patient_id"=>$patient_id);
+				$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', false, $params);
+				$this->data['clinical_notes'] = $this->gen_rep_model->simple_join('clinical_notes', false, false);
+				$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', false, false);
+				$this->data['prescriptions'] = $this->gen_rep_model->simple_join('prescriptions', false, false);			
 			}
 			$this->load->view('pages/view_patients',$this->data);
 		}
