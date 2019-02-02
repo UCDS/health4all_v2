@@ -414,6 +414,7 @@ class Register_model extends CI_Model{
 					$al=$this->input->post('al_'.$pre);
 					$bd=$this->input->post('bd_'.$pre);
 					$ad=$this->input->post('ad_'.$pre);
+					$note = $this->input->post('note_'.$pre);
 					$quantity=$this->input->post('quantity_'.$pre);
 					$drug = $this->input->post('drug_'.$pre);
 					$morning=0;$afternoon=0;$evening=0;
@@ -444,6 +445,7 @@ class Register_model extends CI_Model{
 						'afternoon'=>$afternoon,
 						'evening'=>$evening,
 						'quantity'=>$quantity,
+						'note'=>$note
 					);
 				}
 			}

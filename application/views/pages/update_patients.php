@@ -1731,14 +1731,14 @@ pri.print();
                                 </div>
 			<div class="row alt">
 			<div class="col-md-12 alt">
-				<table class="table table-striped table-bordered">
+				<table class="table table-striped table-bordered" id="prescription_table">
 					<thead>
 						<tr>
 						<th rowspan="3" class="text-center">Drug</th>
 						<th rowspan="3" class="text-center">Duration (in Days)</th>
 						<th rowspan="3" class="text-center">Frequency</th>
 						<th colspan="6" class="text-center">Timings</th>
-						<th rowspan="3" class="text-center">Issued Quantity</th>
+					<!--	<th rowspan="3" class="text-center">Issued Quantity</th> -->
 						</tr>
 						<tr>
 							<th colspan="2" class="text-center">Morning</th>
@@ -1765,6 +1765,8 @@ pri.print();
 								}
 								?>
 								</select>
+								<i class="glyphicon glyphicon-pencil"></i>
+								<textarea name="note_0" cols="30" rows="10" hidden></textarea>
 							</td>
 							<td>
 								<input type="text" name="duration_0" placeholder="in Days" style="width:100px" class="form-control" />
@@ -1793,11 +1795,12 @@ pri.print();
 							</td>
 							<td>
 								<label><input type="checkbox" name="ad_0" value="1" /></label>
-							</td>
-							<td>
-								<input type="text" name="quantity_0" style="width:100px" class="form-control" />
 								<input type="text" name="prescription[]" class="sr-only" value="0"  />
 							</td>
+						<!--	<td>
+								<input type="text" name="quantity_0" style="width:100px" class="form-control" />
+								
+							</td> -->
 							<td>
 								<button type="button" class="btn btn-primary btn-sm" id="prescription_add" >Add</button>
 							</td>
@@ -1815,7 +1818,7 @@ pri.print();
 						<th rowspan="3" class="text-center">Duration</th>
 						<th rowspan="3" class="text-center">Frequency</th>
 						<th colspan="6" class="text-center">Timings</th>
-						<th rowspan="3" class="text-center">Quantity</th>
+					<!--	<th rowspan="3" class="text-center">Quantity</th> -->
 						<th rowspan="3" class="text-center"></th>
 						</tr>
 						<tr>
@@ -1844,7 +1847,7 @@ pri.print();
 						<td><?php if($pres->afternoon == 2 || $pres->afternoon == 3) echo "<i class='fa fa-check'></i>";?></td>
 						<td><?php if($pres->evening == 1 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
 						<td><?php if($pres->evening == 2 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
-						<td><?php echo $pres->quantity;?> </td>
+					<!--	<td><?php echo $pres->quantity;?> </td> -->
 						<td>
 							<?php echo form_open('register/update_patients',array('class'=>'form-custom'));?>
 							<input type="text" class="sr-only" value="<?php echo $pres->prescription_id;?>" name="prescription_id" hidden />
@@ -2127,8 +2130,11 @@ pri.print();
 						'	<td>'+
 								'<select name="drug_'+$i+'" class="form-control">'+
 								'<option value="">--Select--</option>'+
-								'<?php foreach($drugs as $drug){ echo '<option value="'.$drug->item_id.'">'.$drug->item_name.'</option>';}?>'+
-								'</select>'+
+								'<?php 
+									foreach($drugs as $drug){ 
+										echo '<option value="'.$drug->item_id.'">'.$drug->item_name.'</option>';
+								}?>' +
+								'</select>'+'<i class="glyphicon glyphicon-pencil"></i>'+'<textarea name="note_'+$i+'" cols="30" rows="10" hidden></textarea>'+
 							'</td>'+
 							'<td>'+
 								'<input type="text" name="duration_'+$i+'" placeholder="in Days" style="width:100px" class="form-control" />'+
@@ -2158,9 +2164,9 @@ pri.print();
 							'<td>'+
 								'<label><input type="checkbox" name="ad_'+$i+'" value="1" /></label>'+
 							'</td>'+
-							'<td>'+
+							'<!--<td>'+
 								'<input type="text" name="quantity_'+$i+'" style="width:100px" class="form-control" />'+
-							'</td>'+
+							'</td>-->'+
 							'<td><input type="text" name="prescription[]" class="sr-only" value="'+$i+'" />'+
 								'<button type="button" class="btn btn-danger btn-sm" onclick="$(this).parent().parent().remove()">X</button>'+
 							'</td>'+
@@ -2198,10 +2204,18 @@ pri.print();
                 callback(res.icd_codes.slice(0, 10));
             }
         });
-    }
+	}
+	});
+	$(document).ready(function(){
+		$('#prescription_table').click(function(event){
+			if($(event.target).hasClass('glyphicon-pencil')){
+				$(event.target).next().removeAttr("hidden");
+			}			
+		});
 	});
 </script>
 	
 <div class="sr-only" id="print-div-all" style="width:100%;height:100%;"> 
 			<?php $this->load->view('pages/print_layouts/patient_summary_all_visits');?>
 </div>
+
