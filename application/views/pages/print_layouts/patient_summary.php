@@ -404,7 +404,7 @@
 					foreach($prescription as $pres){ ?>
 					<tr>
 						<td width="30px"  style="padding-left:15px"><?php echo $i++;?></td>
-						<td><?php echo $pres->item_name;?></td>
+						<td><?php echo $pres->item_name;?><br><?php if($pres->note!='') echo '-'.$pres->note;?></td>
 						<td><?php echo $pres->frequency;?></td>
 						<td width="40px" style="padding-left:20px"><?php echo $pres->duration;?></td>
 						<td width="30px" style="padding-left:15px"><?php if($pres->morning == 1 || $pres->morning == 3) echo "<i class='fa fa-check'></i>";?></td>

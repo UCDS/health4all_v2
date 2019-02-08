@@ -307,7 +307,8 @@
 				?>
 				<?php
 					if($f->user_function=="Outcome Summary"){ ?>
-                  		<li><a href="<?php echo base_url()."generic_report/gen_rep";?>"><i class="fa fa-gear"></i> Vitals Report</a></li>
+                  		<li><a href="<?php echo base_url()."generic_report/gen_rep/vitals_report";?>"><i class="glyphicon glyphicon-heart"></i> Vitals Report</a></li>
+						<li><a href="<?php echo base_url()."generic_report/gen_rep/prescription_report";?>"><i class="glyphicon glyphicon-pencil"></i> Prescription Report</a></li>
 					<?php }?>
 			<?php	}	?>
 			<li class="divider"></li>

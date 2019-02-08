@@ -373,7 +373,8 @@
 			</td>
 		</tr>
 		<?php } ?>
-		<?php if(isset($prescriptions) && !!$prescriptions){ ?>
+		<?php 
+		if(isset($prescriptions) && !!$prescriptions){ ?>
 		<tr class="print-element" width="95%">
 			<td  style="padding-top:20px" class="print-text" colspan="3">
 				<b><u>Medicines Prescribed: </u></b>
@@ -417,7 +418,7 @@
 				if($patient_visit->visit_id == $pres->visit_id){ ?>
 			<tr>
 				<td width="30px"  style="padding-left:15px"><?php echo $i++;?></td>
-				<td><?php echo $pres->item_name;?></td>
+				<td><?php echo $pres->item_name;?><br><?php if($pres->note!='') echo '-'.$pres->note;?></td>
 				<td><?php echo $pres->frequency;?></td>
 				<td width="40px" style="padding-left:20px"><?php echo $pres->duration;?></td>
 				<td width="30px" style="padding-left:15px"><?php if($pres->morning == 1 || $pres->morning == 3) echo "<i class='fa fa-check'></i>";?></td>

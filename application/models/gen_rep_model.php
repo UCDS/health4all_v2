@@ -286,13 +286,13 @@ class Gen_rep_Model extends CI_Model {
             'filters'=>array(   // set or false
                 '='=>array('patient.patient_id')
             ),
-            'select'=>"prescription.frequency, prescription.duration, prescription.morning, prescription.afternoon, prescription.evening, prescription.quantity, item.item_name, prescription.visit_id",
+            'select'=>"prescription.frequency, prescription.duration, prescription.morning, prescription.afternoon, prescription.evening, prescription.quantity, prescription.note, generic_item_id, generic_name as item_name, patient_visit.visit_id",
             'from'=>'patient',
             'where'=>false,
             'join_sequence'=>array(
                 'patient_visit.patient_id=patient.patient_id',
                 'prescription.visit_id=patient_visit.visit_id',
-                'item.item_id=prescription.item_id'
+                'generic_item.generic_item_id = prescription.item_id'
             ),     // patient_visit -> test -> test_master
             'group_by'=>false,
             'having'=>false,
@@ -350,7 +350,41 @@ class Gen_rep_Model extends CI_Model {
             'having'=>false,
             'limit'=>1,
             'apply_date'=>false
-        )
+        ),
+        'prescription_report'=>array(
+            'filters'=>array(   // set or false
+                '='=>array('patient_visit.signed_consultation', 'patient_visit.hospital_id')    //Doctor_id
+            ),
+            'select'=>"drug_type.drug_type, generic_item.generic_name, SUM(1) prescriptions, 
+            ROUND(SUM(CASE item_form.item_form_id WHEN 2 THEN 
+            CASE WHEN prescription.frequency ='Daily' THEN 
+            prescription.duration*(prescription.morning/2+prescription.afternoon/2+prescription.evening/2) WHEN prescription.frequency ='Alternate Days' THEN prescription.duration*(prescription.morning/2+prescription.afternoon/2+prescription.evening/2)/2 ELSE 0 END ELSE 1 END),2) as quantity",  //ROUND(AVG(prescription.duration),2) as average_duration
+            'from'=>'patient_visit',
+            'where'=>false,
+            'join_sequence'=>array(
+                'prescription.visit_id=patient_visit.visit_id',
+                'generic_item.generic_item_id=prescription.item_id',
+                'item_form.item_form_id=generic_item.form_id',
+                'drug_type.drug_type_id=generic_item.drug_type_id'
+            ),
+            'group_by'=>array('prescription.item_id'),
+            'having'=>false,
+            'apply_date'=>true,
+            'join_type'=>''
+        ),
+        'doctors'=>array(
+            'filters'=>false,
+            'select'=>"DISTINCT(patient_visit.signed_consultation),staff.first_name, staff.last_name",
+            'from'=>'patient_visit',
+            'where'=>false,
+            'join_sequence'=>array(
+                'staff.staff_id=patient_visit.signed_consultation'
+            ),
+            'group_by'=>array('patient_visit.signed_consultation'),
+            'having'=>false,
+            'apply_date'=>true,
+            'join_type'=>''
+        ),
     );
     
     function __construct() {
@@ -476,7 +510,7 @@ class Gen_rep_Model extends CI_Model {
         // Execute query
         $this->db->limit($limit);
         $query = $this->db->get();
-    //    echo $this->db->last_query();
+        
         $result = $query->result();    
         return $result;
     }

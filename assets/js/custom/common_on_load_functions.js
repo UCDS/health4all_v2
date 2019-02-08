@@ -8,6 +8,7 @@ $(document).ready(function() {
     $('#from_date').val(today);
     
     // Set local storage
+    localStorage.clear();
     set_localStorage();
     
     let table_id = localStorage.getItem('table_id');

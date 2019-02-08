@@ -1761,7 +1761,7 @@ pri.print();
 								<option value="">--Select--</option>
 								<?php 
 								foreach($drugs as $drug){
-									echo "<option value='".$drug->item_id."'>".$drug->item_name."</option>";
+									echo "<option value='".$drug->generic_item_id."'>".$drug->generic_name."</option>";
 								}
 								?>
 								</select>
@@ -1819,7 +1819,6 @@ pri.print();
 						<th rowspan="3" class="text-center">Frequency</th>
 						<th colspan="6" class="text-center">Timings</th>
 					<!--	<th rowspan="3" class="text-center">Quantity</th> -->
-						<th rowspan="3" class="text-center"></th>
 						</tr>
 						<tr>
 							<th colspan="2" class="text-center">Morning</th>
@@ -1838,7 +1837,7 @@ pri.print();
 					<tbody>
 					<?php foreach($prescription as $pres){ ?>
 					<tr>
-						<td><?php echo $pres->item_name;?></td>
+						<td><?php echo $pres->item_name;?><br><?php if($pres->note!='') echo '-'.$pres->note;?></td>
 						<td><?php echo $pres->duration;?></td>
 						<td><?php echo $pres->frequency;?></td>
 						<td><?php if($pres->morning == 1 || $pres->morning == 3) echo "<i class='fa fa-check'></i>";?></td>
@@ -1848,13 +1847,13 @@ pri.print();
 						<td><?php if($pres->evening == 1 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
 						<td><?php if($pres->evening == 2 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
 					<!--	<td><?php echo $pres->quantity;?> </td> -->
-						<td>
+					<!--	<td>
 							<?php echo form_open('register/update_patients',array('class'=>'form-custom'));?>
 							<input type="text" class="sr-only" value="<?php echo $pres->prescription_id;?>" name="prescription_id" hidden />
 							<input type="text" class="sr-only" value="<?php echo $pres->visit_id;?>" name="visit_id" hidden />
 							<button type="submit" id="remove_prescription" class="btn btn-danger btn-sm">X</button>
 							</form>
-						</td>
+						</td> -->
 					</tr>
 					<?php } ?>
 					</tbody>
@@ -2132,7 +2131,7 @@ pri.print();
 								'<option value="">--Select--</option>'+
 								'<?php 
 									foreach($drugs as $drug){ 
-										echo '<option value="'.$drug->item_id.'">'.$drug->item_name.'</option>';
+										echo '<option value="'.$drug->generic_item_id.'">'.$drug->generic_name.'</option>';
 								}?>' +
 								'</select>'+'<i class="glyphicon glyphicon-pencil"></i>'+'<textarea name="note_'+$i+'" cols="30" rows="10" hidden></textarea>'+
 							'</td>'+

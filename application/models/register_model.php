@@ -1023,9 +1023,10 @@ class Register_model extends CI_Model{
 	}
 	
 	function get_prescription($visit_id){
-		$this->db->select('prescription.*,item_name')->from('prescription')
-		->join('item','prescription.item_id = item.item_id')
-		->where('visit_id',$visit_id)->where('status',1);
+		$this->db->select("prescription.*, generic_item_id, generic_name as item_name")
+			->from("prescription")
+			->join('generic_item','generic_item.generic_item_id = prescription.item_id')
+			->where('visit_id',$visit_id)->where('status',1);
 		$query=$this->db->get();
 		return $query->result();
 	}
