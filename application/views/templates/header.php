@@ -275,6 +275,7 @@
 						  <li><a href="<?php echo base_url()."patient/casesheet_mrd_status";?>">MRD Report</a></li>
 						  <li><a href="<?php echo base_url()."staff_report/get_patient_records";?>">Staff Activity OP/IP</a></li>
 						  <li><a href="<?php echo base_url()."staff_report/get_doctor_activity";?>">Doctor Activity OP/IP</a></li>
+						  <li><a href="<?php echo base_url()."staff_report/get_doc_act_by_institute";?>">Doctor Activity By Institution </a></li>
 						  <li><a href="<?php echo base_url()."staff_report/get_lab_records";?>">Diagnostics Staff Activity</a></li>
 						  <li><a href="<?php echo base_url()."reports/ip_op_trends";?>">IP/OP Trends</a></li>
 						  <li><a href="<?php echo base_url()."reports/icd_summary";?>">ICD Code Summary</a></li>
@@ -373,7 +374,8 @@
 				<?php
 					$logged_in=$this->session->userdata('logged_in');
 					$hospital=$this->session->userdata('hospital');
-					echo $hospital['hospital_short_name']." | ".$logged_in['username']; ?> <b class="caret"></b></a>
+					$hospital_name = $hospital['hospital_short_name'] ? $hospital['hospital_short_name'] : $hospital['hospital'];
+					echo $hospital_name." | ".$logged_in['staff_first_name'].' '.$logged_in['staff_last_name']." | ".$logged_in['username']; ?> <b class="caret"></b></a>
                 <ul class="dropdown-menu">
 				<?php
 				foreach($functions as $f){

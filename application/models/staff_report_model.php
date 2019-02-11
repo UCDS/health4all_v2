@@ -86,11 +86,53 @@ class Staff_Report_Model extends CI_Model {
         $this->db->select("staff.designation, staff.first_name,  staff.last_name, "
             . " COUNT(*) as patient_records")
             ->from('patient_visit')
-            ->join('user','user.user_id = patient_visit.signed_consultation', 'left')
-            ->join('staff','user.staff_id = staff.staff_id', 'left')
+            ->join('staff','staff.staff_id = patient_visit.signed_consultation', 'left')
             ->where("DATE(insert_datetime) BETWEEN '$from_date' AND '$to_date'")
             ->group_by('patient_visit.signed_consultation');
         $response = $this->db->get();
+        $result = $response->result();
+        
+        return $result;
+    }
+
+    function get_doctor_activity_by_institution(){
+		$hospital=$this->session->userdata('hospital');
+		//$this->db->where('patient_visit.hospital_id',$hospital['hospital_id']);
+        $from_date = $this->input->post('from_date');
+        $to_date = $this->input->post('to_date');
+        
+        $visit_type = $this->input->post('visit_type');
+        
+        if(!$to_date){
+            $to_date = date("Y-m-d");
+        }else{
+            $to_date = date("Y-m-d",strtotime($this->input->post('to_date')));
+        }
+        
+        if(!$from_date){
+            $from_date = date("Y-m-d");
+        }else{
+            $from_date = date("Y-m-d",strtotime($this->input->post('from_date')));
+        }
+        
+        if($visit_type){
+            if($visit_type!='ALL')
+                $this->db->where('patient_visit.visit_type', $visit_type);
+        } else {
+            $this->db->where('patient_visit.visit_type', 'OP');
+        }
+       
+        $empty_space = " ";
+        $this->db->select("staff.designation, staff.first_name, staff.specialisation, staff.phone, department.department, hospital.*, staff.last_name, COUNT(*) as patient_records")
+            ->from('patient_visit')
+            ->join('staff','staff.staff_id = patient_visit.signed_consultation', 'left')
+            ->join('department','department.department_id = staff.department_id', 'left')
+            ->join('hospital','patient_visit.hospital_id = hospital.hospital_id', 'left')
+            ->where("admit_date BETWEEN '$from_date' AND '$to_date'")
+            ->order_by("hospital.state, hospital.hospital, department.department, staff.first_name", "asc")
+            ->group_by('patient_visit.hospital_id, patient_visit.signed_consultation');
+        $response = $this->db->get();
+
         $result = $response->result();
         
         return $result;

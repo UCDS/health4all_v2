@@ -6,7 +6,7 @@ class Staff_model extends CI_Model{
 	//login() accepts the username and password, searches the database for match and if found, returns the 
 	//query result else returns false
 	function login($username, $password){
-	   $this -> db -> select('*');
+	   $this -> db -> select('user.*');
 	   $this -> db -> from('user');
 	   $this -> db -> where('username', $username);
 	   $this -> db -> where('password', MD5($password));
@@ -550,12 +550,24 @@ class Staff_model extends CI_Model{
 		$query=$this->db->get();
 		return $query->result();
 	}
+
 	function get_prescription_frequency(){
 
 		$this->db->select("frequency")
 			->from("prescription_frequency");
 		$query=$this->db->get();
 		return $query->result();
+	}
+
+	function get_staff_details($staff_id=false) {
+		if($staff_id==false)
+			return false;
+		$this->db->select("staff.*")
+			->from("staff")
+			->where('staff_id', $staff_id);
+		$query=$this->db->get();
+		$result = $query->result();
+		return $result[0];
 	}
 }
 ?>

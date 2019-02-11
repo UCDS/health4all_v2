@@ -5,8 +5,8 @@ class Home extends CI_Controller {
 		parent::__construct();
 		$this->load->model('staff_model');
 		if($this->session->userdata('logged_in')){
-			$userdata=$this->session->userdata('logged_in');
-			$user_id=$userdata['user_id'];
+			$userdata = $this->session->userdata('logged_in');
+			$user_id = $userdata['user_id'];
 			$this->data['hospitals']=$this->staff_model->user_hospital($user_id);
 			$this->data['functions']=$this->staff_model->user_function($user_id);
 			$this->data['departments']=$this->staff_model->user_department($user_id);
@@ -55,19 +55,19 @@ class Home extends CI_Controller {
 			}
 			else{
 				foreach($this->data['hospitals'] as $row){
-							$sess_array = array(
-							 'hospital_id' => $row->hospital_id,
-							 'hospital' => $row->hospital,
-							 'hospital_short_name' => $row->hospital_short_name,
-							 'description' => $row->description,
-							 'place' => $row->place,
-							 'district' => $row->district,
-							 'state' => $row->state,
-							 'logo' => $row->logo
-							);
-							$this->session->set_userdata('hospital',$sess_array);
-							$this->session->set_userdata('place',array('camp_id'=>0,'name'=>'Blood Bank'));
-							break;
+					$sess_array = array(
+						'hospital_id' => $row->hospital_id,
+						'hospital' => $row->hospital,
+						'hospital_short_name' => $row->hospital_short_name,
+						'description' => $row->description,
+						'place' => $row->place,
+						'district' => $row->district,
+						'state' => $row->state,
+						'logo' => $row->logo
+					);
+					$this->session->set_userdata('hospital',$sess_array);
+					$this->session->set_userdata('place',array('camp_id'=>0,'name'=>'Blood Bank'));
+					break;
 				}
 				$this->data['op_forms']=$this->staff_model->get_forms("OP");
 				$this->data['ip_forms']=$this->staff_model->get_forms("IP");
@@ -87,7 +87,7 @@ class Home extends CI_Controller {
 		if($this->session->userdata('logged_in')){
 			$this->data['title']="Home";
 			if(count($this->data['hospitals'])>1){
-			$this->load->library('form_validation');
+				$this->load->library('form_validation');
 				$this->form_validation->set_rules('organisation', 'Organisation',
 				'trim|required|xss_clean');
 				if ($this->form_validation->run() === FALSE)
@@ -122,19 +122,19 @@ class Home extends CI_Controller {
 			}
 			else{
 				foreach($this->data['hospitals'] as $row){
-							$sess_array = array(
-							 'hospital_id' => $row->hospital_id,
-							 'hospital' => $row->hospital,
-							 'hospital_short_name' => $row->hospital_short_name,
-							 'description' => $row->description,
-							 'place' => $row->place,
-							 'district' => $row->district,
-							 'state' => $row->state,
-							 'logo' => $row->logo
-							);
-							$this->session->set_userdata('hospital',$sess_array);
-							$this->session->set_userdata('place',array('camp_id'=>0,'name'=>'Blood Bank'));
-							break;
+					$sess_array = array(
+						'hospital_id' => $row->hospital_id,
+						'hospital' => $row->hospital,
+						'hospital_short_name' => $row->hospital_short_name,
+						'description' => $row->description,
+						'place' => $row->place,
+						'district' => $row->district,
+						'state' => $row->state,
+						'logo' => $row->logo
+					);
+					$this->session->set_userdata('hospital',$sess_array);
+					$this->session->set_userdata('place',array('camp_id'=>0,'name'=>'Blood Bank'));
+					break;
 				}
 				$this->data['op_forms']=$this->staff_model->get_forms("OP");
 				$this->data['ip_forms']=$this->staff_model->get_forms("IP");
@@ -174,7 +174,7 @@ class Home extends CI_Controller {
 					$defaults = $this->staff_model->get_defaults();
 					 if($defaults != false) {
 						foreach($defaults as $def) {
-								$this->session->set_userdata($def->primary_key, $def->default_value_text);
+							$this->session->set_userdata($def->primary_key, $def->default_value_text);
 						}
 					 }
 					redirect('home', 'refresh');
@@ -208,11 +208,15 @@ class Home extends CI_Controller {
 	   {
 	     foreach($result as $row)
 	     {
+			 $staff_details = $this->staff_model->get_staff_details($row->staff_id);
 	         $sess_array = array(
 	         'user_id' => $row->user_id,
-	         'username' => $row->username
+			 'username' => $row->username,
+			 'staff_id' => $row->staff_id,
+			 'staff_first_name' => $staff_details->first_name,
+			 'staff_last_name' => $staff_details->last_name
 			 );
-	       $this->session->set_userdata('logged_in', $sess_array);
+		   $this->session->set_userdata('logged_in', $sess_array);		   
 		   break;
 	     }
 	     return TRUE;
