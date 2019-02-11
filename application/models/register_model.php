@@ -2,10 +2,10 @@
 class Register_model extends CI_Model{
 	private $patient_visit = array(
 		'hospital_id','admit_id','visit_type','visit_name_id','patient_id','hosp_file_no',
-		'admit_date','admit_time','department_id','unit','area','doctor_id','nurse','insurance_case',
+		'admit_date','admit_time','department_id','unit','area','nurse','insurance_case',
 		'insurance_id','insurance_no','presenting_complaints','past_history','family_history','admit_weight',
 		'pulse_rate','respiratory_rate','temperature','sbp','dbp','blood_sugar','hb','hb1ac',
-		'clinical_findings','cvs','rs','pa','cns','cxr','provisional_diagnosis','signed_consultation',
+		'clinical_findings','cvs','rs','pa','cns','cxr','provisional_diagnosis',
 		'final_diagnosis','decision','advise','icd_10','icd_10_ext','discharge_weight','outcome','outcome_date',
 		'outcome_time','ip_file_received','mlc','arrival_mode','refereal_hospital_id','insert_by_user_id',
 		'update_by_user_id','insert_datetime','update_datetime','temp_visit_id'
@@ -357,11 +357,23 @@ class Register_model extends CI_Model{
 				$visit_data[$column] = $this->input->post($column);
 			}
 		}
+		$signed_consultation = $this->input->post('signed_consultation');
+		if($signed_consultation==1){
+			$staff_id = $this->session->userdata('logged_in')['user_id'];//all_userdata();
+			$this->db->select('user.staff_id')
+				->from('user')
+				->where('user.user_id', $staff_id);
+			$query = $this->db->get();
+			$result = $query->row();
+			if(!!$result) {
+				$visit_data['signed_consultation'] = $result->staff_id;
+			}
+		}
 		foreach($this->patient as $column){
 			if($this->input->post($column)){
 				$patient_data[$column] = $this->input->post($column);
 			}
-		}
+		}		
 		$mlc_duplicate = '';
 		foreach($this->mlc as $column){
 			if($this->input->post($column)){
@@ -402,6 +414,7 @@ class Register_model extends CI_Model{
 					$al=$this->input->post('al_'.$pre);
 					$bd=$this->input->post('bd_'.$pre);
 					$ad=$this->input->post('ad_'.$pre);
+					$note = $this->input->post('note_'.$pre);
 					$quantity=$this->input->post('quantity_'.$pre);
 					$drug = $this->input->post('drug_'.$pre);
 					$morning=0;$afternoon=0;$evening=0;
@@ -432,6 +445,7 @@ class Register_model extends CI_Model{
 						'afternoon'=>$afternoon,
 						'evening'=>$evening,
 						'quantity'=>$quantity,
+						'note'=>$note
 					);
 				}
 			}
@@ -449,8 +463,10 @@ class Register_model extends CI_Model{
 			$this->db->update('patient', $patient_data);
 		}
 		// MLC Details
-		$mlc_insert = $this->db->insert_string('mlc', $mlc_data).' ON DUPLICATE KEY UPDATE '.$mlc_str;
-		$this->db->query($mlc_insert);
+		if($mlc_str != ''){
+			$mlc_insert = $this->db->insert_string('mlc', $mlc_data).' ON DUPLICATE KEY UPDATE '.$mlc_str;
+			$this->db->query($mlc_insert);
+		}
 		$this->db->where('visit_id',$visit_id);
 		$this->db->update('patient_visit', $visit_data);
 		// Clinical Data
@@ -932,10 +948,7 @@ class Register_model extends CI_Model{
 		}
 		//Build the query to retrieve the patient records based on the search query.
 		$this->db->select("patient.*,patient_visit.*,CONCAT(patient.first_name,' ',patient.last_name) name,
-		IF(father_name IS NULL OR father_name='',spouse_name,father_name) parent_spouse,patient.*,patient_visit.*,mlc.*,occupation.occupation,id_proof_type,
-		area_name,state.state_id,state.state,hospital,unit_name,unit.unit_id,code_title,area.area_id,district.district,department,patient.patient_id,patient_visit.visit_id, 
-				patient_procedure.procedure_duration, patient_procedure.procedure_note, patient_procedure.procedure_findings, visit_name.visit_name,
-				CONCAT(staff.first_name,' ',staff.last_name) doctor_name,designation",false)
+		IF(father_name IS NULL OR father_name='',spouse_name,father_name) parent_spouse, mlc.*,occupation.occupation,id_proof_type, area_name,state.state_id,state.state,hospital,unit_name,unit.unit_id,code_title,area.area_id,district.district,department,patient.patient_id,patient_visit.visit_id, 		patient_procedure.procedure_duration, patient_procedure.procedure_note, patient_procedure.procedure_findings, visit_name.visit_name, CONCAT(staff.first_name,' ',staff.last_name) doctor_name,designation",false)
 		->from('patient')
 		->join('patient_visit','patient.patient_id=patient_visit.patient_id')
                 ->join('visit_name','patient_visit.visit_name_id=visit_name.visit_name_id','left')
@@ -950,10 +963,10 @@ class Register_model extends CI_Model{
 		->join('id_proof_type','patient.id_proof_type_id=id_proof_type.id_proof_type_id','left')
 		->join('icd_code','patient_visit.icd_10=icd_code.icd_code','left')
 		->join('hospital','patient_visit.hospital_id=hospital.hospital_id','left')
-		->join('user', 'patient_visit.signed_consultation = user.user_id', 'left')
-		->join('staff','user.staff_id = staff.staff_id','left')
+		->join('staff','patient_visit.signed_consultation = staff.staff_id','left')
 		->order_by('name','ASC');
 		$query=$this->db->get();
+		
 		//return the search results
 		return $query->result();
 	}
@@ -1010,9 +1023,10 @@ class Register_model extends CI_Model{
 	}
 	
 	function get_prescription($visit_id){
-		$this->db->select('prescription.*,item_name')->from('prescription')
-		->join('item','prescription.item_id = item.item_id')
-		->where('visit_id',$visit_id)->where('status',1);
+		$this->db->select("prescription.*, generic_item_id, generic_name as item_name")
+			->from("prescription")
+			->join('generic_item','generic_item.generic_item_id = prescription.item_id')
+			->where('visit_id',$visit_id)->where('status',1);
 		$query=$this->db->get();
 		return $query->result();
 	}

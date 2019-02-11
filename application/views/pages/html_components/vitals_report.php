@@ -8,7 +8,7 @@
         <label for="to_date">To Date: </label>
         <input class="form-control" type="date" value='' name="to_date" id="to_date" size="15" />
     </div>
-    
+    <!--
     <div class="form-group">
         <label for="sbp">SBP: </label>
         <input maxlength="4" size="4" type="text" name="sbp" class="form-control" id="sbp" placeholder="SBP >=">
@@ -29,10 +29,13 @@
         <label for="dbp">HBA1C: </label>
         <input maxlength="4" size="4" type="text" name="hb1ac" class="form-control" id="hb1ac" placeholder="HBA1C >=">
     </div> 
-    <div class="form-group">
-        <br>
+    <div class="form-group"><br> -->
+      <div class="form-group">
+      <label for="">&nbsp; </label><br>
         <button type="submit" id="submit" class="btn btn-default">Submit</button>
+      </div>       
     </div>
+    
 </form>
 <!--<input type="hidden" name="column_query_strings" id="column_query_strings" value="SBP >=:sbp,nsbp;DBP >=:dbp,ndbp;RBS >=:rbs,nrbs;HB <=:hb,nhb;hb1ac >=:hb1ac,nhb1ac">-->
 <!--<p hidden id="column_query_strings">1#SBP >=:sbp~nsbp;2#DBP >=:dbp~ndbp;3#RBS >=:rbs~nrbs;4#HB <=:hb~nhb;5#HBA1C >=:hb1ac~nhb1ac</p>-->

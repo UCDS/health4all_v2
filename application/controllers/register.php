@@ -183,11 +183,12 @@ class Register extends CI_Controller {
 				$this->data['prescription']=$this->register_model->get_prescription($visit_id);
 				$this->data['previous_visits']=$this->register_model->get_visits($patient_id);
 				$this->data['tests']=$this->diagnostics_model->get_all_tests($visit_id);
-				$this->data['clinical_notes']=$this->register_model->get_clinical_notes($visit_id);
-				$data_array = array('patient_id'=>$patient_id);
-				$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', $data_array);
-				$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', $data_array);
-				$this->data['prescriptions'] = $this->gen_rep_model->simple_join('prescriptions', $data_array);			
+			//	$this->data['clinical_notes']=$this->register_model->get_clinical_notes($visit_id);
+				$params = array("patient_visit.patient_id"=>$patient_id);
+				$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', false, $params);
+				$this->data['clinical_notes'] = $this->gen_rep_model->simple_join('clinical_notes', false, false);
+				$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', false, false);
+				$this->data['prescriptions'] = $this->gen_rep_model->simple_join('prescriptions', false, false);			
 			}
 			$this->load->view('pages/view_patients',$this->data);
 		}
@@ -212,6 +213,7 @@ class Register extends CI_Controller {
 		}
 		if($access==1){
 		$this->data['title']="Update Patients";
+		$this->data['signed_consultation'] = $this->input->post('signed_consultation');
 		$this->load->view('templates/header',$this->data);
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -226,15 +228,13 @@ class Register extends CI_Controller {
 		$this->data['procedures'] = $this->masters_model->get_data("procedure");
 		$this->data['defaults'] = $this->staff_model->get_transport_defaults();
 		$this->data['prescription_frequency'] = $this->staff_model->get_prescription_frequency();
-		
+		$patient_id = $this->input->post('patient_id');
 		if($this->input->post('selected_patient')){
-			$data_array = array('visit_id'=>$this->input->post('selected_patient'));
-			$data_array = $this->gen_rep_model->simple_join('patient_id', $data_array);
-			$data_array = array('patient_id'=>$data_array[0]->patient_id);
-			$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', $data_array);
-			$this->data['clinical_notes'] = $this->gen_rep_model->simple_join('clinical_notes', $data_array);
-			$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', $data_array);
-			$this->data['prescriptions'] = $this->gen_rep_model->simple_join('prescriptions', $data_array);
+			$this->data['previous_visits']=$this->register_model->get_visits($patient_id);
+			$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', false);
+			$this->data['clinical_notes'] = $this->gen_rep_model->simple_join('clinical_notes', false);
+			$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', false);
+			$this->data['prescriptions'] = $this->gen_rep_model->simple_join('prescriptions', false);
 		}
 		
               //  $this->data['hospitals'] = $this->hospital_model->get_hospitals();
@@ -258,6 +258,7 @@ class Register extends CI_Controller {
 				$this->data['transport'] = $this->staff_model->get_transport_log();
 				$this->data['patients']=$this->register_model->search();
 				$this->data['msg'] = "Patient information has been updated successfully";
+				$this->data['previous_visits']=$this->register_model->get_visits($patient_id);
 				$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', false);
 				$this->data['clinical_notes'] = $this->gen_rep_model->simple_join('clinical_notes', false);
 				$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', false);
@@ -277,6 +278,11 @@ class Register extends CI_Controller {
 				if(count($this->data['patients'])==1){
 					$this->load->model('diagnostics_model');
 					$visit_id = $this->data['patients'][0]->visit_id;
+					$data_array = array('patient_id' => $this->data['patients'][0]->patient_id);					
+					$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', $data_array);
+					$this->data['clinical_notes'] = $this->gen_rep_model->simple_join('clinical_notes', $data_array);
+					$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', $data_array);
+					$this->data['prescriptions'] = $this->gen_rep_model->simple_join('prescriptions', $data_array);
                     $this->data['transfers'] = $this->patient_model->get_transfers_info($visit_id);
 					$this->data['prescription_frequency'] = $this->staff_model->get_prescription_frequency();
 					$this->data['transport'] = $this->staff_model->get_transport_log();

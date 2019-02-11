@@ -1,11 +1,10 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/metallic.css" >
 <link rel="stylesheet" href="<?php echo base_url();?>assets/css/theme.default.css" >
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/zebra_datepicker.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
-
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
-	<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
-		<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-barcode.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.widgets.min.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.tablesorter.print.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-barcode.min.js"></script>
 <style>
 	.row{
 		margin-bottom: 1.5em;
@@ -118,6 +117,7 @@ pri.print();
 		<td>
 			<?php echo form_open('register/view_patients',array('role'=>'form','id'=>'select_patient_'.$p->visit_id));?>
 			<input type="text" class="sr-only" hidden value="<?php echo $p->visit_id;?>" name="selected_patient" />
+			<input type="text" class="sr-only" hidden value="<?php echo $p->patient_id;?>" name="patient_id" />
 			</form>
 			<?php echo $i++;?>
 		</td>
@@ -566,6 +566,10 @@ pri.print();
 	  </div>
 			<div class="col-md-12 text-center">
 				<button class="btn btn-md btn-warning" value="Print" type="button" onclick="printDiv('print-div')">Print Summary</button>
+				<?php 
+			$visits = sizeof($patient_visits);
+		?>
+		<button class="btn btn-md btn-warning" value="Print" type="button" onclick="printDiv('print-div-all')">(<?php echo $visits; ?>)-Print Summary All Visits</button>
 			</div>
 		</div>
 	</div>
@@ -587,6 +591,7 @@ pri.print();
 					<td>
 						<?php echo form_open('register/view_patients',array('role'=>'form','id'=>'select_visit_'.$visit->visit_id));?>
 						<input type="text" class="sr-only" hidden value="<?php echo $visit->visit_id;?>" name="selected_patient" />
+						<input type="text" class="sr-only" hidden value="<?php echo $visit->patient_id;?>" name="patient_id" />
 						</form>
 					<?php 
 					if($visit->visit_id == $patient->visit_id) echo "<i class='fa fa-eye'></i> ";?>
@@ -645,10 +650,10 @@ pri.print();
 						<label class="control-label">IP/OP Number</label>
 						<input type="text" name="search_patient_number" size="5" class="form-control" />
 						</div>
-						<div class="form-group">
+					<!--	<div class="form-group">
 						<label class="control-label">Patient Name</label>
 						<input type="text" name="search_patient_name" class="form-control" />
-						</div>
+						</div> -->
 						<div class="form-group">
 						<label class="control-label">Phone Number</label>
 						<input type="text" name="search_phone" class="form-control" />
@@ -666,11 +671,14 @@ pri.print();
 	</div>
 	<br />
 
-	<script type="text/javascript">
-			$(function(){
-				$("#patient_barcode").barcode(
-					"<?php echo $patient->patient_id;?>",
-					"ean13"
-				);
-			});
-		</script>
+<script type="text/javascript">
+	$(function(){
+		$("#patient_barcode").barcode(
+			"<?php echo $patient->patient_id;?>",
+			"ean13"
+		);
+	});
+</script>
+<div class="sr-only" id="print-div-all" style="width:100%;height:100%;"> 
+	<?php $this->load->view('pages/print_layouts/patient_summary_all_visits');?>
+</div>

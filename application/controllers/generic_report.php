@@ -22,17 +22,21 @@ class Generic_report extends CI_Controller {
             $this->data['departments']=$this->staff_model->user_department($user_id);
             $this->data['op_forms']=$this->staff_model->get_forms("OP");
             $this->data['ip_forms']=$this->staff_model->get_forms("IP");
-		    $this->data['user_id']=$user['user_id'];
+            $this->data['user_id']=$user['user_id'];
+            $this->load->model('gen_rep_model');
 		}		
     }
     
-    function gen_rep() {
+    function gen_rep($route = false) {
         if(!$this->logged_in)
             show_404();
 
         $this->load->view('templates/header',$this->data);
         $this->load->view("pages/generic_report",$this->data);
-        $this->load->view("pages/html_components/blood_diagnostic",$this->data);
+        if($route){
+            $this->data['doctors'] = $this->gen_rep_model->simple_join('doctors');
+            $this->load->view("pages/html_components/$route",$this->data);
+        }            
         $this->load->view('templates/footer');
     }
 
@@ -51,7 +55,6 @@ class Generic_report extends CI_Controller {
         
         $post_data = $this->security->xss_clean($_POST);
         
-        $this->load->model('gen_rep_model');
         $result = array();
         if(array_key_exists('query_strings', $post_data)) {
             $query_strings = explode(',', $post_data['query_strings']);

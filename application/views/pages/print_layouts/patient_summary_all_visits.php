@@ -2,6 +2,10 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/qrcode.min.js"></script>  
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-barcode.min.js"></script>
 <?php $patient_visit=$patients[0];?>
+<?php
+	
+?>
+<!-- Extract patient visits from patient -->
 <style>
 	@media print{
 	table{
@@ -25,35 +29,36 @@
 		border:1px solid black;
 		padding:3px;
 	}
-
+	#doctor_name {
+		padding: 0px,15px;
+	}
 	}
 </style>
 <script type="text/javascript">
+<?php foreach($patient_visits as $patient_visit) { ?>
 	$(function(){
 		var settings = {
-		barHeight: 20
+		barHeight: 20,
+		fontSize: 20
 		};
-		$("#patient_barcode").barcode(
+		$("#patient_barcode_<?php echo $patient_visit->visit_id;?>").barcode(
 			"<?php echo $patient_visit->patient_id;?>",
 			"code128",
 			settings
 		);	// patient->patient_id, done
 	});
+<?php } ?>
 </script>
-<?php
-	
-?>
-<!-- Extract patient visits from patient -->
-
 <?php foreach($patient_visits as $patient_visit) { ?>
 <table style="width:98%;padding:5px;">
 	<tbody>
 		<tr>
 			<td colspan="3">
-				<span style="position:absolute;" id="patient_barcode"></span>
+				<span style="position:absolute;" id="patient_barcode_<?php echo $patient_visit->visit_id;?>"></span>
 				<div style="float:right; margin-right:10%;">
-					<div id="qr_code" style="position:absolute;padding-top:2px;"></div>
-					<div style="position:absolute;top:75px;font-size:10px;"><b>ID:</b> <?php echo $patient_visit->patient_id;?></div>
+					<div id="qr_code_<?php echo $patient_visit->visit_id;?>" style="position:absolute;padding-top:2px;"></div>
+					<div id="qr_text_<?php echo $patient_visit->visit_id;?>" style="position:absolute;top:75px;font-size:10px;">
+					</div>
 					<?php
 						if($patient_visit->gender == "M"){
 							$relation = "S/O";
@@ -62,8 +67,9 @@
 						$qr_text = "i:".$patient_visit->patient_id." n:".$patient_visit->name." g:".$patient_visit->gender." a:".$patient_visit->age_years." r:".$relation." s:".$patient_visit->relative." l:".$patient_visit->place." p:".$patient_visit->phone;
 					?>
 					<script type="text/javascript">
-						document.getElementById("qr_code").innerHTML="";
-						var qrcode = new QRCode(document.getElementById("qr_code"), {
+						document.getElementById("qr_code_<?php echo $patient_visit->visit_id;?>").innerHTML="";
+						document.getElementById("qr_text_<?php echo $patient_visit->visit_id;?>").innerHTML="<b>ID:</b> <?php echo $patient_visit->patient_id;?>";
+						var qrcode = new QRCode(document.getElementById("qr_code_<?php echo $patient_visit->visit_id;?>"), {
 							width : 55,
 							height : 55
 						});
@@ -367,7 +373,8 @@
 			</td>
 		</tr>
 		<?php } ?>
-		<?php if(isset($prescriptions) && !!$prescriptions){ ?>
+		<?php 
+		if(isset($prescriptions) && !!$prescriptions){ ?>
 		<tr class="print-element" width="95%">
 			<td  style="padding-top:20px" class="print-text" colspan="3">
 				<b><u>Medicines Prescribed: </u></b>
@@ -411,7 +418,7 @@
 				if($patient_visit->visit_id == $pres->visit_id){ ?>
 			<tr>
 				<td width="30px"  style="padding-left:15px"><?php echo $i++;?></td>
-				<td><?php echo $pres->item_name;?></td>
+				<td><?php echo $pres->item_name;?><br><?php if($pres->note!='') echo '-'.$pres->note;?></td>
 				<td><?php echo $pres->frequency;?></td>
 				<td width="40px" style="padding-left:20px"><?php echo $pres->duration;?></td>
 				<td width="30px" style="padding-left:15px"><?php if($pres->morning == 1 || $pres->morning == 3) echo "<i class='fa fa-check'></i>";?></td>
@@ -437,17 +444,23 @@
 		</tr>
 		<?php } ?>
 		<tr class="print-element" width="95%" >
+		<?php if(!!$patient_visit->doctor_name){ ?>
 			<td colspan="3" style="text-align:right">
 			<br />
 			<br />
-			<b><?php if(!!$patient_visit->signed_consultation){
-					echo $patient_visit->doctor_name."<br />".$patient_visit->designation;
-				}
-				else{ ?>
-				Doctor
-				<?php } ?>
+			<b>
+				<?php echo $patient_visit->doctor_name."<br />".$patient_visit->designation; ?>
 				</b>
 			</td>
+			<?php } else { ?>
+			<td colspan="3" style="text-align:center">
+			<br />
+			<br />
+			<b>
+			Doctor:	
+			</b>
+			</td>
+<?php } ?>
 		</tr>				
 </table>
 <p style="page-break-before: always">
