@@ -377,6 +377,5 @@ class Register extends CI_Controller {
 		else{
 		show_404();
 		}
-		
 	}
 }
