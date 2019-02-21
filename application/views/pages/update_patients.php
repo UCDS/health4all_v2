@@ -1403,7 +1403,7 @@ pri.print();
 			<div class="row alt">
 					<div class="col-md-12 col-xs-12">
 						<?php 
-							if(isset($clinical_notes) && !!$clinical_notes){ ?>
+							if(isset($visit_notes) && !!$visit_notes){ ?>
 						
 						<table class="table table-bordered table-striped">
 							<thead>
@@ -1420,7 +1420,7 @@ pri.print();
 							<tbody>
 							<?php
 							$i=1;
-							 foreach($clinical_notes as $note){ ?>
+							 foreach($visit_notes as $note){ ?>
 								<tr>
 									<td><?php echo $i++; ?></td>
 									<td><?php if($note->note_time!=0) echo date("d-M-Y g:iA",strtotime($note->note_time)); ?></td>
@@ -2217,4 +2217,3 @@ pri.print();
 <div class="sr-only" id="print-div-all" style="width:100%;height:100%;"> 
 			<?php $this->load->view('pages/print_layouts/patient_summary_all_visits');?>
 </div>
-

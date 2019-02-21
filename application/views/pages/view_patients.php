@@ -344,7 +344,7 @@ pri.print();
 				</div>
 			</div>
 			<?php 
-				if(isset($clinical_notes) && !!$clinical_notes){ ?>
+				if(isset($visit_notes) && !!$visit_notes){ ?>
 			<div class="row alt">
 					<div class="col-md-12 col-xs-12">
 						
@@ -363,7 +363,7 @@ pri.print();
 							<tbody>
 							<?php
 							$i=1;
-							 foreach($clinical_notes as $note){ ?>
+							 foreach($visit_notes as $note){ ?>
 								<tr>
 									<td><?php echo $i++; ?></td>
 									<td><?php if($note->note_time!=0) echo date("d-M-Y g:iA",strtotime($note->note_time)); ?></td>

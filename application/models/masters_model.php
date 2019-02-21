@@ -181,7 +181,9 @@ class Masters_model extends CI_Model{
 		}
 		else if($type=="drugs"){
 		//	$this->db->select("item_id,item_name")->from("item")->order_by('item_name');
-			$this->db->select("generic_item_id,generic_name")->from("generic_item");
+			$this->db->select("generic_item_id,generic_name")
+					->from("generic_item")
+					->order_by('generic_name');	
 		}
 		
 		else if($type=="dosage"){

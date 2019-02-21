@@ -193,7 +193,7 @@
 					</td>
 				</tr>
 				<?php } ?>
-				<?php if(isset($clinical_notes) &&  !!$clinical_notes) { ?>
+				<?php if(isset($visit_notes) &&  !!$visit_notes) { ?>
 				<tr class="print-element" width="95%" >				
 					<td colspan="3"><b><u>Cinical Notes</u></b></td>
 				</tr>
@@ -210,7 +210,7 @@
 							<tbody>
 							<?php
 							$i=1;
-							 foreach($clinical_notes as $note){ ?>
+							 foreach($visit_notes as $note){ ?>
 								<tr>
 									<td><?php echo $i++; ?></td>
 									<td><?php if($note->note_time!=0) echo date("d-M-Y g:iA",strtotime($note->note_time)); ?></td>

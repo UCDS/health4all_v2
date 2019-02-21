@@ -50,6 +50,7 @@ class Staff extends CI_Controller {
 				);
 				$this->data['hospital']=$this->masters_model->get_data("hospital");
 				$this->data['department']=$this->masters_model->get_data("department");
+			
 				$this->data['staff_category']=$this->masters_model->get_data("staff_category");
 				$this->data['unit']=$this->masters_model->get_data("unit");
 				$this->data['area']=$this->masters_model->get_data("area");
@@ -207,12 +208,11 @@ class Staff extends CI_Controller {
 			$this->data['area']=$this->masters_model->get_data("area");
 		//	$this->data['staff_category']=$this->masters_model->get_data("staff_category",$mode='all');
 			$this->data['staff_role']=$this->masters_model->get_data("staff_role",$mode='all');
-		//	$this->data[$type]=$this->masters_model->get_data($type);
+			$this->data['staff']=$this->masters_model->get_data('view_staff');
 			$this->data['designation']=$this->masters_model->get_designation();
 			$this->data['staff_category']=$this->masters_model->get_data("staff_category");
 				
-		}
-		
+		}		
 		else if($type == 'staff_role')
 		{
 			$title = 'Edit Staff Role';
@@ -223,8 +223,7 @@ class Staff extends CI_Controller {
 						 'rules'   => 'trim|xss_clean'
 				)
 			);
-			$this->data['staff_role'] = $this->masters_model->get_data('staff_role');
-			
+			$this->data['staff_role'] = $this->masters_model->get_data('staff_role');			
 		}
 		else if($type == 'staff_category')
 		{
@@ -238,8 +237,7 @@ class Staff extends CI_Controller {
 						)
 			);
 			
-		}
-        
+		}        
 		// if none of the options is selected (i.e. any invalid url modifications) 404 error is shown
 		else
 		{
@@ -252,7 +250,6 @@ class Staff extends CI_Controller {
       	$this->load->view('templates/leftnav',$this->data);
 		//form configuration is set based on the option selected from the menu
 		$this->form_validation->set_rules($config);
-
 		//if the form contains any invalid data same page along with error msg is shown.
 		if ($this->form_validation->run() === FALSE)
 		{
@@ -273,8 +270,7 @@ class Staff extends CI_Controller {
 			{
 				//search results are retrieved from the master_model class
 				$this->data['mode'] = 'search';
-				$this->data[$type]=$this->masters_model->get_data($type);
-				
+				$this->data[$type]=$this->masters_model->get_data($type);				
 				$this->load->view($page,$this->data);
 			}
 			// step 2.

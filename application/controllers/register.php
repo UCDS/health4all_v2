@@ -183,12 +183,12 @@ class Register extends CI_Controller {
 				$this->data['prescription']=$this->register_model->get_prescription($visit_id);
 				$this->data['previous_visits']=$this->register_model->get_visits($patient_id);
 				$this->data['tests']=$this->diagnostics_model->get_all_tests($visit_id);
-			//	$this->data['clinical_notes']=$this->register_model->get_clinical_notes($visit_id);
+				$this->data['visit_notes']=$this->register_model->get_clinical_notes($visit_id);
 				$params = array("patient_visit.patient_id"=>$patient_id);
 				$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', false, $params);
-				$this->data['clinical_notes'] = $this->gen_rep_model->simple_join('clinical_notes', false, false);
-				$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', false, false);
-				$this->data['prescriptions'] = $this->gen_rep_model->simple_join('prescriptions', false, false);			
+				$this->data['clinical_notes'] = $this->gen_rep_model->simple_join('clinical_notes', false, $params);
+				$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', false, $params);
+				$this->data['prescriptions'] = $this->gen_rep_model->simple_join('prescriptions', false, $params);			
 			}
 			$this->load->view('pages/view_patients',$this->data);
 		}
@@ -269,7 +269,7 @@ class Register extends CI_Controller {
 					$this->data['prescription_frequency'] = $this->staff_model->get_prescription_frequency();
 					$this->data['prescription']=$this->register_model->get_prescription($visit_id);
 					$this->data['tests']=$this->diagnostics_model->get_all_tests($visit_id);
-					$this->data['clinical_notes']=$this->register_model->get_clinical_notes($visit_id);
+					$this->data['visit_notes']=$this->register_model->get_clinical_notes($visit_id);
 				}
 				$this->load->view('pages/update_patients',$this->data);
 			}
@@ -288,7 +288,7 @@ class Register extends CI_Controller {
 					$this->data['transport'] = $this->staff_model->get_transport_log();
 					$this->data['prescription']=$this->register_model->get_prescription($visit_id);
 					$this->data['tests']=$this->diagnostics_model->get_all_tests($visit_id);
-					$this->data['clinical_notes']=$this->register_model->get_clinical_notes($visit_id);
+					$this->data['visit_notes']=$this->register_model->get_clinical_notes($visit_id);
 				}
 				$this->load->view('pages/update_patients',$this->data);
 			}
