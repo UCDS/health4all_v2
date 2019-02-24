@@ -245,8 +245,9 @@ class Helpline_model extends CI_Model{
 		if($this->input->post('helpline_id')){
 			$this->db->where('helpline.helpline_id',$this->input->post('helpline_id'));
 		}
-		$this->db->select('helpline_call.*,group_name,caller_type,call_category,resolution_status,hospital')->from('helpline_call')
+		$this->db->select('helpline_call.*, helpline_receiver.short_name as short_name, group_name,caller_type,call_category,resolution_status,hospital')->from('helpline_call')
 		->join('helpline', 'helpline_call.to_number=helpline.helpline','left')	// 6 Dec 18 -> gokulakrishna@yousee.in
+		->join('helpline_receiver','helpline_call.dial_whom_number = helpline_receiver.phone','left')
 		->join('helpline_caller_type','helpline_call.caller_type_id = helpline_caller_type.caller_type_id','left')
 		->join('helpline_call_category','helpline_call.call_category_id = helpline_call_category.call_category_id','left')
 		->join('helpline_call_group','helpline_call.call_group_id = helpline_call_group.call_group_id','left')

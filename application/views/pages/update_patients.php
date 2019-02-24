@@ -366,9 +366,9 @@ pri.print();
 		<div class="sr-only" id="print-div" style="width:100%;height:100%;"> 
 			<?php $this->load->view('pages/print_layouts/patient_summary');?>
 		</div>
-                <div class="col-md-8">
+                <div class="col-md-8"  >
 			<div class="row alt">
-                            <div class="col-md-4 col-xs-12 col-lg-3">
+                            <div class="col-md-4 col-xs-12 col-lg-3"  style="background: #FFA500;">
                                 <b>Patient ID: <?php echo $patient->patient_id; ?> </b>
                             </div>
 			<div class="col-md-4 col-xs-12 col-lg-4">
@@ -382,43 +382,43 @@ pri.print();
 			<div class="row alt">
                         <div class="col-md-4 col-xs-12 col-lg-4">
 				<label class="control-label">Patient ID Manual
-				<input type="text" name="patient_id_manual" class="form-control" placeholder="Patient ID Manual" value="<?php if($patient) echo $patient->patient_id_manual;?>" <?php if($f->edit==1 && empty($patient->patient_id_manual)) echo ''; else echo ' readonly'; ?> />
+				<input type="text" name="patient_id_manual" class="form-control" placeholder="Patient ID Manual" value="<?php if($patient) echo $patient->patient_id_manual;?>" <?php if($f->edit==1 && empty($patient->patient_id_manual)) echo ''; else echo ' readonly'; ?>  style="background: #ADFF2F; font-weight: bold;"/>
 				</label>
 			</div>
 			<div class="col-md-4 col-xs-12 col-lg-4">
 				<label class="control-label">First Name
-				<input type="text" name="first_name" class="form-control" placeholder="First" value="<?php if($patient) echo $patient->first_name;?>" <?php if($f->edit==1 && empty($patient->first_name)) echo ' required'; else echo ' readonly'; ?> />
+				<input type="text" name="first_name" class="form-control" placeholder="First" value="<?php if($patient) echo $patient->first_name;?>" <?php if($f->edit==1 && empty($patient->first_name)) echo ' required'; else echo ' readonly'; ?> style="background: #ADFF2F; font-weight: bold;" />
 				</label>
 			</div>
                         <div class="col-md-4 col-xs-12 col-lg-4">
 				<label class="control-label">Middle Name
-				<input type="text" name="middle_name" class="form-control" placeholder="Middle" value="<?php if($patient) echo $patient->middle_name;?>" <?php if($f->edit==1 && empty($patient->middle_name)) echo ''; else echo ' readonly'; ?> />
+				<input type="text" name="middle_name" class="form-control" placeholder="Middle" value="<?php if($patient) echo $patient->middle_name;?>" <?php if($f->edit==1 && empty($patient->middle_name)) echo ''; else echo ' readonly'; ?> style="background: #ADFF2F; font-weight: bold;" />
 				</label>
 			</div>
 			<div class="col-md-4 col-xs-12 col-lg-4">
 				<label class="control-label">Last Name
-				<input type="text" name="last_name" class="form-control" placeholder="Last" value="<?php  if($patient) echo $patient->last_name;?>" <?php if($f->edit==1 && empty($patient->last_name)) echo ''; else echo ' readonly'; ?>/>
+				<input type="text" name="last_name" class="form-control" placeholder="Last" value="<?php  if($patient) echo $patient->last_name;?>" <?php if($f->edit==1 && empty($patient->last_name)) echo ''; else echo ' readonly'; ?> style="background: #ADFF2F; font-weight: bold;"/>
 				</label>
 			</div>
 			
 			</div>
                         <div class="row alt">
-			<div class="col-md-4 col-xs-4">
+			<div class="col-md-4 col-xs-4" style="background: #ADFF2F; font-weight: bold;" >
 				<label class="control-label"><input type="radio" class="gender" value="M" name="gender" <?php if($patient)  if($patient->gender=="M") echo " checked ";?> <?php if($f->edit==1 && empty($patient->gender)) echo ' required'; else echo ' readonly'; ?> />Male</label>
 				<label class="control-label"><input type="radio" class="gender" value="F" name="gender" <?php if($patient)  if($patient->gender=="F") echo " checked ";?> <?php if($f->edit==1 && empty($patient->gender)) echo ' required'; else echo ' readonly'; ?> />Female</label>
 				<label class="control-label"><input type="radio" class="gender" value="O" name="gender" <?php if($patient)  if($patient->gender=="O") echo " checked ";?> <?php if($f->edit==1 && empty($patient->gender)) echo ' required'; else echo ' readonly'; ?> />Others</label>
 			</div>			
 			<div class="col-md-6 col-xs-12">
 				<label class="control-label">Age</label>
-				<input type="text" name="age_years" class="form-control" maxlength="3" size="3"  value="<?php if($patient)  echo $patient->age_years;?>" <?php if($f->edit==1 && empty($patient->age_years)) echo ''; else echo ' readonly'; ?>/>Y
-				<input type="text" name="age_months" class="form-control" maxlength="2" size="2" value="<?php if($patient)  echo $patient->age_months;?>" <?php if($f->edit==1 && empty($patient->age_moths)) echo ''; else echo ' readonly'; ?>/>M
-				<input type="text" name="age_days" class="form-control" maxlength="2" size="2"  value="<?php if($patient)  echo $patient->age_days;?>" <?php if($f->edit==1 && empty($patient->age_days)) echo ''; else echo ' readonly'; ?>/>D
+				<input type="text" name="age_years" class="form-control" maxlength="3" size="3"  value="<?php if($patient)  echo $patient->age_years;?>" <?php if($f->edit==1 && empty($patient->age_years)) echo ''; else echo ' readonly'; ?>  style="background: #ADFF2F; font-weight: bold;"/>Y
+				<input type="text" name="age_months" class="form-control" maxlength="2" size="2" value="<?php if($patient)  echo $patient->age_months;?>" <?php if($f->edit==1 && empty($patient->age_moths)) echo ''; else echo ' readonly'; ?>  style="background: #ADFF2F; font-weight: bold;"/>M
+				<input type="text" name="age_days" class="form-control" maxlength="2" size="2"  value="<?php if($patient)  echo $patient->age_days;?>" <?php if($f->edit==1 && empty($patient->age_days)) echo ''; else echo ' readonly'; ?>  style="background: #ADFF2F; font-weight: bold;"/>D
 			</div>			
 			</div>
                     <div class ="row alt">
                         <div class="col-md-12 col-xs-12">
                                 <label class="control-label">Date of Birth</label>
-                                <input type="text" name="dob" class="form-control dob" value="<?php if($patient->dob!='0000-00-00') echo date("d-M-Y",strtotime($patient->dob)); else echo ""; ?>" <?php if($f->edit==1&& empty($patient->dob)) echo ''; else echo ' readonly'; ?> />
+                                <input type="text" name="dob" class="form-control dob" value="<?php if($patient->dob!='0000-00-00') echo date("d-M-Y",strtotime($patient->dob)); else echo ""; ?>" <?php if($f->edit==1&& empty($patient->dob)) echo ''; else echo ' readonly'; ?>  />
                              <!--   <input type="date" name="dob" class="form-control" value="<?php if($patient)  echo $patient->dob;?>" <?php if($f->edit==1 && empty($patient->dob)) echo ''; else echo ' readonly'; ?>/> -->
                         </div>
                     </div>
@@ -2152,7 +2152,7 @@ pri.print();
 									$style = '';
 									if(drug_available($drug, $drugs_available)){
 										$available = '- Available';
-										$style = 'style="background: #6DF48F;"';
+										$style = 'style="background: #ADFF2F; font-weight: bold;"';
 									}
 									echo '<option value="'.$drug->generic_item_id.'"'.' '.$style.'>'.$drug->generic_name.$available.'</option>';
 								}?>' +
