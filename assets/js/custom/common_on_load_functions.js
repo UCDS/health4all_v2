@@ -21,7 +21,8 @@ $(document).ready(function() {
             console.log('link event');
             let query_string = $(event.target).attr('href');
             query_string = query_string.replace('#', '');
-            localStorage.clear();
+        //    localStorage.clear();
+            clear_localStorage();
             localStorage.setItem('query_strings', query_string);
             localStorage.setItem("table_id", 'detailed_table');
             localStorage.setItem("row_query_strings", '');

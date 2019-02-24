@@ -425,7 +425,7 @@ class Register extends CI_Controller {
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 		$this->data['title']="Bleeding";
-		$this->data['staff']=$this->staff_model->staff_list();
+		$this->data['staff']= $this->staff_model->staff_list();
 		$this->load->view('templates/header',$this->data);
 		$this->load->view('templates/panel_nav',$this->data);
 		$this->form_validation->set_rules('donation_id', 'Donation ID',
@@ -597,10 +597,10 @@ class Register extends CI_Controller {
         $this->load->helper('form');
         $this->load->library('form_validation');
         if($donor_id!=0 && $donor_id!='0'){
-            $this->register_model->remove_donation_from_bleeding($donor_id); //calling this method from resiter model.
+            $this->donation_model->remove_donation_from_bleeding($donor_id); //calling this method from resiter model.
         }
         else{
-            if($this->register_model->remove_donation_from_bleeding($donor_id)){
+            if($this->donation_model->remove_donation_from_bleeding($donor_id)){
                 $this->data['msg']="<font color='green'>Cancelled successfully.</font>";
             }
             else{

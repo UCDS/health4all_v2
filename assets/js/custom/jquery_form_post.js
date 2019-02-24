@@ -3,7 +3,9 @@ $(document).ready(function(){
     $("#primary_filter").submit(function(event){
         // send ajax
         console.log('Submit clicked');
-        $('#ajax_notification').text("Query submitted please wait...");
+        let previous_text = localStorage.getItem('initial_text');
+        
+        $('#ajax_notification').text(previous_text+" Query submitted please wait...");
         let query_strings = localStorage.getItem('query_strings');
         $('<input />').attr('type', 'hidden')
             .attr('name', "query_strings")
@@ -19,13 +21,13 @@ $(document).ready(function(){
             success : function(result) {
                 // you can see the result from the console
                 // tab of the developer tools
-                $('#ajax_notification').text("Got Result");
+                $('#ajax_notification').text(previous_text+" Got Result");
                 build_table(result);
                 $('#query_strings_field').remove();
             },
             error: function(xhr, resp, text) {
                 console.log(xhr, resp, text);
-                $('#ajax_notification').text("Something went wrong");
+                $('#ajax_notification').text(previous_text+" Something went wrong");
                 $('#query_strings_field').remove();
             }
         });

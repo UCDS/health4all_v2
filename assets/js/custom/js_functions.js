@@ -124,7 +124,13 @@ function build_table(table_data) {
                 let columns = Object.values(row);
                 html_rows += '<td>' + index + '&nbsp;</td>';
                 columns.forEach(function (column) {
-                    html_rows += '<td>' + column + '</td>';
+                    let col;
+                    if(Boolean(column)){
+                        col = column.replace(/(^\s*,)|(,\s*$)/g, '');
+                    } else{
+                        col = column;
+                    }                   
+                    html_rows += '<td>' + col + '</td>';
                 });
                 html_rows += '</tr>'
                 index++;
@@ -141,10 +147,18 @@ function build_table(table_data) {
 }
 
 function set_localStorage() {
-    console.log('Called local store');
     localStorage.setItem('loaded', 1);
+    localStorage.setItem('initial_text', $('#ajax_notification').text());
     localStorage.setItem("table_id", $('#table_id').text());
     localStorage.setItem('query_strings', $('#query_strings').text());
     localStorage.setItem("row_query_strings", '');
     localStorage.setItem("column_query_strings", '');
+}
+
+function clear_localStorage() {
+    localStorage.removeItem('loaded');
+    localStorage.removeItem("table_id");
+    localStorage.removeItem('query_strings');
+    localStorage.removeItem("row_query_strings");
+    localStorage.removeItem("column_query_strings");
 }

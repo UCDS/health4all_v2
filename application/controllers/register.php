@@ -8,6 +8,7 @@ class Register extends CI_Controller {
 		$this->load->model('register_model');
 		$this->load->model('staff_model');
 		$this->load->model('masters_model');
+		$this->load->model('hospital_model');
                 $this->load->model('patient_model');
          //       $this->load->model('hospital_model');
 				$this->load->model('counter_model');
@@ -19,10 +20,10 @@ class Register extends CI_Controller {
 		$this->data['hospitals']=$this->staff_model->user_hospital($user_id);
 		$this->data['functions']=$this->staff_model->user_function($user_id);
 		$this->data['departments']=$this->staff_model->user_department($user_id);
-		}
 		//The OP and IP forms in the application are loaded into a data variable for the menu.
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
+		}
 	}
 	
 	//custom_form() accepts a form ID to display the selected form (OP or IP) 
@@ -228,6 +229,7 @@ class Register extends CI_Controller {
 		$this->data['procedures'] = $this->masters_model->get_data("procedure");
 		$this->data['defaults'] = $this->staff_model->get_transport_defaults();
 		$this->data['prescription_frequency'] = $this->staff_model->get_prescription_frequency();
+		$this->data['drugs_available'] = $this->hospital_model->get_drugs();
 		$patient_id = $this->input->post('patient_id');
 		if($this->input->post('selected_patient')){
 			$this->data['previous_visits']=$this->register_model->get_visits($patient_id);

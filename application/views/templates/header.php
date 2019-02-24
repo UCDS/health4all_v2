@@ -308,7 +308,7 @@
 				?>
 				<?php
 					if($f->user_function=="Outcome Summary"){ ?>
-                  		<li><a href="<?php echo base_url()."generic_report/gen_rep/vitals_report";?>"><i class="glyphicon glyphicon-heart"></i> Vitals Report</a></li>
+           <!--       		<li><a href="<?php echo base_url()."generic_report/gen_rep/vitals_report";?>"><i class="glyphicon glyphicon-heart"></i> Vitals Report</a></li> -->
 						<li><a href="<?php echo base_url()."generic_report/gen_rep/prescription_report";?>"><i class="glyphicon glyphicon-pencil"></i> Prescription Report</a></li>
 					<?php }?>
 			<?php	}	?>
@@ -323,7 +323,7 @@
 			}
 			foreach($functions as $f){
 			if($f->user_function=="OP Detail"){ ?>
-						<li><a href="<?php echo base_url()."reports/op_detail";?>">OP Detail</a></li>
+						<li><a href="<?php echo base_url()."generic_report/gen_rep/op_vitals_detailed";?>">OP Detail</a></li>
 			<?php	}
 			if($f->user_function=="IP Detail"){ ?>
 						<li><a href="<?php echo base_url()."reports/ip_detail";?>">IP Detail</a></li>

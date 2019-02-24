@@ -46,7 +46,7 @@ class Generic_report extends CI_Controller {
             return;
         }        
         foreach($this->functions as $function){
-            if($function->user_function == 'Outcome Summary') {
+            if($function->user_function == 'Outcome Summary' || $function->user_function =="OP Detail") {
                 $authorised = true;
             }
         }

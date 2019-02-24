@@ -27,5 +27,3 @@ $(document).ready(
     });
 });
 </script>
-
-<div class="alert alert-info" id="ajax_notification" role="alert">Loading...</div>

@@ -40,6 +40,9 @@ class Masters_model extends CI_Model{
 			$this->db->select("*")->from("icd_code")->order_by('code_title');
 		}
 		else if($type=="user"){
+			$hospital_id = $this->session->userdata('hospital')['hospital_id'];
+			if($hospital_id != '')
+					$this->db->where('staff.hospital_id', $hospital_id);
 			$this->db->select("hospital.hospital,user.user_id,username,password,user.staff_id,first_name,last_name,designation,phone,department")
 			->from("user")
 			->join('staff','user.staff_id=staff.staff_id')

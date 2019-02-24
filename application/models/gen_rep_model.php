@@ -322,7 +322,7 @@ class Gen_rep_Model extends CI_Model {
                 '>='=>array('sbp-patient_visit.sbp','dbp-patient_visit.dbp','rbs-patient_visit.blood_sugar','hba1c-patient_visit.hb1ac'),
                 '<='=>array('hb-patient_visit.hb')
             ),
-            'select'=>"patient.patient_id, patient_visit.hosp_file_no as OP_IP_Number, DATE_FORMAT(patient_visit.admit_date, '%d %b %Y') as date, patient_visit.admit_time as time, patient.gender, CONCAT(patient.first_name,' ', patient.last_name) as name, patient.age_years, CONCAT(patient.father_name,' ', patient.mother_name, ' ', patient.spouse_name) as relative, patient.place, CONCAT(patient.phone, ' ', patient.alt_phone) as phone, department.department, CONCAT(unit.unit_name, '-', area.area_name) as Unit,  GROUP_CONCAT(patient_visit.sbp SEPARATOR ', ') as SBP,GROUP_CONCAT(patient_visit.dbp SEPARATOR ', ') as DBP,GROUP_CONCAT(patient_visit.blood_sugar SEPARATOR ', ') as blood_sugar, GROUP_CONCAT(patient_visit.hb SEPARATOR ', ') as HB,GROUP_CONCAT(patient_visit.hb1ac SEPARATOR ', ') as HB1AC",
+            'select'=>"patient.patient_id, patient_visit.hosp_file_no as OP_IP_Number, DATE_FORMAT(patient_visit.admit_date, '%d %b %Y') as date, patient_visit.admit_time as time, patient.gender, CONCAT(patient.first_name,' ', patient.last_name) as name, patient.age_years, CONCAT(patient.father_name,' ', patient.mother_name, ' ', patient.spouse_name) as relative, patient.place, CONCAT(patient.phone, ' ', patient.alt_phone) as phone, department.department, CONCAT(unit.unit_name, '-', area.area_name) as Unit, GROUP_CONCAT(patient_visit.sbp SEPARATOR ', ') as SBP,GROUP_CONCAT(patient_visit.dbp SEPARATOR ', ') as DBP,GROUP_CONCAT(patient_visit.blood_sugar SEPARATOR ', ') as blood_sugar, GROUP_CONCAT(patient_visit.hb SEPARATOR ', ') as HB,GROUP_CONCAT(patient_visit.hb1ac SEPARATOR ', ') as HB1AC",
             'from'=>'patient',
             'where'=>false,
             'join_sequence'=>array(
@@ -335,6 +335,28 @@ class Gen_rep_Model extends CI_Model {
             'having'=>false,
             'limit'=>5000,
             'apply_date'=>true
+        ),
+        'op_vitals_detailed'=>array(
+            'filters'=>array(   // set or false
+                '>='=>array('sbp-patient_visit.sbp','dbp-patient_visit.dbp','rbs-patient_visit.blood_sugar','hba1c-patient_visit.hb1ac'),
+                '<='=>array('hb-patient_visit.hb')
+            ),
+            'select'=>"patient.patient_id as Patient_ID, patient_visit.hosp_file_no as OP_Number, DATE_FORMAT(patient_visit.admit_date, '%d %b %Y') as date, patient_visit.admit_time as time, patient.gender, CONCAT(patient.first_name,' ', patient.last_name) as name, CONCAT(IF(patient.age_years > 0, CONCAT(patient.age_years, 'Y'), ' '), IF(patient.age_months > 0, CONCAT(patient.age_months, 'M'), ' '), IF(patient.age_days > 0, CONCAT(patient.age_days, 'Y'), ' ')) as age, CONCAT(patient.father_name,' ', patient.mother_name, ' ', patient.spouse_name) as relative, CONCAT(patient.address, '. ', patient.place) as address, CONCAT(IF(patient.phone !=0, patient.phone, ''),', ',IF(patient.alt_phone!=0, patient.alt_phone, '')) as phone, (CASE WHEN (staff.first_name IS NOT NULL OR staff.last_name IS NOT NULL) THEN CONCAT(staff.first_name, ' ', staff.last_name) ELSE ' ' END) as doctor,department.department, (CASE WHEN CONCAT(unit.unit_name, '-', area.area_name) IS NOT NULL THEN CONCAT(unit.unit_name, '-', area.area_name) ELSE ' ' END) as Unit_and_Area, GROUP_CONCAT(IF(patient_visit.sbp>0, CONCAT(patient_visit.sbp, ', '), '') SEPARATOR '') as SBP,GROUP_CONCAT(IF(patient_visit.dbp>0, CONCAT(patient_visit.dbp, ', '), '') SEPARATOR '') as DBP,GROUP_CONCAT(IF(patient_visit.blood_sugar>0,CONCAT(patient_visit.blood_sugar, ', '),'') SEPARATOR '') as blood_sugar, GROUP_CONCAT(if(patient_visit.hb>0,CONCAT(patient_visit.hb, ', '), '') SEPARATOR '') as HB,GROUP_CONCAT(IF(patient_visit.hb1ac>0,CONCAT(patient_visit.hb1ac, ', '), '') SEPARATOR '') as HB1AC, GROUP_CONCAT(IF(mlc.mlc_number IS NOT NULL, CONCAT(mlc.mlc_number, ', '), '') SEPARATOR '') as MLC_Number",
+            'from'=>'patient',
+            'where'=>array('=' => array('OP-patient_visit.visit_type')),
+            'join_sequence'=>array(
+                'patient_visit.patient_id=patient.patient_id',
+                'staff.staff_id=patient_visit.signed_consultation',
+                'department.department_id=patient_visit.department_id',
+                'unit.unit_id=patient_visit.unit',
+                'area.area_id=patient_visit.area',
+                'mlc.visit_id=patient_visit.visit_id',
+            ),     // patient_visit -> test -> test_master
+            'group_by'=>array('patient_id'),
+            'having'=>false,
+            'limit'=>5000,
+            'apply_date'=>true,
+            'order_by' => 'patient_visit.admit_date asc, patient_visit.admit_time asc'
         ),
         'patient_id'=>array(
             'filters'=>array(   // set or false
@@ -449,6 +471,7 @@ class Gen_rep_Model extends CI_Model {
         $limit = array_key_exists('limit', $this->queries[$query]) ? $this->queries[$query]['limit'] : 1000;
         $apply_date = array_key_exists('apply_date', $this->queries[$query]) ? $this->queries[$query]['apply_date'] : true;
         $join_type = array_key_exists('join_type', $this->queries[$query]) ? $this->queries[$query]['join_type'] : 'left';
+        $order_by = array_key_exists('order_by', $this->queries[$query]) ? $this->queries[$query]['order_by'] : false;
         $this->db->select($select, false);
         $this->db->from($from);
         
@@ -480,13 +503,12 @@ class Gen_rep_Model extends CI_Model {
         // Where conditions{string}{(operator_value-table_name.column_name)}
         foreach($where as $op => $columns) {
             foreach($columns as $column){
-                $temp = explode('-', $column);
+                $value_table_column = explode('-', $column);
                 if($op != ''){
-                    $this->db->where("$temp[1] ".$op, "$temp[0]");
+                    $this->db->where("$value_table_column[1] ".$op, "$value_table_column[0]");
                 }else {
                     $this->db->where("$column");
-                }
-                
+                }                
             }
         }
 
@@ -501,6 +523,10 @@ class Gen_rep_Model extends CI_Model {
         foreach($group_by as $group) {
             $this->db->group_by("$group");
         }
+        // Order by conditions- {Column name asc/desc, ...}
+        if($order_by)
+            $this->db->order_by($order_by);
+
         // Having conditions{$op=>value-table_name.column_name}
         foreach($having as $op => $column) {
             $value = explode('-', $column);

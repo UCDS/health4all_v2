@@ -202,7 +202,15 @@
 			</td>
 		</tr>
 		<?php } ?>
-		<?php if(isset($clinical_notes) &&  !!$clinical_notes) { ?>
+		<?php 
+		
+		if(isset($clinical_notes) &&  !!$clinical_notes) { ?>
+		<?php
+			$i=1;
+				foreach($clinical_notes as $note){ 
+					if($patient_visit->visit_id == $note->visit_id){
+					?>
+					<?php if($i == 1){ ?>
 		<tr class="print-element" width="95%" >				
 			<td colspan="3"><b><u>Clinical Notes</u></b></td>
 		</tr>
@@ -216,12 +224,7 @@
 							<th>Note</th>
 						</tr>
 					</thead>
-					<tbody>
-					<?php
-					$i=1;
-						foreach($clinical_notes as $note){ 
-							if($patient_visit->visit_id == $note->visit_id){
-							?>
+					<tbody> <?php } ?>					
 						<tr>
 							<td><?php echo $i++; ?></td>
 							<td><?php if($note->note_time!=0) echo date("d-M-Y g:iA",strtotime($note->note_time)); ?></td>
@@ -261,14 +264,14 @@
 		</tr>
 		<?php } ?>
 		<?php 
-		if(isset($all_tests) && count($all_tests)>0){ ?>				
+		if(isset($tests_ordered) && count($tests_ordered)>0){ ?>				
 		<tr  class="print-element" style="width:100%">
 			<td colspan="3"><b><u>Diagnositcs</u></b><br></td>
 		</tr>
 		<?php
 			$count=0;
 			$text_result_tests=array();
-			foreach($all_tests as $test){	
+			foreach($tests_ordered as $test){	
 				if($test->text_result==1 && $test->numeric_result == 0 && $test->binary_result == 0) {
 					$text_result_tests[] = $test;
 					array_splice($all_tests,$count,1);
@@ -306,18 +309,7 @@
 		<tr class="print-element" width="95%" >
 			<td colspan="3">
 			<br>
-				<table id="table-prescriptions">
-				<tbody>
-					<tr>
-					<td style="width:3em">#</td>
-					<td style="width:10em">Order Date</td>
-					<td style="width:10em">Specimen</td>
-					<td style="width:12em">Test</td>
-					<td style="width:10em">Value</td>
-					<td style="width:5em">Report - Binary</td>
-					<td style="width:10em">Report</td>
-					</tr>
-					<?php 
+			<?php 
 					$o=array();
 					foreach($all_tests as $order){
 						$o[]=$order->order_id;
@@ -330,6 +322,19 @@
 							
 							if($patient_visit->visit_id == $order->visit_id){
 							if($order->order_id == $ord) { ?>
+				<?php if($i==1){ ?>
+				<table id="table-prescriptions">
+				<tbody>
+					<tr>
+					<td style="width:3em">#</td>
+					<td style="width:10em">Order Date</td>
+					<td style="width:10em">Specimen</td>
+					<td style="width:12em">Test</td>
+					<td style="width:10em">Value</td>
+					<td style="width:5em">Report - Binary</td>
+					<td style="width:10em">Report</td>
+					</tr>
+				<?php } ?>
 						<tr <?php if($order->test_status == 2) { ?> onclick="$('#order_<?php echo $ord;?>').submit()" <?php } ?>>
 								<td><?php echo $i++;?></td>
 								<td>

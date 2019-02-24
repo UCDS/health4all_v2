@@ -176,6 +176,16 @@ pri.print();
 		$("#to_area").chained("#to_department");
 });
 </script>
+<?php 
+	function drug_available($drug, $drugs_available){
+		foreach($drugs_available as $drg){
+			if($drg->generic_item_id == $drug->generic_item_id){
+				return true;
+			}
+		}
+		return false;
+	}	
+?>
 <!-- $("#remove_obstetric_history").click(function(){
        alert('In remove');
        var rowCount = $("#obstetric_history").rows.length;
@@ -1761,7 +1771,13 @@ pri.print();
 								<option value="">--Select--</option>
 								<?php 
 								foreach($drugs as $drug){
-									echo "<option value='".$drug->generic_item_id."'>".$drug->generic_name."</option>";
+									$available = '';
+									$style = '';
+									if(drug_available($drug, $drugs_available)){
+										$available = '- Available';
+										$style = "style='background: #6DF48F;'";
+									}
+									echo "<option $style value='".$drug->generic_item_id."'>".$drug->generic_name.$available."</option>";
 								}
 								?>
 								</select>
@@ -1774,6 +1790,7 @@ pri.print();
 							<td>
 								<select name="frequency_0" class="form-control" >
 									<?php foreach($prescription_frequency as $freq){ ?>
+										
 										<option value="<?php echo $freq->frequency;?>"><?php echo $freq->frequency;?></option>
 									<?php } ?>
 								</select>
@@ -2131,7 +2148,13 @@ pri.print();
 								'<option value="">--Select--</option>'+
 								'<?php 
 									foreach($drugs as $drug){ 
-										echo '<option value="'.$drug->generic_item_id.'">'.$drug->generic_name.'</option>';
+										$available = '';
+									$style = '';
+									if(drug_available($drug, $drugs_available)){
+										$available = '- Available';
+										$style = 'style="background: #6DF48F;"';
+									}
+									echo '<option value="'.$drug->generic_item_id.'"'.' '.$style.'>'.$drug->generic_name.$available.'</option>';
 								}?>' +
 								'</select>'+'<i class="glyphicon glyphicon-pencil"></i>'+'<textarea name="note_'+$i+'" cols="30" rows="10" hidden></textarea>'+
 							'</td>'+

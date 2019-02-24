@@ -597,26 +597,5 @@ class Register_model extends CI_Model{
             return false;
         }
     }// remove_donation
-
-    /* removing donor from bleeding and inserting the reason for cancelling*/
-    function remove_donation_from_bleeding($donation_id){
-        $bleeding_cancel_details =array(
-			'donation_id'=>$donation_id,
-			'reason'=>$this->input->post('reason_for_cancel'),
-		);
-        $this->db->trans_start();
-        $this->db->where('donation_id',$donation_id);
-        $this->db->where('status_id','2');
-		$this->db->update('bb_donation',array('status_id'=>'-1')); //changing the status id from 2 to -1
-        $this->db->insert('bb_donation_cancel',$bleeding_cancel_details);
-        $this->db->trans_complete();
-        if($this->db->trans_status()==TRUE){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }// remove_donation_from_bleeding
-
 }
 ?>
