@@ -395,4 +395,67 @@ class Hospital_model extends CI_Model {
            return false;
        }     
     }	   	
+
+    function add_drug() {
+        $generic_item_id = $this->input->post('generic_item_id');
+        $hospital_id = $this->session->userdata('hospital')['hospital_id'];
+        
+        if($hospital_id == '')
+            return false;
+        $drug_record = array(
+            'generic_item_id' => $generic_item_id,
+            'hospital_id' => $hospital_id
+        );
+        $this->db->insert('drug_available', $drug_record);
+        $insert_id = $this->db->insert_id();
+        return $insert_id;
+    }
+
+    function get_drugs() {
+        $hospital_id = $this->session->userdata('hospital')['hospital_id'];
+        if($hospital_id == '')
+            return false;
+        $drug_record = array(
+            'drug_available.hospital_id' => $hospital_id
+        );
+        $this->db->select('generic_item.generic_item_id, generic_item.generic_name, item_form.item_form, drug_type.drug_type,drug_available.drug_avl_id')
+                ->from('drug_available')
+                ->join('generic_item', 'generic_item.generic_item_id = drug_available.generic_item_id', 'left')
+                ->join('item_form', 'generic_item.form_id = item_form.item_form_id', 'left')
+                ->join('drug_type', 'generic_item.drug_type_id = drug_type.drug_type_id', 'left')
+                ->order_by('generic_item.generic_name')
+                ->where($drug_record);
+        $query = $this->db->get();
+        $result = $query->result();
+        
+        return $result;
+    }
+
+    function delete_drug() {
+        $hospital_id = $this->session->userdata('hospital')['hospital_id'];
+        if($hospital_id == '')
+            return false;
+        $drug_avl_id = $this->input->post('drug_avl_id');
+        $delete_record = array(
+            'drug_avl_id' => $drug_avl_id,
+            'hospital_id' => $hospital_id
+        );
+        
+        $this->db->delete('drug_available', $delete_record);
+        $affected_rows = $this->db->affected_rows();
+        
+        return $affected_rows;
+    }
+
+    function get_masters_drugs() {
+        $this->db->select('generic_item.generic_item_id, generic_item.generic_name, item_form.item_form, drug_type.drug_type')
+            ->from('generic_item')
+            ->join('item_form', 'generic_item.form_id = item_form.item_form_id', 'left')
+            ->join('drug_type', 'generic_item.drug_type_id = drug_type.drug_type_id', 'left')
+            ->order_by('generic_item.generic_name');
+        $query = $this->db->get();
+        $result = $query->result();
+        
+        return $result;
+    }
 }

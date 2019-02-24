@@ -62,6 +62,21 @@ class Staff_Report extends CI_Controller {
         $this->load->view('pages/staff/patient_records_by_doctor', $this->data);
         $this->load->view('templates/footer');
     }
+
+    function get_doc_act_by_institute(){
+        if(!$this->session->userdata('logged_in')){
+            show_404();
+            return;
+        }
+        $this->load->helper('form');	
+        $this->data['userdata']=$this->session->userdata('logged_in');
+        $this->load->model('staff_report_model');
+        $this->data['title']="Doctor Activity Report";
+        $this->load->view('templates/header',$this->data);
+        $this->data['doctor_activity_by_institution'] = $this->staff_report_model->get_doctor_activity_by_institution();        
+        $this->load->view('pages/staff/doctor_activity_by_institution', $this->data);
+        $this->load->view('templates/footer');
+    }
     
     //  Patient records entry count end.
     

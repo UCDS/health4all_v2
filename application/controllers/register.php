@@ -8,19 +8,22 @@ class Register extends CI_Controller {
 		$this->load->model('register_model');
 		$this->load->model('staff_model');
 		$this->load->model('masters_model');
+		$this->load->model('hospital_model');
                 $this->load->model('patient_model');
          //       $this->load->model('hospital_model');
-                $this->load->model('counter_model');
+				$this->load->model('counter_model');
+		$this->load->model('gen_rep_model');
 		if($this->session->userdata('logged_in')){
 		$userdata=$this->session->userdata('logged_in');
+
 		$user_id=$userdata['user_id'];
 		$this->data['hospitals']=$this->staff_model->user_hospital($user_id);
 		$this->data['functions']=$this->staff_model->user_function($user_id);
 		$this->data['departments']=$this->staff_model->user_department($user_id);
-		}
 		//The OP and IP forms in the application are loaded into a data variable for the menu.
 		$this->data['op_forms']=$this->staff_model->get_forms("OP");
 		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
+		}
 	}
 	
 	//custom_form() accepts a form ID to display the selected form (OP or IP) 
@@ -181,7 +184,12 @@ class Register extends CI_Controller {
 				$this->data['prescription']=$this->register_model->get_prescription($visit_id);
 				$this->data['previous_visits']=$this->register_model->get_visits($patient_id);
 				$this->data['tests']=$this->diagnostics_model->get_all_tests($visit_id);
-				$this->data['clinical_notes']=$this->register_model->get_clinical_notes($visit_id);				
+				$this->data['visit_notes']=$this->register_model->get_clinical_notes($visit_id);
+				$params = array("patient_visit.patient_id"=>$patient_id);
+				$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', false, $params);
+				$this->data['clinical_notes'] = $this->gen_rep_model->simple_join('clinical_notes', false, $params);
+				$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', false, $params);
+				$this->data['prescriptions'] = $this->gen_rep_model->simple_join('prescriptions', false, $params);			
 			}
 			$this->load->view('pages/view_patients',$this->data);
 		}
@@ -206,6 +214,7 @@ class Register extends CI_Controller {
 		}
 		if($access==1){
 		$this->data['title']="Update Patients";
+		$this->data['signed_consultation'] = $this->input->post('signed_consultation');
 		$this->load->view('templates/header',$this->data);
 		$this->load->helper('form');
 		$this->load->library('form_validation');
@@ -219,6 +228,17 @@ class Register extends CI_Controller {
 		$this->data['drugs'] = $this->masters_model->get_data("drugs");
 		$this->data['procedures'] = $this->masters_model->get_data("procedure");
 		$this->data['defaults'] = $this->staff_model->get_transport_defaults();
+		$this->data['prescription_frequency'] = $this->staff_model->get_prescription_frequency();
+		$this->data['drugs_available'] = $this->hospital_model->get_drugs();
+		$patient_id = $this->input->post('patient_id');
+		if($this->input->post('selected_patient')){
+			$this->data['previous_visits']=$this->register_model->get_visits($patient_id);
+			$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', false);
+			$this->data['clinical_notes'] = $this->gen_rep_model->simple_join('clinical_notes', false);
+			$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', false);
+			$this->data['prescriptions'] = $this->gen_rep_model->simple_join('prescriptions', false);
+		}
+		
               //  $this->data['hospitals'] = $this->hospital_model->get_hospitals();
               //  $this->data['arrival_modes'] = $this->patient_model->get_arrival_modes();
         $this->data['visit_names'] = $this->staff_model->get_visit_name();
@@ -228,8 +248,7 @@ class Register extends CI_Controller {
 		{
 			$this->load->view('pages/update_patients',$this->data);
 		}
-		else{
-		
+		else{		
 			$this->data['transporters'] = $this->staff_model->get_staff("Transport");
 			if($this->input->post('update_patient')){
 				$update = $this->register_model->update();
@@ -241,13 +260,18 @@ class Register extends CI_Controller {
 				$this->data['transport'] = $this->staff_model->get_transport_log();
 				$this->data['patients']=$this->register_model->search();
 				$this->data['msg'] = "Patient information has been updated successfully";
+				$this->data['previous_visits']=$this->register_model->get_visits($patient_id);
+				$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', false);
+				$this->data['clinical_notes'] = $this->gen_rep_model->simple_join('clinical_notes', false);
+				$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', false);
+				$this->data['prescriptions'] = $this->gen_rep_model->simple_join('prescriptions', false);
 				if(count($this->data['patients'])==1){
 					$this->load->model('diagnostics_model');
 					$visit_id = $this->data['patients'][0]->visit_id;
 					$this->data['prescription_frequency'] = $this->staff_model->get_prescription_frequency();
 					$this->data['prescription']=$this->register_model->get_prescription($visit_id);
 					$this->data['tests']=$this->diagnostics_model->get_all_tests($visit_id);
-					$this->data['clinical_notes']=$this->register_model->get_clinical_notes($visit_id);
+					$this->data['visit_notes']=$this->register_model->get_clinical_notes($visit_id);
 				}
 				$this->load->view('pages/update_patients',$this->data);
 			}
@@ -256,12 +280,17 @@ class Register extends CI_Controller {
 				if(count($this->data['patients'])==1){
 					$this->load->model('diagnostics_model');
 					$visit_id = $this->data['patients'][0]->visit_id;
+					$data_array = array('patient_id' => $this->data['patients'][0]->patient_id);					
+					$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', $data_array);
+					$this->data['clinical_notes'] = $this->gen_rep_model->simple_join('clinical_notes', $data_array);
+					$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', $data_array);
+					$this->data['prescriptions'] = $this->gen_rep_model->simple_join('prescriptions', $data_array);
                     $this->data['transfers'] = $this->patient_model->get_transfers_info($visit_id);
 					$this->data['prescription_frequency'] = $this->staff_model->get_prescription_frequency();
 					$this->data['transport'] = $this->staff_model->get_transport_log();
 					$this->data['prescription']=$this->register_model->get_prescription($visit_id);
 					$this->data['tests']=$this->diagnostics_model->get_all_tests($visit_id);
-					$this->data['clinical_notes']=$this->register_model->get_clinical_notes($visit_id);
+					$this->data['visit_notes']=$this->register_model->get_clinical_notes($visit_id);
 				}
 				$this->load->view('pages/update_patients',$this->data);
 			}
@@ -350,6 +379,5 @@ class Register extends CI_Controller {
 		else{
 		show_404();
 		}
-		
 	}
 }

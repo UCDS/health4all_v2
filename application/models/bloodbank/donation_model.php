@@ -50,8 +50,7 @@ class Donation_Model extends CI_Model{
        }
    }
    
-   function update_blood_bag_info(){
-		
+   function update_blood_bag_info(){		
         $this->db->select('bb_donation.donation_id, bb_donation.blood_unit_num, bb_donation.segment_num, bb_donation.bag_type, bb_donation.camp_id, blood_inventory.volume')
                ->from('bb_donation')
                ->join('blood_inventory','bb_donation.donation_id = blood_inventory.donation_id')
@@ -164,7 +163,6 @@ class Donation_Model extends CI_Model{
             'blood_group'=>$blood_group,
             'sub_group'=>$sub_group
         );        
-        var_dump($blood_group_data);
         $this->db->trans_start();
         $this->db->insert('bloodbank_edit_log', $data_trail); 
         $this->db->where('donation_id', $this->input->post('donation_id'));
@@ -298,6 +296,30 @@ class Donation_Model extends CI_Model{
         
         return $this->db->trans_status();
    }
+
+   /* removing donor from bleeding and inserting the reason for cancelling*/
+   function remove_donation_from_bleeding($donation_id){
+        $this->db->select('bb_donation.donation_id, bb_donation.blood_unit_num, bb_donation.segment_num, bb_donation.bag_type, bb_donation.camp_id, blood_inventory.volume')
+        ->from('bb_donation')
+        ->join('blood_inventory','bb_donation.donation_id = blood_inventory.donation_id')
+        ->where('bb_donation.donation_id',$this->input->post('donation_id'));
+        $bleeding_cancel_details =array(
+            'donation_id'=>$donation_id,
+            'reason'=>$this->input->post('reason_for_cancel'),
+        );
+        $this->db->trans_start();
+        $this->db->where('donation_id',$donation_id);
+        $this->db->where('status_id','2');
+        $this->db->update('bb_donation',array('status_id'=>'-1')); //changing the status id from 2 to -1
+        $this->db->insert('bb_donation_cancel',$bleeding_cancel_details);
+        $this->db->trans_complete();
+        if($this->db->trans_status()==TRUE){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }// remove_donation_from_bleeding
    
 }
 

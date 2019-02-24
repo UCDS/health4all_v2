@@ -1,7 +1,41 @@
 <?php
 
 class patient_model extends CI_Model {
-    
+    private $patient_visit = array(
+		'visit_id','hospital_id','admit_id','visit_type','visit_name_id','patient_id','hosp_file_no',
+		'admit_date','admit_time','department_id','unit','area','doctor_id','nurse','insurance_case',
+		'insurance_id','insurance_no','presenting_complaints','past_history','family_history','admit_weight',
+		'pulse_rate','respiratory_rate','temperature','sbp','dbp','blood_sugar','hb','hb1ac',
+		'clinical_findings','cvs','rs','pa','cns','cxr','provisional_diagnosis','signed_consultation',
+		'final_diagnosis','decision','advise','icd_10','icd_10_ext','discharge_weight','outcome','outcome_date',
+		'outcome_time','ip_file_received','mlc','arrival_mode','refereal_hospital_id','insert_by_user_id',
+		'update_by_user_id','insert_datetime','update_datetime','temp_visit_id'
+	);
+	private $patient = array(
+		'patient_id','patient_id_manual','identification_marks','first_name','middle_name','last_name','dob',
+		'age_years','age_months','age_days','gender','address','place','country_code','state_code',
+		'district_id','phone','alt_phone','father_name','mother_name','spouse_name','id_proof_type_id',
+		'id_proof_number','occupation_id','education_level','education_qualification','blood_group','mr_no',
+		'bc_no','gestation','gestation_type'
+	);
+	private $mlc = array(
+		'visit_id',  'mlc_number', 'mlc_number_manual', 'ps_name', 'brought_by', 'police_intimation', 'declaration_required', 'pc_number', 'mlc_id'
+    );
+    private $test_order = array(
+        'order_id', 'visit_id', 'doctor_id', 'test_area_id', 'order_date_time', 'received_date_time','order_status', 'hospital_id', 'temp_order_id'
+    );
+    private $test_master = array(        
+        'test_master_id', 'test_name', 'assay_id', 'test_method_id', 'test_area_id', 'binary_result', 'numeric_result', 'text_range', 'text_result', 'binary_positive', 'binary_negative', 'numeric_result_unit','availability', 'nabl', 'level', 'comments', 'interpretation', 'hospital_id', 'temp_test_master_id'
+    );
+    private $test = array(
+        'test_id', 'order_id', 'sample_id', 'test_master_id', 'group_id', 'test_result', 'test_result_binary','test_result_text', 'test_date_time', 'test_done_by', 'test_approved_by', 'reported_date_time','test_status', 'test_range_id', 'temp_test_id'
+    );
+    private $specimen_type = array(
+        'specimen_type_id', 'specimen_type', 'hospital_id', 'temp_specimen_type_id'
+    );
+    // order_date_time, test_name, test_status, text_result, test_result_text, 
+    // order_id, test_status, specimen_type, test_name, numeric_result, test_result, lab_unit, 
+    // test_result_binary, binary_result, test_result_binary, test_result_text
     function __construct() {
         parent::__construct();
     }
@@ -207,6 +241,24 @@ class patient_model extends CI_Model {
 	$visit_id = $this->db->insert_id(); //store the visit_id from the inserted record
         echo $visit_id;
         return $visit_id;
+    }
+
+    function get_visits() {
+        $patient_id;
+        if(!$this->input->post('patient_id'))
+            return false;
+        else
+            $patient_id = $this->input->post('patient_id');
+        $this->db->select('patient_visit.*, patient.*')
+        ->from('patient')
+        ->join('patient_visit', 'patient_visit.patient_id=patient.patient_id', 'left')
+        ->join('')
+        ->where('patient_visit.patient_id', $patient_id);
+    
+        $query = $this->db->get();        
+        $result = $query->result();
+    
+        return $result;
     }
 }
 

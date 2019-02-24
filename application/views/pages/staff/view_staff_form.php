@@ -547,10 +547,12 @@ $(function(){
 		<?php if(!!$bank_details) { ?>
 		<th style="text-align:center">Name</th>
 		<th style="text-align:center">Gender</th>
+		<th style="text-align:center">Specialization</th>
 		<th style="text-align:center">DOB</th>
 		<th style="text-align:center">Phone</th>
 		<th style="text-align:center">Email</th>                		
 		<th style="text-align:center">Status</th>
+		<th style="text-align:center">MCI</th>
 		<?php } 
 		else { ?>
 		<th style="text-align:center">Name</th>
@@ -582,10 +584,12 @@ $(function(){
 		<td><?php echo  $a->first_name." ".$a->last_name;  ?></td>
 		<td> <?php echo $a->gender;?>
 		</td>
+		<td><?php echo $a->specialisation; ?> </td>
 		<td><?php echo date("d-M-Y",strtotime($a->date_of_birth)); ?></td>
                 <td><?php echo $a->phone; ?></td>
                 <td><?php echo $a->email; ?></td>
 		<td><?php echo $a->hr_transaction_type;?></td>
+		<td><?php echo ($a->mci_flag==1 ? "Yes" : "No"); ?> </td>
 		<?php } 
 		else { ?>
 		<td><?php echo  $a->first_name." ".$a->last_name;  ?></td>
@@ -618,10 +622,12 @@ $(function(){
 		<?php if(!!$bank_details) { ?>
 		<th style="text-align:center">Name</th>
 		<th style="text-align:center">Gender</th>
+		<th style="text-align:center">Specialization</th>
 		<th style="text-align:center">DOB</th>
 		<th style="text-align:center">Phone</th>
 		<th style="text-align:center">Email</th>                		
 		<th style="text-align:center">Status</th>
+		<th style="text-align:center">MCI</th>
 		<?php } 
 		else { ?>
 		<th style="text-align:center">Name</th>
@@ -637,11 +643,9 @@ $(function(){
 	$i=1;
 	foreach($view_staff as $a){ ?>
 	<tr onclick="$('#select_staff_form_<?php echo $a->staff_id;?>').submit();" >
-		<td>	
-			
+		<td>			
 			<?php echo $i++; ?>
-		</td>
-		
+		</td>		
 		<td><?php echo $a->department;?></td>
 		<td><?php echo $a->area_name;?></td>
 		<td><?php echo $a->designation;?> </td>
@@ -652,6 +656,7 @@ $(function(){
 		<input type="hidden" value="<?php echo $a->staff_id; ?>" name="staff_id" />
 		<input type="hidden" value="select" name="select" />
 		</td>
+		<td><?php echo $a->specialisation; ?> </td>
 		<td><?php echo date("d-M-Y",strtotime($a->date_of_birth)); ?></td>
                 <td><?php echo $a->phone; ?></td>
                 <td><?php echo $a->email; ?></td>
@@ -664,6 +669,7 @@ $(function(){
 		<td><?php echo $a->bank_branch;?> </td>
 		<td><?php echo $a->account_number;?> </td>
 		<td><?php echo $a->ifsc_code;?> </td>
+		<td><?php echo ($a->mci_flag==1 ? "Yes" : "No"); ?> </td>
 		<?php } ?>
 		
 	</tr>

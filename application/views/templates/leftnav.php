@@ -48,7 +48,7 @@
 	|| preg_match("^dosage/*^",current_url()) || preg_match("^drug_typ/*^",current_url()) 
 	|| preg_match("^supply_chain_party/*^",current_url()) || preg_match("^indent/*^",current_url()) 
 	|| preg_match("^indent_approve/*^",current_url()) || preg_match("^indent_approve/*^",current_url()) 
-	|| preg_match("^indent_reports/*^",current_url())) { ?>
+	|| preg_match("^indent_reports/*^",current_url()) || preg_match("^drugs_available/*^",current_url()) || preg_match("^delete_drug/*^",current_url())) { ?>
 <div class="col-sm-3 col-md-2 sidebar-left">
     <ul class="nav nav-sidebar">
 			<?php	foreach($functions as $f){
@@ -73,6 +73,13 @@
 				<li <?php if(preg_match("^add_dosage^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>consumables/dosage/add_dosage">Dosages</a></li>
 				<li <?php if(preg_match("^add_drug_type^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>consumables/drug_type/add_drug_type"> Drug Type Details</a></li>
 				<li <?php if(preg_match("^add_supply_chain_party^",current_url())) echo 'class="active"';?> ><a href="<?php echo base_url();?>consumables/supply_chain_party/add_supply_chain_party">Supply Chain Party</a></li>
+				<?php 
+                
+                } 
+			} ?>
+				<?php	foreach($functions as $f){
+					if($f->user_function=="consumables_drugs"){ ?>
+				<li <?php if(preg_match("^drugs_available^",current_url()) || preg_match("^delete_drug^",current_url())) echo 'class="nav-header active"'; else echo 'class="nav-header"';?> ><a href="<?php echo base_url();?>hospital/drugs_available">Add Drugs</a></li>
 				<?php 
                 
                 } 
@@ -271,7 +278,7 @@
 		}
 		?>
 
-<?php if(preg_match("^user_panel/*^",current_url()) || preg_match("^hospital/*^",current_url()) || preg_match("^departments/*^",current_url()) || preg_match("^hospital_areas/*^",current_url()) ||preg_match("^hospital_units/*^",current_url()) ) { ?>
+<?php if(preg_match("^user_panel/*^",current_url()) || preg_match("^hospital/add_hospital^",current_url()) || preg_match("^departments/*^",current_url()) || preg_match("^hospital_areas/*^",current_url()) ||preg_match("^hospital_units/*^",current_url()) ) { ?>
 
 		<div class="col-xs-1 col-md-1 sidebar-left">
 			<strong>Settings</strong>

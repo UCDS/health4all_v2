@@ -62,9 +62,7 @@ class Dashboard_model extends CI_Model{
         }
         else {
             $date = date("Y-m-d");
-            $this->db->where("patient_visit.admit_date <=",$date);
-            $fromDate = date("Y-m-d");
-            $this->db->where('patient_visit.admit_date >=',$fromDate);
+            $this->db->where('(patient_visit.admit_date BETWEEN "'.$date.'" AND "'.$date.'")');
         }
         if($visit_type) {
             $this->db->where('patient_visit.visit_type', $visit_type);

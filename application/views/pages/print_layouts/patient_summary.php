@@ -1,7 +1,6 @@
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/font-awesome.min.css" media="print">
 		<script type="text/javascript" src="<?php echo base_url();?>assets/js/qrcode.min.js"></script>  
 		<script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-barcode.min.js"></script>
-		
 		<?php $patient=$patients[0];?>
 		<style>
 			@media print{
@@ -34,7 +33,8 @@
 			$(function(){
 
 				var settings = {
-				barHeight: 20
+				barHeight: 20,
+				fontSize: 20
 				};
 				$("#patient_barcode").barcode(
 					"<?php echo $patient->patient_id;?>",
@@ -193,7 +193,7 @@
 					</td>
 				</tr>
 				<?php } ?>
-				<?php if(isset($clinical_notes) &&  !!$clinical_notes) { ?>
+				<?php if(isset($visit_notes) &&  !!$visit_notes) { ?>
 				<tr class="print-element" width="95%" >				
 					<td colspan="3"><b><u>Cinical Notes</u></b></td>
 				</tr>
@@ -210,7 +210,7 @@
 							<tbody>
 							<?php
 							$i=1;
-							 foreach($clinical_notes as $note){ ?>
+							 foreach($visit_notes as $note){ ?>
 								<tr>
 									<td><?php echo $i++; ?></td>
 									<td><?php if($note->note_time!=0) echo date("d-M-Y g:iA",strtotime($note->note_time)); ?></td>
@@ -404,7 +404,7 @@
 					foreach($prescription as $pres){ ?>
 					<tr>
 						<td width="30px"  style="padding-left:15px"><?php echo $i++;?></td>
-						<td><?php echo $pres->item_name;?></td>
+						<td><?php echo $pres->item_name;?><br><?php if($pres->note!='') echo '-'.$pres->note;?></td>
 						<td><?php echo $pres->frequency;?></td>
 						<td width="40px" style="padding-left:20px"><?php echo $pres->duration;?></td>
 						<td width="30px" style="padding-left:15px"><?php if($pres->morning == 1 || $pres->morning == 3) echo "<i class='fa fa-check'></i>";?></td>
@@ -430,16 +430,22 @@
 				</tr>
 				<?php } ?>
 				<tr class="print-element" width="95%" >
-					<td colspan="3" style="text-align:right">
-					<br />
-					<br />
-					<b><?php if(!!$patient->signed_consultation){
-							echo $patient->doctor_name."<br />".$patient->designation;
-						}
-						else{ ?>
-						Doctor
-						<?php } ?>
-						</b>
-					</td>
+				<?php if(!!$patient->doctor_name){ ?>
+			<td colspan="3" style="text-align:right">
+			<br />
+			<br />
+				<b>
+				<?php echo $patient->doctor_name."<br />".$patient->designation; ?>
+				</b>
+			</td>
+			<?php } else { ?>
+			<td colspan="3" style="text-align:center">
+			<br />
+			<br />
+			<b>
+			Doctor:	
+			</b>
+			</td>
+<?php } ?>
 				</tr>				
 		</table>

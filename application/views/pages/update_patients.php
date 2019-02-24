@@ -176,6 +176,16 @@ pri.print();
 		$("#to_area").chained("#to_department");
 });
 </script>
+<?php 
+	function drug_available($drug, $drugs_available){
+		foreach($drugs_available as $drg){
+			if($drg->generic_item_id == $drug->generic_item_id){
+				return true;
+			}
+		}
+		return false;
+	}	
+?>
 <!-- $("#remove_obstetric_history").click(function(){
        alert('In remove');
        var rowCount = $("#obstetric_history").rows.length;
@@ -210,6 +220,7 @@ pri.print();
 		<td>
 			<?php echo form_open('register/update_patients',array('role'=>'form','id'=>'select_patient_'.$p->visit_id));?>
 			<input type="text" class="sr-only" hidden value="<?php echo $p->visit_id;?>" form="select_patient_<?php echo $p->visit_id;?>" name="selected_patient" />
+			<input type="text" class="sr-only" hidden value="<?php echo $p->patient_id;?>" name="patient_id" />
 			</form>
 			<?php echo $i++;?>
 		</td>
@@ -353,7 +364,7 @@ pri.print();
                 </div>
 		<iframe id="ifmcontentstoprint" style="height: 0px; width: 0px; position: absolute;display:none"></iframe>
 		<div class="sr-only" id="print-div" style="width:100%;height:100%;"> 
-		<?php $this->load->view('pages/print_layouts/patient_summary');?>
+			<?php $this->load->view('pages/print_layouts/patient_summary');?>
 		</div>
                 <div class="col-md-8">
 			<div class="row alt">
@@ -750,6 +761,7 @@ pri.print();
                             </div>
                             <div class="col-md-4 col-xs-6">
                                 <label class="control-label">Doctor</label>
+								
                                 <?php if($f->edit==1 && empty($patient->doctor_id)){ ?>
                       <!--          <select name="doctor_id" id="doctor_id" class="form-control doctor">
                                     <option value="">--Select--</option>
@@ -1330,7 +1342,7 @@ pri.print();
 					<input maxlength="4" size="4" type="text" name="hb"  style="width:50px" class="form-control hb" value="<?php if(!!$patient->hb) echo $patient->hb;?>" <?php if($f->edit==1 && empty($patient->hb)) echo ''; else echo ' readonly'; ?> /> g/dL
 				</div>
 				<div class="col-md-4 col-xs-6">
-					<label class="control-label">Hb1Ac</label>
+					<label class="control-label">HbA1c</label>
 					<input maxlength="3" size="3" type="text" name="hb1ac"  style="width:50px" class="form-control hb1ac" value="<?php if(!!$patient->hb1ac) echo $patient->hb1ac;?>" <?php if($f->edit==1 && empty($patient->hb1ac)) echo ''; else echo ' readonly'; ?> />%
 				</div>
 			</div>
@@ -1401,7 +1413,7 @@ pri.print();
 			<div class="row alt">
 					<div class="col-md-12 col-xs-12">
 						<?php 
-							if(isset($clinical_notes) && !!$clinical_notes){ ?>
+							if(isset($visit_notes) && !!$visit_notes){ ?>
 						
 						<table class="table table-bordered table-striped">
 							<thead>
@@ -1418,7 +1430,7 @@ pri.print();
 							<tbody>
 							<?php
 							$i=1;
-							 foreach($clinical_notes as $note){ ?>
+							 foreach($visit_notes as $note){ ?>
 								<tr>
 									<td><?php echo $i++; ?></td>
 									<td><?php if($note->note_time!=0) echo date("d-M-Y g:iA",strtotime($note->note_time)); ?></td>
@@ -1729,14 +1741,14 @@ pri.print();
                                 </div>
 			<div class="row alt">
 			<div class="col-md-12 alt">
-				<table class="table table-striped table-bordered">
+				<table class="table table-striped table-bordered" id="prescription_table">
 					<thead>
 						<tr>
 						<th rowspan="3" class="text-center">Drug</th>
 						<th rowspan="3" class="text-center">Duration (in Days)</th>
 						<th rowspan="3" class="text-center">Frequency</th>
 						<th colspan="6" class="text-center">Timings</th>
-						<th rowspan="3" class="text-center">Issued Quantity</th>
+					<!--	<th rowspan="3" class="text-center">Issued Quantity</th> -->
 						</tr>
 						<tr>
 							<th colspan="2" class="text-center">Morning</th>
@@ -1759,10 +1771,18 @@ pri.print();
 								<option value="">--Select--</option>
 								<?php 
 								foreach($drugs as $drug){
-									echo "<option value='".$drug->item_id."'>".$drug->item_name."</option>";
+									$available = '';
+									$style = '';
+									if(drug_available($drug, $drugs_available)){
+										$available = '- Available';
+										$style = "style='background: #6DF48F;'";
+									}
+									echo "<option $style value='".$drug->generic_item_id."'>".$drug->generic_name.$available."</option>";
 								}
 								?>
 								</select>
+								<i class="glyphicon glyphicon-pencil"></i>
+								<textarea name="note_0" cols="30" rows="10" hidden></textarea>
 							</td>
 							<td>
 								<input type="text" name="duration_0" placeholder="in Days" style="width:100px" class="form-control" />
@@ -1770,6 +1790,7 @@ pri.print();
 							<td>
 								<select name="frequency_0" class="form-control" >
 									<?php foreach($prescription_frequency as $freq){ ?>
+										
 										<option value="<?php echo $freq->frequency;?>"><?php echo $freq->frequency;?></option>
 									<?php } ?>
 								</select>
@@ -1791,11 +1812,12 @@ pri.print();
 							</td>
 							<td>
 								<label><input type="checkbox" name="ad_0" value="1" /></label>
-							</td>
-							<td>
-								<input type="text" name="quantity_0" style="width:100px" class="form-control" />
 								<input type="text" name="prescription[]" class="sr-only" value="0"  />
 							</td>
+						<!--	<td>
+								<input type="text" name="quantity_0" style="width:100px" class="form-control" />
+								
+							</td> -->
 							<td>
 								<button type="button" class="btn btn-primary btn-sm" id="prescription_add" >Add</button>
 							</td>
@@ -1813,8 +1835,7 @@ pri.print();
 						<th rowspan="3" class="text-center">Duration</th>
 						<th rowspan="3" class="text-center">Frequency</th>
 						<th colspan="6" class="text-center">Timings</th>
-						<th rowspan="3" class="text-center">Quantity</th>
-						<th rowspan="3" class="text-center"></th>
+					<!--	<th rowspan="3" class="text-center">Quantity</th> -->
 						</tr>
 						<tr>
 							<th colspan="2" class="text-center">Morning</th>
@@ -1833,7 +1854,7 @@ pri.print();
 					<tbody>
 					<?php foreach($prescription as $pres){ ?>
 					<tr>
-						<td><?php echo $pres->item_name;?></td>
+						<td><?php echo $pres->item_name;?><br><?php if($pres->note!='') echo '-'.$pres->note;?></td>
 						<td><?php echo $pres->duration;?></td>
 						<td><?php echo $pres->frequency;?></td>
 						<td><?php if($pres->morning == 1 || $pres->morning == 3) echo "<i class='fa fa-check'></i>";?></td>
@@ -1842,14 +1863,14 @@ pri.print();
 						<td><?php if($pres->afternoon == 2 || $pres->afternoon == 3) echo "<i class='fa fa-check'></i>";?></td>
 						<td><?php if($pres->evening == 1 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
 						<td><?php if($pres->evening == 2 || $pres->evening == 3) echo "<i class='fa fa-check'></i>";?></td>
-						<td><?php echo $pres->quantity;?> </td>
-						<td>
+					<!--	<td><?php echo $pres->quantity;?> </td> -->
+					<!--	<td>
 							<?php echo form_open('register/update_patients',array('class'=>'form-custom'));?>
 							<input type="text" class="sr-only" value="<?php echo $pres->prescription_id;?>" name="prescription_id" hidden />
 							<input type="text" class="sr-only" value="<?php echo $pres->visit_id;?>" name="visit_id" hidden />
 							<button type="submit" id="remove_prescription" class="btn btn-danger btn-sm">X</button>
 							</form>
-						</td>
+						</td> -->
 					</tr>
 					<?php } ?>
 					</tbody>
@@ -1983,22 +2004,29 @@ pri.print();
 		}} ?>
 	  </div>
 
-	<div class="col-md-12 text-center">
+	<div class="col-md-4 text-right">
 			<label class="control-label">
 				Signed Consultation? 
-				<?php if($patient->signed_consultation) { ?>
+				<?php if(!empty($patient->signed_consultation) && $patient->signed_consultation > 0) { ?>
 					<span class="fa fa-check"></span>
 					<input type="checkbox" class="sr-only" name="signed_consultation" value="1" readonly checked />
 				<?php }
 				else{ ?>
  				<input type="checkbox"  class="form-control checkbox-big" name="signed_consultation" value = "1" />
 				<?php } ?>
-			</label>
+			</label><br>
+			<b><?php echo $patient->doctor_name; ?></b>
 			&emsp;
+		</div>
+		<div class="col-md-8">
 		<input type="text" name="visit_id" class="sr-only" value="<?php echo $patient->visit_id;?>" hidden readonly />
 		<input type="text" name="patient_id" class="sr-only" value="<?php echo $patient->patient_id;?>" hidden readonly />
 		<button class="btn btn-md btn-primary" value="Update" name="update_patient">Update</button>&emsp;
 		<button class="btn btn-md btn-warning" value="Print" type="button" onclick="printDiv('print-div')">Print Summary</button>
+		<?php 
+			$visits = sizeof($patient_visits);
+		?>
+		<button class="btn btn-md btn-warning" value="Print" type="button" onclick="printDiv('print-div-all')">(<?php echo $visits; ?>)-Print Summary All Visits</button>
 	</div>
 	</div>
 	</div>
@@ -2010,6 +2038,46 @@ pri.print();
 	?>
 	</div>
 	<br/>
+	
+	<?php if(!!isset($previous_visits)){ ?>
+	<div class="container">
+	<table class="table table-bordered table-striped">
+		<thead>
+		<th>Date</th>
+		<th>Hospital</th>
+		<th>Type</th>
+		<th>Number</th>
+		<th>Department</th>
+		<th>Unit/Area</th>
+		<th>Outcome</th>
+		<th>Outcome Date</th>
+		</thead>
+		<tbody>
+		<?php foreach($previous_visits as $visit){ ?>
+			<tr onclick="$('#select_visit_<?php echo $visit->visit_id;?>').submit()" style="cursor:pointer">
+				<td>
+					<?php echo form_open('register/view_patients',array('role'=>'form','id'=>'select_visit_'.$visit->visit_id));?>
+					<input type="text" class="sr-only" hidden value="<?php echo $visit->visit_id;?>" name="selected_patient" />
+					<input type="text" class="sr-only" hidden value="<?php echo $visit->patient_id;?>" name="patient_id" />
+					</form>
+				<?php 
+				if($visit->visit_id == $patient->visit_id) echo "<i class='fa fa-eye'></i> ";?>
+				<?php echo date("d-M-Y",strtotime($visit->admit_date));?>
+				</td>
+				<td><?php echo $visit->hospital;?></td>
+				<td><?php echo $visit->visit_type;?></td>
+				<td><?php echo $visit->hosp_file_no;?></td>
+				<td><?php echo $visit->department;?></td>
+				<td><?php echo $visit->unit_name."/".$visit->area_name;?></td>
+				<td><?php echo $visit->outcome;?></td>
+				<td><?php if($visit->outcome_date!=0) echo date("d-M-Y",strtotime($visit->outcome_date));?></td>
+			</tr>
+		<?php } ?>
+		</tbody>
+	</table>
+	</div>
+<?php } ?>
+<br>
 <div class="col-md-12">
 		<div class="panel panel-default">
 		<div class="panel-heading">
@@ -2045,10 +2113,10 @@ pri.print();
 						<label class="control-label">IP/OP Number</label>
 						<input type="text" name="search_patient_number" size="5" class="form-control" />
 						</div>
-						<div class="form-group">
+					<!--	<div class="form-group">
 						<label class="control-label">Patient Name</label>
 						<input type="text" name="search_patient_name" class="form-control" />
-						</div>
+						</div> -->
 						<div class="form-group">
 						<label class="control-label">Phone Number</label>
 						<input type="text" name="search_phone" class="form-control" />
@@ -2078,8 +2146,17 @@ pri.print();
 						'	<td>'+
 								'<select name="drug_'+$i+'" class="form-control">'+
 								'<option value="">--Select--</option>'+
-								'<?php foreach($drugs as $drug){ echo '<option value="'.$drug->item_id.'">'.$drug->item_name.'</option>';}?>'+
-								'</select>'+
+								'<?php 
+									foreach($drugs as $drug){ 
+										$available = '';
+									$style = '';
+									if(drug_available($drug, $drugs_available)){
+										$available = '- Available';
+										$style = 'style="background: #6DF48F;"';
+									}
+									echo '<option value="'.$drug->generic_item_id.'"'.' '.$style.'>'.$drug->generic_name.$available.'</option>';
+								}?>' +
+								'</select>'+'<i class="glyphicon glyphicon-pencil"></i>'+'<textarea name="note_'+$i+'" cols="30" rows="10" hidden></textarea>'+
 							'</td>'+
 							'<td>'+
 								'<input type="text" name="duration_'+$i+'" placeholder="in Days" style="width:100px" class="form-control" />'+
@@ -2109,9 +2186,9 @@ pri.print();
 							'<td>'+
 								'<label><input type="checkbox" name="ad_'+$i+'" value="1" /></label>'+
 							'</td>'+
-							'<td>'+
+							'<!--<td>'+
 								'<input type="text" name="quantity_'+$i+'" style="width:100px" class="form-control" />'+
-							'</td>'+
+							'</td>-->'+
 							'<td><input type="text" name="prescription[]" class="sr-only" value="'+$i+'" />'+
 								'<button type="button" class="btn btn-danger btn-sm" onclick="$(this).parent().parent().remove()">X</button>'+
 							'</td>'+
@@ -2149,7 +2226,17 @@ pri.print();
                 callback(res.icd_codes.slice(0, 10));
             }
         });
-    }
+	}
+	});
+	$(document).ready(function(){
+		$('#prescription_table').click(function(event){
+			if($(event.target).hasClass('glyphicon-pencil')){
+				$(event.target).next().removeAttr("hidden");
+			}			
+		});
 	});
 </script>
 	
+<div class="sr-only" id="print-div-all" style="width:100%;height:100%;"> 
+			<?php $this->load->view('pages/print_layouts/patient_summary_all_visits');?>
+</div>

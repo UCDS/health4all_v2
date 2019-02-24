@@ -134,8 +134,7 @@ $(document).ready(function(){$("#from_date").datepicker({
 					<input class="btn btn-sm btn-primary" type="submit" value="Submit" />
 		</form>
 	<br />
-	<?php if(isset($report) && count($report)>0){ ?>
-	
+	<?php if(isset($report) && count($report)>0){ ?>	
 		<button type="button" class="btn btn-default btn-md print">
 		  <span class="glyphicon glyphicon-print"></span> Print
 		</button>

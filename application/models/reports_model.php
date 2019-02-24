@@ -10,7 +10,8 @@ class Reports_model extends CI_Model{
 			$to_date=date("Y-m-d",strtotime($this->input->post('to_date')));
 		}
 		else if($this->input->post('from_date') || $this->input->post('to_date')){
-			$this->input->post('from_date')?$from_date=$this->input->post('from_date'):$from_date=$this->input->post('to_date');
+			$this->input->post('from_date')
+			?$from_date=$this->input->post('from_date'):$from_date=$this->input->post('to_date');
 			$to_date=$from_date;
 		}
 		else{
@@ -56,7 +57,7 @@ class Reports_model extends CI_Model{
 			$this->db->select('"0" as area',false);
 		}
 		//moved 30 to 60 interval --> 22 Dec 18 -->gokulakrishna@yousee.in
-		$this->db->select("department 'department',
+		$this->db->select("(CASE when `department` IS NULL or department='' then 'Not Set' else department end) as 'department',
           SUM(CASE WHEN 1  THEN 1 ELSE 0 END) 'op',
 		SUM(CASE WHEN gender = 'F'  THEN 1 ELSE 0 END) 'op_female',
 		SUM(CASE WHEN gender = 'M'  THEN 1 ELSE 0 END) 'op_male',
@@ -83,6 +84,7 @@ class Reports_model extends CI_Model{
 		 ->group_by('department');
 
 		$resource=$this->db->get();
+		
 		return $resource->result();
 	}
 	function get_ip_summary(){

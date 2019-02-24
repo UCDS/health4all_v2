@@ -13,12 +13,12 @@
         <input type="password" class="form-control" placeholder="Password" name="password" required><br />
         <div class="row">
           <div class="col-md-6 col-xs-6">
-            <label class="control-label"><h5>Captcha</h5></label>
+            <label class="control-label"><h5>Captcha:</h5><br></label>
             <?php echo $image; ?>
           </div>
           <div class="col-md-6 col-xs-6">
-            <label class="control-label"><h5>Enter image text:</h5></label>
-            <input type="text" name="captcha" class="form-control" placeholder="Captcha Text" required>
+            <label class="control-label"><h5>Enter Text From Left Box Below:</h5></label>
+            <input type="text" name="captcha_text" class="form-control" placeholder="Captcha Text" required>
           </div>
         </div>
         <br>

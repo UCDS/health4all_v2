@@ -146,10 +146,10 @@ class User_panel extends CI_Controller {
           $this->data['msg']="Sms Sent.";			
 		}
 		$this->data['donors']=$this->reports_model->get_invite_donors();
-		//var_dump($search);
 		$this->load->view('pages/bloodbank/invite_donor',$this->data);
 		$this->load->view('templates/footer');	
 		}
+		
 		else {
 			show_404();
 		}
