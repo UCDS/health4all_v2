@@ -3024,6 +3024,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`user_id`, `username`, `password`, `staff_id`, `present_login_time`, `present_login_date`, `past_login_time`, `past_login_date`, `temp_user_id`) VALUES
 (1, 'admin', 'f1870d419486542c67889abad8e6fb1e', 0, '00:00:00', '0000-00-00', '00:00:00', '0000-00-00', 0);
+;
 -- --------------------------------------------------------
 
 --
