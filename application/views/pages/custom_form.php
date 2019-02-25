@@ -183,6 +183,7 @@ pri.print();
 		<?php if($form_type=="OP" || count($patient)>0){ ?>
 		<?php echo form_open("register/custom_form/$form_id",array('id'=>'update_patients','role'=>'form','class'=>'form-custom')); ?>
 		<input type="text" class="sr-only" value="<?php echo $form_type;?>" name="form_type" />
+		<input type="hidden" class="sr-only" value="<?php echo $transaction_id;?>" name="transaction_id" />
 		<div class="row">
 		<div class="panel panel-default">
 		<div class="panel-heading">

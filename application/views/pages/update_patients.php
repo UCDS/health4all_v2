@@ -247,6 +247,7 @@ pri.print();
 		<div class="alert alert-info"><?php echo $msg;?></div>
 	<?php } ?>
 	<?php echo form_open('register/update_patients',array('class'=>'form-custom','role'=>'form', 'id'=>'update_patients')); ?>
+	<input type="hidden" class="sr-only" value="<?php echo $transaction_id;?>" name="transaction_id" />
 	<div class="panel panel-default">
 	<div class="panel-body">
 	  <!-- Nav tabs -->

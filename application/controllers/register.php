@@ -1,28 +1,59 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 // OP and IP registration forms.
 class Register extends CI_Controller {
+	private $transaction_condition = false;
 	function __construct(){
 		//Constructor loads the required models for this controller
 		//Based on the user_id we get the hospitals,functions and departments the user has access to.
 		parent::__construct();
-		$this->load->model('register_model');
-		$this->load->model('staff_model');
-		$this->load->model('masters_model');
-		$this->load->model('hospital_model');
-                $this->load->model('patient_model');
-         //       $this->load->model('hospital_model');
-				$this->load->model('counter_model');
-		$this->load->model('gen_rep_model');
 		if($this->session->userdata('logged_in')){
-		$userdata=$this->session->userdata('logged_in');
+			$userdata=$this->session->userdata('logged_in');
+			$this->load->model('register_model');
+			$this->load->model('staff_model');
+			$this->load->model('masters_model');
+			$this->load->model('hospital_model');
+			$this->load->model('patient_model');
+			$this->load->model('counter_model');
+			$this->load->model('gen_rep_model');
+			$user_id = $userdata['user_id'];
+			$this->data['hospitals'] = $this->staff_model->user_hospital($user_id);
+			$this->data['functions'] = $this->staff_model->user_function($user_id);
+			$this->data['departments'] = $this->staff_model->user_department($user_id);
+			//The OP and IP forms in the application are loaded into a data variable for the menu.
+			$this->data['op_forms'] = $this->staff_model->get_forms("OP");
+			$this->data['ip_forms'] = $this->staff_model->get_forms("IP");
 
-		$user_id=$userdata['user_id'];
-		$this->data['hospitals']=$this->staff_model->user_hospital($user_id);
-		$this->data['functions']=$this->staff_model->user_function($user_id);
-		$this->data['departments']=$this->staff_model->user_department($user_id);
-		//The OP and IP forms in the application are loaded into a data variable for the menu.
-		$this->data['op_forms']=$this->staff_model->get_forms("OP");
-		$this->data['ip_forms']=$this->staff_model->get_forms("IP");
+			// Set transaction ID
+			// Test Transaction condition
+			$this->transaction_condition = false;
+			if($this->session->userdata('transaction') && $this->input->post('transaction_id')) {
+				$transaction = $this->session->userdata('transaction');
+				if(array_key_exists($this->input->post('transaction_id'), $transaction) && $transaction[$this->input->post('transaction_id')]){
+					$this->transaction_condition = true;
+					end($transaction);
+					$next_transaction = key($transaction) + 1;
+					$this->data['transaction_id'] = $next_transaction;
+					$transaction[$this->input->post('transaction_id')] = false;
+					$transaction[$next_transaction] = true;
+					$this->session->set_userdata('transaction', $transaction);
+				} else {
+					$this->transaction_condition = false;
+					end($transaction);
+					$next_transaction = key($transaction) + 1;
+					$this->data['transaction_id'] = $next_transaction;
+					$transaction[$this->input->post('transaction_id')] = false;
+					$transaction[$next_transaction] = true;
+					$this->session->set_userdata('transaction', $transaction);
+				}
+			}else {
+				$this->transaction_condition = false;
+				$this->data['transaction_id'] = 1;
+				$transaction = array(
+					1 => true
+				);
+				$this->session->set_userdata('transaction', $transaction);
+			}
+			$session_data = $this->session->all_userdata();
 		}
 	}
 	
@@ -49,7 +80,7 @@ class Register extends CI_Controller {
 				else{
 					$access=0;
 				}
-		}
+			}
 			if($access==1){
 			//Load data required for the select options in views.
 			$this->data['id_proof_types']=$this->staff_model->get_id_proof_type();
@@ -91,10 +122,10 @@ class Register extends CI_Controller {
 					if(count($this->data['patients'])==1) {
 						$visit_id = $this->data['patients'][0]->visit_id;
 						$this->data['patient']=$this->register_model->select($visit_id);
-                                                $this->data['ip_count'] = $this->counter_model->get_counters("IP");
+                        $this->data['ip_count'] = $this->counter_model->get_counters("IP");
 						if($this->data['patient']->visit_type == "IP") {
-                                                    $this->data['update']=1;                                                    
-                                                }
+                            $this->data['update']=1;                                                    
+                        }
 					}
 				}
 				else if($this->input->post('select_patient') && $visit_id!=0){
@@ -106,26 +137,24 @@ class Register extends CI_Controller {
 						$this->data['update']=1;
 					}
 				}
-				else if($this->input->post('register')){
+				else if($this->input->post('register') && $this->transaction_condition){
 					// if the register button has been clicked, invoke the register function in register_model.
 					// Get the inserted patient details from the function and store it in a variable to display
 					// in the views.
-						$this->data['registered']=$this->register_model->register(); 
+					
+					$this->data['registered']=$this->register_model->register(); 
 					if(is_int($this->data['registered']) && $this->data['registered']==2){
 						//If register function returns value 2 then we are setting a duplicate ip no error.
 						$this->data['duplicate']=1;
-					}
-					
+					}					
 					//Set the print layout page based on the form selected.
 					$this->data['print_layout']="pages/print_layouts/$print_layout_page";
 				}
 				//load the custom_form page with the data loaded.
 				$this->load->view('pages/custom_form',$this->data);
-
 			}
-
-			//Load the footer.
-			$this->load->view('templates/footer');
+				//Load the footer.
+				$this->load->view('templates/footer');
 			}
 			else {
 				$this->data['title']="Patient Registration"; //Set the page title to be used by the header.
@@ -250,7 +279,7 @@ class Register extends CI_Controller {
 		}
 		else{		
 			$this->data['transporters'] = $this->staff_model->get_staff("Transport");
-			if($this->input->post('update_patient')){
+			if($this->input->post('update_patient') && $this->transaction_condition){
 				$update = $this->register_model->update();
                 if(is_int($update) && $update==2){
 					//If register function returns value 2 then we are setting a duplicate ip no error.
