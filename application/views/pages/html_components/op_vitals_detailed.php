@@ -8,6 +8,58 @@
         <label for="to_date">To Date: </label>        
         <input class="form-control" type="date" value='' name="to_date" id="to_date" size="10" />
     </div>
+    <div class="form-group">       
+        <label for="department">Department: </label><br>
+        <select name="department" id="department" class="form-control">
+            <option value="">Department</option>
+            <?php 
+            foreach($department as $dept){
+                echo "<option value='".$dept->department_id."'";
+                if($this->input->post('department') && $this->input->post('department') == $dept->department_id) echo " selected ";
+                echo ">".$dept->department."</option>";
+            }
+            ?>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="unit">Unit: </label><br>
+        <select name="unit" id="unit" class="form-control" >
+            <option value="">Unit</option>
+            <?php 
+            foreach($unit as $un){
+                echo "<option value='".$un->unit_id."' class='".$un->department_id."'";
+                if($this->input->post('un') && $this->input->post('unit') == $un->unit_id) echo " selected ";
+                echo ">".$un->unit_name."</option>";
+            }
+            ?>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="area">Area: </label><br>        
+        <select name="area" id="area" class="form-control" >
+            <option value="">Area</option>
+            <?php 
+            foreach($area as $ar){
+                echo "<option value='".$ar->area_id."' class='".$ar->department_id."'";
+                if($this->input->post('area') && $this->input->post('area') == $ar->area_id) echo " selected ";
+                echo ">".$ar->area_name."</option>";
+            }
+            ?>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="visit_name">Visit Type: </label>     <br>   
+        <select name="visit_name" id="visit_name" class="form-control" >
+            <option value="">Visit Type</option>
+            <?php 
+            foreach($visit_name as $v){
+                echo "<option value='".$v->visit_name_id."'";
+                if($this->input->post('visit_name') && $this->input->post('visit_name') == $v->visit_name_id) echo " selected ";
+                echo ">".$v->visit_name."</option>";
+            }
+            ?>
+        </select>
+    </div>
     <div class="form-group">
         <label for="">&nbsp; </label><br>
         <button type="submit" id="submit" class="btn btn-default">Submit</button>

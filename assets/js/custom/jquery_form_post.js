@@ -13,7 +13,7 @@ $(document).ready(function(){
             .attr('value', query_strings)
             .appendTo('#primary_filter');
         $.ajax({
-            url: '/health4all_v2/generic_report/json_data',     // url where to submit the request Local URL
+            url: '/health4all_v2/report/json_data',     // url where to submit the request Local URL
                                                                 // url: '/generic_report/json_data',     // url where to submit the request
             type : "POST",                                      // type of action POST || GET
             dataType : 'json',                                  // data type

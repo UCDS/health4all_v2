@@ -17,7 +17,16 @@
 		background:#eee;
 	}
 </style>
-
+<?php 
+	function drug_available($drug, $drugs_available){
+		foreach($drugs_available as $drg){
+			if($drg->generic_item_id == $drug->generic_item_id){
+				return true;
+			}
+		}
+		return false;
+	}	
+?>
 <script type="text/javascript">
 $(function(){
 	$("#from_date,#to_date").Zebra_DatePicker();
@@ -456,7 +465,7 @@ pri.print();
 						<tr>
 						<th rowspan="3" class="text-center">Drug</th>
 						<th rowspan="3" class="text-center">Duration</th>
-						<th rowspan="3" class="text-center">Frequency</th>
+					<!--	<th rowspan="3" class="text-center">Frequency</th> -->
 						<th colspan="6" class="text-center">Timings</th>
 						<th rowspan="3" class="text-center">Quantity</th>
 						<th rowspan="3" class="text-center"></th>
@@ -477,10 +486,18 @@ pri.print();
 					</thead>
 					<tbody>
 					<?php foreach($prescription as $pres){ ?>
+						<?php							
+							$available = $pres->item_name.' - '.$pres->item_form;
+							$style = '';
+							if(drug_available($pres, $drugs_available)){
+								$available .= ' - Available';
+								$style = "style='background: #6DF48F;'";
+							}						
+						?>
 					<tr>
-						<td><?php echo $pres->item_name;?></td>
+						<td><?php echo $available;?></td>
 						<td><?php echo $pres->duration;?></td>
-						<td><?php echo $pres->frequency;?></td>
+						<!--<td><?php echo $pres->frequency;?></td>-->
 						<td><?php if($pres->morning == 1 || $pres->morning == 3) echo "<i class='fa fa-check'></i>";?></td>
 						<td><?php if($pres->morning == 2 || $pres->morning == 3) echo " <i class='fa fa-check'></i>";?></td>
 						<td><?php if($pres->afternoon == 1 || $pres->afternoon == 3) echo "<i class='fa fa-check'></i>";?></td>

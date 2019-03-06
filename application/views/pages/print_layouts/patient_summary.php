@@ -31,7 +31,6 @@
 		</style>
 		<script type="text/javascript">
 			$(function(){
-
 				var settings = {
 				barHeight: 20,
 				fontSize: 20
@@ -377,7 +376,7 @@
 							<img src="<?php echo base_url();?>assets/images/medicines.jpg" width="20px" alt="" />
 							Medicine
 							<img src="<?php echo base_url();?>assets/images/syrup.jpg" width="20px" alt="" /></th>
-							<th rowspan="2" width="50px">Frequency</th>
+						<!--	<th rowspan="2" width="50px">Frequency</th> -->
 							<th rowspan="2" width="50px"><img src="<?php echo base_url();?>assets/images/calendar.jpg" width="20px" alt="Days" /><br />Days</th>
 							<th colspan="6" align="center" width="300px"><img src="<?php echo base_url();?>assets/images/timings.jpg" width="20px"  alt="Timings" />
 							<span style="position:relative;">Timings</span></th>
@@ -401,11 +400,11 @@
 					<tbody>
 					<?php 
 					$i=1;
-					foreach($prescription as $pres){ ?>
+					foreach($prescription as $pres){ ?>					
 					<tr>
 						<td width="30px"  style="padding-left:15px"><?php echo $i++;?></td>
-						<td><?php echo $pres->item_name;?><br><?php if($pres->note!='') echo '-'.$pres->note;?></td>
-						<td><?php echo $pres->frequency;?></td>
+						<td><?php echo $pres->item_name.' - '.$pres->item_form;?><br><?php if($pres->note!='') echo '-'.$pres->note;?></td>
+					<!--	<td><?php echo $pres->frequency;?></td> -->
 						<td width="40px" style="padding-left:20px"><?php echo $pres->duration;?></td>
 						<td width="30px" style="padding-left:15px"><?php if($pres->morning == 1 || $pres->morning == 3) echo "<i class='fa fa-check'></i>";?></td>
 						<td width="30px" style="padding-left:15px"><?php if($pres->morning == 2 || $pres->morning == 3) echo " <i class='fa fa-check'></i>";?></td>

@@ -6,6 +6,7 @@ $(document).ready(function() {
     var today = now.getFullYear()+"-"+(month)+"-"+(day);
     $('#to_date').val(today);
     $('#from_date').val(today);
+    $('#admit_date').val(today);
     
     // Set local storage
     localStorage.clear();

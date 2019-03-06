@@ -200,6 +200,7 @@ class Register extends CI_Controller {
 		$this->data['areas']=$this->staff_model->get_area();
 		$this->form_validation->set_rules('patient_number', 'IP/OP Number',
 		'trim|xss_clean');
+		$this->data['drugs_available'] = $this->hospital_model->get_drugs();
 		if ($this->form_validation->run() === FALSE)
 		{
 			$this->load->view('pages/view_patients',$this->data);

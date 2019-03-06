@@ -83,12 +83,14 @@ class Staff_Report_Model extends CI_Model {
         }
        
         $empty_space = " ";
-        $this->db->select("staff.designation, staff.first_name,  staff.last_name, "
-            . " COUNT(*) as patient_records")
+        $this->db->select("staff.designation, staff.first_name, staff.specialisation, staff.phone, department.department, hospital.*, staff.last_name, COUNT(*) as patient_records")
             ->from('patient_visit')
             ->join('staff','staff.staff_id = patient_visit.signed_consultation', 'left')
-            ->where("DATE(insert_datetime) BETWEEN '$from_date' AND '$to_date'")
-            ->group_by('patient_visit.signed_consultation');
+            ->join('department','department.department_id = staff.department_id', 'left')
+            ->join('hospital','patient_visit.hospital_id = hospital.hospital_id', 'left')
+            ->where("admit_date BETWEEN '$from_date' AND '$to_date'")
+            ->order_by("hospital.state, hospital.hospital, department.department, staff.first_name", "asc")
+            ->group_by('patient_visit.hospital_id, patient_visit.signed_consultation');
         $response = $this->db->get();
         $result = $response->result();
         
