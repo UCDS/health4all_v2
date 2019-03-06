@@ -111,7 +111,7 @@ $(function(){
 
         <select name="visit_type" id="visit_type" class="form-control">
             <option value="">All</option>
-            <option value="OP" <?php if($this->input->post('visit_type') == 'OP') echo 'selected'; ?> >OP</option>
+            <option value="OP" <?php if($this->input->post('visit_type') == 'IP') echo ''; else echo 'selected';?> >OP</option>
             <option value="IP" <?php if($this->input->post('visit_type') == 'IP') echo 'selected'; ?> >IP</option>
         </select>
         <input class="btn btn-sm btn-primary" type="submit" value="Submit" />
@@ -135,11 +135,16 @@ $(function(){
         </a>
         <table class="table table-bordered table-striped" id="table-sort">
             <thead>
-	  <tr>
+	        <tr>
                 <th style="text-align:center">#</th>
+                <th style="text-align:center">State</th>
+                <th style="text-align:center">Hospital</th>
                 <th style="text-align:center">Doctor Name</th>
+                <th style="text-align:center">Department</th>
+                <th style="text-align:center">Specialization</th>                
+                <th style="text-align:center">Phone</th>
                 <th style="text-align:center">Entries</th>
-          </tr>
+            </tr>
             </thead>
             <tbody>
                 <?php 
@@ -149,7 +154,12 @@ $(function(){
                 ?>
                 <tr>
                     <td class="text-right"><?php echo $index; ?></td>
+                    <td><?php echo $records->state; ?></td>
+                    <td><?php echo $records->hospital; ?></td>
                     <td><?php echo $records->first_name." ".$records->last_name; ?></td>
+                    <td><?php echo $records->department; ?></td>
+                    <td><?php echo $records->specialisation; ?></td>                    
+                    <td><?php echo $records->phone; ?></td>
                     <td class="text-right"><?php echo $records->patient_records; ?></td>
                 </tr>                
                 <?php 
@@ -158,7 +168,7 @@ $(function(){
                 }
                     ?>
                 <tr>
-                    <td class="text-right" colspan="2">Total Entries</td>
+                    <td class="text-right" colspan="7">Total Entries</td>
                     <td class="text-right"><?php echo $total_entries; ?></td>
                 </tr>
             </tbody>

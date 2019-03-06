@@ -36,7 +36,8 @@
       <div class="container">
         <div class="navbar-header">
 		<!-- Bootstrap toggle menu for mobile devices, only visible on small screens -->
-		<a class="navbar-brand" href="https://yousee.in/c4c" target="_blank"><span style="position:absolute;font-size:2.7em;left:5%;top:10px" class="logo logo-yousee"> </span> </a>
+		<a class="navbar-brand" href="https://yousee.in/c4c" target="_blank"><span style="position:absolute;font-size:2.7em;left:5%;top:10px" class="logo logo-yousee"></a>
+		
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
@@ -251,7 +252,7 @@
 					$f->user_function=="OP Detail" || $f->user_function=="IP Detail" ||
 					$f->user_function=="Diagnostics - Detail" || $f->user_function=="Diagnostics - Summary" ||
 					($f->user_function == "Sanitation Evaluation" && $f->view==1) ||
-					$f->user_function == "Bloodbank" || $f->user_function == "Outcome Summary" || $f->user_function == "Helpline Reports"){ ?>
+					$f->user_function == "Bloodbank" || $f->user_function == "Outcome Summary" || $f->user_function == "Helpline Reports"|| $f->user_function == "follow_up_report"){ ?>
 					<li class="dropdown  <?php if(preg_match("^".base_url()."reports^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><i class="fa fa-line-chart"></i> Reports <b class="caret"></b></a>
 						<ul class="dropdown-menu">
@@ -307,9 +308,9 @@
 					}
 				?>
 				<?php
-					if($f->user_function=="Outcome Summary"){ ?>
-           <!--       		<li><a href="<?php echo base_url()."generic_report/gen_rep/vitals_report";?>"><i class="glyphicon glyphicon-heart"></i> Vitals Report</a></li> -->
-						<li><a href="<?php echo base_url()."generic_report/gen_rep/prescription_report";?>"><i class="glyphicon glyphicon-pencil"></i> Prescription Report</a></li>
+					if($f->user_function=="prescription_report"){ ?>
+           <!--       		<li><a href="<?php echo base_url()."report/get/vitals_report";?>"><i class="glyphicon glyphicon-heart"></i> Vitals Report</a></li> -->
+						<li><a href="<?php echo base_url()."report/get/prescription_report";?>"><i class="glyphicon glyphicon-pencil"></i> Prescription Report</a></li>
 					<?php }?>
 			<?php	}	?>
 			<li class="divider"></li>
@@ -322,8 +323,11 @@
 			}
 			}
 			foreach($functions as $f){
-			if($f->user_function=="OP Detail"){ ?>
-						<li><a href="<?php echo base_url()."generic_report/gen_rep/op_vitals_detailed";?>">OP Detail</a></li>
+			if($f->user_function=="OP Detail"){ //OP Detail?>
+						<li><a href="<?php echo base_url()."report/get/op_vitals_detailed";?>">OP Detail</a></li>
+			<?php	}
+			if($f->user_function=="follow_up_report"){ ?>
+				<li><a href="<?php echo base_url()."report/get/follow_up_report";?>">Follow Up Report</a></li>
 			<?php	}
 			if($f->user_function=="IP Detail"){ ?>
 						<li><a href="<?php echo base_url()."reports/ip_detail";?>">IP Detail</a></li>
@@ -363,9 +367,6 @@
                     <li><a href="<?php echo base_url()."contact_us";?>"><i class="fa fa-question"> </i> Contact us</a></li>
 				</ul>
 			</li>
-
-
-
 			<?php } ?>
 
 		</ul>

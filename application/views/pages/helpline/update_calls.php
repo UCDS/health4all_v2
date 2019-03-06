@@ -150,7 +150,7 @@ $(function(){
 							<?php echo $call->to_number;?>
 							</small>
 						</td>
-						<td><small><?php echo $call->dial_whom_number;?>
+						<td><small><?php echo $call->dial_whom_number.' - '.$call->short_name;?>
 							<audio controls preload="none">
 								<source src="<?php echo $call->recording_url;?>" id="recording_<?= $call->call_id;?>" type="audio/mpeg">
 								Your browser does not support the audio element.

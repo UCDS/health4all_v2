@@ -43,7 +43,7 @@ class Masters_model extends CI_Model{
 			$hospital_id = $this->session->userdata('hospital')['hospital_id'];
 			if($hospital_id != '')
 					$this->db->where('staff.hospital_id', $hospital_id);
-			$this->db->select("hospital.hospital,user.user_id,username,password,user.staff_id,first_name,last_name,designation,phone,department")
+			$this->db->select("hospital.hospital,user.user_id,username,password,user.staff_id,first_name,last_name,gender, specialisation, email, designation,phone,department")
 			->from("user")
 			->join('staff','user.staff_id=staff.staff_id')
 			->join('hospital','staff.hospital_id=hospital.hospital_id')
@@ -184,8 +184,9 @@ class Masters_model extends CI_Model{
 		}
 		else if($type=="drugs"){
 		//	$this->db->select("item_id,item_name")->from("item")->order_by('item_name');
-			$this->db->select("generic_item_id,generic_name")
+			$this->db->select("generic_item_id,generic_name, item_form.item_form")
 					->from("generic_item")
+					->join('item_form', 'item_form.item_form_id = generic_item.form_id', 'left')
 					->order_by('generic_name');	
 		}
 		

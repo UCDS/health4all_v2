@@ -451,6 +451,18 @@ class Register_model extends CI_Model{
 			}
 		}
 		
+		$outcome = $this->input->post('outcome');              
+		if(!!$outcome) {
+			if(!!$this->input->post('outcome_date') != 0) 
+				$visit_data['outcome_date'] = date("Y-m-d",strtotime($this->input->post('outcome_date'))); 
+			else 
+				$visit_data['outcome_date'] = 0;
+			if(!!$this->input->post('outcome_date')) 
+				$visit_data['outcome_time'] = date("H:i:s",strtotime($this->input->post('outcome_date'))); 
+			else 
+				$visit_data['outcome_time'] = 0;
+		}
+
 		if(!$this->input->post('visit_id')){
 			return false;
 		}
@@ -1023,9 +1035,10 @@ class Register_model extends CI_Model{
 	}
 	
 	function get_prescription($visit_id){
-		$this->db->select("prescription.*, generic_item_id, generic_name as item_name")
+		$this->db->select("prescription.*, generic_item_id, generic_name as item_name, item_form.item_form")
 			->from("prescription")
-			->join('generic_item','generic_item.generic_item_id = prescription.item_id')
+			->join('generic_item','generic_item.generic_item_id = prescription.item_id','left')
+			->join('item_form','generic_item.form_id = item_form.item_form_id','left')
 			->where('visit_id',$visit_id)->where('status',1);
 		$query=$this->db->get();
 		return $query->result();
