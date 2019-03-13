@@ -384,6 +384,10 @@ class Register_model extends CI_Model{
 			}
 		}
 		$mlc_str = rtrim($mlc_duplicate,", ");
+		foreach($mlc_duplicate as $key => $value){
+			$mlc_str[] = $key.'='."'".$value."'";
+		}
+		$mlc_str = implode(',',$mlc_str);
 		if(!!$this->input->post('clinical_note')) {			
 			$clinical_note = $this->input->post('clinical_note');
 			$note_date = $this->input->post('note_date');
@@ -477,7 +481,9 @@ class Register_model extends CI_Model{
 		// MLC Details
 		if($mlc_str != ''){
 			$mlc_insert = $this->db->insert_string('mlc', $mlc_data).' ON DUPLICATE KEY UPDATE '.$mlc_str;
+			var_dump($mlc_insert);
 			$this->db->query($mlc_insert);
+			echo $this->db->last_query();
 		}
 		$this->db->where('visit_id',$visit_id);
 		$this->db->update('patient_visit', $visit_data);

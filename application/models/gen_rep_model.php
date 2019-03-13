@@ -375,7 +375,7 @@ class Gen_rep_Model extends CI_Model {
             'limit'=>1,
             'apply_date'=>false
         ),
-        'prescription_report'=>array(
+        'prescription_report_with_frequency'=>array(
             'filters'=>array(   // set or false
                 '='=>array('patient_visit.signed_consultation', 'patient_visit.hospital_id')    //Doctor_id
             ),
@@ -383,6 +383,26 @@ class Gen_rep_Model extends CI_Model {
             ROUND(SUM(CASE item_form.item_form_id WHEN 2 THEN 
             CASE WHEN prescription.frequency ='Daily' THEN 
             prescription.duration*(prescription.morning/2+prescription.afternoon/2+prescription.evening/2) WHEN prescription.frequency ='Alternate Days' THEN prescription.duration*(prescription.morning/2+prescription.afternoon/2+prescription.evening/2)/2 ELSE 0 END ELSE 1 END),2) as quantity",  //ROUND(AVG(prescription.duration),2) as average_duration
+            'from'=>'patient_visit',
+            'where'=>false,
+            'join_sequence'=>array(
+                'prescription.visit_id=patient_visit.visit_id',
+                'generic_item.generic_item_id=prescription.item_id',
+                'item_form.item_form_id=generic_item.form_id',
+                'drug_type.drug_type_id=generic_item.drug_type_id'
+            ),
+            'group_by'=>array('prescription.item_id'),
+            'having'=>false,
+            'apply_date'=>true,
+            'join_type'=>'',
+            'session_filter'=>array('hospital.hospital_id'=>'patient_visit.hospital_id')
+        ),
+        'prescription_report'=>array(
+            'filters'=>array(   // set or false
+                '='=>array('patient_visit.signed_consultation', 'patient_visit.hospital_id')    //Doctor_id
+            ),
+            'select'=>"drug_type.drug_type, generic_item.generic_name, SUM(1) prescriptions, 
+            ROUND(SUM(if(item_form.item_form_id = 2, (IF(prescription.morning > 0, 1, 0 ) + IF(prescription.afternoon > 0, 1, 0) + IF(prescription.evening > 0, 1, 0))*prescription.duration, 1)), 2) as quantity",  //ROUND(AVG(prescription.duration),2) as average_duration
             'from'=>'patient_visit',
             'where'=>false,
             'join_sequence'=>array(
