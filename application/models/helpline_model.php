@@ -245,7 +245,7 @@ class Helpline_model extends CI_Model{
 		if($this->input->post('helpline_id')){
 			$this->db->where('helpline.helpline_id',$this->input->post('helpline_id'));
 		}
-		$this->db->select('helpline_call.*, helpline_receiver.short_name as short_name, group_name,caller_type,call_category,resolution_status,hospital')->from('helpline_call')
+		$this->db->select('helpline_call.*, helpline_receiver.short_name as short_name, group_name,caller_type,call_category,resolution_status,hospital, helpline.note as line_note')->from('helpline_call')
 		->join('helpline', 'helpline_call.to_number=helpline.helpline','left')	// 6 Dec 18 -> gokulakrishna@yousee.in
 		->join('helpline_receiver','helpline_call.dial_whom_number = helpline_receiver.phone','left')
 		->join('helpline_caller_type','helpline_call.caller_type_id = helpline_caller_type.caller_type_id','left')
@@ -342,7 +342,7 @@ class Helpline_model extends CI_Model{
 		if($this->input->post('helpline_id')){
 			$this->db->where('helpline.helpline_id',$this->input->post('helpline_id'));
 		}
-		$this->db->select('*, helpline_receiver.short_name as short_name, helpline_call.call_id, helpline_call.call_group_id, helpline_call.note,count(helpline_email_id) email_count')
+		$this->db->select('*, helpline_receiver.short_name as short_name, helpline_call.call_id, helpline_call.call_group_id, helpline_call.note,count(helpline_email_id) email_count, helpline.note as line_note')
 		->from('helpline_call')
 		->join('helpline', 'helpline_call.to_number=helpline.helpline','left')	// 6 Dec 18 -> gokulakrishna@yousee.in
 		->join('helpline_receiver','helpline_call.dial_whom_number = helpline_receiver.phone','left')

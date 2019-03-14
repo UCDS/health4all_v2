@@ -405,9 +405,22 @@ pri.print();
 			</div>
                         <div class="row alt">
 			<div class="col-md-4 col-xs-4" style="background: #ADFF2F; font-weight: bold;" >
-				<label class="control-label"><input type="radio" class="gender" value="M" name="gender" <?php if($patient)  if($patient->gender=="M") echo " checked ";?> <?php if($f->edit==1 && empty($patient->gender)) echo ' required'; else echo ' readonly'; ?> />Male</label>
-				<label class="control-label"><input type="radio" class="gender" value="F" name="gender" <?php if($patient)  if($patient->gender=="F") echo " checked ";?> <?php if($f->edit==1 && empty($patient->gender)) echo ' required'; else echo ' readonly'; ?> />Female</label>
-				<label class="control-label"><input type="radio" class="gender" value="O" name="gender" <?php if($patient)  if($patient->gender=="O") echo " checked ";?> <?php if($f->edit==1 && empty($patient->gender)) echo ' required'; else echo ' readonly'; ?> />Others</label>
+				<?php if(!empty($patient->gender)) { ?> 
+					<label>
+					<?php 
+						if($patient->gender == 'M')
+							echo "Male";
+						else if($patient->gender == 'F')
+							echo "Female";
+						else 
+							echo "Other";
+					?>
+					</label>
+				<?php } else { ?>
+				<label class="control-label"><input type="radio" class="gender" value="M" name="gender" />Male</label>
+				<label class="control-label"><input type="radio" class="gender" value="F" name="gender" />Female</label>
+				<label class="control-label"><input type="radio" class="gender" value="O" name="gender" />Others</label>
+				<?php } ?>
 			</div>			
 			<div class="col-md-6 col-xs-12">
 				<label class="control-label">Age</label>
@@ -1508,9 +1521,9 @@ pri.print();
 				<script>
 					$(function(){
 						var i=2;
-		//				$(".daily_notes_date").Zebra_DatePicker({
+		/*				$(".daily_notes_date").Zebra_DatePicker({
 							format:'d-M-Y g:iA'
-						});
+						}); */
 						$("#add_daily_note").click(function(){
 							var row = "<tr>"+
 									"<td><textarea rows=\"4\" cols=\"60\" name=\"clinical_note[]\"  class=\"form-control\"></textarea></td>"+
@@ -1518,9 +1531,9 @@ pri.print();
 									"<td></td>"+
 								"</tr>";
 							$('.daily_notes').append(row);
-				//			$(".daily_notes_date").Zebra_DatePicker({
+				/*			$(".daily_notes_date").Zebra_DatePicker({
 								format:'d-M-Y g:iA'
-							});
+							}); */
 							i++;
 
 						});
@@ -1963,19 +1976,7 @@ pri.print();
 				});
                             </script>
                         <div class="col-md-12 alt">
-                            <div class="col-md-2">
-                                <label class="control-label">Case Sheet Recieved at MRD on </label>
-                            </div>
-                            <div class="col-md-8">
-							<?php if($patient->ip_file_received =='0000-00-00') {?>
-                                <input type="datetime-local" name="ip_file_received" class="form-control ip_file_received" />
-							<?php }	else { ?>
-								<p><?php echo date("d-M-Y",strtotime($patient->ip_file_received)); ?></p>
-							<?php } ?>
-                            </div>
-			</div>
-			<div class="col-md-12 alt">
-				<div class="col-md-2">
+						<div class="col-md-2">	<!-- here -->
 				<script>
 				$(function(){
 					<?php if($patient->outcome_date == 0){ ?>
@@ -2007,13 +2008,24 @@ pri.print();
 				</script>
 				<label>Outcome Date & Time</label>
 				</div> 
-				<div class="col-md-8">
+				<div class="col-md-4">
 				<?php if($patient->outcome_date=='0000-00-00'){ ?>
 				<input type="datetime-local" name="outcome_date" class="form-control" />
 				<?php } else { ?>
 					<p><?php echo date("d-M-Y",strtotime($patient->outcome_date)).' '.date("g:iA",strtotime($patient->outcome_time)); ?></p>
 				<?php } ?>
 				</div>
+                            <div class="col-md-2">
+                                <label class="control-label">Case Sheet Recieved at MRD on </label>
+                            </div>
+                            <div class="col-md-4">
+							<?php if($patient->ip_file_received =='0000-00-00') {?>
+                                <input type="date" name="ip_file_received" class="form-control" />
+							<?php }	else { ?>
+								<p><?php echo date("d-M-Y",strtotime($patient->ip_file_received)); ?></p>
+							<?php } ?>
+                            </div>			
+				
 			</div>
 			<div class="col-md-12 alt ">
 				<div class="col-md-2">
@@ -2044,11 +2056,15 @@ pri.print();
 					<label>ICD Code</label>
 				</div>
 				<div class="col-md-8">
-					<select id="icd_code" class="repositories" placeholder="Search ICD codes" name="icd_code" <?php if($f->edit==1&& empty($patient->icd_10)) echo ''; else echo ' readonly'; ?> >
+				<?php if(!empty($patient->icd_10)){?>
+					<label><?php echo $patient->icd_10." ".$patient->code_title;?></label>
+				 <?php } else {?>
+					<select id="icd_code" class="repositories" placeholder="Search ICD codes" name="icd_code" >
 					<?php if(!!$patient->icd_10){ ?>
 						<option value="<?php echo $patient->icd_10;?>"><?php echo $patient->icd_10." ".$patient->code_title;?></option>
 					<?php } ?>
 					</select>
+				<?php } ?>
 				</div>
 				</div>
 			</div>
@@ -2142,7 +2158,6 @@ pri.print();
 					<div class="row">
 					<div class="col-md-10">
 						<div class="form-group">
-
 						<label class="control-label">H4A ID</label>
 						<input type="text" name="search_patient_id" size="5" class="form-control" />
 						<label class="control-label">Year</label>
