@@ -2010,7 +2010,8 @@ pri.print();
 				</div> 
 				<div class="col-md-4">
 				<?php if($patient->outcome_date=='0000-00-00'){ ?>
-				<input type="datetime-local" name="outcome_date" class="form-control" />
+				<input type="date" name="outcome_date" class="form-control" />
+				<input type="time" name="outcome_time" class="form-control" />
 				<?php } else { ?>
 					<p><?php echo date("d-M-Y",strtotime($patient->outcome_date)).' '.date("g:iA",strtotime($patient->outcome_time)); ?></p>
 				<?php } ?>
@@ -2091,6 +2092,7 @@ pri.print();
 		<div class="col-md-8">
 		<input type="text" name="visit_id" class="sr-only" value="<?php echo $patient->visit_id;?>" hidden readonly />
 		<input type="text" name="patient_id" class="sr-only" value="<?php echo $patient->patient_id;?>" hidden readonly />
+		<input type="text" name="patient_number" class="sr-only" value="patient_number" hidden readonly />
 		<button class="btn btn-md btn-primary" value="Update" name="update_patient">Update</button>&emsp;
 		<button class="btn btn-md btn-warning" value="Print" type="button" onclick="printDiv('print-div')">Print Summary</button>
 		<?php 

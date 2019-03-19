@@ -363,7 +363,6 @@ $(function(){
 	    create: false,
 	    render: {
 	        option: function(item, escape) {
-
 	            return '<div>' +
 	                '<span class="title">' +
 	                    '<span class="group_name">' + escape(item.group_name) + '</span>' +

@@ -357,9 +357,9 @@ class Register_model extends CI_Model{
 				$visit_data[$column] = $this->input->post($column);
 			}
 		}
-		$visit_data['icd_10'] = $this->input->post('icd_code');
-		$icd_code = $this->input->post('icd_code');
-		
+		if($this->input->post('icd_code')){
+			$visit_data['icd_10'] = $this->input->post('icd_code');
+		}			
 		$signed_consultation = $this->input->post('signed_consultation');
 		if($signed_consultation==1){
 			$staff_id = $this->session->userdata('logged_in')['user_id'];//all_userdata();
@@ -472,25 +472,25 @@ class Register_model extends CI_Model{
 		$visit_id = $this->input->post('visit_id');
 		$this->db->trans_start();
 		// Patient details
-		if($this->input->post('patient_id') && !!$patient_data){
+		if($this->input->post('patient_id') && sizeof($patient_data) > 0){
 			$patient_id = $this->input->post('patient_id');
 			$this->db->where('patient_id', $patient_id);
 			$this->db->update('patient', $patient_data);
 		}
 		// MLC Details
-		if($mlc_str != '' && !!$mlc_data){
+		if($mlc_str != '' && sizeof($mlc_data) > 0){
 			$mlc_insert = $this->db->insert_string('mlc', $mlc_data).' ON DUPLICATE KEY UPDATE '.$mlc_str;
 			$this->db->query($mlc_insert);
 		}
-		if(!!$visit_data){
+		if(sizeof($visit_data) > 0){
 			$this->db->where('visit_id',$visit_id);
 			$this->db->update('patient_visit', $visit_data);
 		}		
 		// Clinical Data
-		if(!!$clinical_data)
+		if(sizeof($clinical_data) > 0)
 			$this->db->insert_batch('patient_clinical_notes',$clinical_data);
 		// Prescription Data
-		if(!!$prescription_data)
+		if(sizeof($prescription_data) > 0)
 			$this->db->insert_batch('prescription',$prescription_data);
 		//Transaction ends here.
 		$this->db->trans_complete();

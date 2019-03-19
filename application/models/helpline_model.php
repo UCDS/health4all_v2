@@ -143,6 +143,7 @@ class Helpline_model extends CI_Model{
 		$call_category = $this->input->post('call_category');
 		$hospital = $this->input->post('hospital');
 		$recording = $this->input->post('recording');
+		
 		$from_name = "Hospital Helpline";
 		if($to_email!=''){
 		$subject="Helpline call #$call_id - ";
