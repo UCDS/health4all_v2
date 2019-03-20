@@ -1,7 +1,39 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 // OP and IP registration forms.
 class Register extends CI_Controller {
-	private $transaction_condition = false;
+	private function transaction_condition() {
+		// Set transaction ID
+		// Test Transaction condition
+		$transaction_condition = false;
+		if($this->session->userdata('transaction') && $this->input->post('transaction_id')) {
+			$transaction = $this->session->userdata('transaction');
+			if(array_key_exists($this->input->post('transaction_id'), $transaction) && $transaction[$this->input->post('transaction_id')]){
+				$transaction_condition = true;
+				end($transaction);
+				$next_transaction = key($transaction) + 1;
+				$this->data['transaction_id'] = $next_transaction;
+				$transaction[$this->input->post('transaction_id')] = false;
+				$transaction[$next_transaction] = true;
+				$this->session->set_userdata('transaction', $transaction);
+			} else {
+				$transaction_condition = false;
+				end($transaction);
+				$next_transaction = key($transaction) + 1;
+				$this->data['transaction_id'] = $next_transaction;
+				$transaction[$this->input->post('transaction_id')] = false;
+				$transaction[$next_transaction] = true;
+				$this->session->set_userdata('transaction', $transaction);
+			}
+		}else {
+			$transaction_condition = false;
+			$this->data['transaction_id'] = 1;
+			$transaction = array(
+				1 => true
+			);
+			$this->session->set_userdata('transaction', $transaction);
+		}
+		return $transaction_condition;
+	}
 	function __construct(){
 		//Constructor loads the required models for this controller
 		//Based on the user_id we get the hospitals,functions and departments the user has access to.
@@ -22,37 +54,7 @@ class Register extends CI_Controller {
 			//The OP and IP forms in the application are loaded into a data variable for the menu.
 			$this->data['op_forms'] = $this->staff_model->get_forms("OP");
 			$this->data['ip_forms'] = $this->staff_model->get_forms("IP");
-
-			// Set transaction ID
-			// Test Transaction condition
-			$this->transaction_condition = false;
-			if($this->session->userdata('transaction') && $this->input->post('transaction_id')) {
-				$transaction = $this->session->userdata('transaction');
-				if(array_key_exists($this->input->post('transaction_id'), $transaction) && $transaction[$this->input->post('transaction_id')]){
-					$this->transaction_condition = true;
-					end($transaction);
-					$next_transaction = key($transaction) + 1;
-					$this->data['transaction_id'] = $next_transaction;
-					$transaction[$this->input->post('transaction_id')] = false;
-					$transaction[$next_transaction] = true;
-					$this->session->set_userdata('transaction', $transaction);
-				} else {
-					$this->transaction_condition = false;
-					end($transaction);
-					$next_transaction = key($transaction) + 1;
-					$this->data['transaction_id'] = $next_transaction;
-					$transaction[$this->input->post('transaction_id')] = false;
-					$transaction[$next_transaction] = true;
-					$this->session->set_userdata('transaction', $transaction);
-				}
-			}else {
-				$this->transaction_condition = false;
-				$this->data['transaction_id'] = 1;
-				$transaction = array(
-					1 => true
-				);
-				$this->session->set_userdata('transaction', $transaction);
-			}
+			
 			$session_data = $this->session->all_userdata();
 		}
 	}
@@ -66,7 +68,7 @@ class Register extends CI_Controller {
 		}
 		//Loading the form helper
 		$this->load->helper('form');
-		
+		$transaction = $this->transaction_condition();
 		if($this->session->userdata('hospital')){ //If the user has selected a hospital after log-in.
 			if($form_id=="") //Form ID cannot be null, if so show a 404 error.
 				show_404();
@@ -113,6 +115,7 @@ class Register extends CI_Controller {
 			if ($this->form_validation->run() === FALSE)
 			{
 				//if the form validation fails, or the form has not been submitted yet
+				
 				$this->load->view('pages/custom_form',$this->data); //Load the view custom_form
 			}
 			else{
@@ -137,7 +140,7 @@ class Register extends CI_Controller {
 						$this->data['update']=1;
 					}
 				}
-				else if($this->input->post('register') && $this->transaction_condition){
+				else if($this->input->post('register') && $transaction){
 					// if the register button has been clicked, invoke the register function in register_model.
 					// Get the inserted patient details from the function and store it in a variable to display
 					// in the views.
@@ -243,6 +246,7 @@ class Register extends CI_Controller {
 			}
 		}
 		if($access==1){
+		$transaction = $this->transaction_condition();
 		$this->data['title']="Update Patients";
 		$this->data['signed_consultation'] = $this->input->post('signed_consultation');
 		$this->load->view('templates/header',$this->data);
@@ -275,12 +279,12 @@ class Register extends CI_Controller {
 		$this->form_validation->set_rules('patient_number', 'IP/OP Number',
 		'trim|xss_clean');
 		if ($this->form_validation->run() === FALSE)
-		{
+		{			
 			$this->load->view('pages/update_patients',$this->data);
 		}
 		else{		
 			$this->data['transporters'] = $this->staff_model->get_staff("Transport");
-			if($this->input->post('update_patient') && $this->transaction_condition){
+			if($this->input->post('update_patient') && $transaction){				
 				$update = $this->register_model->update();
                 if(is_int($update) && $update==2){
 					//If register function returns value 2 then we are setting a duplicate ip no error.

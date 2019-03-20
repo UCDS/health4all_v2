@@ -6,7 +6,7 @@ class Register_model extends CI_Model{
 		'insurance_id','insurance_no','presenting_complaints','past_history','family_history','admit_weight',
 		'pulse_rate','respiratory_rate','temperature','sbp','dbp','blood_sugar','hb','hb1ac',
 		'clinical_findings','cvs','rs','pa','cns','cxr','provisional_diagnosis',
-		'final_diagnosis','decision','advise','icd_10','icd_10_ext','discharge_weight','outcome','outcome_date',
+		'final_diagnosis','decision','advise','discharge_weight','outcome','outcome_date',
 		'outcome_time','ip_file_received','mlc','arrival_mode','refereal_hospital_id','insert_by_user_id',
 		'update_by_user_id','insert_datetime','update_datetime','temp_visit_id'
 	);
@@ -357,6 +357,9 @@ class Register_model extends CI_Model{
 				$visit_data[$column] = $this->input->post($column);
 			}
 		}
+		if($this->input->post('icd_code')){
+			$visit_data['icd_10'] = $this->input->post('icd_code');
+		}			
 		$signed_consultation = $this->input->post('signed_consultation');
 		if($signed_consultation==1){
 			$staff_id = $this->session->userdata('logged_in')['user_id'];//all_userdata();
@@ -384,10 +387,6 @@ class Register_model extends CI_Model{
 			}
 		}
 		$mlc_str = rtrim($mlc_duplicate,", ");
-		foreach($mlc_duplicate as $key => $value){
-			$mlc_str[] = $key.'='."'".$value."'";
-		}
-		$mlc_str = implode(',',$mlc_str);
 		if(!!$this->input->post('clinical_note')) {			
 			$clinical_note = $this->input->post('clinical_note');
 			$note_date = $this->input->post('note_date');
@@ -473,25 +472,25 @@ class Register_model extends CI_Model{
 		$visit_id = $this->input->post('visit_id');
 		$this->db->trans_start();
 		// Patient details
-		if($this->input->post('patient_id')){
+		if($this->input->post('patient_id') && sizeof($patient_data) > 0){
 			$patient_id = $this->input->post('patient_id');
 			$this->db->where('patient_id', $patient_id);
 			$this->db->update('patient', $patient_data);
 		}
 		// MLC Details
-		if($mlc_str != ''){
+		if($mlc_str != '' && sizeof($mlc_data) > 0){
 			$mlc_insert = $this->db->insert_string('mlc', $mlc_data).' ON DUPLICATE KEY UPDATE '.$mlc_str;
-			var_dump($mlc_insert);
 			$this->db->query($mlc_insert);
-			echo $this->db->last_query();
 		}
-		$this->db->where('visit_id',$visit_id);
-		$this->db->update('patient_visit', $visit_data);
+		if(sizeof($visit_data) > 0){
+			$this->db->where('visit_id',$visit_id);
+			$this->db->update('patient_visit', $visit_data);
+		}		
 		// Clinical Data
-		if(!!$clinical_data)
+		if(sizeof($clinical_data) > 0)
 			$this->db->insert_batch('patient_clinical_notes',$clinical_data);
 		// Prescription Data
-		if(!!$prescription_data)
+		if(sizeof($prescription_data) > 0)
 			$this->db->insert_batch('prescription',$prescription_data);
 		//Transaction ends here.
 		$this->db->trans_complete();
