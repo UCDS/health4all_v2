@@ -2063,7 +2063,7 @@ pri.print();
 				Signed Consultation? 
 				<?php if(!empty($patient->signed_consultation) && $patient->signed_consultation > 0) { ?>
 					<span class="fa fa-check"></span>
-					<input type="checkbox" class="sr-only" name="signed_consultation" value="1" readonly checked />
+					<input type="checkbox" class="sr-only" value="1" readonly checked />
 				<?php }
 				else{ ?>
  				<input type="checkbox"  class="form-control checkbox-big" name="signed_consultation" value = "1" />
