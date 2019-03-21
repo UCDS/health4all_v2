@@ -143,7 +143,10 @@ class Helpline_model extends CI_Model{
 		$call_category = $this->input->post('call_category');
 		$hospital = $this->input->post('hospital');
 		$recording = $this->input->post('recording');
-		
+		$helpline_to_num = $this->input->post('helpline_to_num');
+		$helpline_note = $this->input->post('helpline_note');
+		$helpline_to_num = trim($helpline_to_num);
+		$helpline_note = trim($helpline_note);
 		$from_name = "Hospital Helpline";
 		if($to_email!=''){
 		$subject="Helpline call #$call_id - ";
@@ -152,7 +155,7 @@ class Helpline_model extends CI_Model{
 		if(!!$caller_type) $subject .= "by ".$caller_type." ";
 		if(!!$patient) $subject .= "regarding ".$patient." ";
 		if(!!$greeting){ $body = $greeting; } else $body = "Hi,";
-		$body.="<br /><br />This call information from Hospital Helpline (040 - 39 56 53 39) is being escalated for your information and intervention.<br /><br />";
+		$body.="<br /><br />This call information from $helpline_note ($helpline_to_num) is being escalated for your information and intervention.<br /><br />";
 		$body.="<b>Call ID</b>: $call_id <br />";
 		$body.="<b>Call Time</b>: ".date("d-M-Y, g:iA",strtotime($call_date))." <br />";
 		$body.="<b>Call</b>: ";
@@ -164,7 +167,7 @@ class Helpline_model extends CI_Model{
 		$body.="<br />";
 		$body.="<b>Call Information</b>: $note <br />";
 		$body.="<b>Recording</b>: <a href=\"$recording\">Click Here</a><br /><br />";
-		$body.="We request you to give your input regarding this call by calling the helpline 040 - 39 56 53 39 or by replying to this email.<br /><br />";
+		$body.="We request you to give your input regarding this call by calling the helpline $helpline_to_num or by replying to this email.<br /><br />";
 		$body.="With Regards, <br />Hospital Helpline Team";
 		$mailbody="
 		<div style='width:90%;padding:5px;margin:5px;font-style:\"Trebuchet MS\";border:1px solid #eee;'>

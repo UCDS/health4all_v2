@@ -421,10 +421,18 @@
 				</tr>
 				<?php } ?>
 
-				<?php if(!!$patient->advise) { ?>
+				<?php if(!!$patient->advise || !!$patient->cns || !!$patient->decision) { ?>
 				<tr class="print-element" width="95%" >
 					<td  style="padding-top:20px" colspan="3">
+					<?php if(!!$patient->decision) { ?>
+					<b>Decision</b>: <?php echo $patient->decision;?>
+					<?php } ?>
+					<?php if(!!$patient->cns) { ?>
+					<b>CNS</b>: <?php echo $patient->cns;?>
+					<?php } ?>
+					<?php if(!!$patient->advise) { ?>
 					<b>Advise</b>: <?php echo $patient->advise;?>
+					<?php } ?>
 					</td>
 				</tr>
 				<?php } ?>

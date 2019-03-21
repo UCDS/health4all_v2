@@ -146,12 +146,12 @@ $(function(){
 							</small>
 						</td>
 						<td>
-							<small><span id="from_number_<?= $call->call_id;?>"><?php echo $call->from_number;?></span><br />
-							<?php echo $call->to_number;?>
+							<small><span id="from_number_<?= $call->call_id;?>"><?php echo $call->from_number;?></span><br /><span  id="to_number_<?= $call->call_id;?>">
+							<?php echo $call->to_number;?></span>
 							</small>
 						</td>
 						<td><small>
-						<?php echo $call->short_name.'&nbsp;-&nbsp;'.$call->dial_whom_number;?>&nbsp;-&nbsp;<?php echo $call->line_note; ?>
+						<?php echo $call->short_name.'&nbsp;-&nbsp;'.$call->dial_whom_number;?>&nbsp;-&nbsp;<span id="line_note_<?= $call->call_id; ?>"><?php echo $call->line_note; ?></span>
 							<audio controls preload="none">
 								<source src="<?php echo $call->recording_url;?>" id="recording_<?= $call->call_id;?>" type="audio/mpeg">
 								Your browser does not support the audio element.
@@ -305,6 +305,8 @@ $(function(){
 		<?php echo form_open("helpline/update_call",array("class"=>"form-custom","role"=>"form","id"=>"send_email_form"));?>
 		<div class="col-md-3">To</div>
 		<div class="col-md-9"><input type="text" class="form-control" name="to_email" form="send_email_form" required placeholder="Comma separated for multiple emails" style="width:100%" /></div>
+		<input type="hidden" class="form-control" name="helpline_to_num" id="helpline_to_num" />
+		<input type="hidden" class="form-control" name="helpline_note" id="helpline_note" />
         <div class="col-md-3">CC</div>
 		<div class="col-md-9"><input type="text" class="form-control" name="cc_email" form="send_email_form" placeholder="Comma separated for multiple emails" style="width:100%" /></div>
         <div class="col-md-3">Greeting</div>
@@ -352,10 +354,12 @@ $(function(){
 		else $(".caller_type_row").hide();
 		$(".note").text($("#note_"+callId).val());
 		$(".call_id_email").val(callId);
+
+		$('#helpline_to_num').val($('#to_number_'+callId).text());
+		$('#helpline_note').val($('#line_note_'+callId).text());
 	}
 
 	$(function(){
-
 		$('.call_group').selectize({
 	    valueField: 'call_group_id',
 	    labelField: 'group_name',
