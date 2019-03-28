@@ -168,7 +168,7 @@ class Helpline_model extends CI_Model{
 		$body.="<b>Call Information</b>: $note <br />";
 		$body.="<b>Recording</b>: <a href=\"$recording\">Click Here</a><br /><br />";
 		$body.="We request you to give your input regarding this call by calling the helpline $helpline_to_num or by replying to this email.<br /><br />";
-		$body.="With Regards, <br />Hospital Helpline Team";
+		$body.="With Regards, <br />$helpline_note Helpline Team";
 		$mailbody="
 		<div style='width:90%;padding:5px;margin:5px;font-style:\"Trebuchet MS\";border:1px solid #eee;'>
 		<br />$body

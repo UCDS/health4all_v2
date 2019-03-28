@@ -116,13 +116,14 @@ pri.print();
     $(document).ready(function() {
   $("input:radio[name=mlc_radio]").click(function() {
       if($('input[name=mlc_radio]:checked').val()=='-1'){          
-          $("#mlc_number_manual").prop("disabled", true);
-          $("#ps_name").prop("disabled", true);
-          $("#brought_by").prop("disabled", true);
-          $("#police_intimation").prop("disabled", true);
-          $("#declaration_required").prop("disabled", true);
-          $("#pc_number").prop("disabled", true);
+          $("#mlc_number_manual").prop("readonly", true);
+          $("#ps_name").prop("readonly", true);
+          $("#brought_by").prop("readonly", true);
+          $("#police_intimation").prop("readonly", true);
+          $("#declaration_required").prop("readonly", true);
+          $("#pc_number").prop("readonly", true);
 		  $("#mlc_number").val("not_mlc");
+		  $("#mlc_number").prop("readonly", true);
       }else if($('input[name=mlc_radio]:checked').val()=='1'){          
           $("#mlc_number_manual").prop("disabled", false);
           $("#ps_name").prop("disabled", false);
@@ -1058,10 +1059,9 @@ pri.print();
 			</div>
                       <div class="col-md-4 col-xs-6">
                           <label class="control-label">MLC Number- System</label>
-				<!--		  <?php if($patient->mlc_number!='not_mlc'){ ?> 
-                          <input name="mlc_number" class="form-control mlc" id="mlc_number" value="<?php if(!empty($patient->mlc_number)) echo $patient->mlc_number; else echo "unset"?>" type="text" readonly/>
-						  <?php } ?> -->
-                      </div>
+						  <?php if($patient->mlc_number!='not_mlc'){ ?> 
+                          <input name="mlc_number" class="form-control mlc" id="mlc_number" value="<?php if(!empty($patient->mlc_number)) echo $patient->mlc_number; else echo ""?>" type="text" readonly/>
+						  <?php } ?>                       </div>
                         <div class="col-md-4 col-xs-6">
                                 <label class="control-label">MLC Number Manual</label>
 								<?php if($patient->mlc_number!='not_mlc'){ ?> 

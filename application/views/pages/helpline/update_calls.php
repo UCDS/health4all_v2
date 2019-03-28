@@ -323,7 +323,7 @@ $(function(){
       <div class="modal-footer">
 		<input type="text" class="sr-only" value="<?php echo $date;?>" name="date" />
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" form="send_email_form" required name="send_email" value="1">Save changes</button>
+        <button type="submit" class="btn btn-primary" form="send_email_form" required name="send_email" value="1">Send Mail</button>
 		</form>
       </div>
     </div>
