@@ -344,6 +344,15 @@ pri.print();
 				 } 
 			}
 		?>
+		<?php 
+			foreach($functions as $f){ 
+				if($f->user_function == "Discharge" && ($f->add==1 || $f->edit==1)) { ?>
+					<li role="presentation"><a href="#vitals" aria-controls="discharge" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-signal" aria-hidden="true">&nbsp;</span>Vitals Trend</a></li>
+				<?php 
+				break;
+				 } 
+			}
+		?>
 	  </ul>
           <?php
 				$patient = $patients[0];
@@ -2073,6 +2082,64 @@ pri.print();
 		<?php 
 				break;
 		}} ?>
+		<!-- Insert New Tab here -->
+		<div role="tabpanel" class="tab-pane" id="vitals">
+		<div class="row">
+                                <div class="col-md-4 col-xs-6">
+                                    <b>Patient ID: <?php echo $patient->patient_id; ?> </b>
+                                </div>
+                                <div class="col-md-4 col-xs-6">
+                                    <b><?php echo $patient->visit_type; ?> Number: </b><?php echo $patient->hosp_file_no;?>
+                                </div>
+                                <div class="col-md-4 col-xs-6">
+                                    <b><?php if( $patient->visit_type == "IP") echo "Admit Date:"; else echo "Visit Date:";?></b>
+                                    <?php echo date("d-M-Y", strtotime($patient->admit_date)).", ".date("g:ia", strtotime($patient->admit_time));?>
+                                </div>
+                    </div>
+			<div class="row">
+			<div class="col-md-12">
+			<table class="table table-striped table-bordered" id="detailed_table" >
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Date</th>
+						<th>Wt-Kg</th>
+						<th>SBP</th>
+						<th>DBP</th>
+						<th>Pulse</th>
+						<th>RBS</th>
+						<th>Hb</th>
+						<th>HbA1C</th>
+						<th>Doctor</th>
+						<th>Clinical Notes</th>
+						<th>Prescription</th>
+					</tr>
+				</thead>
+				<tbody><!-- tr td -->
+					<?php $i=1; foreach($vitals as $vital){ ?>
+					<tr>
+						<td><?php echo $i; ?></td>
+						<td><?php echo $vital->DATE; ?></td>
+						<td><?php echo $vital->Weight; ?></td>
+						<td><?php echo $vital->SBP; ?></td>
+						<td><?php echo $vital->DBP; ?></td>
+						<td><?php echo $vital->Pulse; ?></td>
+						<td><?php echo $vital->RBS; ?></td>
+						<td><?php echo $vital->Hb; ?></td>
+						<td><?php echo $vital->HbA1C; ?></td>
+						<td><?php echo $vital->Doctor; ?></td>	
+						<td><?php echo $vital->Clinical_Notes; ?></td>		
+						<td><?php echo $vital->Prescription; ?></td>		
+					</tr>
+					<?php $i++; } ?>
+				</tbody>
+				<tfoot><!-- tr td -->
+					
+				</tfoot>
+			</table>
+			</div>
+			</div>
+		</div>
 	  </div>
 
 	<div class="col-md-4 text-right">

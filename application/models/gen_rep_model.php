@@ -509,7 +509,7 @@ class Gen_rep_Model extends CI_Model {
             IF(patient_visit.admit_weight IS NULL OR patient_visit.admit_weight = '', '', patient_visit.admit_weight) AS Weight,
             IF(patient_visit.sbp IS NULL OR patient_visit.sbp = '', '', patient_visit.sbp) AS SBP,
             IF(patient_visit.dbp IS NULL OR patient_visit.dbp = '', '', patient_visit.dbp) AS DBP,
-            IF(patient_visit.pulse_rate IS NULL OR patient_visit.pulse_rate = '', '', patient_visit.pulse_rate) AS Pusle,
+            IF(patient_visit.pulse_rate IS NULL OR patient_visit.pulse_rate = '', '', patient_visit.pulse_rate) AS Pulse,
             IF(patient_visit.blood_sugar IS NULL OR patient_visit.blood_sugar = '', '', patient_visit.blood_sugar) AS RBS,
             IF(patient_visit.hb IS NULL OR patient_visit.hb = '', '', patient_visit.hb) AS Hb,
             IF(patient_visit.hb1ac IS NULL OR patient_visit.hb1ac = '', '', patient_visit.hb1ac) AS HbA1C,
@@ -534,6 +534,245 @@ class Gen_rep_Model extends CI_Model {
             FROM patient INNER JOIN patient_visit USING (patient_id)
             LEFT JOIN staff ON patient_visit.signed_consultation = staff.staff_id 
             LEFT JOIN (SELECT patient_clinical_notes.visit_id, GROUP_CONCAT(patient_clinical_notes.clinical_note SEPARATOR ',') AS note FROM patient_clinical_notes GROUP BY patient_clinical_notes.visit_id) AS add_note USING (visit_id) LEFT JOIN prescription USING (visit_id) LEFT JOIN generic_item ON prescription.item_id = generic_item.generic_item_id LEFT JOIN item_form ON generic_item.form_id = item_form.item_form_id"
+        ),
+        'patient_vitals'=>array(
+            'filters'=>array(
+                '='=>array('visit_id-patient_visit.visit_id')
+            ),            
+            'from'=>false,
+            'where'=>array('='=>array('OP-patient_visit.visit_type')),
+            'join_sequence'=>false,
+            'group_by'=>array('visit_id'),
+            'having'=>false,
+            'apply_date'=>false,
+            'join_type'=>false,
+            'session_filter'=>array('hospital.hospital_id'=>'patient_visit.hospital_id'),
+            'order_by'=>'patient_visit.admit_date ASC',
+            'select'=>"
+            DATE_FORMAT(
+                patient_visit.admit_date,
+                '%d-%b-%Y'
+            ) AS DATE,
+            IF(
+                patient_visit.admit_weight IS NULL OR patient_visit.admit_weight = '',
+                '',
+                patient_visit.admit_weight
+            ) AS Weight,
+            IF(
+                patient_visit.sbp IS NULL OR patient_visit.sbp = '',
+                '',
+                patient_visit.sbp
+            ) AS SBP,
+            IF(
+                patient_visit.dbp IS NULL OR patient_visit.dbp = '',
+                '',
+                patient_visit.dbp
+            ) AS DBP,
+            IF(
+                patient_visit.pulse_rate IS NULL OR patient_visit.pulse_rate = '',
+                '',
+                patient_visit.pulse_rate
+            ) AS Pulse,
+            IF(
+                patient_visit.blood_sugar IS NULL OR patient_visit.blood_sugar = '',
+                '',
+                patient_visit.blood_sugar
+            ) AS RBS,
+            IF(
+                patient_visit.hb IS NULL OR patient_visit.hb = '',
+                '',
+                patient_visit.hb
+            ) AS Hb,
+            IF(
+                patient_visit.hb1ac IS NULL OR patient_visit.hb1ac = '',
+                '',
+                patient_visit.hb1ac
+            ) AS HbA1C,
+            IF(
+                CONCAT(
+                    staff.first_name,
+                    ' ',
+                    staff.last_name
+                ) IS NULL OR CONCAT(
+                    staff.first_name,
+                    ' ',
+                    staff.last_name
+                ) = '',
+                '',
+                CONCAT(
+                    staff.first_name,
+                    ' ',
+                    staff.last_name
+                )
+            ) AS Doctor,
+            CONCAT(
+                IF(
+                    patient_visit.presenting_complaints IS NULL OR patient_visit.presenting_complaints = '',
+                    '',
+                    CONCAT(
+                        'SYMPTOMS: ',
+                        patient_visit.presenting_complaints
+                    )
+                ),
+                IF(
+                    patient_visit.past_history IS NULL OR patient_visit.past_history = '',
+                    '',
+                    CONCAT(
+                        ', PAST HISTORY: ',
+                        patient_visit.past_history
+                    )
+                ),
+                IF(
+                    patient_visit.family_history IS NULL OR patient_visit.family_history = '',
+                    '',
+                    CONCAT(
+                        ', FAMILY HISTORY: ',
+                        patient_visit.family_history
+                    )
+                ),
+                IF(
+                    patient_visit.clinical_findings IS NULL OR patient_visit.clinical_findings = '',
+                    '',
+                    CONCAT(
+                        ', CLINICAL FINDINGS: ',
+                        patient_visit.clinical_findings
+                    )
+                ),
+                IF(
+                    patient_visit.cvs IS NULL OR patient_visit.cvs = '',
+                    '',
+                    CONCAT(', CVS: ', patient_visit.cvs)
+                ),
+                IF(
+                    patient_visit.rs IS NULL OR patient_visit.rs = '',
+                    '',
+                    CONCAT(', RS: ', patient_visit.rs)
+                ),
+                IF(
+                    patient_visit.pa IS NULL OR patient_visit.pa = '',
+                    '',
+                    CONCAT(', PA: ', patient_visit.pa)
+                ),
+                IF(
+                    patient_visit.cns IS NULL OR patient_visit.cns = '',
+                    '',
+                    CONCAT(', CNS: ', patient_visit.cns)
+                ),
+                IF(
+                    patient_visit.cxr IS NULL OR patient_visit.cxr = '',
+                    '',
+                    CONCAT(', CXR: ', patient_visit.cxr)
+                ),
+                IF(
+                    add_note.note IS NULL OR add_note.note = '',
+                    '',
+                    CONCAT(', NOTE: ', add_note.note)
+                ),
+                IF(
+                    patient_visit.final_diagnosis IS NULL OR patient_visit.final_diagnosis = '',
+                    '',
+                    CONCAT(
+                        ', DIAGNOSIS: ',
+                        patient_visit.final_diagnosis
+                    )
+                ),
+                IF(
+                    patient_visit.decision IS NULL OR patient_visit.decision = '',
+                    '',
+                    CONCAT(
+                        ', DECISION: ',
+                        patient_visit.decision
+                    )
+                ),
+                IF(
+                    patient_visit.advise IS NULL OR patient_visit.advise = '',
+                    '',
+                    CONCAT(
+                        ', ADVISE: ',
+                        patient_visit.advise
+                    )
+                )
+            ) AS Clinical_Notes,
+            IF(
+                (
+                    GROUP_CONCAT(
+                        (
+                            CONCAT(
+                                generic_item.generic_name,
+                                ' - ',
+                                prescription.note,
+                                '-',
+                                prescription.duration,
+                                'Days ',
+                                prescription.morning,
+                                '-',
+                                prescription.afternoon,
+                                '-',
+                                prescription.evening,
+                                ' '
+                            )
+                        ) SEPARATOR '| '
+                    )
+                ) IS NULL OR(
+                    GROUP_CONCAT(
+                        (
+                            CONCAT(
+                                generic_item.generic_name,
+                                ' - ',
+                                prescription.note,
+                                '-',
+                                prescription.duration,
+                                'Days ',
+                                prescription.morning,
+                                '-',
+                                prescription.afternoon,
+                                '-',
+                                prescription.evening,
+                                ' '
+                            )
+                        ) SEPARATOR '| '
+                    )
+                ) = '',
+                '',
+                (
+                    GROUP_CONCAT(
+                        (
+                            CONCAT(
+                                generic_item.generic_name,
+                                ' - ',
+                                prescription.note,
+                                '-',
+                                prescription.duration,
+                                'Days ',
+                                prescription.morning,
+                                '-',
+                                prescription.afternoon,
+                                '-',
+                                prescription.evening,
+                                ' '
+                            )
+                        ) SEPARATOR '| '
+                    )
+                )
+            ) AS Prescription
+        FROM
+            patient
+        INNER JOIN patient_visit USING(patient_id)
+        LEFT JOIN staff ON patient_visit.signed_consultation = staff.staff_id
+        LEFT JOIN(
+            SELECT
+                patient_clinical_notes.visit_id,
+                GROUP_CONCAT(
+                    patient_clinical_notes.clinical_note SEPARATOR ', '
+                ) AS note
+            FROM
+                patient_clinical_notes
+            GROUP BY
+                patient_clinical_notes.visit_id
+        ) AS add_note USING(visit_id)
+        LEFT JOIN prescription USING(visit_id)
+        LEFT JOIN generic_item ON prescription.item_id = generic_item.generic_item_id
+        LEFT JOIN item_form ON generic_item.form_id = item_form.item_form_id"
         )
     );
     
@@ -638,7 +877,7 @@ class Gen_rep_Model extends CI_Model {
             }
         }
         
-        // Where conditions{string}{(operator_value-table_name.column_name)}
+        // Where conditions{string}{(operator=>value-table_name.column_name)}
         foreach($where as $op => $columns) {
             foreach($columns as $column){
                 $value_table_column = explode('-', $column);
