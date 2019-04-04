@@ -460,8 +460,8 @@ class Register_model extends CI_Model{
 				$visit_data['outcome_date'] = date("Y-m-d",strtotime($this->input->post('outcome_date'))); 
 			else 
 				$visit_data['outcome_date'] = 0;
-			if(!!$this->input->post('outcome_date')) 
-				$visit_data['outcome_time'] = date("H:i:s",strtotime($this->input->post('outcome_date'))); 
+			if(!!$this->input->post('outcome_time'))
+				$visit_data['outcome_time'] = date("H:i:s",strtotime($this->input->post('outcome_time'))); 
 			else 
 				$visit_data['outcome_time'] = 0;
 		}

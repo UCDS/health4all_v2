@@ -5,6 +5,7 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/patient_field_validations.js"></script>
+<script type="text/javascript" src="<?php echo base_url();?>assets/js/Chart.min.js"></script>
 <link rel="stylesheet"  type="text/css" href="<?php echo base_url();?>assets/css/bootstrap_datetimepicker.css">
 <link rel="stylesheet"  type="text/css" href="<?php echo base_url();?>assets/css/patient_field_validations.css">
 <script type="text/javascript" src="<?php echo base_url();?>assets/js/jquery-barcode.min.js"></script>
@@ -2097,6 +2098,17 @@ pri.print();
                                 </div>
                     </div>
 			<div class="row">
+				<div class="col-md-4">
+					<canvas id="sbp_dbp" width="100" height="100"></canvas>
+				</div>
+				<div class="col-md-4">
+					<canvas id="rbs" width="100" height="100"></canvas>
+				</div>
+				<div class="col-md-4">
+					<canvas id="hb" width="100" height="100"></canvas>
+				</div>				
+			</div>
+			<div class="row">
 			<div class="col-md-12">
 			<table class="table table-striped table-bordered" id="detailed_table" >
 				<thead>
@@ -2138,7 +2150,7 @@ pri.print();
 				</tfoot>
 			</table>
 			</div>
-			</div>
+			</div>			
 		</div>
 	  </div>
 
@@ -2371,6 +2383,74 @@ pri.print();
 			if($(event.target).hasClass('glyphicon-pencil')){
 				$(event.target).next().removeAttr("hidden");
 			}			
+		});
+		// Goto line no 2144
+		$SBP = '';
+		$DBP = '';
+		$HB = '';
+		$RBS = '';
+		$dates = '';
+		<?php foreach($vitals as $vital){
+			$tmp = $vital->SBP;
+			$SBP .=  !empty($tmp) ? $vital->SBP.',' : '0,';
+			$tmp = $vital->DBP;
+			$DBP .= !empty($tmp) ? $vital->DBP.',' : '0,';
+			$tmp = $vital->Hb;
+			$HB .= !empty($tmp) ? $vital->Hb.',' : '0,';
+			$tmp = $vital->RBS;
+			$RBS .= !empty($tmp) ? $vital->RBS.',' : '0,';
+			$dates .= "'".$vital->DATE."'".',';
+		} 
+		$SBP = rtrim($SBP, ",");
+		$DBP = rtrim($DBP, ",");
+		$HB = rtrim($HB, ",");
+		$RBS = rtrim($RBS, ",");
+		$dates = rtrim($dates, ",");		
+		?>
+		var sbpdbp = $('#sbp_dbp');
+		var sbp_dbp = new Chart(sbpdbp, {
+    		type: 'line',
+    		data: {
+				datasets: [{
+					label: 'SBP',
+					data: [0, <?php echo $SBP; ?>],
+					borderColor: 'red',
+					fill: false
+				}, {
+					label: 'DBP',
+					data: [0, <?php echo $DBP; ?>],
+					// Changes this dataset to become a line
+					borderColor: 'blue',
+					fill: false
+				}],
+				labels: ['0',<?php echo $dates; ?>]        		
+    		}
+		});
+		var rbs_ctx = $('#rbs');
+		var rbs = new Chart(rbs_ctx, {
+    		type: 'line',
+    		data: {
+				datasets: [{
+					label: 'RBS',
+					data: [0, <?php echo $RBS; ?>],
+					borderColor: 'red',
+					fill: false
+				}],
+				labels: ['0',<?php echo $dates; ?>]        		
+    		}
+		});
+		var hb_ctx = $('#hb');
+		var hb = new Chart(hb_ctx, {
+    		type: 'line',
+    		data: {
+				datasets: [{
+					label: 'HB',
+					data: [0, <?php echo $HB; ?>],
+					borderColor: 'red',
+					fill: false
+				}],
+				labels: ['0',<?php echo $dates; ?>]        		
+    		}
 		});
 	});
 </script>
