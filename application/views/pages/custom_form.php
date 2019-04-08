@@ -1115,6 +1115,7 @@ pri.print();
 				</div>
 			</div>
 			</form>
+			
 			<?php if(isset($patients) && count($patients)!=1){ 
 			?>
 					<div class="panel panel-default">

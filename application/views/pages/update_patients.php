@@ -2392,13 +2392,13 @@ pri.print();
 		$dates = '';
 		<?php foreach($vitals as $vital){
 			$tmp = $vital->SBP;
-			$SBP .=  !empty($tmp) ? $vital->SBP.',' : '0,';
+			$SBP .=  !empty($tmp) ? $vital->SBP.',' : 'null,';
 			$tmp = $vital->DBP;
-			$DBP .= !empty($tmp) ? $vital->DBP.',' : '0,';
+			$DBP .= !empty($tmp) ? $vital->DBP.',' : 'null,';
 			$tmp = $vital->Hb;
-			$HB .= !empty($tmp) ? $vital->Hb.',' : '0,';
+			$HB .= !empty($tmp) ? $vital->Hb.',' : 'null,';
 			$tmp = $vital->RBS;
-			$RBS .= !empty($tmp) ? $vital->RBS.',' : '0,';
+			$RBS .= !empty($tmp) ? $vital->RBS.',' : 'null,';
 			$dates .= "'".$vital->DATE."'".',';
 		} 
 		$SBP = rtrim($SBP, ",");
@@ -2407,23 +2407,26 @@ pri.print();
 		$RBS = rtrim($RBS, ",");
 		$dates = rtrim($dates, ",");		
 		?>
+		
 		var sbpdbp = $('#sbp_dbp');
 		var sbp_dbp = new Chart(sbpdbp, {
     		type: 'line',
     		data: {
 				datasets: [{
 					label: 'SBP',
-					data: [0, <?php echo $SBP; ?>],
+					data: [null, <?php echo $SBP; ?>],
 					borderColor: 'red',
-					fill: false
+					fill: false,
+					lineTension: 0
 				}, {
 					label: 'DBP',
-					data: [0, <?php echo $DBP; ?>],
+					data: [null, <?php echo $DBP; ?>],
 					// Changes this dataset to become a line
 					borderColor: 'blue',
-					fill: false
+					fill: false,
+					lineTension: 0
 				}],
-				labels: ['0',<?php echo $dates; ?>]        		
+				labels: ['', <?php echo $dates; ?>]        		
     		}
 		});
 		var rbs_ctx = $('#rbs');
@@ -2433,10 +2436,11 @@ pri.print();
 				datasets: [{
 					label: 'RBS',
 					data: [0, <?php echo $RBS; ?>],
-					borderColor: 'red',
-					fill: false
+					borderColor: 'blue',
+					fill: false,
+					lineTension: 0
 				}],
-				labels: ['0',<?php echo $dates; ?>]        		
+				labels: ['',<?php echo $dates; ?>]        		
     		}
 		});
 		var hb_ctx = $('#hb');
@@ -2447,9 +2451,10 @@ pri.print();
 					label: 'HB',
 					data: [0, <?php echo $HB; ?>],
 					borderColor: 'red',
-					fill: false
+					fill: false,
+					lineTension: 0
 				}],
-				labels: ['0',<?php echo $dates; ?>]        		
+				labels: ['',<?php echo $dates; ?>]        		
     		}
 		});
 	});
