@@ -2,36 +2,31 @@
 // OP and IP registration forms.
 class Register extends CI_Controller {
 	private function transaction_condition() {
-		// Set transaction ID
-		// Test Transaction condition
+		// Check for transaction ID if none found set one in session, always overrides
+		// If transaction ID found remove that transaction, add a new transaction
+		// If transaction ID not found do nothing
 		$transaction_condition = false;
-		if($this->session->userdata('transaction') && $this->input->post('transaction_id')) {
-			$transaction = $this->session->userdata('transaction');
-			if(array_key_exists($this->input->post('transaction_id'), $transaction) && $transaction[$this->input->post('transaction_id')]){
+		if($this->input->post('transaction_id')) {
+			$tran_key = 'transaction_key_'.$this->input->post('transaction_id');
+			$transaction_value = $this->session->userdata($tran_key);
+			if($transaction_value){
 				$transaction_condition = true;
-				end($transaction);
-				$next_transaction = key($transaction) + 1;
+				$next_transaction = $transaction_value + 1;
 				$this->data['transaction_id'] = $next_transaction;
-				$transaction[$this->input->post('transaction_id')] = false;
-				$transaction[$next_transaction] = true;
-				$this->session->set_userdata('transaction', $transaction);
+				$transaction_key = 'transaction_key_'.$next_transaction;			
+				$this->session->set_userdata($transaction_key, $next_transaction);
+				$this->session->unset_userdata($tran_key);
 			} else {
 				$transaction_condition = false;
-				end($transaction);
-				$next_transaction = key($transaction) + 1;
-				$this->data['transaction_id'] = $next_transaction;
-				$transaction[$this->input->post('transaction_id')] = false;
-				$transaction[$next_transaction] = true;
-				$this->session->set_userdata('transaction', $transaction);
 			}
 		}else {
 			$transaction_condition = false;
 			$this->data['transaction_id'] = 1;
-			$transaction = array(
-				1 => true
-			);
-			$this->session->set_userdata('transaction', $transaction);
+			$transaction = 1;
+			$transaction_key = 'transaction_key_'.$transaction;			
+			$this->session->set_userdata($transaction_key, $transaction);
 		}
+		$session = $this->session->all_userdata();
 		return $transaction_condition;
 	}
 	function __construct(){

@@ -55,6 +55,11 @@ $(function(){
 			$(".mlc:text,.mlc_field").parent().parent().hide();
 		}
 	});
+	// Code to disable the back button
+	history.pushState(null, null, document.URL);
+		window.addEventListener('popstate', function () {
+    	history.pushState(null, null, document.URL);
+	});
 });
 function DaysInMonth(Y, M) {
     	with (new Date(Y, M, 1, 12)) {
@@ -1056,6 +1061,7 @@ pri.print();
 		</div>
 		</form>	
 		<?php } ?>
+		<p><?php echo $transaction_id;?></p>
 		<div class="row">
 			<?php echo form_open("register/custom_form/$form_id",array('role'=>'form','class'=>'form-custom')); ?>
 			<div class="panel panel-default">

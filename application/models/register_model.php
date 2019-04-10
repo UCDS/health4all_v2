@@ -948,8 +948,8 @@ class Register_model extends CI_Model{
 				$this->db->where('visit_type','IP');
 			}
 			if($this->input->post('search_phone')){
-				$this->db->where('phone',$this->input->post('search_phone'));
-				$this->db->or_where('alt_phone',$this->input->post('search_phone'));
+				$this->db->where('patient.phone',$this->input->post('search_phone'));
+				$this->db->or_where('patient.alt_phone',$this->input->post('search_phone'));
 			}
 			if($this->input->post('selected_patient')){
 				$this->db->where('patient_visit.visit_id',$this->input->post('selected_patient'));

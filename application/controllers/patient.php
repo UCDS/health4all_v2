@@ -1,5 +1,4 @@
 <?php
-
 class Patient extends CI_Controller {    
     function __construct() {
         parent::__construct();
@@ -24,7 +23,7 @@ class Patient extends CI_Controller {
             show_404();            
         }
         $this->data['op_forms']=$this->staff_model->get_forms("OP");
-	$this->data['ip_forms']=$this->staff_model->get_forms("IP");
+	    $this->data['ip_forms']=$this->staff_model->get_forms("IP");
     }
     
     function external_patient_blood_request(){  ////Presently used only for bloodbank module. Also registers a external patient.
