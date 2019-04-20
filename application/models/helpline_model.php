@@ -143,6 +143,10 @@ class Helpline_model extends CI_Model{
 		$call_category = $this->input->post('call_category');
 		$hospital = $this->input->post('hospital');
 		$recording = $this->input->post('recording');
+		$helpline_to_num = $this->input->post('helpline_to_num');
+		$helpline_note = $this->input->post('helpline_note');
+		$helpline_to_num = trim($helpline_to_num);
+		$helpline_note = trim($helpline_note);
 		$from_name = "Hospital Helpline";
 		if($to_email!=''){
 		$subject="Helpline call #$call_id - ";
@@ -151,7 +155,7 @@ class Helpline_model extends CI_Model{
 		if(!!$caller_type) $subject .= "by ".$caller_type." ";
 		if(!!$patient) $subject .= "regarding ".$patient." ";
 		if(!!$greeting){ $body = $greeting; } else $body = "Hi,";
-		$body.="<br /><br />This call information from Hospital Helpline (040 - 39 56 53 39) is being escalated for your information and intervention.<br /><br />";
+		$body.="<br /><br />This call information from $helpline_note ($helpline_to_num) is being escalated for your information and intervention.<br /><br />";
 		$body.="<b>Call ID</b>: $call_id <br />";
 		$body.="<b>Call Time</b>: ".date("d-M-Y, g:iA",strtotime($call_date))." <br />";
 		$body.="<b>Call</b>: ";
@@ -163,8 +167,8 @@ class Helpline_model extends CI_Model{
 		$body.="<br />";
 		$body.="<b>Call Information</b>: $note <br />";
 		$body.="<b>Recording</b>: <a href=\"$recording\">Click Here</a><br /><br />";
-		$body.="We request you to give your input regarding this call by calling the helpline 040 - 39 56 53 39 or by replying to this email.<br /><br />";
-		$body.="With Regards, <br />Hospital Helpline Team";
+		$body.="We request you to give your input regarding this call by calling the helpline $helpline_to_num or by replying to this email.<br /><br />";
+		$body.="With Regards, <br />$helpline_note Helpline Team";
 		$mailbody="
 		<div style='width:90%;padding:5px;margin:5px;font-style:\"Trebuchet MS\";border:1px solid #eee;'>
 		<br />$body
@@ -245,7 +249,7 @@ class Helpline_model extends CI_Model{
 		if($this->input->post('helpline_id')){
 			$this->db->where('helpline.helpline_id',$this->input->post('helpline_id'));
 		}
-		$this->db->select('helpline_call.*, helpline_receiver.short_name as short_name, group_name,caller_type,call_category,resolution_status,hospital')->from('helpline_call')
+		$this->db->select('helpline_call.*, helpline_receiver.short_name as short_name, group_name,caller_type,call_category,resolution_status,hospital, helpline.note as line_note')->from('helpline_call')
 		->join('helpline', 'helpline_call.to_number=helpline.helpline','left')	// 6 Dec 18 -> gokulakrishna@yousee.in
 		->join('helpline_receiver','helpline_call.dial_whom_number = helpline_receiver.phone','left')
 		->join('helpline_caller_type','helpline_call.caller_type_id = helpline_caller_type.caller_type_id','left')
@@ -342,7 +346,7 @@ class Helpline_model extends CI_Model{
 		if($this->input->post('helpline_id')){
 			$this->db->where('helpline.helpline_id',$this->input->post('helpline_id'));
 		}
-		$this->db->select('*, helpline_receiver.short_name as short_name, helpline_call.call_id, helpline_call.call_group_id, helpline_call.note,count(helpline_email_id) email_count')
+		$this->db->select('*, helpline_receiver.short_name as short_name, helpline_call.call_id, helpline_call.call_group_id, helpline_call.note,count(helpline_email_id) email_count, helpline.note as line_note')
 		->from('helpline_call')
 		->join('helpline', 'helpline_call.to_number=helpline.helpline','left')	// 6 Dec 18 -> gokulakrishna@yousee.in
 		->join('helpline_receiver','helpline_call.dial_whom_number = helpline_receiver.phone','left')

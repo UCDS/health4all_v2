@@ -13,7 +13,7 @@ $(document).ready(function() {
     set_localStorage();
     
     let table_id = localStorage.getItem('table_id');
-    
+    console.log("common onload functions");
     // Submit default filter
     $('#primary_filter').submit();
     $('#'+table_id).click(function(event){

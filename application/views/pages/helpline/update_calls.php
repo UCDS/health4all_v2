@@ -146,11 +146,12 @@ $(function(){
 							</small>
 						</td>
 						<td>
-							<small><span id="from_number_<?= $call->call_id;?>"><?php echo $call->from_number;?></span><br />
-							<?php echo $call->to_number;?>
+							<small><span id="from_number_<?= $call->call_id;?>"><?php echo $call->from_number;?></span><br /><span  id="to_number_<?= $call->call_id;?>">
+							<?php echo $call->to_number;?></span>
 							</small>
 						</td>
-						<td><small><?php echo $call->dial_whom_number.' - '.$call->short_name;?>
+						<td><small>
+						<?php echo $call->short_name.'&nbsp;-&nbsp;'.$call->dial_whom_number;?>&nbsp;-&nbsp;<span id="line_note_<?= $call->call_id; ?>"><?php echo $call->line_note; ?></span>
 							<audio controls preload="none">
 								<source src="<?php echo $call->recording_url;?>" id="recording_<?= $call->call_id;?>" type="audio/mpeg">
 								Your browser does not support the audio element.
@@ -304,6 +305,8 @@ $(function(){
 		<?php echo form_open("helpline/update_call",array("class"=>"form-custom","role"=>"form","id"=>"send_email_form"));?>
 		<div class="col-md-3">To</div>
 		<div class="col-md-9"><input type="text" class="form-control" name="to_email" form="send_email_form" required placeholder="Comma separated for multiple emails" style="width:100%" /></div>
+		<input type="hidden" class="form-control" name="helpline_to_num" id="helpline_to_num" />
+		<input type="hidden" class="form-control" name="helpline_note" id="helpline_note" />
         <div class="col-md-3">CC</div>
 		<div class="col-md-9"><input type="text" class="form-control" name="cc_email" form="send_email_form" placeholder="Comma separated for multiple emails" style="width:100%" /></div>
         <div class="col-md-3">Greeting</div>
@@ -320,7 +323,7 @@ $(function(){
       <div class="modal-footer">
 		<input type="text" class="sr-only" value="<?php echo $date;?>" name="date" />
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary" form="send_email_form" required name="send_email" value="1">Save changes</button>
+        <button type="submit" class="btn btn-primary" form="send_email_form" required name="send_email" value="1">Send Mail</button>
 		</form>
       </div>
     </div>
@@ -351,10 +354,12 @@ $(function(){
 		else $(".caller_type_row").hide();
 		$(".note").text($("#note_"+callId).val());
 		$(".call_id_email").val(callId);
+
+		$('#helpline_to_num').val($('#to_number_'+callId).text());
+		$('#helpline_note').val($('#line_note_'+callId).text());
 	}
 
 	$(function(){
-
 		$('.call_group').selectize({
 	    valueField: 'call_group_id',
 	    labelField: 'group_name',
@@ -362,7 +367,6 @@ $(function(){
 	    create: false,
 	    render: {
 	        option: function(item, escape) {
-
 	            return '<div>' +
 	                '<span class="title">' +
 	                    '<span class="group_name">' + escape(item.group_name) + '</span>' +

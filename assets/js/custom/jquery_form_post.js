@@ -1,10 +1,10 @@
 $(document).ready(function(){
     // click on button submit
+    console.log("Document ready function");
     $("#primary_filter").submit(function(event){
         // send ajax
-        console.log('Submit clicked');
-        let previous_text = localStorage.getItem('initial_text');
-        
+        console.log('Submit called');
+        let previous_text = localStorage.getItem('initial_text');        
         $('#ajax_notification').text(previous_text+" Query submitted please wait...");
         let query_strings = localStorage.getItem('query_strings');
         $('<input />').attr('type', 'hidden')

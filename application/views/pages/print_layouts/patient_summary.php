@@ -237,12 +237,16 @@
 						<td colspan="3">
 						<b>RS: </b><?php echo $patient->rs;?> 
 						</td>
-					<?php } ?>
-					<?php if(!!$patient->pa) { ?>
-						<td colspan="3">
-						<b>PA:</b> <?php echo $patient->pa;?> 
-						</td>
-					<?php } ?>
+					<?php } ?>					
+					<td colspan="3">
+						<?php if(!!$patient->pa) { ?>
+							<b>PA:</b> <?php echo $patient->pa;?> &nbsp;
+						<?php } ?>
+						<?php if(!!$patient->cns) { ?>
+							<b>CNS</b>: <?php echo $patient->cns;?>
+						<?php } ?>
+					</td>
+					
 					</tr>
 					</table>
 					</td>
@@ -421,10 +425,15 @@
 				</tr>
 				<?php } ?>
 
-				<?php if(!!$patient->advise) { ?>
+				<?php if(!!$patient->advise || !!$patient->decision) { ?>
 				<tr class="print-element" width="95%" >
 					<td  style="padding-top:20px" colspan="3">
+					<?php if(!!$patient->decision) { ?>
+					<b>Decision</b>: <?php echo $patient->decision;?><br />
+					<?php } ?>
+					<?php if(!!$patient->advise) { ?>
 					<b>Advise</b>: <?php echo $patient->advise;?>
+					<?php } ?>
 					</td>
 				</tr>
 				<?php } ?>

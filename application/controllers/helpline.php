@@ -29,21 +29,21 @@ class Helpline extends CI_Controller {
 			}
 		}
 		if($access==1){
-		$this->load->helper('form');
-		$this->load->library('form_validation');
-		$user=$this->session->userdata('logged_in');
-		$this->data['user_id']=$user['user_id'];
-		$this->data['title']="HelpLine Calls - Detailed Report";
-		$this->load->view('templates/header',$this->data);
-		$this->data['calls']=$this->helpline_model->get_detailed_report();
-		$this->data['caller_type']=$this->helpline_model->get_caller_type();
-		$this->data['call_category']=$this->helpline_model->get_call_category();
-		$this->data['resolution_status']=$this->helpline_model->get_resolution_status();
-		$this->data['helpline']=$this->helpline_model->get_helpline();
-		$this->data['all_hospitals']=$this->staff_model->get_hospital();
-		$this->data['emails_sent']=$this->helpline_model->get_emails();
-		$this->load->view('pages/helpline/report_detailed',$this->data);
-		$this->load->view('templates/footer');
+			$this->load->helper('form');
+			$this->load->library('form_validation');
+			$user=$this->session->userdata('logged_in');
+			$this->data['user_id']=$user['user_id'];
+			$this->data['title']="HelpLine Calls - Detailed Report";
+			$this->load->view('templates/header',$this->data);
+			$this->data['calls']=$this->helpline_model->get_detailed_report();
+			$this->data['caller_type']=$this->helpline_model->get_caller_type();
+			$this->data['call_category']=$this->helpline_model->get_call_category();
+			$this->data['resolution_status']=$this->helpline_model->get_resolution_status();
+			$this->data['helpline']=$this->helpline_model->get_helpline();
+			$this->data['all_hospitals']=$this->staff_model->get_hospital();
+			$this->data['emails_sent']=$this->helpline_model->get_emails();
+			$this->load->view('pages/helpline/report_detailed',$this->data);
+			$this->load->view('templates/footer');
 		}
 		else show_404();
 	}
