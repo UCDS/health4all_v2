@@ -1049,6 +1049,17 @@ class Register_model extends CI_Model{
 		return $query->result();
 	}
 	
+	function get_previous_visit($visit_id, $patient_id){
+		$this->db->select("visit_id")
+			->from("patient_visit")
+			->where('patient_id',$patient_id)
+			->where('visit_id <',$visit_id)
+			->order_by('visit_id','desc')
+			->limit(1);
+		$query=$this->db->get();
+		return $query->row();
+	}
+
 	function get_clinical_notes($visit_id){
 		$this->db->select('patient_clinical_notes.*,staff.first_name, staff.last_name')->from('patient_clinical_notes')
 		->join('user','patient_clinical_notes.user_id = user.user_id','left')

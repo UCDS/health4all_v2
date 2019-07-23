@@ -257,7 +257,7 @@ pri.print();
 		<?php 
 			foreach($functions as $f){ 
 				if($f->user_function == "Update Patients"  || $f->user_function == "Clinical" || $f->user_function == "Diagnostics" || $f->user_function == "Procedures" || $f->user_function == "Prescription" || $f->user_function == "Discharge") { ?>
-					<li role="presentation" class="active"><a href="#patient" aria-controls="patient" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Patient Info</a></li>
+					<li role="presentation" <?php if(count($previous_visits) <= 1) echo "class='active'"; ?>><a href="#patient" aria-controls="patient" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Patient Info</a></li>
 				<?php 
 				break;
 				} 
@@ -348,7 +348,7 @@ pri.print();
 		<?php 
 			foreach($functions as $f){ 
 				if($f->user_function == "Discharge" && ($f->add==1 || $f->edit==1)) { ?>
-					<li role="presentation"><a href="#vitals" aria-controls="discharge" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-signal" aria-hidden="true">&nbsp;</span>Vitals Trend</a></li>
+					<li role="presentation" <?php if(count($previous_visits) > 1) echo "class='active'"; ?>><a href="#vitals" aria-controls="discharge" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-signal" aria-hidden="true">&nbsp;</span>Vitals Trend</a></li>
 				<?php 
 				break;
 				 } 
@@ -368,7 +368,7 @@ pri.print();
 		<?php 
 			foreach($functions as $f){ 
 				if($f->user_function == "Update Patients" || $f->user_function == "Clinical" || $f->user_function == "Diagnostics" || $f->user_function == "Procedures" || $f->user_function == "Prescription" || $f->user_function == "Discharge") { ?>
-		<div role="tabpanel" class="tab-pane active" id="patient">			
+		<div role="tabpanel" class="tab-pane <?php if(count($previous_visits) <= 1) echo "active"; ?>" id="patient">			
                 <div class="col-md-4 col-lg-3">
                     <div class="well well-sm text-center">
                         <img src="<?php echo base_url()."assets/images/patients/".$patient->patient_id;?>.jpg" alt="Image" style="width:50%;height:50%" onError="this.onerror=null;this.src='<?php echo base_url()."assets/images/patients/default.png";?>';" />
@@ -1806,7 +1806,14 @@ pri.print();
                                 </div>
 			<div class="row alt">
 			<div class="col-md-12 alt">
-				<table class="table table-striped table-bordered" id="prescription_table">
+
+					<?php if(count($previous_visits) > 1) { ?>
+								<button type="button" class="btn btn-success btn-md" id="retrieve_prescription">Retrieve previous prescription</button> 
+								<br />
+								<br />
+						
+					<?php } ?>
+					<table class="table table-striped table-bordered" id="prescription_table">
 					<thead>
 						<tr>
 						<th rowspan="3" class="text-center">Drug</th>
@@ -2084,10 +2091,20 @@ pri.print();
 				break;
 		}} ?>
 		<!-- Insert New Tab here -->
-		<div role="tabpanel" class="tab-pane" id="vitals">
+		<div role="tabpanel" class="tab-pane  <?php if(count($previous_visits) > 1) echo "active"; ?>" id="vitals">
 		<div class="row">
                                 <div class="col-md-4 col-xs-6">
-                                    <b>Patient ID: <?php echo $patient->patient_id; ?> </b>
+                                    <b>Patient ID: <?php echo $patient->patient_id; ?>, </b>
+                                    <b>
+										<?php 
+											echo $patient->first_name." ".$patient->last_name.", "; 
+											if($patient->age_years!=0){ echo $patient->age_years." Yrs "; } 
+											if($patient->age_months!=0){ echo $patient->age_months." Mths "; }
+											if($patient->age_days!=0){ echo $patient->age_days." Days "; }
+											if($patient->age_years==0 && $patient->age_months == 0 && $patient->age_days==0) echo "0 Days";
+											echo "/".$patient->gender; 
+										?> 
+									</b>
                                 </div>
                                 <div class="col-md-4 col-xs-6">
                                     <b><?php echo $patient->visit_type; ?> Number: </b><?php echo $patient->hosp_file_no;?>
@@ -2156,6 +2173,7 @@ pri.print();
 
 	<div class="col-md-4 text-right">
 			<label class="control-label">
+				<input type="text" name="selected_tab" id="selected_tab" class="sr-only" hidden value="" />
 				Signed Consultation? 
 				<?php if(!empty($patient->signed_consultation) && $patient->signed_consultation > 0) { ?>
 					<span class="fa fa-check"></span>
@@ -2291,6 +2309,69 @@ pri.print();
 			console.log(test);
 		});
 		$i=1;
+		$("#retrieve_prescription").click(function(){
+			<?php if(count($previous_prescription)==0) echo "alert('No prescriptions in the previous visit'); return;"; ?>
+			$row = "";
+			<?php foreach($previous_prescription as $prev) { ?>
+				$row += '<tr class="prescription">'+
+						'	<td>'+
+								'<select name="drug_'+$i+'" class="form-control">'+
+								'<option value="">--Select--</option>'+
+								"<?php 
+									foreach($drugs as $drug){ 
+										$available = '';
+									$style = '';
+									if(drug_available($drug, $drugs_available)){
+										$available = '- Available';
+										$style = 'style=\"background: #ADFF2F; font-weight: bold;\"';
+									}
+									echo '<option value=\"'.$drug->generic_item_id.'\"';
+									if($prev->generic_item_id == $drug->generic_item_id) echo " selected ";									
+									echo ' '.$style.'>'.$drug->generic_name.$available.'</option>';
+								}?>" +
+								'</select>'+'<i class="glyphicon glyphicon-pencil"></i>'+'<textarea name="note_'+$i+'" cols="30" rows="10"';
+							<?php if(trim($prev->note) == "") { ?> $row += " hidden "; <?php } ?>
+							$row += '><?php echo $prev->note;?></textarea>'+
+							'</td>'+
+							'<td>'+
+								'<input type="text" name="duration_'+$i+'" placeholder="in Days" value="<?php echo $prev->duration;?>" style="width:100px" class="form-control" />'+
+							'</td>'+
+							'<!-- <td>'+
+								'<select name="frequency_'+$i+'" class="form-control">'+
+								<?php foreach($prescription_frequency as $freq){ ?>
+									'<option value="<?php echo $freq->frequency;?>"><?php echo $freq->frequency;?></option>'+
+								<?php } ?>
+								'</select>'+
+							'</td> -->'+
+							'<td>'+
+								'<label><input type="checkbox" name="bb_'+$i+'" <?php if($prev->morning == 1 || $prev->morning == 3) echo " checked ";?> value="1" /></label>'+
+							'</td>'+
+							'<td>'+
+								'<label><input type="checkbox" name="ab_'+$i+'" <?php if($prev->morning == 2 || $prev->morning == 3) echo " checked ";?> value="1" /></label>'+
+							'</td>'+
+							'<td>'+
+								'<label><input type="checkbox" name="bl_'+$i+'" <?php if($prev->afternoon == 1 || $prev->afternoon == 3) echo " checked ";?> value="1" /></label>'+
+							'</td>'+
+							'<td>'+
+								'<label><input type="checkbox" name="al_'+$i+'" <?php if($prev->afternoon == 2 || $prev->afternoon == 3) echo " checked ";?> value="1" /></label>'+
+							'</td>'+
+							'<td>'+
+								'<label><input type="checkbox" name="bd_'+$i+'" <?php if($prev->evening == 1 || $prev->evening == 3) echo " checked ";?> value="1" /></label>'+
+							'</td>'+
+							'<td>'+
+								'<label><input type="checkbox" name="ad_'+$i+'" <?php if($prev->evening == 2 || $prev->evening == 3) echo " checked ";?> value="1" /></label>'+
+							'</td>'+
+							'<!--<td>'+
+								'<input type="text" name="quantity_'+$i+'" style="width:100px" class="form-control" />'+
+							'</td>-->'+
+							'<td><input type="text" name="prescription[]" class="sr-only" value="'+$i+'" />'+
+								'<button type="button" class="btn btn-danger btn-sm" onclick="$(this).parent().parent().remove()">X</button>'+
+							'</td>'+
+						'</tr>';
+				$i++;
+			<?php } ?>
+			$(".prescription").parent().prepend($row);
+		});
 		$("#prescription_add").click(function(){
 			$row = '<tr class="prescription">'+
 						'	<td>'+
@@ -2435,7 +2516,7 @@ pri.print();
     		data: {
 				datasets: [{
 					label: 'RBS',
-					data: [0, <?php echo $RBS; ?>],
+					data: [null, <?php echo $RBS; ?>],
 					borderColor: 'blue',
 					fill: false,
 					lineTension: 0
@@ -2449,7 +2530,7 @@ pri.print();
     		data: {
 				datasets: [{
 					label: 'HB',
-					data: [0, <?php echo $HB; ?>],
+					data: [null, <?php echo $HB; ?>],
 					borderColor: 'red',
 					fill: false,
 					lineTension: 0
@@ -2458,6 +2539,15 @@ pri.print();
     		}
 		});
 	});
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		var target = $(e.target).attr("href");
+		$("#selected_tab").val(target);
+	});
+	<?php if($this->input->post('selected_tab')) { ?>
+	$(function(){
+		$('.nav-tabs a[href="<?php echo $this->input->post('selected_tab'); ?>"]').tab('show');
+	});
+	<?php } ?>
 </script>
 	
 <div class="sr-only" id="print-div-all" style="width:100%;height:100%;"> 
