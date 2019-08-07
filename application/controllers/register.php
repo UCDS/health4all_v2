@@ -117,7 +117,7 @@ class Register extends CI_Controller {
 				if($this->input->post('search_patients')){
 					//if the user searches for a patient, get the list of patients that matched the query.
 					$this->data['patients']=$this->register_model->search();
-					if(count($this->data['patients'])==1) {
+					if(count($this->data['patients'])==1 || $this->data['form_type']=="OP") {
 						$visit_id = $this->data['patients'][0]->visit_id;
 						$this->data['patient']=$this->register_model->select($visit_id);
                         $this->data['ip_count'] = $this->counter_model->get_counters("IP");
@@ -260,12 +260,14 @@ class Register extends CI_Controller {
 		$this->data['prescription_frequency'] = $this->staff_model->get_prescription_frequency();
 		$this->data['drugs_available'] = $this->hospital_model->get_drugs();
 		$patient_id = $this->input->post('patient_id');
+		$visit_id = $this->input->post('selected_patient');
 		if($this->input->post('selected_patient')){
 			$this->data['previous_visits']=$this->register_model->get_visits($patient_id);
 			$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', false);
 			$this->data['clinical_notes'] = $this->gen_rep_model->simple_join('clinical_notes', false);
 			$this->data['all_tests'] = $this->gen_rep_model->simple_join('tests_ordered', false);
 			$this->data['prescriptions'] = $this->gen_rep_model->simple_join('prescriptions', false);
+			// $this->data['previous_prescriptions'] = $this->register_model->get_previous_prescriptions($visit_id);
 		}		
 		//  $this->data['hospitals'] = $this->hospital_model->get_hospitals();
 		//  $this->data['arrival_modes'] = $this->patient_model->get_arrival_modes();
@@ -277,6 +279,7 @@ class Register extends CI_Controller {
 			$this->load->view('pages/update_patients',$this->data);
 		}
 		else{		
+			
 			$this->data['transporters'] = $this->staff_model->get_staff("Transport");
 			if($this->input->post('update_patient') && $transaction){				
 				$update = $this->register_model->update();
@@ -284,6 +287,7 @@ class Register extends CI_Controller {
 					//If register function returns value 2 then we are setting a duplicate ip no error.
 					$this->data['duplicate']=1;
 				}
+				
 				$this->data['transfers'] = $this->patient_model->get_transfers_info();
 				$this->data['transport'] = $this->staff_model->get_transport_log();
 				$this->data['patients']=$this->register_model->search();
@@ -297,8 +301,10 @@ class Register extends CI_Controller {
 					$this->load->model('diagnostics_model');
 					$this->data['vitals'] = $this->gen_rep_model->simple_join('patient_vitals', false, array('patient.patient_id'=>$this->data['patients'][0]->patient_id));
 					$visit_id = $this->data['patients'][0]->visit_id;
+					$previous_visit = $this->register_model->get_previous_visit($visit_id, $patient_id);
 					$this->data['prescription_frequency'] = $this->staff_model->get_prescription_frequency();
 					$this->data['prescription']=$this->register_model->get_prescription($visit_id);
+					$this->data['previous_prescription']=$this->register_model->get_prescription($previous_visit->visit_id);
 					$this->data['tests']=$this->diagnostics_model->get_all_tests($visit_id);
 					$this->data['visit_notes']=$this->register_model->get_clinical_notes($visit_id);
 				}
@@ -309,6 +315,7 @@ class Register extends CI_Controller {
 				if(count($this->data['patients'])==1){
 					$this->load->model('diagnostics_model');
 					$visit_id = $this->data['patients'][0]->visit_id;
+					$previous_visit = $this->register_model->get_previous_visit($visit_id, $patient_id);
 					$data_array = array('patient_id' => $this->data['patients'][0]->patient_id);				
 					$this->data['vitals'] = $this->gen_rep_model->simple_join('patient_vitals', false, array('patient.patient_id'=>$this->data['patients'][0]->patient_id));	
 					$this->data['patient_visits'] = $this->gen_rep_model->simple_join('patient_visits_all', $data_array);
@@ -319,6 +326,7 @@ class Register extends CI_Controller {
 					$this->data['prescription_frequency'] = $this->staff_model->get_prescription_frequency();
 					$this->data['transport'] = $this->staff_model->get_transport_log();
 					$this->data['prescription']=$this->register_model->get_prescription($visit_id);
+					$this->data['previous_prescription']=$this->register_model->get_prescription($previous_visit->visit_id);
 					$this->data['tests']=$this->diagnostics_model->get_all_tests($visit_id);
 					$this->data['visit_notes']=$this->register_model->get_clinical_notes($visit_id);
 				}

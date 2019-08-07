@@ -197,11 +197,11 @@ class Home extends CI_Controller {
 	   $username = $this->input->post('username');
 	   $captcha_text = $this->input->post('captcha_text');
 	   
-	   if(!strtoupper($this->session->userdata(strtoupper($captcha_text)))){
-		   $this->session->unset_userdata(strtoupper($captcha_text));
-			$this->form_validation->set_message('check_database','Invalid Username or Password or Captcha');
-			return false;
-	   }
+	//    if(!strtoupper($this->session->userdata(strtoupper($captcha_text)))){
+	// 	   $this->session->unset_userdata(strtoupper($captcha_text));
+	// 		$this->form_validation->set_message('check_database','Invalid Username or Password or Captcha');
+	// 		return false;
+	//    }
 	   //query the database
 	   $result = $this->staff_model->login($username, $password);
 	   if($result)

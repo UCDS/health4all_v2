@@ -536,9 +536,7 @@ class Gen_rep_Model extends CI_Model {
             LEFT JOIN (SELECT patient_clinical_notes.visit_id, GROUP_CONCAT(patient_clinical_notes.clinical_note SEPARATOR ',') AS note FROM patient_clinical_notes GROUP BY patient_clinical_notes.visit_id) AS add_note USING (visit_id) LEFT JOIN prescription USING (visit_id) LEFT JOIN generic_item ON prescription.item_id = generic_item.generic_item_id LEFT JOIN item_form ON generic_item.form_id = item_form.item_form_id"
         ),
         'patient_vitals'=>array(
-            'filters'=>array(
-                '='=>array('visit_id-patient_visit.visit_id')
-            ),            
+            'filters'=>false,            
             'from'=>false,
             'where'=>array('='=>array('OP-patient_visit.visit_type')),
             'join_sequence'=>false,
@@ -913,7 +911,7 @@ class Gen_rep_Model extends CI_Model {
         // Execute query
         $this->db->limit($limit);
         $query = $this->db->get();
-        
+        // echo $this->db->last_query();
         $result = $query->result();    
         return $result;
     }

@@ -53,7 +53,8 @@
 
 			foreach($functions as $f){
 					//Check if the user has access to Out Patient Registration forms or In Patient Registration forms
-					if($f->user_function=="Out Patient Registration" || $f->user_function=="In Patient Registration" || $f->user_function == "View Patients" || $f->user_function == "Update Patients"){
+					if(($f->user_function=="Out Patient Registration" || $f->user_function=="In Patient Registration" ||
+						 $f->user_function == "View Patients" || $f->user_function == "Update Patients") && !!$this->session->userdata('hospital')){
 					// If they do, display dropdown menu which will contain all the links to the forms. ?>
 						<li class="dropdown  <?php if(preg_match("^".base_url()."register^",current_url())){ echo "active";}?>">
 									<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><i class="fa fa-user"></i> Patients <b class="caret"></b></a>
@@ -108,7 +109,8 @@
 					}
 				?>
 			<?php foreach($functions as $f){
-					if($f->user_function=="Diagnostics" ||$f->user_function=="Diagnostics - Order All" || $f->user_function=="Bloodbank" || $f->user_function == "Sanitation Evaluation"){ ?>
+					if(($f->user_function=="Diagnostics" ||$f->user_function=="Diagnostics - Order All" || 
+					$f->user_function=="Bloodbank" || $f->user_function == "Sanitation Evaluation") && !!$this->session->userdata('hospital')){ ?>
 					<li class="dropdown  <?php if(preg_match("^".base_url()."services^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Services <b class="caret"></b></a>
 						<ul class="dropdown-menu">
@@ -187,7 +189,8 @@
 				?>
 
 			<?php foreach($functions as $f){
-					if($f->user_function=="Equipment" || $f->user_function=="Consumables" || $f->user_function=="HR" || $f->user_function=="Vendor"){ ?>
+					if(($f->user_function=="Equipment" || $f->user_function=="Consumables" || 
+					$f->user_function=="HR" || $f->user_function=="Vendor") && !!$this->session->userdata('hospital')){ ?>
 			<li class="dropdown  <?php if(preg_match("^".base_url()."inventory^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown">Resources <b class="caret"></b></a>
 						<ul class="dropdown-menu">
@@ -248,11 +251,13 @@
 
 			<?php
 			foreach($functions as $f){
-					if($f->user_function=="OP Summary" || $f->user_function=="IP Summary" ||
+					if(($f->user_function=="OP Summary" || $f->user_function=="IP Summary" ||
 					$f->user_function=="OP Detail" || $f->user_function=="IP Detail" ||
 					$f->user_function=="Diagnostics - Detail" || $f->user_function=="Diagnostics - Summary" ||
 					($f->user_function == "Sanitation Evaluation" && $f->view==1) ||
-					$f->user_function == "Bloodbank" || $f->user_function == "Outcome Summary" || $f->user_function == "Helpline Reports"|| $f->user_function == "follow_up_report"){ ?>
+					$f->user_function == "Bloodbank" || $f->user_function == "Outcome Summary"|| $f->user_function == "follow_up_report") 
+					&& !!$this->session->userdata('hospital') || 
+					($f->user_function == "Helpline Reports" )){ ?>
 					<li class="dropdown  <?php if(preg_match("^".base_url()."reports^",current_url())){ echo "active";}?>">
 						<a href="#" class="dropdown-toggle js-activated" data-toggle="dropdown"><i class="fa fa-line-chart"></i> Reports <b class="caret"></b></a>
 						<ul class="dropdown-menu">

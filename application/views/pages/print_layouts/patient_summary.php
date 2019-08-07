@@ -184,6 +184,38 @@
 					</td>
 				</tr>
 				<?php } ?>
+
+				<?php if(!!$patient->cvs || !!$patient->rs || !!$patient->pa || !!$patient->cns) { ?>
+				<tr class="print-element">
+					<td colspan="3">
+					<table>
+					<tbody style="border:0px">
+						<tr >
+						<?php if(!!$patient->cvs) { ?>
+							<td>
+								<b>CVS: </b><?php echo $patient->cvs;?> 
+							</td>
+						<?php } ?>
+						<?php if(!!$patient->rs) { ?>
+							<td colspan="3">
+							<b>RS: </b><?php echo $patient->rs;?> 
+							</td>
+						<?php } ?>					
+						<td colspan="3">
+							<?php if(!!$patient->pa) { ?>
+								<b>PA:</b> <?php echo $patient->pa;?> &nbsp;
+							<?php } ?>
+							<?php if(!!$patient->cns) { ?>
+								<b>CNS</b>: <?php echo $patient->cns;?>
+							<?php } ?>
+						</td>
+						
+						</tr>
+					</tbody>
+					</table>
+					</td>
+				</tr>
+				<?php } ?>
 				</tbody>
 				<?php if(!!$patient->clinical_findings) { ?>
 				<tr class="print-element" width="95%">
@@ -194,7 +226,7 @@
 				<?php } ?>
 				<?php if(isset($visit_notes) &&  !!$visit_notes) { ?>
 				<tr class="print-element" width="95%" >				
-					<td colspan="3"><b><u>Cinical Notes</u></b></td>
+					<td colspan="3"><b><u>Clinical Notes</u></b></td>
 				</tr>
 				<tr class="print-element" width="95%" >				
 					<td colspan="3">
@@ -202,7 +234,7 @@
 							<thead>
 								<tr>
 									<th>#</th>
-									<th>Date</th>
+									<th width="150px">Date</th>
 									<th>Note</th>
 								</tr>
 							</thead>
@@ -212,43 +244,13 @@
 							 foreach($visit_notes as $note){ ?>
 								<tr>
 									<td><?php echo $i++; ?></td>
-									<td><?php if($note->note_time!=0) echo date("d-M-Y g:iA",strtotime($note->note_time)); ?></td>
+									<td width="150px"><?php if($note->note_time!=0) echo date("d-M-Y g:iA",strtotime($note->note_time)); ?></td>
 									<td><?php echo $note->clinical_note;?></td>
 								</tr>
 								<?php  } ?>
 							</tbody>
 							</table>
 							<br />
-					</td>
-				</tr>
-				<?php } ?>
-
-				<?php if(!!$patient->cvs || !!$patient->rs || !!$patient->pa || !!$patient->cns) { ?>
-				<tr class="print-element">
-					<td colspan="3">
-					<table class="table borderless" style="border:none">
-					<tr>
-					<?php if(!!$patient->cvs) { ?>
-						<td>
-							<b>CVS: </b><?php echo $patient->cvs;?> 
-						</td>
-					<?php } ?>
-					<?php if(!!$patient->rs) { ?>
-						<td colspan="3">
-						<b>RS: </b><?php echo $patient->rs;?> 
-						</td>
-					<?php } ?>					
-					<td colspan="3">
-						<?php if(!!$patient->pa) { ?>
-							<b>PA:</b> <?php echo $patient->pa;?> &nbsp;
-						<?php } ?>
-						<?php if(!!$patient->cns) { ?>
-							<b>CNS</b>: <?php echo $patient->cns;?>
-						<?php } ?>
-					</td>
-					
-					</tr>
-					</table>
 					</td>
 				</tr>
 				<?php } ?>
