@@ -83,6 +83,14 @@ class Register_model extends CI_Model{
 		if($this->input->post('temperature')) $temperature=$this->input->post('temperature'); else $temperature="";
 		if($this->input->post('admit_weight')) $admit_weight=$this->input->post('admit_weight'); else $admit_weight="";
 		if($this->input->post('discharge_weight')) $discharge_weight=$this->input->post('discharge_weight'); else $discharge_weight="";
+		// if($this->input->post('follow_up_category_id'))$followup_category=$this->input->post('follow_up_category_id'); else $followup_category="";
+		// if($this->input->post('follow_up_status_id'))$followup_status=$this->input->post('follow_up_status_id'); else $followup_status="";
+		// if($this->input->post('follow_up_status_reason_id'))$followup_statusreason=$this->input->post('follow_up_status_reason_id'); else $followup_statusreason="";
+		// if($this->input->post('follow_up_note'))$followup_notes=$this->input->post('follow_up_note'); else $followup_notes="";
+		// if($this->input->post('follow_up_clinical_speciality_id'))$followup_clinicalspeciality=$this->input->post('follow_up_clinical_speciality_id'); else $followup_clinicalspeciality="";
+		// if($this->input->post('assigned_to_staff_id'))$followup_staffid=$this->input->post('assigned_to_staff_id'); else $followup_staffid="";
+		// if($this->input->post('follow_up_target_date_time'))$followup_date=$this->input->post('follow_up_target_date_time'); else $followup_date="";
+
 		$phone=$this->input->post('phone');
 		$alt_phone=$this->input->post('alt_phone');
 		$country_code=$this->input->post('country');
@@ -190,6 +198,9 @@ class Register_model extends CI_Model{
 			'state_code'=>$state_code,
 			'district_id'=>$district,
 			'identification_marks'=>$identification_marks,
+			'insert_by_user_id'=>$user_id,
+			'insert_datetime'=>date("Y-m-d H:i:s"),
+
 
 			'insert_by_user_id'=>$user_id,
 			'insert_datetime'=>date("Y-m-d H:i:s")
@@ -404,6 +415,70 @@ class Register_model extends CI_Model{
 				}
 			}
 		}
+		// if( (isset($_POST['followup_category']) || (isset($_POST['followup_status']) || (isset($_POST['followup_statusreason']) || (isset($_POST['followup_clinicalspeciality']) || (isset($_POST['followup_staffid']) )
+
+
+		if($this->input->post('followup_category')){			
+			$followup_category = $this->input->post('followup_category');
+			$followup_status = $this->input->post('followup_status');
+			$followup_statusreason=$this->input->post('followup_statusreason');
+			$followup_notes=$this->input->post('followup_notes');
+			$followup_clinicalspeciality=$this->input->post('followup_clinicalspeciality');
+			$followup_staffid=$this->input->post('followup_staffid');
+			$followup_date=$this->input->post('followup_date');
+			$userdata = $this->session->userdata('logged_in');
+			$staff_id = $userdata['staff_id'];
+			$follow_up_data = array();
+			for($i=0;$i<count($followup_category);$i++){
+				{
+					$follow_up_data[]=array(
+						'follow_up_category_id'=>$followup_category[$i],
+						'follow_up_status_id'=>$followup_status[$i],
+						'follow_up_status_reason_id'=>$followup_statusreason[$i],
+						'follow_up_clinical_speciality_id'=>$followup_clinicalspeciality[$i],
+						'assigned_to_staff_id'=>$followup_staffid[$i],
+						'follow_up_target_date_time'=>$followup_date[$i],
+						'follow_up_note'=>$followup_notes[$i],
+						'visit_id' => $this->input->post('visit_id'),
+						'follow_up_creation_date_time'=>date('Y-m-d H:i:s'),
+						'follow_up_update_date_time'=>date('Y-m-d H:i:s'),
+						'created_by_staff_id'=>$staff_id,
+						'edited_by_staff_id'=>$staff_id				 
+						
+
+					);
+				}
+			}
+		}
+		else{
+
+
+		}
+		// if($this->input->post('visit_id')) {	
+		// 	$visit_id = $this->input->post('visit_id');
+		// $follow = 0;
+		// 	$follow_up_data = array();
+		// 		$followup_status = $this->input->post('followup_status_'.$follow);
+		// 			$followup_statusreason=$this->input->post('followup_statusreason_'.$follow);
+		// 			$followup_notes=$this->input->post('followup_notes_'.$follow);
+		// 			$followup_category=$this->input->post('followup_category_'.$follow);
+		// 			$clinical_id=$this->input->post('followup_clinicalspeciality_'.$follow);
+		// 			$assigned_staff=$this->input->post('followup_staffid_'.$follow);
+		// 			$target_date=$this->input->post('followup_date_'.$follow);
+		// 			$follow_up_data[] = array(
+		// 				'visit_id'=>$this->input->post('visit_id'),
+		// 				'follow_up_category_id'=>$followup_category,
+		// 				'follow_up_status_id'=>$followup_status,
+		// 				'follow_up_status_reason_id'=>$followup_statusreason,
+		// 				'follow_up_note'=>$followup_notes,
+		// 				'follow_up_clinical_speciality_id'=>$clinical_id,
+		// 				'assigned_to_staff_id'=>$assigned_staff,
+		// 				'follow_up_target_date_time'=>$target_date,
+		// 			);
+			
+	
+		// }
+
 		if($this->input->post('prescription')){
 			$prescription = $this->input->post('prescription');
 			$prescription_data = array();
@@ -984,7 +1059,7 @@ class Register_model extends CI_Model{
 		->order_by('name','ASC');
 		$query=$this->db->get();
 		
-		//return the search results
+		//return the search refollsults
 		return $query->result();
 	}
 	function select($visit_id=0){
@@ -1048,7 +1123,57 @@ class Register_model extends CI_Model{
 		$query=$this->db->get();
 		return $query->result();
 	}
-	
+
+
+	function get_follow_up_report_id($id){
+
+		$this->load->database();
+		$this->db->select('follow_up.*, clinical_speciality.clinical_speciality_id, follow_up_category.follow_up_category_id, follow_up_category.follow_up_category, follow_up_status.follow_up_status_id, follow_up_status.follow_up_status, follow_up_status_reason.follow_up_status_reason_id, follow_up_status_reason.follow_up_status_reason, clinical_speciality.clinical_speciality, follow_up.assigned_to_staff_id, staff.staff_id, staff.first_name');
+		$this->db->from('follow_up'); 
+		$this->db->join('follow_up_category', 'follow_up_category.follow_up_category_id = follow_up.follow_up_category_id', 'left');
+		$this->db->join('follow_up_status', 'follow_up_status.follow_up_status_id=follow_up.follow_up_status_id','left');
+		$this->db->join('follow_up_status_reason', 'follow_up_status_reason.follow_up_status_reason_id=follow_up.follow_up_status_reason_id','left');
+		$this->db->join('clinical_speciality', 'clinical_speciality.clinical_speciality_id=follow_up.follow_up_clinical_speciality_id ','left');
+		$this->db->join('staff','staff.staff_id=follow_up.assigned_to_staff_id');
+		$this->db->where('follow_up_id',$id);
+		$this->db->order_by('follow_up.follow_up_id','asc');         
+		$query = $this->db->get();
+		$follow_ups =  $query->result();
+		return $follow_ups;
+	}
+
+	function get_follow_up_report($visit_id){
+		$this->db->select('follow_up.*, clinical_speciality.clinical_speciality_id, follow_up_category.follow_up_category_id, follow_up_category.follow_up_category, follow_up_status.follow_up_status_id, follow_up_status.follow_up_status, follow_up_status_reason.follow_up_status_reason_id, follow_up_status_reason.follow_up_status_reason, clinical_speciality.clinical_speciality, follow_up.assigned_to_staff_id, staff.staff_id, staff.first_name');
+		$this->db->from('follow_up'); 
+		$this->db->join('follow_up_category', 'follow_up_category.follow_up_category_id = follow_up.follow_up_category_id', 'left');
+		$this->db->join('follow_up_status', 'follow_up_status.follow_up_status_id=follow_up.follow_up_status_id','left');
+		$this->db->join('follow_up_status_reason', 'follow_up_status_reason.follow_up_status_reason_id=follow_up.follow_up_status_reason_id','left');
+		$this->db->join('clinical_speciality', 'clinical_speciality.clinical_speciality_id=follow_up.follow_up_clinical_speciality_id ','left');
+		$this->db->join('staff','staff.staff_id=follow_up.assigned_to_staff_id');
+		$this->db->where('visit_id',$visit_id);
+		$this->db->order_by('follow_up.follow_up_id','asc');         
+		$query = $this->db->get();
+		$follow_ups =  $query->result();
+		return $follow_ups;
+	}
+
+
+	function get_staff_selected_hosp(){
+		$hospital=$this->session->userdata('hospital');
+		$hospital_id=$hospital['hospital_id'];
+		$this->db->select("staff_id,first_name,hospital_id")->from("staff")->order_by('staff_id')
+		->where('hospital_id',$hospital_id);
+		$query=$this->db->get();
+		return $query->result_array();
+	}
+	// function get_staff_selected_hosp($hospital_id){
+	// 	$this->db->select("staff.first_name,staff.staff_id, patient_visit.patient_id")
+	// 		->from("staff")
+	// 		->join('patient_visit','patient_visit.hospital_id = staff.hospital_id','inner')
+	// 		->where ('hospital_id',$hospital_id)
+	// 	$query=$this->db->get();
+	// 	return $query->result();
+	// }
 	function get_previous_visit($visit_id, $patient_id){
 		$this->db->select("visit_id")
 			->from("patient_visit")

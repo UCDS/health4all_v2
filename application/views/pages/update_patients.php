@@ -1953,6 +1953,294 @@ pri.print();
 		<?php 
 				break;
 				 }} ?>
+
+
+
+
+
+
+<?php 
+			foreach($functions as $f){ 
+				if($f->user_function == "follow_up" && ($f->add==1 || $f->edit==1)) { ?>
+<div role="tabpanel" class="tab-pane" id="follow_up">
+	
+						<div class="col-md-4 col-xs-6">
+							<b>Patient ID: <?php echo $patient->patient_id; ?> </b>
+						</div>  
+						<div class="col-md-4 col-xs-6">
+							<b><?php echo $patient->visit_type; ?> Number: </b><?php echo $patient->hosp_file_no;?>
+						</div>
+						<div class="col-md-4 col-xs-6">
+							<b><?php if( $patient->visit_type == "IP") echo "Admit Date:"; else echo "Visit Date:";?></b>
+							<?php echo date("d-M-Y", strtotime($patient->admit_date)).", ".date("g:ia", strtotime($patient->admit_time));?>
+						</div> 
+						<br>
+			
+	<div class="row">
+		<div class="col-md-12 alt" id="create_followup">
+
+					<table class="table table-striped table-bordered" id="followup_table">
+					<thead>
+						<tr>
+						<th  class="text-center">Follow Up Category</th>
+						<th  class="text-center">Follow Up Status</th>
+						<th  class="text-center">Status Reason</th>
+						<th  class="text-center">Follow Up Speciality</th>
+						<th  class="text-center">Assigned to </th>
+						<th  class="text-center">Follow Up Target Date</th>
+
+					<!--	<th rowspan="3" class="text-center">Issued Quantity</th> -->
+						</tr>
+
+													
+					</thead>
+					<tbody>
+						<tr>
+						<td>
+							<select name="followup_category[]" class="form-control">
+								<option value="">--Select--</option>
+								<?php foreach($follow_ups as $follow_up): ?>
+									<option value="<?php echo $follow_up->follow_up_category_id;?>" id="follow_up_category"><?php echo $follow_up->follow_up_category;?></option>
+								<?php endforeach; ?>
+								
+								</select>
+							</td>
+							<td>
+								<select name="followup_status[]" class="form-control">
+								<option value="" selected>--SELECT--</option>
+								<?php foreach($follow_up_status as $follow_up_stat): ?>
+								<option value="<?php echo $follow_up_stat->follow_up_status_id;?>" id="follow_up_status"><?php echo $follow_up_stat->follow_up_status;?></option>
+								<?php endforeach; ?>				
+							</select>	
+							</td>
+						
+							<td>
+								<select name="followup_statusreason[]" class="form-control">
+									<option value="" selected>--SELECT--</option>
+									<?php foreach($follow_up_status_reason as $follow_up): ?>
+									<option value="<?php echo $follow_up->follow_up_status_reason_id;?>"><?php echo $follow_up->follow_up_status_reason;?></option>
+								<?php endforeach; ?>
+								</select>	
+							</td>
+							<td>
+								<select name="followup_clinicalspeciality[]" class="form-control">
+							<option value="" selected>--SELECT--</option>
+							<?php foreach($clinical_speciality as $follow_up): ?>
+								<option value="<?php echo $follow_up->clinical_speciality_id;?>"><?php echo $follow_up->clinical_speciality;?></option>
+							<?php endforeach; ?>
+							</select>
+							</td>
+							<td>
+									<select name="followup_staffid[]" class="form-control">
+									<option value="" selected>--SELECT--</option>
+									<?php foreach($get_staff_selected_hosp as $follow_up): ?>
+										<option value="<?php echo $follow_up['staff_id'];?>"><?php echo $follow_up['first_name'];?></option>
+									<?php endforeach; ?>
+									</select>
+							</td>
+							<td>
+									<input type="date" name="followup_date[]" class="form-control" />
+									
+							</td>
+						</tr>
+						<tr>
+							
+							<td style="text-align:center">
+								<b>Notes</b>
+							</td>
+							<td colspan="6" rowspan="2" >
+								<textarea class="form-control" cols="40"  name="followup_notes[]"></textarea>
+							</td>
+							<td>
+								<button type="button" class="btn btn-primary btn-sm" id="follow_up_add" >Add</button>
+							</td>
+						</tr>
+
+							
+					</tbody>
+				</table>
+				</div>
+				<script>
+					$(function(){
+					 
+						var form ='<table class="table table-striped table-bordered" id="followup_table">'+
+					'<thead>'+
+						'<tr>'+
+						'<th  class="text-center">Follow Up Category</th>'+
+						'<th  class="text-center">Follow Up Status</th>'+
+						'<th  class="text-center">Status Reason</th>'+
+						'<th  class="text-center">Follow Up Speciality</th>'+
+						'<th  class="text-center">Assigned to </th>'+
+						'<th  class="text-center">Follow Up Target Date</th>'+
+
+						'</tr>'+
+
+													
+					'</thead>'+
+					'<tbody>'+
+						'<tr>'+
+						'<td>'+
+							'<select name="followup_category[]" class="form-control">'+
+								'<option value="">--Select--</option>'+
+								'<?php foreach($follow_ups as $follow_up): ?>'+
+									'<option value="<?php echo $follow_up->follow_up_category_id;?>" id="follow_up_category"><?php echo $follow_up->follow_up_category;?></option>'+
+								'<?php endforeach; ?>'+
+								
+								'</select>'+
+							'</td>'+
+							'<td>'+
+								'<select name="followup_status[]" class="form-control">'+
+								'<option value="" selected>--SELECT--</option>'+
+								'<?php foreach($follow_up_status as $follow_up_stat): ?>'+
+								'<option value="<?php echo $follow_up_stat->follow_up_status_id;?>" id="follow_up_status"><?php echo $follow_up_stat->follow_up_status;?></option>'+
+								'<?php endforeach; ?>'+
+							'</select>	'+
+							'</td>'+
+						
+							'<td>'+
+								'<select name="followup_statusreason[]" class="form-control">'+
+									'<option value="" selected>--SELECT--</option>'+
+									'<?php foreach($follow_up_status_reason as $follow_up): ?>'+
+									'<option value="<?php echo $follow_up->follow_up_status_reason_id;?>"><?php echo $follow_up->follow_up_status_reason;?></option>'+
+								'<?php endforeach; ?>'+
+								'</select>	'+
+							'</td>'+
+							'<td>'+
+								'<select name="followup_clinicalspeciality[]" class="form-control">'+
+							'<option value="" selected>--SELECT--</option>'+
+							'<?php foreach($clinical_speciality as $follow_up): ?>'+
+								'<option value="<?php echo $follow_up->clinical_speciality_id;?>"><?php echo $follow_up->clinical_speciality;?></option>'+
+							'<?php endforeach; ?>'+
+							'</select>'+
+							'</td>'+
+							'<td>'+
+									'<select name="followup_staffid[]" class="form-control">'+
+									'<option value="" selected>--SELECT--</option>'+
+									'<?php foreach($get_staff_selected_hosp as $follow_up): ?>'+
+										'<option value="<?php echo $follow_up['staff_id'];?>"><?php echo $follow_up['first_name'];?></option>'+
+									'<?php endforeach; ?>'+
+									'</select>'+
+							'</td>'+
+							'<td>'+
+								'	<input type="date" name="followup_date[]" class="form-control" />'+
+									
+							'</td>'+
+						'</tr>'+
+						'<tr>'+
+							
+							'<td style="text-align:center">'+
+								'<b>Notes</b>'+
+							'</td>'+
+							'<td colspan="6" rowspan="2" >'+
+							'	<textarea class="form-control" cols="40"  name="followup_notes[]"></textarea>'+
+							'</td>'+
+						'</tr>'+
+
+							
+					'</tbody>'+
+				'</table>'
+						$("#follow_up_add").click(function(){
+							// alert("Haiiiffffffffffff");
+							$('#create_followup').append(form);
+
+						});
+					});
+				</script>
+
+
+
+</div>
+
+<div>
+<?php if(isset($follow_up_data) && !!$follow_up_data){ ?>
+
+<table class="table table-hover" id="data_table">
+  <thead>
+    <tr>
+		<th  class="text-center">#</th>
+      	<th  class="text-center">Follow Up Category</th>
+		<th  class="text-center">Follow Up Status</th>
+		<th  class="text-center">Status Reason</th>
+		<th  class="text-center">Follow Up Speciality</th>
+		<th  class="text-center">Assigned to </th>
+		<th  class="text-center">Follow Up Target Date</th>
+		<th  class="text-center">Notes</th>
+		<th> Edit </th>
+
+    </tr>
+  </thead>
+  <tbody>
+  
+	
+		
+		<tr>
+		<?php
+		$i=1;
+		foreach($follow_up_data as $follow){ ?>
+			<td><?php echo $i++; ?></td>
+			<td><?php 
+			if ($follow->follow_up_category_id == "NULL") {
+				echo "Null";
+			}
+			else {
+			echo $follow->follow_up_category;}?></td>
+						<td><?php 
+			if ($follow->follow_up_status_reason_id == "NULL") {
+				echo "Null";
+			}
+			else {
+			echo $follow->follow_up_status_reason;}?></td>
+			<td><?php 
+			if ($follow->follow_up_status_reason_id == "NULL") {
+				echo "Null";
+			}
+			else {
+			echo $follow->follow_up_status_reason;}?></td>
+			<td><?php 
+			if ($follow->follow_up_clinical_speciality_id == "NULL") {
+				echo "Null";
+			}
+			else {
+			echo $follow->clinical_speciality;}?></td>
+			<td><?php 
+			if ($follow->assigned_to_staff_id == "NULL") {
+				echo "Null";
+			}
+			else {
+			echo $follow->first_name;}?></td>
+				<td><?php 
+			if ($follow->follow_up_target_date_time == "0000-00-00") {
+				echo "Null";
+			}
+			else {
+			echo $follow->follow_up_target_date_time;}?></td>
+			<td><?php 
+			if ($follow->follow_up_note == "") {
+				echo "Null";
+			}
+			else {
+			echo $follow->follow_up_note;}?></td>
+			<td>
+
+				<a href="followup_edit/?id=<?php echo $follow->follow_up_id; ?>">Edit</a></td>
+			</tr>
+		<?php  } ?>
+    
+  </tbody>
+</table>
+<?php } ?>
+</div>
+</div>
+
+
+
+
+		<?php 
+				break;
+		}} ?>
+
+
+
 		<?php 
 			foreach($functions as $f){ 
 				if($f->user_function == "Discharge" && ($f->add==1 || $f->edit==1)) { ?>
